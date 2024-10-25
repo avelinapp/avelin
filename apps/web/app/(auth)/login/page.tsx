@@ -2,6 +2,7 @@ import { LogoGithub, LogoGoogle } from '@avelin/icons'
 import { MailIcon } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { LogoAvelin } from '@avelin/icons'
+import Link from 'next/link'
 
 export default function Page() {
   return (
@@ -19,9 +20,11 @@ export default function Page() {
         <Button
           className='w-full'
           variant='secondary'
+          asChild
         >
-          <LogoGoogle />
-          {/* <p>Continue with Google</p> */}
+          <Link href={process.env.API_URL + '/auth/google'}>
+            <LogoGoogle />
+          </Link>
         </Button>
         <Button
           className='w-full'
@@ -29,7 +32,6 @@ export default function Page() {
           disabled
         >
           <LogoGithub />
-          {/* <p>Continue with GitHub</p> */}
         </Button>
         <Button
           className='w-full'
@@ -37,7 +39,6 @@ export default function Page() {
           disabled
         >
           <MailIcon />
-          {/* <p>Continue with Magic Link</p> */}
         </Button>
       </div>
     </div>

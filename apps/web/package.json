@@ -11,11 +11,13 @@
   },
   "dependencies": {
     "@avelin/api": "workspace:*",
-    "@avelin/ui": "workspace:*",
     "@avelin/icons": "workspace:*",
+    "@avelin/ui": "workspace:*",
+    "@tanstack/react-query": "^5.59.16",
     "next": "15.0.1",
     "react": "catalog:react19",
-    "react-dom": "catalog:react19"
+    "react-dom": "catalog:react19",
+    "use-scramble": "^2.2.15"
   },
   "devDependencies": {
     "@avelin/eslint-config": "workspace:*",

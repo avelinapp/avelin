@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${innovatorGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}
+        className={`${innovatorGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased bg-color-background`}
       >
         {children}
       </body>
