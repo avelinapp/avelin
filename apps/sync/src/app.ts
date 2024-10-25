@@ -3,6 +3,7 @@ import { createBunWebSocket } from 'hono/bun'
 import type { ServerWebSocket } from 'bun'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
+import { setupWSConnection } from './utils'
 
 export const { upgradeWebSocket, websocket } =
   createBunWebSocket<ServerWebSocket>()
