@@ -3,7 +3,7 @@ import { api } from '@/lib/api'
 
 export const useCreateRoom = () =>
   useMutation({
-    mutationFn: async () => {
+    mutationFn: async (variables: undefined) => {
       const res = await api.rooms.create.$post()
       return await res.json()
     },
