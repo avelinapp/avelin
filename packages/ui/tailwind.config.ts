@@ -2,6 +2,10 @@ import { fontFamily } from 'tailwindcss/defaultTheme'
 import tailwindCssAnimate from 'tailwindcss-animate'
 import { Config } from 'tailwindcss'
 
+function color(cssVar: string) {
+  return `hsl(var(--${cssVar}) / <alpha-value>)`
+}
+
 export default {
   darkMode: ['class'],
   content: [
@@ -22,18 +26,18 @@ export default {
     extend: {
       colors: {
         gray: {
-          1: 'hsl(var(--gray-1))',
-          2: 'hsl(var(--gray-2))',
-          3: 'hsl(var(--gray-3))',
-          4: 'hsl(var(--gray-4))',
-          5: 'hsl(var(--gray-5))',
-          6: 'hsl(var(--gray-6))',
-          7: 'hsl(var(--gray-7))',
-          8: 'hsl(var(--gray-8))',
-          9: 'hsl(var(--gray-9))',
-          10: 'hsl(var(--gray-10))',
-          11: 'hsl(var(--gray-11))',
-          12: 'hsl(var(--gray-12))',
+          1: color('gray-1'),
+          2: color('gray-2'),
+          3: color('gray-3'),
+          4: color('gray-4'),
+          5: color('gray-5'),
+          6: color('gray-6'),
+          7: color('gray-7'),
+          8: color('gray-8'),
+          9: color('gray-9'),
+          10: color('gray-10'),
+          11: color('gray-11'),
+          12: color('gray-12'),
         },
         // Semantic Color Variables
         'color-background': 'hsl(var(--color-background))',

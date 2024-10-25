@@ -29,9 +29,9 @@
 
     /* Buttons */
     /* Primary Button */
-    --color-primary-bg: var(--gray-9);
-    --color-primary-hover: var(--gray-10);
-    --color-primary-active: var(--gray-11);
+    --color-primary-bg: var(--gray-12);
+    --color-primary-hover: var(--gray-12) / 0.9;
+    /*--color-primary-active: var(--gray-11);*/
     /* Almost black background */
     --color-primary-text: var(--gray-1);
     /* Light text for contrast */
