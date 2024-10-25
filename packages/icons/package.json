@@ -10,6 +10,7 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "lucide-react": "^0.453.0",
     "react": "catalog:react19"
   },
   "devDependencies": {
