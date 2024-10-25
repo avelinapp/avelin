@@ -34,8 +34,14 @@ export const sessions = pgTable('sessions', {
   }).notNull(),
 })
 
+export const rooms = pgTable('rooms', {
+  id: text().primaryKey(),
+  slug: text().unique(),
+})
+
 export const schema = {
   users,
   sessions,
   oauthAccounts,
+  rooms,
 }

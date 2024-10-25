@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { innovatorGrotesk, jetbrainsMono } from '@/lib/fonts'
 import './globals.css'
 import '@avelin/ui/globals.css'
+import Providers from '@/providers'
 
 export const metadata: Metadata = {
   title: 'Avelin',
@@ -18,7 +19,7 @@ export default function RootLayout({
       <body
         className={`${innovatorGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased bg-color-background`}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   )

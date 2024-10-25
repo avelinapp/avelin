@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 // import { toast } from 'sonner'
 import { useScramble } from 'use-scramble'
+import { useCreateRoom } from '@/lib/mutations'
 
 export default function CreateRoomButton() {
   const router = useRouter()
@@ -18,6 +19,8 @@ export default function CreateRoomButton() {
   const { ref } = useScramble({
     text: buttonText,
   })
+
+  const { mutate, isPending } = useCreateRoom()
 
   async function handleClick() {
     setLoading(true)
@@ -49,8 +52,8 @@ export default function CreateRoomButton() {
     <Button
       size='lg'
       className='inline-flex min-w-[275px] items-center font-mono text-base font-medium tracking-tight sm:min-w-[350px] sm:text-xl'
-      disabled={loading}
-      onClick={handleClick}
+      disabled={isPending}
+      onClick={() => mutate()}
     >
       {!loading && <PlusIcon className='mr-2 size-4 sm:size-6' />}
       <span ref={ref} />

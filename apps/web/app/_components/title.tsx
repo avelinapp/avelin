@@ -17,11 +17,11 @@ export default function Title() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setIndex((index + 1) % 3)
+      setIndex((i) => (i + 1) % 3)
     }, 3000)
 
     return () => clearInterval(timer)
-  })
+  }, [])
 
   return (
     <h1

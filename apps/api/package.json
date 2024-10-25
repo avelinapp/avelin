@@ -9,6 +9,7 @@
   "dependencies": {
     "@avelin/auth": "workspace:*",
     "@avelin/id": "workspace:*",
+    "@avelin/database": "workspace:*",
     "arctic": "catalog:",
     "drizzle-orm": "catalog:",
     "hono": "catalog:"
