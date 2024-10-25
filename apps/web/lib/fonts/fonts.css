@@ -1,0 +1,170 @@
+/* InnovatorGrotesk - Thin */
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-Thin.woff2')
+    format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-ThinItalic.woff2')
+    format('woff2');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* InnovatorGrotesk - ExtraLight */
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-ExtraLight.woff2')
+    format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-ExtraLightItalic.woff2')
+    format('woff2');
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* InnovatorGrotesk - Light */
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-Light.woff2')
+    format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-LightItalic.woff2')
+    format('woff2');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* InnovatorGrotesk - Regular */
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-Regular.woff2')
+    format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-RegularItalic.woff2')
+    format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* InnovatorGrotesk - Medium */
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-Medium.woff2')
+    format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-MediumItalic.woff2')
+    format('woff2');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* InnovatorGrotesk - SemiBold */
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-SemiBold.woff2')
+    format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-SemiBoldItalic.woff2')
+    format('woff2');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* InnovatorGrotesk - Bold */
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-Bold.woff2')
+    format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-BoldItalic.woff2')
+    format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* InnovatorGrotesk - ExtraBold */
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-ExtraBold.woff2')
+    format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-ExtraBoldItalic.woff2')
+    format('woff2');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* InnovatorGrotesk - Black */
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-Black.woff2')
+    format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InnovatorGrotesk';
+  src: url('http://localhost:4200/assets/fonts/InnovatorGrotesk-BlackItalic.woff2')
+    format('woff2');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}

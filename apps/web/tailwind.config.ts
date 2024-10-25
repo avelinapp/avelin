@@ -11,7 +11,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-innovator-grotesk)'],
+        sans: ['InnovatorGrotesk'],
         mono: ['var(--font-jetbrains-mono)'],
       },
     },
