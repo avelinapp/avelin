@@ -6,4 +6,8 @@
   * {
     cursor: default;
   }
+
+  body {
+    /*@apply text-primary;*/
+  }
 }

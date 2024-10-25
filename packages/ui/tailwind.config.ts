@@ -1,5 +1,4 @@
 import { fontFamily } from 'tailwindcss/defaultTheme'
-import tailwindcssRadixColors from 'tailwindcss-radix-colors'
 import tailwindCssAnimate from 'tailwindcss-animate'
 import { Config } from 'tailwindcss'
 
@@ -22,48 +21,39 @@ export default {
     },
     extend: {
       colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        gray: {
+          1: 'hsl(var(--gray-1))',
+          2: 'hsl(var(--gray-2))',
+          3: 'hsl(var(--gray-3))',
+          4: 'hsl(var(--gray-4))',
+          5: 'hsl(var(--gray-5))',
+          6: 'hsl(var(--gray-6))',
+          7: 'hsl(var(--gray-7))',
+          8: 'hsl(var(--gray-8))',
+          9: 'hsl(var(--gray-9))',
+          10: 'hsl(var(--gray-10))',
+          11: 'hsl(var(--gray-11))',
+          12: 'hsl(var(--gray-12))',
+        },
+        // Semantic Color Variables
+        'color-background': 'hsl(var(--color-background))',
+        'color-text': 'hsl(var(--color-text))',
+        'color-text-accent': 'hsl(var(--color-text-accent))',
+        'color-border-subtle': 'hsl(var(--color-border-subtle))',
+        'color-border': 'hsl(var(--color-border-normal))',
+        'color-border-strong': 'hsl(var(--color-border-strong))',
+        // Buttons
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          bg: 'hsl(var(--color-primary-bg))',
+          hover: 'hsl(var(--color-primary-hover))',
+          active: 'hsl(var(--color-primary-active))',
+          text: 'hsl(var(--color-primary-text))',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
-        },
-        destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
-        },
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
-        },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
-        },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
-        },
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
-        },
-        sidebar: {
-          DEFAULT: 'hsl(var(--sidebar-background))',
-          foreground: 'hsl(var(--sidebar-foreground))',
-          primary: 'hsl(var(--sidebar-primary))',
-          'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-          accent: 'hsl(var(--sidebar-accent))',
-          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-          border: 'hsl(var(--sidebar-border))',
-          ring: 'hsl(var(--sidebar-ring))',
+          bg: 'hsl(var(--color-secondary-bg))',
+          hover: 'hsl(var(--color-secondary-hover))',
+          active: 'hsl(var(--color-secondary-active))',
+          text: 'hsl(var(--color-secondary-text))',
         },
       },
       borderRadius: {
@@ -98,5 +88,5 @@ export default {
       },
     },
   },
-  plugins: [tailwindcssRadixColors, tailwindCssAnimate],
+  plugins: [tailwindCssAnimate],
 } satisfies Config

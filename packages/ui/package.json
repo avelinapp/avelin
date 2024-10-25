@@ -38,6 +38,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "hsl-radix-colors": "^1.0.2",
     "next-themes": "^0.3.0",
     "react": "catalog:react19",
     "tailwind-merge": "^2.5.4",
