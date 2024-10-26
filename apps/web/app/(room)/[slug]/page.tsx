@@ -2,47 +2,45 @@
 
 import { sync } from '@/lib/sync'
 import { use, useEffect, useRef, useState } from 'react'
+import { Monaco, default as MonacoEditor } from '@monaco-editor/react'
+import { useCodeRoom } from '@/providers/code-room-provider'
 
 type Params = Promise<{ slug: string }>
 
 export default function Page({ params }: { params: Params }) {
   const { slug } = use(params)
-  const [isReady, setIsReady] = useState(false)
-
-  const syncWs = useRef<WebSocket | null>(null)
+  const { initialize } = useCodeRoom()
 
   useEffect(() => {
-    if (isReady) {
-      syncWs.current?.send('Hello from client!')
-    }
-  }, [isReady])
-
-  useEffect(() => {
-    if (!slug) {
-      return
-    }
-
-    const ws = sync.ws.$ws({
-      query: { roomSlug: slug },
+    initialize({
+      id: 'room_0192ca62cc417bb8b07a49944961e033',
+      slug,
     })
+  }, [])
 
-    ws.onopen = () => {
-      setIsReady(true)
-      console.log('Avelin Sync - connection established.')
-    }
-    ws.onclose = () => {
-      setIsReady(false)
-      console.log('Avelin Sync - connection closed.')
-    }
-    ws.onmessage = (ev) => {
-      console.log(`[SYNC] ${ev.data}`)
-    }
-
-    syncWs.current = ws
-
-    return () => {
-      ws.close()
-    }
-  }, [slug])
-  return <div>Room</div>
+  return (
+    <div>
+      <MonacoEditor
+        width='100vw'
+        height='100vh'
+        theme='light'
+        // language={language}
+        value=''
+        // onMount={setupEditor}
+        options={{
+          padding: {
+            top: 30,
+            bottom: 30,
+          },
+          fontSize: 16,
+          // fontFamily: `${jetbrainsMono.style.fontFamily}`,
+          fontLigatures: true,
+          minimap: {
+            enabled: false,
+          },
+          renderLineHighlight: 'none',
+        }}
+      />
+    </div>
+  )
 }
