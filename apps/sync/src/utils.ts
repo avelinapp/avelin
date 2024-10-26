@@ -6,6 +6,7 @@ import * as encoding from 'lib0/encoding'
 import * as decoding from 'lib0/decoding'
 import * as map from 'lib0/map'
 import { ServerWebSocket } from 'bun'
+import { HonoRequest } from 'hono'
 
 const wsReadyStateConnecting = 0
 const wsReadyStateOpen = 1
@@ -14,7 +15,7 @@ const wsReadyStateClosed = 3 // eslint-disable-line
 
 const gcEnabled = process.env.GC !== 'false' && process.env.GC !== '0'
 
-const docs = new Map()
+export const docs = new Map<string, WSSharedDoc>()
 
 const messageSync = 0
 const messageAwareness = 1
@@ -40,11 +41,11 @@ let contentInitializor = (_ydoc: Y.Doc) => Promise.resolve()
  *
  * @param {(ydoc: Y.Doc) => Promise<void>} f
  */
-exports.setContentInitializor = (f: any) => {
+export const setContentInitializor = (f: any) => {
   contentInitializor = f
 }
 
-const getYDoc = (docname: string, gc = true) =>
+export const getYDoc = (docname: string, gc = true) =>
   map.setIfUndefined(docs, docname, () => {
     const doc = new WSSharedDoc(docname)
     doc.gc = gc
@@ -53,7 +54,11 @@ const getYDoc = (docname: string, gc = true) =>
     return doc
   })
 
-const messageListener = (conn: any, doc: WSSharedDoc, message: Uint8Array) => {
+export const messageListener = (
+  conn: ServerWebSocket,
+  doc: WSSharedDoc,
+  message: Uint8Array,
+) => {
   try {
     const encoder = encoding.createEncoder()
     const decoder = decoding.createDecoder(message)
@@ -86,17 +91,10 @@ const messageListener = (conn: any, doc: WSSharedDoc, message: Uint8Array) => {
   }
 }
 
-/**
- * @param {WSSharedDoc} doc
- * @param {any} conn
- */
-const closeConn = (doc: WSSharedDoc, conn: any) => {
+export const closeConn = (doc: WSSharedDoc, conn: ServerWebSocket) => {
   if (doc.conns.has(conn)) {
-    /**
-     * @type {Set<number>}
-     */
     // @ts-ignore
-    const controlledIds = doc.conns.get(conn)
+    const controlledIds = doc.conns.get(conn) satisfies Set<number>
     doc.conns.delete(conn)
     awarenessProtocol.removeAwarenessStates(
       doc.awareness,
@@ -104,43 +102,37 @@ const closeConn = (doc: WSSharedDoc, conn: any) => {
       Array.from(controlledIds),
       null,
     )
-    // if (doc.conns.size === 0 && persistence !== null) {
-    //   // if persisted, we store state and destroy ydocument
-    //   persistence.writeState(doc.name, doc).then(() => {
-    //     doc.destroy()
-    //   })
-    //   docs.delete(doc.name)
-    // }
   }
   conn.close()
 }
 
-/**
- * @param {WSSharedDoc} doc
- * @param {import('ws').WebSocket} conn
- * @param {Uint8Array} m
- */
-const send = (doc: WSSharedDoc, conn: any, m: Uint8Array) => {
+export const send = (
+  doc: WSSharedDoc,
+  conn: ServerWebSocket,
+  m: Uint8Array,
+) => {
   if (
     conn.readyState !== wsReadyStateConnecting &&
     conn.readyState !== wsReadyStateOpen
   ) {
     closeConn(doc, conn)
   }
-  try {
-    conn.send(m, {}, (err: any) => {
-      err != null && closeConn(doc, conn)
-    })
-  } catch (e) {
-    closeConn(doc, conn)
-  }
+
+  conn.send(m)
+  // try {
+  //   conn.send(m, {}, (err: any) => {
+  //     err != null && closeConn(doc, conn)
+  //   })
+  // } catch (e) {
+  //   closeConn(doc, conn)
+  // }
 }
 
 const pingTimeout = 30000
 
 export const setupWSConnection = (
-  conn: WebSocket,
-  req: Request,
+  conn: ServerWebSocket,
+  req: HonoRequest,
   { docName = (req.url || '').slice(1).split('?')[0], gc = true } = {},
 ) => {
   conn.binaryType = 'arraybuffer'

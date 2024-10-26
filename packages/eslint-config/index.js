@@ -12,7 +12,14 @@ module.exports = {
   env: {
     node: true,
     browser: true,
+    es6: true,
   },
+  parserOptions: {
+    ecmaVersion: 2023,
+    sourceType: 'module',
+    project: true,
+  },
+
   plugins: ['only-warn'],
   settings: {
     'import/resolver': {
