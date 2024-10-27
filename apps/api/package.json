@@ -1,7 +1,8 @@
 {
   "name": "@avelin/api",
   "scripts": {
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "build": "bun build src/index.ts --compile --minify --sourcemap ./src/index.ts --outfile avelin-api"
   },
   "exports": {
     "./client": "./src/client.ts"

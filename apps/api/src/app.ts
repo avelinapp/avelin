@@ -7,6 +7,7 @@ import { roomApp } from './routes/rooms'
 export const app = new Hono()
   .use('*', cors())
   .use(logger())
+  .get('/health', (c) => c.json({ message: 'Avelin API is running.' }))
   .route('/auth', authApp)
   .route('/rooms', roomApp)
 

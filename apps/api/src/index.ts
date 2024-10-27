@@ -6,6 +6,6 @@ showRoutes(app, {
 })
 
 export default {
-  port: 4000,
+  port: process.env.API_PORT || 8080,
   fetch: app.fetch,
 }

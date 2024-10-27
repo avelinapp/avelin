@@ -1,25 +1,79 @@
+ARG NODE_VERSION=20
+ARG BUN_VERSION=1.1.33
+ARG APP_DIRNAME=api
+ARG PROJECT=@avelin/api
 
-FROM node:20-slim AS base
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+# 1. Alpine image
+FROM imbios/bun-node:${BUN_VERSION}-${NODE_VERSION}-alpine AS alpine
+RUN apk update
+# RUN apk add --no-cache libc6-compat
+
+# Setup pnpm and turbo on the alpine base
+FROM alpine AS base
 RUN corepack enable
+# Replace <your-major-version> with the major version installed in your repository. For example:
+# RUN npm install turbo@2.1.3 --global
+RUN npm install turbo --global
 
-FROM base AS build
-COPY . /usr/src/app
-WORKDIR /usr/src/app
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run -r build
-RUN pnpm deploy --filter=app1 --prod /prod/app1
-RUN pnpm deploy --filter=app2 --prod /prod/app2
+RUN 
 
-FROM base AS app1
-COPY --from=build /prod/app1 /prod/app1
-WORKDIR /prod/app1
-EXPOSE 8000
-CMD [ "pnpm", "start" ]
+# 2. Prune projects
+FROM base AS pruner
+# https://stackoverflow.com/questions/49681984/how-to-get-version-value-of-package-json-inside-of-dockerfile
+# RUN export VERSION=$(npm run version)
 
-FROM base AS app2
-COPY --from=build /prod/app2 /prod/app2
-WORKDIR /prod/app2
-EXPOSE 8001
-CMD [ "pnpm", "start" ]
+ARG PROJECT
+
+# Set working directory
+WORKDIR /app
+
+# It might be the path to <ROOT> turborepo
+COPY . .
+ 
+# Generate a partial monorepo with a pruned lockfile for a target workspace.
+# Assuming "@acme/nextjs" is the name entered in the project's package.json: { name: "@acme/nextjs" }
+RUN turbo prune --scope=${PROJECT} --docker
+ 
+# 3. Build the project
+FROM base AS builder
+ARG PROJECT
+
+# Environment to skip .env validation on build
+ENV CI=true
+
+WORKDIR /app
+
+# Copy lockfile and package.json's of isolated subworkspace
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY --from=pruner /app/out/json/ .
+
+# First install the dependencies (as they change less often)
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm config set store-dir /pnpm/store && \
+    pnpm set package-import-method copy && \
+    pnpm install --frozen-lockfile
+ 
+# Copy source code of isolated subworkspace
+COPY --from=pruner /app/out/full/ .
+
+RUN pnpm build --filter=${PROJECT}
+
+# 4. Final image - runner stage to run the application
+FROM alpine AS runner 
+ARG APP_DIRNAME
+ 
+# Don't run production as root
+USER 1001 
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY --from=builder --chown=1001:1001 /app/apps/api/avelin-api .
+
+ARG API_PORT=3000
+ENV API_PORT=${API_PORT}
+EXPOSE ${API_PORT}
+
+CMD ["sh", "-c", "./avelin-api"] 
