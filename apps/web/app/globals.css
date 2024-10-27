@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  * {
+    cursor: default;
+  }
+
+  body {
+    @apply text-color-text;
+  }
+}

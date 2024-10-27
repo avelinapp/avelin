@@ -1,0 +1,24 @@
+{
+  "name": "@avelin/sync",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts"
+  },
+  "dependencies": {
+    "@avelin/auth": "workspace:*",
+    "@avelin/database": "workspace:*",
+    "@hocuspocus/extension-logger": "^2.13.7",
+    "@hocuspocus/server": "^2.13.7",
+    "drizzle-orm": "catalog:",
+    "y-protocols": "^1.0.6",
+    "yjs": "^13.6.20"
+  },
+  "devDependencies": {
+    "@avelin/eslint-config": "workspace:*",
+    "@avelin/prettier-config": "workspace:*",
+    "@avelin/typescript-config": "workspace:*",
+    "@types/bun": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  }
+}

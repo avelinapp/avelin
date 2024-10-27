@@ -1,0 +1,26 @@
+{
+  "name": "@avelin/api",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "build": "bun build src/index.ts --compile --minify --sourcemap ./src/index.ts --outfile avelin-api"
+  },
+  "exports": {
+    "./client": "./src/client.ts"
+  },
+  "dependencies": {
+    "@avelin/auth": "workspace:*",
+    "@avelin/id": "workspace:*",
+    "@avelin/database": "workspace:*",
+    "arctic": "catalog:",
+    "drizzle-orm": "catalog:",
+    "hono": "catalog:"
+  },
+  "devDependencies": {
+    "@avelin/eslint-config": "workspace:*",
+    "@avelin/prettier-config": "workspace:*",
+    "@avelin/typescript-config": "workspace:*",
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "prettier": "catalog:"
+  }
+}

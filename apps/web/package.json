@@ -1,0 +1,48 @@
+{
+  "name": "@avelin/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbo",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "clean": "rm -rf .next node_modules .turbo"
+  },
+  "dependencies": {
+    "@avelin/api": "workspace:*",
+    "@avelin/icons": "workspace:*",
+    "@avelin/sync": "workspace:*",
+    "@avelin/ui": "workspace:*",
+    "@hocuspocus/provider": "^2.13.7",
+    "@monaco-editor/react": "^4.5.1",
+    "@tanstack/react-query": "^5.59.16",
+    "monaco-editor": "0.41.0",
+    "next": "15.0.1",
+    "react": "catalog:react19",
+    "react-dom": "catalog:react19",
+    "use-scramble": "^2.2.15",
+    "ws": "^8.18.0",
+    "y-indexeddb": "^9.0.12",
+    "y-monaco": "^0.1.4",
+    "y-protocols": "^1.0.6",
+    "y-websocket": "^2.0.4",
+    "yjs": "^13.6.20",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@avelin/database": "workspace:*",
+    "@avelin/eslint-config": "workspace:*",
+    "@avelin/prettier-config": "workspace:*",
+    "@avelin/typescript-config": "workspace:*",
+    "@types/node": "^20",
+    "@types/react": "catalog:react19",
+    "@types/react-dom": "catalog:react19",
+    "eslint": "catalog:",
+    "eslint-config-next": "15.0.1",
+    "postcss": "^8",
+    "prettier": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
+  }
+}

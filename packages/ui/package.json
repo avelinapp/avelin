@@ -1,0 +1,47 @@
+{
+  "name": "@avelin/ui",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "ui:init": "pnpm dlx shadcn@latest init",
+    "ui:add": "pnpm dlx shadcn@latest add",
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "files": [
+    "tailwind.config.ts",
+    "postcss.config.mjs",
+    "globals.css"
+  ],
+  "exports": {
+    "./button": "./src/components/ui/button.tsx",
+    "./globals.css": "./src/globals.css",
+    "./tailwind": "./tailwind.config.ts",
+    "./postcss": "./postcss.config.mjs",
+    "./cn": "./src/utils/cn.ts",
+    "./hooks": "./src/hooks/index.ts"
+  },
+  "devDependencies": {
+    "@avelin/eslint-config": "workspace:*",
+    "@avelin/prettier-config": "workspace:*",
+    "@avelin/typescript-config": "workspace:*",
+    "@types/react": "catalog:react19",
+    "autoprefixer": "^10",
+    "eslint": "catalog:",
+    "postcss": "^8",
+    "postcss-load-config": "^6",
+    "prettier": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.1.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "hsl-radix-colors": "^1.0.2",
+    "next-themes": "^0.3.0",
+    "react": "catalog:react19",
+    "tailwind-merge": "^2.5.4",
+    "tailwindcss-animate": "^1.0.7"
+  }
+}
