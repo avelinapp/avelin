@@ -21,6 +21,7 @@
     "next": "15.0.1",
     "react": "catalog:react19",
     "react-dom": "catalog:react19",
+    "superjson": "^2.2.1",
     "use-scramble": "^2.2.15",
     "ws": "^8.18.0",
     "y-indexeddb": "^9.0.12",

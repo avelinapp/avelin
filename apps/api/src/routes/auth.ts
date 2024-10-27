@@ -5,9 +5,11 @@ import {
   generateGoogleAuthorizationUrl,
   getUserByGoogleId,
   google,
+  validateSession,
 } from '@avelin/auth'
 import { getCookie, setCookie } from 'hono/cookie'
 import { decodeIdToken, OAuth2Tokens } from 'arctic'
+import superjson from 'superjson'
 
 export const authApp = new Hono()
   .get('/google', async (c) => {
@@ -91,4 +93,19 @@ export const authApp = new Hono()
     })
 
     return c.redirect(process.env.APP_URL ?? '/')
+  })
+  .get('/verify', async (c) => {
+    const sessionId = getCookie(c, 'avelin_session_id')
+
+    if (!sessionId) {
+      return c.json({ error: 'Invalid session.' }, 400)
+    }
+
+    const auth = await validateSession(sessionId)
+
+    if (!auth) {
+      return c.json({ error: 'Session not found.' }, 400)
+    }
+
+    return c.json(superjson.stringify(auth))
   })

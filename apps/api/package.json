@@ -9,18 +9,19 @@
   },
   "dependencies": {
     "@avelin/auth": "workspace:*",
-    "@avelin/id": "workspace:*",
     "@avelin/database": "workspace:*",
+    "@avelin/id": "workspace:*",
     "arctic": "catalog:",
     "drizzle-orm": "catalog:",
-    "hono": "catalog:"
+    "hono": "catalog:",
+    "superjson": "^2.2.1"
   },
   "devDependencies": {
     "@avelin/eslint-config": "workspace:*",
     "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
     "eslint": "catalog:",
-    "typescript": "catalog:",
-    "prettier": "catalog:"
+    "prettier": "catalog:",
+    "typescript": "catalog:"
   }
 }
