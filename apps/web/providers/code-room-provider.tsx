@@ -36,6 +36,8 @@ export const createCodeRoomStore = () =>
     initialize: (room) => {
       if (!room) throw new Error('Cannot initialize code room without a room')
 
+      set({ room })
+
       const { ydoc, networkProvider, persistenceProvider } = get()
 
       if (!persistenceProvider) {
@@ -57,36 +59,23 @@ export const createCodeRoomStore = () =>
           `ws://localhost:4100/ws`,
           room.id,
           ydoc,
+          {
+            WebSocketPolyfill: WebSocket,
+          },
         )
 
-        ws.on('open', () => {
-          console.log('Avelin Sync - connection established.')
-        })
+        ws.on(
+          'status',
+          ({
+            status,
+          }: {
+            status: 'disconnected' | 'connecting' | 'connected'
+          }) => {
+            console.log('Avelin Sync - connection status:', status)
+          },
+        )
 
-        ws.on('close', () => {
-          console.log('Avelin Sync - connection closed.')
-        })
-
-        ws.on('message', (event: MessageEvent) => {
-          try {
-            const message = JSON.parse(event.data)
-            if (message.type === 'ping') {
-              // Respond with a pong message
-              ws.ws!.send(JSON.stringify({ type: 'pong' }))
-              console.log('[SYNC] Responded to heartbeat check.')
-            } else {
-              // Handle other message types
-              console.log(`[SYNC] ${event.data}`)
-            }
-          } catch (error) {
-            if (error instanceof SyntaxError) {
-              return
-            }
-            if (error instanceof Error) {
-              console.error(error)
-            }
-          }
-        })
+        set({ networkProvider: ws })
       } else {
         console.log('Network provider already initialized.')
       }
