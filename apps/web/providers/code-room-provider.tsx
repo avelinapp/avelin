@@ -21,7 +21,7 @@ export type CodeRoomState = {
 }
 
 export type CodeRoomActions = {
-  initialize: ({ room, session }: { room: Room; session: Session }) => void
+  initialize: ({ room, session }: { room: Room; session?: Session }) => void
   destroy: () => void
 }
 
@@ -59,7 +59,7 @@ export const createCodeRoomStore = () =>
           url: process.env.NEXT_PUBLIC_SYNC_URL as string,
           name: room.id,
           document: ydoc,
-          token: session.id,
+          token: session?.id,
           onStatus: ({ status }) => {
             console.log('Avelin Sync - connection status:', status)
           },
