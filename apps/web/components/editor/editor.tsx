@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useCallback, useEffect } from 'react'
+import { useRef, useState, useCallback } from 'react'
 import { Monaco, default as MonacoEditor } from '@monaco-editor/react'
 import { editor } from 'monaco-editor'
 import { useCodeRoom } from '@/providers/code-room-provider'
@@ -42,13 +42,6 @@ export default function Editor({
     ydoc,
     networkProvider,
   )
-
-  useEffect(() => {
-    if (!!networkProvider) {
-      networkProvider.awareness?.on('change', console.log)
-      networkProvider.awareness?.setLocalStateField('user', 'hello')
-    }
-  }, [])
 
   return (
     <MonacoEditor
