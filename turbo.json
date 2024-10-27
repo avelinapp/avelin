@@ -11,8 +11,6 @@
       "outputs": [".next/**", "!.next/cache/**"],
       "env": [
         "DATABASE_URL",
-        "NEXT_PUBLIC_API_URL",
-        "NEXT_PUBLIC_APP_URL",
         "API_URL",
         "APP_URL",
         "GOOGLE_CLIENT_ID",

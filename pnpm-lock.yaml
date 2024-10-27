@@ -170,6 +170,9 @@ importers:
       '@avelin/database':
         specifier: workspace:*
         version: link:../../packages/database
+      '@hocuspocus/extension-logger':
+        specifier: ^2.13.7
+        version: 2.13.7(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)
       '@hocuspocus/server':
         specifier: ^2.13.7
         version: 2.13.7(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)
@@ -841,6 +844,9 @@ packages:
 
   '@hocuspocus/common@2.13.7':
     resolution: {integrity: sha512-ROqYfW15XlAGd+qb/FVyp0zUC9Rosv7kdcck9LRMdfW3jT66wK9pDDWL2ily4Qj/zhbLCFtjAUPB4UKln/GYNQ==}
+
+  '@hocuspocus/extension-logger@2.13.7':
+    resolution: {integrity: sha512-mjlY0RjocWg4Qe1uVVL5lYXQs9yy80/5vrSuHMh9oFaXGGBOiVM7sOoM2IWl9k3ehBvlCid1xgNnNkNIJKDOPw==}
 
   '@hocuspocus/provider@2.13.7':
     resolution: {integrity: sha512-BjZIIV8tWf/MD/8IcEMSFA+sW4wtR/M9MmhN+XSssYJOZxnszw44Gdwda23TmhsXvCV+qggS8lGEs+SfZSzEag==}
@@ -3317,6 +3323,15 @@ snapshots:
   '@hocuspocus/common@2.13.7':
     dependencies:
       lib0: 0.2.98
+
+  '@hocuspocus/extension-logger@2.13.7(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)':
+    dependencies:
+      '@hocuspocus/server': 2.13.7(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - y-protocols
+      - yjs
 
   '@hocuspocus/provider@2.13.7(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)':
     dependencies:

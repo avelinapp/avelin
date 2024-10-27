@@ -6,6 +6,7 @@
   "dependencies": {
     "@avelin/auth": "workspace:*",
     "@avelin/database": "workspace:*",
+    "@hocuspocus/extension-logger": "^2.13.7",
     "@hocuspocus/server": "^2.13.7",
     "drizzle-orm": "catalog:",
     "y-protocols": "^1.0.6",

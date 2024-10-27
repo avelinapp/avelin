@@ -56,7 +56,7 @@ export const createCodeRoomStore = () =>
 
       if (!networkProvider) {
         const ws = new HocuspocusProvider({
-          url: `ws://localhost:4100`,
+          url: process.env.NEXT_PUBLIC_SYNC_URL as string,
           name: room.id,
           document: ydoc,
           onStatus: ({ status }) => {
