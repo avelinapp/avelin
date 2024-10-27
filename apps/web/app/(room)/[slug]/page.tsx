@@ -4,24 +4,28 @@ import { use, useEffect } from 'react'
 import { useCodeRoom } from '@/providers/code-room-provider'
 import { useRoom } from '@/hooks/use-room'
 import LazySuspense from '@avelin/ui/suspense'
+import { useAuth } from '@/providers/auth-provider'
 
 type Params = Promise<{ slug: string }>
 
 export default function Page({ params }: { params: Params }) {
   const { slug } = use(params)
+  const { session } = useAuth()
   const { initialize, destroy } = useCodeRoom()
-  const { data: room, error, isPending, isError } = useRoom(slug)
+  const { data: room, isPending, isError } = useRoom(slug)
 
   useEffect(() => {
-    if (!room) return
+    if (!room || !session) return
 
-    initialize(room)
+    initialize({
+      room,
+      session,
+    })
 
     return () => destroy()
-  }, [initialize, destroy, room])
+  }, [initialize, destroy, room, session])
 
-  if (isPending) return <div>Loading...</div>
-  if (isError) return <div>Error: {error.message}</div>
+  if (isPending || isError) return <div />
 
   return (
     <div>

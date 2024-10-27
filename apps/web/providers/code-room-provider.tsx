@@ -5,7 +5,7 @@ import { createStore, StoreApi, useStore } from 'zustand'
 import * as Y from 'yjs'
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { HocuspocusProvider } from '@hocuspocus/provider'
-import type { Room } from '@avelin/database'
+import type { Room, Session } from '@avelin/database'
 
 const CodeRoomContext = createContext<StoreApi<CodeRoomStore> | null>(null)
 
@@ -21,7 +21,7 @@ export type CodeRoomState = {
 }
 
 export type CodeRoomActions = {
-  initialize: (room: Room) => void
+  initialize: ({ room, session }: { room: Room; session: Session }) => void
   destroy: () => void
 }
 
@@ -33,7 +33,7 @@ export const createCodeRoomStore = () =>
     networkProvider: undefined,
     persistenceProvider: undefined,
     room: undefined,
-    initialize: (room) => {
+    initialize: ({ room, session }) => {
       if (!room) throw new Error('Cannot initialize code room without a room')
 
       set({ room })
@@ -59,6 +59,7 @@ export const createCodeRoomStore = () =>
           url: process.env.NEXT_PUBLIC_SYNC_URL as string,
           name: room.id,
           document: ydoc,
+          token: session.id,
           onStatus: ({ status }) => {
             console.log('Avelin Sync - connection status:', status)
           },

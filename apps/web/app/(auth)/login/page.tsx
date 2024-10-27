@@ -22,7 +22,7 @@ export default function Page() {
           variant='secondary'
           asChild
         >
-          <Link href={process.env.API_URL + '/auth/google'}>
+          <Link href={process.env.NEXT_PUBLIC_API_URL + '/auth/google'}>
             <LogoGoogle />
           </Link>
         </Button>
