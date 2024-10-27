@@ -3,8 +3,8 @@
 import { createContext, useContext, useState } from 'react'
 import { createStore, StoreApi, useStore } from 'zustand'
 import * as Y from 'yjs'
-import { WebsocketProvider } from 'y-websocket'
 import { IndexeddbPersistence } from 'y-indexeddb'
+import { HocuspocusProvider } from '@hocuspocus/provider'
 import type { Room } from '@avelin/database'
 
 const CodeRoomContext = createContext<StoreApi<CodeRoomStore> | null>(null)
@@ -15,7 +15,7 @@ export interface CodeRoomProviderProps {
 
 export type CodeRoomState = {
   ydoc: Y.Doc
-  networkProvider?: WebsocketProvider
+  networkProvider?: HocuspocusProvider
   persistenceProvider?: IndexeddbPersistence
   room?: Room
 }
@@ -55,25 +55,14 @@ export const createCodeRoomStore = () =>
       }
 
       if (!networkProvider) {
-        const ws = new WebsocketProvider(
-          `ws://localhost:4100/ws`,
-          room.id,
-          ydoc,
-          {
-            WebSocketPolyfill: WebSocket,
-          },
-        )
-
-        ws.on(
-          'status',
-          ({
-            status,
-          }: {
-            status: 'disconnected' | 'connecting' | 'connected'
-          }) => {
+        const ws = new HocuspocusProvider({
+          url: `ws://localhost:4100`,
+          name: room.id,
+          document: ydoc,
+          onStatus: ({ status }) => {
             console.log('Avelin Sync - connection status:', status)
           },
-        )
+        })
 
         set({ networkProvider: ws })
       } else {
@@ -84,12 +73,10 @@ export const createCodeRoomStore = () =>
       const { ydoc, networkProvider, persistenceProvider } = get()
 
       ydoc.destroy()
+      networkProvider?.awareness?.destroy()
+      networkProvider?.disconnect()
       networkProvider?.destroy()
       persistenceProvider?.destroy()
-
-      console.log('Destroyed Yjs document.')
-      console.log('Tore down WebRTC provider.')
-      console.log('Tore down IndexedDB provider.')
 
       set({
         ydoc: new Y.Doc(),

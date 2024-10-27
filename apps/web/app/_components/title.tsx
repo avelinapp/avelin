@@ -28,6 +28,7 @@ export default function Title() {
       className={cn(
         'h-12 w-full p-1 text-center text-4xl font-bold tracking-tighter sm:h-24 sm:text-7xl',
         'bg-gradient-to-t from-gray-12/85 to-gray-12 bg-clip-text text-transparent',
+        'drop-shadow-2xl',
       )}
     >
       Ready to <span ref={titleRef} />

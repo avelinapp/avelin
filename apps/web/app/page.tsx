@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <div className='h-screen flex w-full flex-1 flex-col items-center justify-center gap-12 p-4'>
       <div className='flex flex-col items-center gap-12'>
-        <LogoAvelin className='size-24 text-primary-bg sm:size-64' />
+        <LogoAvelin className='size-24 text-primary-bg sm:size-64 drop-shadow-xl' />
         <Title />
         <p className='text-center font-mono font-medium text-lg tracking-tighter sm:text-2xl'>
           Create a code room to get started.

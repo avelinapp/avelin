@@ -1,12 +1,7 @@
-import { app, websocket } from './app'
-import { showRoutes } from 'hono/dev'
+import { Hocuspocus } from '@hocuspocus/server'
 
-showRoutes(app, {
-  verbose: true,
+const server = new Hocuspocus({
+  port: 4100,
 })
 
-export default {
-  port: 4100,
-  fetch: app.fetch,
-  websocket: websocket,
-}
+server.listen()

@@ -3,18 +3,11 @@
   "scripts": {
     "dev": "bun run --watch src/index.ts"
   },
-  "exports": {
-    "./client": "./src/client.ts"
-  },
   "dependencies": {
     "@avelin/auth": "workspace:*",
     "@avelin/database": "workspace:*",
-    "@avelin/id": "workspace:*",
-    "arctic": "catalog:",
+    "@hocuspocus/server": "^2.13.7",
     "drizzle-orm": "catalog:",
-    "hono": "catalog:",
-    "lib0": "^0.2.98",
-    "lodash.debounce": "^4.0.8",
     "y-protocols": "^1.0.6",
     "yjs": "^13.6.20"
   },
@@ -23,7 +16,6 @@
     "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
     "@types/bun": "catalog:",
-    "@types/lodash.debounce": "^4.0.9",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"

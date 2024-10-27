@@ -170,24 +170,12 @@ importers:
       '@avelin/database':
         specifier: workspace:*
         version: link:../../packages/database
-      '@avelin/id':
-        specifier: workspace:*
-        version: link:../../packages/id
-      arctic:
-        specifier: 'catalog:'
-        version: 2.0.1
+      '@hocuspocus/server':
+        specifier: ^2.13.7
+        version: 2.13.7(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)
       drizzle-orm:
         specifier: 'catalog:'
         version: 0.35.3(@cloudflare/workers-types@4.20241022.0)(@libsql/client-wasm@0.14.0)(@neondatabase/serverless@0.10.1)(@types/pg@8.11.6)(@types/react@18.3.12)(bun-types@1.1.32)(postgres@3.4.4)
-      hono:
-        specifier: 'catalog:'
-        version: 4.6.6
-      lib0:
-        specifier: ^0.2.98
-        version: 0.2.98
-      lodash.debounce:
-        specifier: ^4.0.8
-        version: 4.0.8
       y-protocols:
         specifier: ^1.0.6
         version: 1.0.6(yjs@13.6.20)
@@ -207,9 +195,6 @@ importers:
       '@types/bun':
         specifier: 'catalog:'
         version: 1.1.12
-      '@types/lodash.debounce':
-        specifier: ^4.0.9
-        version: 4.0.9
       eslint:
         specifier: 'catalog:'
         version: 8.57.1
@@ -234,6 +219,9 @@ importers:
       '@avelin/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@hocuspocus/provider':
+        specifier: ^2.13.7
+        version: 2.13.7(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)
       '@monaco-editor/react':
         specifier: ^4.5.1
         version: 4.6.0(monaco-editor@0.41.0)(react-dom@19.0.0-rc-69d4b800-20241021(react@19.0.0-rc-69d4b800-20241021))(react@19.0.0-rc-69d4b800-20241021)
@@ -851,6 +839,21 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
+  '@hocuspocus/common@2.13.7':
+    resolution: {integrity: sha512-ROqYfW15XlAGd+qb/FVyp0zUC9Rosv7kdcck9LRMdfW3jT66wK9pDDWL2ily4Qj/zhbLCFtjAUPB4UKln/GYNQ==}
+
+  '@hocuspocus/provider@2.13.7':
+    resolution: {integrity: sha512-BjZIIV8tWf/MD/8IcEMSFA+sW4wtR/M9MmhN+XSssYJOZxnszw44Gdwda23TmhsXvCV+qggS8lGEs+SfZSzEag==}
+    peerDependencies:
+      y-protocols: ^1.0.6
+      yjs: ^13.6.8
+
+  '@hocuspocus/server@2.13.7':
+    resolution: {integrity: sha512-D9juGX9NZoKT9/Ty/HGhaimHJe71DyKbYssC831oetYF33x3WSYV6GY82RhHo9xjKZE6r0Le7jgxgQb+u08slw==}
+    peerDependencies:
+      y-protocols: ^1.0.6
+      yjs: ^13.6.8
+
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
     engines: {node: '>=10.10.0'}
@@ -998,6 +1001,9 @@ packages:
 
   '@libsql/core@0.14.0':
     resolution: {integrity: sha512-nhbuXf7GP3PSZgdCY2Ecj8vz187ptHlZQ0VRc751oB2C1W8jQUXKKklvt7t1LJiUTQBVJuadF628eUk+3cRi4Q==}
+
+  '@lifeomic/attempt@3.1.0':
+    resolution: {integrity: sha512-QZqem4QuAnAyzfz+Gj5/+SLxqwCAw2qmt7732ZXodr6VDWGeYLG6w1i/vYLa55JQM9wRuBKLmXmiZ2P0LtE5rw==}
 
   '@monaco-editor/loader@1.4.0':
     resolution: {integrity: sha512-00ioBig0x642hytVspPl7DbQyaSWRaolYie/UFNjoTdvoKPzo6xrXLhTk9ixgIKcLH5b5vDOjVNiGyY+uDCUlg==}
@@ -1149,12 +1155,6 @@ packages:
 
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
-
-  '@types/lodash.debounce@4.0.9':
-    resolution: {integrity: sha512-Ma5JcgTREwpLRwMM+XwBR7DaWe96nC38uCBDFKZWbNKD+osjVzdpnUSwBcqCptrp16sSOLBAUb50Car5I0TCsQ==}
-
-  '@types/lodash@4.17.12':
-    resolution: {integrity: sha512-sviUmCE8AYdaF/KIHLDJBQgeYzPBI0vf/17NaYehBJfYD1j6/L95Slh07NlyK2iNyBNaEkb3En2jRt+a8y3xZQ==}
 
   '@types/node@20.12.14':
     resolution: {integrity: sha512-scnD59RpYD91xngrQQLGkE+6UrHUPzeKZWhhjBSa3HSkwjbQc38+q3RoIVEwxQGRw3M+j5hpNAM+lgV3cVormg==}
@@ -1396,6 +1396,9 @@ packages:
 
   async-limiter@1.0.1:
     resolution: {integrity: sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==}
+
+  async-lock@1.4.1:
+    resolution: {integrity: sha512-Az2ZTpuytrtqENulXwO3GGv1Bztugx6TT37NIo7imr/Qo0gsYiGtSdBa2B6fsXhTpVZDNfu1Qn3pk531e3q+nQ==}
 
   autoprefixer@10.4.20:
     resolution: {integrity: sha512-XY25y5xSv/wEoqzDyXXME4AFfkZI0P23z6Fs3YgymDnKJkCGOnkL0iTxCa85UTqaSgfcqyf3UA6+c7wUvx/16g==}
@@ -2244,6 +2247,10 @@ packages:
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
+
+  kleur@4.1.5:
+    resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
+    engines: {node: '>=6'}
 
   language-subtag-registry@0.3.23:
     resolution: {integrity: sha512-0K65Lea881pHotoGEa5gDlMxt3pctLi2RplBb7Ezh4rRdLEOtgi7n4EwK9lamnUCkKBqaeKRVebTq6BAxSkpXQ==}
@@ -3307,6 +3314,36 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
+  '@hocuspocus/common@2.13.7':
+    dependencies:
+      lib0: 0.2.98
+
+  '@hocuspocus/provider@2.13.7(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)':
+    dependencies:
+      '@hocuspocus/common': 2.13.7
+      '@lifeomic/attempt': 3.1.0
+      lib0: 0.2.98
+      ws: 8.18.0
+      y-protocols: 1.0.6(yjs@13.6.20)
+      yjs: 13.6.20
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  '@hocuspocus/server@2.13.7(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)':
+    dependencies:
+      '@hocuspocus/common': 2.13.7
+      async-lock: 1.4.1
+      kleur: 4.1.5
+      lib0: 0.2.98
+      uuid: 10.0.0
+      ws: 8.18.0
+      y-protocols: 1.0.6(yjs@13.6.20)
+      yjs: 13.6.20
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
@@ -3429,6 +3466,8 @@ snapshots:
     dependencies:
       js-base64: 3.7.7
 
+  '@lifeomic/attempt@3.1.0': {}
+
   '@monaco-editor/loader@1.4.0(monaco-editor@0.41.0)':
     dependencies:
       monaco-editor: 0.41.0
@@ -3546,12 +3585,6 @@ snapshots:
       bun-types: 1.1.32
 
   '@types/json5@0.0.29': {}
-
-  '@types/lodash.debounce@4.0.9':
-    dependencies:
-      '@types/lodash': 4.17.12
-
-  '@types/lodash@4.17.12': {}
 
   '@types/node@20.12.14':
     dependencies:
@@ -3879,6 +3912,8 @@ snapshots:
 
   async-limiter@1.0.1:
     optional: true
+
+  async-lock@1.4.1: {}
 
   autoprefixer@10.4.20(postcss@8.4.47):
     dependencies:
@@ -4856,6 +4891,8 @@ snapshots:
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
+
+  kleur@4.1.5: {}
 
   language-subtag-registry@0.3.23: {}
 
