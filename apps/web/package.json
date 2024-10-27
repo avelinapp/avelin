@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@avelin/api": "workspace:*",
+    "@avelin/auth": "workspace:*",
     "@avelin/icons": "workspace:*",
     "@avelin/sync": "workspace:*",
     "@avelin/ui": "workspace:*",

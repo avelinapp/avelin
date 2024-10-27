@@ -95,10 +95,11 @@ export const authApp = new Hono()
     return c.redirect(process.env.APP_URL ?? '/')
   })
   .get('/verify', async (c) => {
+    console.log(getCookie(c))
     const sessionId = getCookie(c, 'avelin_session_id')
 
     if (!sessionId) {
-      return c.json({ error: 'Invalid session.' }, 400)
+      return c.json({ error: 'Session not defined in request.' }, 400)
     }
 
     const auth = await validateSession(sessionId)

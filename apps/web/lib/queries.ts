@@ -28,7 +28,7 @@ const authQueries = {
     queryOptions({
       queryKey: [...authQueries.all(), 'check'],
       queryFn: async () => {
-        const res = await api.auth.verify.$get()
+        const res = await api.auth.verify.$get({}, {})
         const data = await res.json()
 
         if (res.status >= 400) {

@@ -5,7 +5,13 @@ import { authApp } from './routes/auth'
 import { roomApp } from './routes/rooms'
 
 export const app = new Hono()
-  .use('*', cors())
+  .use(
+    '*',
+    cors({
+      origin: [process.env.APP_URL!],
+      credentials: true,
+    }),
+  )
   .use(logger())
   .get('/health', (c) => c.json({ message: 'Avelin API is running.' }))
   .route('/auth', authApp)

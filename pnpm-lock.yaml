@@ -219,6 +219,9 @@ importers:
       '@avelin/api':
         specifier: workspace:*
         version: link:../api
+      '@avelin/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@avelin/icons':
         specifier: workspace:*
         version: link:../../packages/icons
