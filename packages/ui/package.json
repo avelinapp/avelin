@@ -19,7 +19,9 @@
     "./tailwind": "./tailwind.config.ts",
     "./postcss": "./postcss.config.mjs",
     "./cn": "./src/utils/cn.ts",
-    "./hooks": "./src/hooks/index.ts"
+    "./hooks": "./src/hooks/index.ts",
+    "./suspense": "./src/components/suspense/lazy-suspense.tsx",
+    "./colors": "./src/colors/index.ts"
   },
   "devDependencies": {
     "@avelin/eslint-config": "workspace:*",
@@ -35,10 +37,12 @@
     "typescript": "catalog:"
   },
   "dependencies": {
+    "@radix-ui/colors": "^3.0.0",
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "hsl-radix-colors": "^1.0.2",
+    "next": "catalog:react19",
     "next-themes": "^0.3.0",
     "react": "catalog:react19",
     "tailwind-merge": "^2.5.4",

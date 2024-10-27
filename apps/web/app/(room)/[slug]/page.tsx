@@ -2,8 +2,8 @@
 
 import { use, useEffect } from 'react'
 import { useCodeRoom } from '@/providers/code-room-provider'
-import Editor from '@/components/editor'
 import { useRoom } from '@/hooks/use-room'
+import LazySuspense from '@avelin/ui/suspense'
 
 type Params = Promise<{ slug: string }>
 
@@ -25,7 +25,10 @@ export default function Page({ params }: { params: Params }) {
 
   return (
     <div>
-      <Editor />
+      <LazySuspense
+        component={() => import('@/components/editor/editor')}
+        delay={500}
+      />
     </div>
   )
 }
