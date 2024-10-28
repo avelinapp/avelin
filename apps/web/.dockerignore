@@ -1,0 +1,9 @@
+.next
+.turbo
+node_modules
+.git
+.gitignore
+*.md
+dist
+Dockerfile
+.DS_Store

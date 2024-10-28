@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { db, schema } from '@avelin/database'
+import { db, Room, schema } from '@avelin/database'
 import { eq } from 'drizzle-orm'
 import { newId, newRoomSlug } from '@avelin/id'
 
@@ -17,7 +17,7 @@ export const roomApp = new Hono()
       return room
     })
 
-    return c.json(newRoom)
+    return c.json(newRoom as Required<Room>, 200)
   })
   .get('/:slug', async (c) => {
     const slug = c.req.param('slug')
@@ -32,5 +32,5 @@ export const roomApp = new Hono()
       return c.json({ error: 'Room not found.' }, 404)
     }
 
-    return c.json(room)
+    return c.json(room, 200)
   })

@@ -1,6 +1,6 @@
 ARG NODE_VERSION=20
 ARG BUN_VERSION=1.1.33
-ARG PROJECT
+ARG PROJECT=api
 ARG PACKAGE=@avelin/${PROJECT}
 
 # 1. Alpine image
@@ -60,27 +60,7 @@ COPY --from=pruner /app/out/full/ .
 RUN pnpm build --filter=${PACKAGE}
 
 ###### @avelin/api
-FROM alpine AS runner-api
-ARG PROJECT
- 
-# Don't run production as root
-USER 1001 
-
-WORKDIR /app
-
-ENV NODE_ENV=production
-
-COPY --from=builder --chown=1001:1001 /app/apps/${PROJECT} .
-
-ARG API_PORT=3000
-ENV API_PORT=${API_PORT}
-EXPOSE ${API_PORT}
-
-CMD ["sh", "-c", "./main"] 
-
-###### @avelin/web
-FROM alpine AS runner-web
-
+FROM oven/bun:${BUN_VERSION}-alpine AS runner 
 ARG PROJECT
 
 # Don't run production as root
@@ -88,16 +68,11 @@ USER 1001
 
 WORKDIR /app
 
-ENV NODE_ENV=production
+COPY --from=builder --chown=1001:1001 /app/apps/${PROJECT}/api .
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
-
-ARG API_PORT=3000
+ARG API_PORT=4000
 ENV API_PORT=${API_PORT}
+
 EXPOSE ${API_PORT}
- 
-CMD node apps/web/server.js
+
+CMD ["sh", "-c", "./api"] 

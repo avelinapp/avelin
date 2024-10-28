@@ -6,8 +6,7 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "clean": "rm -rf .next node_modules .turbo"
+    "lint": "next lint"
   },
   "dependencies": {
     "@avelin/api": "workspace:*",

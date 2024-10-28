@@ -2,7 +2,7 @@
   "name": "@avelin/api",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
-    "build": "bun build src/index.ts --compile --minify --sourcemap ./src/index.ts --outfile main"
+    "build": "bun build src/index.ts --compile --minify --sourcemap ./src/index.ts --outfile api"
   },
   "exports": {
     "./client": "./src/client.ts"
