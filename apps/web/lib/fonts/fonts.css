@@ -168,3 +168,7 @@
   font-style: italic;
   font-display: swap;
 }
+
+:root {
+  --font-sans: 'InnovatorGrotesk';
+}
