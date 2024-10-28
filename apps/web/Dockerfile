@@ -7,9 +7,6 @@ FROM node:${NODE_VERSION}-alpine AS alpine
 RUN apk update
 # RUN apk add --no-cache libc6-compat
 
-FROM node:${NODE_VERSION}-alpine-slim AS alpine
-RUN apk update
-
 # Setup pnpm and turbo on the alpine base
 FROM alpine AS base
 RUN corepack enable
@@ -80,7 +77,13 @@ USER 1001
 
 WORKDIR /app
 
-ENV NODE_ENV=production
+ARG APP_PORT=3000
+
+ENV NODE_ENV=production \
+    HOSTNAME="0.0.0.0" \
+    APP_PORT=${APP_PORT}
+
+EXPOSE ${APP_PORT}
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing

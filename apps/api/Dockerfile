@@ -57,7 +57,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
 # Copy source code of isolated subworkspace
 COPY --from=pruner /app/out/full/ .
 
-RUN pnpm build --filter=${PACKAGE}
+RUN pnpm compile --filter=${PACKAGE}
 
 ###### @avelin/api
 FROM oven/bun:${BUN_VERSION}-alpine AS runner 

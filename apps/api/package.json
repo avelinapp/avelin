@@ -2,10 +2,14 @@
   "name": "@avelin/api",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
-    "build": "bun build src/index.ts --compile --minify --sourcemap ./src/index.ts --outfile api"
+    "build": "tsc",
+    "compile": "bun build src/index.ts --compile --minify --sourcemap ./src/index.ts --outfile api"
   },
   "exports": {
-    "./client": "./src/client.ts"
+    "./client": {
+      "types": "./src/client.ts",
+      "default": "./dist/client.js"
+    }
   },
   "dependencies": {
     "@avelin/auth": "workspace:*",
