@@ -2,7 +2,8 @@
 .yRemoteSelection {
   opacity: 0.3;
   background-color: var(--user-color);
-  padding: 2px;
+  padding-left: 1px;
+  padding-right: 1px;
 }
 
 /* Cursor caret */
@@ -15,6 +16,11 @@
 
 /* Cursor name */
 .yRemoteSelectionHead::after {
+  visibility: var(--name-visibility);
+  opacity: var(--name-opacity);
+  transition:
+    opacity 0.3s,
+    visibility 0.3s ease-in-out;
   position: absolute;
   top: -1.4em;
   left: -2px;
