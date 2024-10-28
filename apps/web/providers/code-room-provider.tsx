@@ -6,6 +6,7 @@ import * as Y from 'yjs'
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 import type { Room, Session } from '@avelin/database'
+import { USER_IDLE_TIMEOUT } from '@/lib/sync'
 
 const CodeRoomContext = createContext<StoreApi<CodeRoomStore> | null>(null)
 
@@ -18,11 +19,15 @@ export type CodeRoomState = {
   networkProvider?: HocuspocusProvider
   persistenceProvider?: IndexeddbPersistence
   room?: Room
+  activeUsers: Map<number, number>
 }
 
 export type CodeRoomActions = {
   initialize: ({ room, session }: { room: Room; session?: Session }) => void
   destroy: () => void
+  setUserActive: (userId: number) => void
+  setUserInactive: (userId: number) => void
+  cleanIdleUsers: () => void
 }
 
 export type CodeRoomStore = CodeRoomState & CodeRoomActions
@@ -33,6 +38,7 @@ export const createCodeRoomStore = () =>
     networkProvider: undefined,
     persistenceProvider: undefined,
     room: undefined,
+    activeUsers: new Map<number, number>(),
     initialize: ({ room, session }) => {
       if (!room) throw new Error('Cannot initialize code room without a room')
 
@@ -83,7 +89,33 @@ export const createCodeRoomStore = () =>
         ydoc: new Y.Doc(),
         networkProvider: undefined,
         persistenceProvider: undefined,
+        room: undefined,
+        activeUsers: undefined,
       })
+    },
+    setUserActive: (userId) => {
+      const { activeUsers } = get()
+      activeUsers.set(userId, Date.now())
+      set({ activeUsers: new Map([...activeUsers]) })
+    },
+    setUserInactive: (userId) => {
+      const { activeUsers } = get()
+      activeUsers.delete(userId)
+      set({ activeUsers: new Map([...activeUsers]) })
+    },
+    cleanIdleUsers: () => {
+      const { activeUsers } = get()
+
+      const now = Date.now()
+      const users = new Map<number, number>()
+
+      activeUsers.forEach((userId, lastActive) => {
+        if (now - lastActive <= USER_IDLE_TIMEOUT) {
+          users.set(userId, lastActive)
+        }
+      })
+
+      set({ activeUsers: users })
     },
   }))
 

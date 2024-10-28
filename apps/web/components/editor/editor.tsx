@@ -7,6 +7,8 @@ import { useCodeRoom } from '@/providers/code-room-provider'
 import { useMonacoBinding } from '@/hooks/use-monaco-binding'
 import { jetbrainsMono } from '@/lib/fonts'
 import { themes } from './themes'
+import { Cursors } from './cursors'
+import './style.css'
 
 interface EditorProps {
   value?: string
@@ -44,22 +46,25 @@ export default function Editor({
   )
 
   return (
-    <MonacoEditor
-      width='100vw'
-      height='100vh'
-      theme='light'
-      loading={null}
-      language={language}
-      value={value}
-      onMount={setupEditor}
-      options={{
-        padding: { top: 30, bottom: 30 },
-        fontSize: 16,
-        fontFamily: `${jetbrainsMono.style.fontFamily}`,
-        fontLigatures: true,
-        minimap: { enabled: false },
-        renderLineHighlight: 'none',
-      }}
-    />
+    <>
+      {networkProvider ? <Cursors provider={networkProvider} /> : null}
+      <MonacoEditor
+        width='100vw'
+        height='100vh'
+        theme='light'
+        loading={null}
+        language={language}
+        value={value}
+        onMount={setupEditor}
+        options={{
+          padding: { top: 30, bottom: 30 },
+          fontSize: 16,
+          fontFamily: `${jetbrainsMono.style.fontFamily}`,
+          fontLigatures: true,
+          minimap: { enabled: false },
+          renderLineHighlight: 'none',
+        }}
+      />
+    </>
   )
 }
