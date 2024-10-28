@@ -1,7 +1,7 @@
 import { editor } from 'monaco-editor'
 import { gray } from '@avelin/ui/colors'
 
-export const themes: Record<string, editor.IStandaloneThemeData> = {
+export const themes: Record<'dark' | 'light', editor.IStandaloneThemeData> = {
   dark: {
     base: 'vs-dark',
     inherit: true,

@@ -76,5 +76,5 @@ export function assignOption<T>(
   const randomIndex = Math.floor(Math.random() * leastAssignedOptions.length)
   const selectedOption = leastAssignedOptions[randomIndex]
 
-  return selectedOption
+  return selectedOption as T
 }

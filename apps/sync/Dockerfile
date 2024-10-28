@@ -1,6 +1,6 @@
 ARG NODE_VERSION=20
 ARG BUN_VERSION=1.1.33
-ARG PROJECT=api
+ARG PROJECT=sync
 ARG PACKAGE=@avelin/${PROJECT}
 
 # 1. Alpine image
@@ -52,14 +52,14 @@ COPY --from=pruner /app/out/json/ .
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
     pnpm config set store-dir /pnpm/store && \
     pnpm set package-import-method copy && \
-    pnpm install --frozen-lockfile
+    pnpm install --no-frozen-lockfile
  
 # Copy source code of isolated subworkspace
 COPY --from=pruner /app/out/full/ .
 
 RUN pnpm compile --filter=${PACKAGE}
 
-###### @avelin/api
+###### @avelin/sync
 FROM oven/bun:${BUN_VERSION}-alpine AS runner 
 ARG PROJECT
 
@@ -68,11 +68,11 @@ USER 1001
 
 WORKDIR /app
 
-COPY --from=builder --chown=1001:1001 /app/apps/${PROJECT}/api .
+COPY --from=builder --chown=1001:1001 /app/apps/${PROJECT}/sync .
 
-ARG API_PORT=4000
+ARG API_PORT=4100
 ENV API_PORT=${API_PORT}
 
 EXPOSE ${API_PORT}
 
-CMD ["sh", "-c", "./api"] 
+CMD ["sh", "-c", "./sync"] 

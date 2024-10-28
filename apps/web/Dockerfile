@@ -1,10 +1,9 @@
 ARG NODE_VERSION=20
-ARG BUN_VERSION=1.1.33
-ARG PROJECT=api
+ARG PROJECT=web
 ARG PACKAGE=@avelin/${PROJECT}
 
 # 1. Alpine image
-FROM imbios/bun-node:${BUN_VERSION}-${NODE_VERSION}-alpine AS alpine
+FROM node:${NODE_VERSION}-alpine AS alpine
 RUN apk update
 # RUN apk add --no-cache libc6-compat
 
@@ -41,6 +40,16 @@ ARG PACKAGE
 # Environment to skip .env validation on build
 ENV CI=true
 
+# Environment variables for the client
+ARG NEXT_PUBLIC_BASE_URL \
+  NEXT_PUBLIC_API_URL \
+  NEXT_PUBLIC_SYNC_URL
+
+ENV NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL} \
+  NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL} \
+  NEXT_PUBLIC_SYNC_URL=${NEXT_PUBLIC_SYNC_URL}  
+
+
 WORKDIR /app
 
 # Copy lockfile and package.json's of isolated subworkspace
@@ -57,10 +66,10 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
 # Copy source code of isolated subworkspace
 COPY --from=pruner /app/out/full/ .
 
-RUN pnpm compile --filter=${PACKAGE}
+RUN pnpm build --filter=${PACKAGE}
 
-###### @avelin/api
-FROM oven/bun:${BUN_VERSION}-alpine AS runner 
+FROM alpine AS runner
+
 ARG PROJECT
 
 # Don't run production as root
@@ -68,11 +77,18 @@ USER 1001
 
 WORKDIR /app
 
-COPY --from=builder --chown=1001:1001 /app/apps/${PROJECT}/api .
+ARG APP_PORT=3000
 
-ARG API_PORT=4000
-ENV API_PORT=${API_PORT}
+ENV NODE_ENV=production \
+    HOSTNAME="0.0.0.0" \
+    APP_PORT=${APP_PORT}
 
-EXPOSE ${API_PORT}
+EXPOSE ${APP_PORT}
 
-CMD ["sh", "-c", "./api"] 
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=1001:1001 /app/apps/web/.next/standalone ./
+COPY --from=builder --chown=1001:1001 /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder --chown=1001:1001 /app/apps/web/public ./apps/web/public
+
+CMD node apps/web/server.js

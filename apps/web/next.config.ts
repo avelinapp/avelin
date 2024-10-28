@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next'
 
 const nextConfig = {
-  transpilePackages: ['@avelin/ui'],
+  output: 'standalone',
 } satisfies NextConfig
 
 export default nextConfig
