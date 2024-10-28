@@ -8,6 +8,9 @@
     "@avelin/api#compile": {
       "outputs": ["./api"]
     },
+    "@avelin/sync#compile": {
+      "outputs": ["./sync"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
