@@ -6,6 +6,7 @@
       "cache": false
     },
     "@avelin/api#compile": {
+      "dependsOn": ["^build"],
       "outputs": ["./api"]
     },
     "@avelin/sync#compile": {
