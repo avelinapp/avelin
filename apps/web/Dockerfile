@@ -14,8 +14,6 @@ RUN corepack enable
 # RUN npm install turbo@2.1.3 --global
 RUN npm install turbo --global
 
-RUN 
-
 # 2. Prune projects
 FROM base AS pruner
 # https://stackoverflow.com/questions/49681984/how-to-get-version-value-of-package-json-inside-of-dockerfile
