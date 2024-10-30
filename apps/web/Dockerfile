@@ -14,8 +14,6 @@ RUN corepack enable
 # RUN npm install turbo@2.1.3 --global
 RUN npm install turbo --global
 
-RUN 
-
 # 2. Prune projects
 FROM base AS pruner
 # https://stackoverflow.com/questions/49681984/how-to-get-version-value-of-package-json-inside-of-dockerfile
@@ -41,11 +39,11 @@ ARG PACKAGE
 ENV CI=true
 
 # Environment variables for the client
-ARG NEXT_PUBLIC_BASE_URL \
+ARG NEXT_PUBLIC_APP_URL \
   NEXT_PUBLIC_API_URL \
   NEXT_PUBLIC_SYNC_URL
 
-ENV NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL} \
+ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL} \
   NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL} \
   NEXT_PUBLIC_SYNC_URL=${NEXT_PUBLIC_SYNC_URL}  
 
@@ -91,4 +89,4 @@ COPY --from=builder --chown=1001:1001 /app/apps/web/.next/standalone ./
 COPY --from=builder --chown=1001:1001 /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder --chown=1001:1001 /app/apps/web/public ./apps/web/public
 
-CMD node apps/web/server.js
+CMD ["node" , "apps/web/server.js"]
