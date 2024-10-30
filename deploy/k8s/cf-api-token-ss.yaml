@@ -1,0 +1,21 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "cf-api-token-secret",
+    "namespace": "avelin",
+    "creationTimestamp": null
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "cf-api-token-secret",
+        "namespace": "avelin",
+        "creationTimestamp": null
+      }
+    },
+    "encryptedData": {
+      "key": "AgAPuLUcus0AT+IduegknzVEVdibdFBYTx2no10K6vCEb3YGDDX3R+vXBFAAqae8LaSqEZ6P45Cv85AQztybzCd7o7ef0uuBW+78LE8UgoKI6a9wZjhL6m7O+KzkzAws1iSdJkLsUtm22ZD0S//kdgzldZ+S6STX6w5Tpq0pAytkuRM0QXqAWGqa1ULyVoXJtHPVeLu89/dwMWcTdSWQXXBigNfwJwUFMCl6+9BthW8vKNMERWn1P1/8j2D/045D3fJ1gft9EuxjduSI7jXPEwQcBn7ho5+9b5IutFpFftHwTKqvV5L6l2tvzFDiD0dyglIxJQqA0b9uNOVkYeW+ChQvyQcZU7xAzqLUsIX/o4aAR0UCPICPyjxEw6FSWg8DHzPWxujpLA/KelxT9azNLR7Qt+12UX1hAJdzJd+kdeRqm1KSnp68eEXKG+QY4nICSzDADDTp0KzlCIIUdkF4/fDUTc21wsEoFLXfIpMRPEj19DugwwUxeaz0ehowTgZFvv0HIls2MR4UzbTl3TIdp6lr+WQc7mgIXXo8qtOD5EgCJPFohdy+q3enXOH2ot0kYv5+53zNfwCa0+iv3z4LSauswOMB0bp5cBpbmQssZFuvg+XH4L3qA8BUGtQLgQledJMfIX4ri8EF0PcgKbccYrKG4KiZPuHU34UMJVwELjBDCPfx1eV6+GERwa6DfuKPYO3f/8hDJ19kCtTdznIh6bcugkPW6ZC9YFwldPYBEfo9fs0ABcpUyx/q"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: avelin-web-svc
+  namespace: avelin
+  labels:
+    app: avelin-web
+spec:
+  selector:
+    app: avelin-web
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 3000

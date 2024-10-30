@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: avelin-sync-ingress
+  namespace: avelin
+  labels:
+    app: avelin-sync
+  annotations:
+    cert-manager.io/issuer: cf-origin-issuer
+    cert-manager.io/issuer-kind: OriginIssuer
+    cert-manager.io/issuer-group: cert-manager.k8s.cloudflare.com
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: sync.avelin.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: avelin-sync-svc
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - sync.avelin.app
+      secretName: avelin-sync-tls

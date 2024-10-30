@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: avelin-api-ingress
+  namespace: avelin
+  labels:
+    app: avelin-api
+  annotations:
+    cert-manager.io/issuer: cf-origin-issuer
+    cert-manager.io/issuer-kind: OriginIssuer
+    cert-manager.io/issuer-group: cert-manager.k8s.cloudflare.com
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api.avelin.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: avelin-api-svc
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - api.avelin.app
+      secretName: avelin-api-tls

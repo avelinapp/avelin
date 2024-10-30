@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: avelin-sync
+  namespace: avelin
+  labels:
+    app: avelin-sync
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: avelin-sync
+  template:
+    metadata:
+      labels:
+        app: avelin-sync
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: avelin-sync
+          image: ghcr.io/avelinapp/sync:latest
+          ports:
+            - containerPort: 4100
+              protocol: TCP
+              name: http
+          envFrom:
+            - configMapRef:
+                name: avelin-config
+            - secretRef:
+                name: oauth-secret
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DATABASE_URL

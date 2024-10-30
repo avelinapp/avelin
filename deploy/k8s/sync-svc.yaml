@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: avelin-sync-svc
+  namespace: avelin
+  labels:
+    app: avelin-sync
+spec:
+  selector:
+    app: avelin-sync
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http

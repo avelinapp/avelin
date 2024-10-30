@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: avelin-web
+  namespace: avelin
+  labels:
+    app: avelin-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: avelin-web
+  template:
+    metadata:
+      labels:
+        app: avelin-web
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: avelin-web
+          image: ghcr.io/avelinapp/web:latest
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: avelin-config
+            - secretRef:
+                name: oauth-secret
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DATABASE_URL
