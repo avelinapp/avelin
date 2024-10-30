@@ -4,6 +4,7 @@ import { use, useEffect } from 'react'
 import { useCodeRoom } from '@/providers/code-room-provider'
 import { useRoom } from '@/hooks/use-room'
 import LazySuspense from '@avelin/ui/suspense'
+import { EditorToolbar } from '@/components/editor/editor-toolbar'
 
 type Params = Promise<{ slug: string }>
 
@@ -26,6 +27,7 @@ export default function Page({ params }: { params: Params }) {
 
   return (
     <div className='flex flex-col border border-red-500 h-full w-full'>
+      <EditorToolbar />
       <LazySuspense
         component={() => import('@/components/editor/editor-text-area')}
         delay={500}
