@@ -15,7 +15,7 @@ interface EditorProps {
   language?: string
 }
 
-export default function Editor({
+export function EditorTextArea({
   value = '',
   language = 'javascript',
 }: EditorProps) {
@@ -68,3 +68,5 @@ export default function Editor({
     </>
   )
 }
+
+export default EditorTextArea

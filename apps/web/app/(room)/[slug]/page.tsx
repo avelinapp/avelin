@@ -27,7 +27,7 @@ export default function Page({ params }: { params: Params }) {
   return (
     <div>
       <LazySuspense
-        component={() => import('@/components/editor/editor')}
+        component={() => import('@/components/editor/editor-text-area')}
         delay={500}
       />
     </div>

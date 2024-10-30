@@ -1,1 +1,1 @@
-export { default } from './editor'
+export { EditorTextArea } from './editor-text-area'
