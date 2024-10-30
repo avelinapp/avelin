@@ -25,10 +25,13 @@ export default function Page({ params }: { params: Params }) {
   if (isPending || isError) return <div />
 
   return (
-    <div>
+    <div className='flex flex-col border border-red-500 h-full w-full'>
       <LazySuspense
         component={() => import('@/components/editor/editor-text-area')}
         delay={500}
+        containerProps={{
+          className: 'flex-1',
+        }}
       />
     </div>
   )

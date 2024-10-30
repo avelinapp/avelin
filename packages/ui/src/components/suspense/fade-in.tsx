@@ -1,10 +1,13 @@
+'use client'
+
+import { cn } from '@avelin/ui/utils'
 import { useState, useEffect } from 'react'
 
-interface FadeInProps {
+interface FadeInProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
 }
 
-function FadeIn({ children }: FadeInProps) {
+function FadeIn({ children, className, ...props }: FadeInProps) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -12,7 +15,12 @@ function FadeIn({ children }: FadeInProps) {
   }, [])
 
   return (
-    <div className={`${mounted ? 'animate-in fade-in-15 duration-300' : ''}`}>
+    <div
+      className={
+        (cn(mounted && 'animate-in fade-in-15 duration-300'), className)
+      }
+      {...props}
+    >
       {children}
     </div>
   )

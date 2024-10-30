@@ -3,22 +3,24 @@ import dynamic from 'next/dynamic'
 import DelayedFallback from './delayed-fallback'
 import FadeIn from './fade-in'
 
-interface LazySuspenseProps {
+interface LazySuspenseProps<P = {}>
+  extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className'> {
   component: () => Promise<{
-    default: React.ComponentType<any>
+    default: React.ComponentType<P>
   }>
   loader?: React.ReactNode
   delay?: number
+  containerProps?: React.HTMLAttributes<HTMLDivElement>
+  componentProps?: P
 }
 
-function LazySuspense({ component, loader, delay = 500 }: LazySuspenseProps) {
-  // const LazyComponent = lazy(async () => {
-  //   await new Promise((resolve) => {
-  //     setTimeout(resolve, 5000)
-  //   })
-  //
-  //   return component()
-  // })
+function LazySuspense({
+  component,
+  loader,
+  delay = 500,
+  containerProps,
+  componentProps,
+}: LazySuspenseProps) {
   const LazyComponent = lazy(component)
 
   return (
@@ -29,8 +31,8 @@ function LazySuspense({ component, loader, delay = 500 }: LazySuspenseProps) {
         </DelayedFallback>
       }
     >
-      <FadeIn>
-        <LazyComponent />
+      <FadeIn {...containerProps}>
+        <LazyComponent {...componentProps} />
       </FadeIn>
     </Suspense>
   )
@@ -39,14 +41,24 @@ function LazySuspense({ component, loader, delay = 500 }: LazySuspenseProps) {
 // Ensure this component is only rendered on the client side
 export default dynamic(
   () =>
-    Promise.resolve(({ component, loader, delay }: LazySuspenseProps) => {
-      return (
-        <LazySuspense
-          component={component}
-          loader={loader}
-          delay={delay}
-        />
-      )
-    }),
+    Promise.resolve(
+      ({
+        component,
+        loader,
+        delay,
+        containerProps,
+        componentProps,
+      }: LazySuspenseProps) => {
+        return (
+          <LazySuspense
+            component={component}
+            loader={loader}
+            delay={delay}
+            containerProps={containerProps}
+            componentProps={componentProps}
+          />
+        )
+      },
+    ),
   { ssr: false },
 )
