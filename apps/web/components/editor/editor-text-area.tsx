@@ -59,7 +59,7 @@ export function EditorTextArea({
         value={value}
         onMount={setupEditor}
         options={{
-          padding: { top: 30, bottom: 30 },
+          padding: { top: 16, bottom: 16 },
           fontSize: 16,
           fontFamily: `${jetbrainsMono.style.fontFamily}`,
           fontLigatures: true,

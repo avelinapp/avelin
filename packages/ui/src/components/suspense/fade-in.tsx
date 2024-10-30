@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@avelin/ui/utils'
+import { cn } from '@avelin/ui/cn'
 import { useState, useEffect } from 'react'
 
 interface FadeInProps extends React.HTMLAttributes<HTMLDivElement> {

@@ -23,10 +23,8 @@ export default function Page({ params }: { params: Params }) {
     return () => destroy()
   }, [initialize, destroy, room])
 
-  if (isPending || isError) return <div />
-
   return (
-    <div className='flex flex-col border border-red-500 h-full w-full'>
+    <div className='flex flex-col h-full w-full'>
       <EditorToolbar />
       <LazySuspense
         component={() => import('@/components/editor/editor-text-area')}

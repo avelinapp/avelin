@@ -11,10 +11,10 @@
     "prefix": ""
   },
   "aliases": {
-    "utils": "@/utils",
-    "lib": "@/utils",
-    "components": "@/components",
-    "ui": "@/components/ui",
-    "hooks": "@/hooks"
+    "utils": "@avelin/ui/utils",
+    "lib": "@avelin/ui/utils",
+    "components": "@avelin/ui/components",
+    "ui": "@avelin/ui/components/ui",
+    "hooks": "@avelin/ui/hooks"
   }
 }
