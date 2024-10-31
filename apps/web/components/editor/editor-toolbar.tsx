@@ -149,6 +149,7 @@ function UsersList() {
 const languageOptions = languages.map((l) => ({
   value: l.value,
   label: l.name,
+  keywords: l.keywords,
 }))
 
 function EditorLanguage() {

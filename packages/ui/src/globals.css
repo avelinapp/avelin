@@ -41,6 +41,7 @@
     /* Light text for contrast */
 
     /* Secondary Button */
+    --color-secondary-bg-subtle: var(--gray-2);
     --color-secondary-bg: var(--gray-3);
     --color-secondary-hover: var(--gray-4);
     --color-secondary-active: var(--gray-5);

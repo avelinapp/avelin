@@ -56,6 +56,7 @@ export default {
           text: 'hsl(var(--color-primary-text))',
         },
         secondary: {
+          'bg-subtle': 'hsl(var(--color-secondary-bg-subtle))',
           bg: 'hsl(var(--color-secondary-bg))',
           hover: 'hsl(var(--color-secondary-hover))',
           active: 'hsl(var(--color-secondary-active))',

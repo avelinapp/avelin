@@ -21,7 +21,7 @@ type ComboboxProps = {
   value?: string
   onValueChange?: (value: string) => void
   disabled?: boolean
-  options?: Array<{ value: string; label: string }>
+  options?: Array<{ value: string; label: string; keywords?: string[] }>
 }
 
 export const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
@@ -59,7 +59,10 @@ export const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
             <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className='w-[200px] p-0'>
+        <PopoverContent
+          className='w-fit min-w-[100px] p-0'
+          align='end'
+        >
           <Command>
             <CommandInput placeholder={`Search ${name}...`} />
             <CommandList>
@@ -67,12 +70,14 @@ export const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
               <CommandGroup>
                 {options.map((option) => (
                   <CommandItem
+                    className='whitespace-nowrap'
                     key={option.value}
                     value={option.value}
                     onSelect={(currentValue) => {
                       onValueChange?.(currentValue)
                       setOpen(false)
                     }}
+                    keywords={option.keywords}
                   >
                     <Check
                       className={cn(

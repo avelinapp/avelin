@@ -1,7 +1,7 @@
-type Language = { value: string; name: string }
+type Language = { value: string; name: string; keywords?: string[] }
 
 export const languages: Language[] = [
-  { value: 'bat', name: 'Batch Script (Windows)' },
+  { value: 'bat', name: 'Batch Script', keywords: ['cmd', 'batch', 'bat'] },
   { value: 'clojure', name: 'Clojure' },
   { value: 'coffee', name: 'CoffeeScript' },
   { value: 'cpp', name: 'C++' },
@@ -22,7 +22,11 @@ export const languages: Language[] = [
   { value: 'less', name: 'LESS' },
   { value: 'lua', name: 'Lua' },
   { value: 'markdown', name: 'Markdown' },
-  { value: 'msdax', name: 'DAX (Data Analysis Expressions)' },
+  {
+    value: 'msdax',
+    name: 'DAX',
+    keywords: ['msdax', 'dax', 'data analysis expressions'],
+  },
   { value: 'mysql', name: 'MySQL' },
   { value: 'objective-c', name: 'Objective-C' },
   { value: 'pascal', name: 'Pascal' },
@@ -32,9 +36,13 @@ export const languages: Language[] = [
   { value: 'plaintext', name: 'Plain Text' },
   { value: 'postiats', name: 'ATS (Applied Type System)' },
   { value: 'powerquery', name: 'Power Query' },
-  { value: 'powershell', name: 'PowerShell' },
+  {
+    value: 'powershell',
+    name: 'PowerShell',
+    keywords: ['powershell', 'ps', 'pwsh', 'ps1'],
+  },
   { value: 'pug', name: 'Pug (formerly Jade)' },
-  { value: 'python', name: 'Python' },
+  { value: 'python', name: 'Python', keywords: ['python', 'py'] },
   { value: 'r', name: 'R' },
   { value: 'razor', name: 'Razor (CSHTML)' },
   { value: 'redis', name: 'Redis' },
@@ -45,12 +53,12 @@ export const languages: Language[] = [
   { value: 'sb', name: 'Small Basic' },
   { value: 'scheme', name: 'Scheme' },
   { value: 'scss', name: 'SCSS' },
-  { value: 'shell', name: 'Shell Script (Bash)' },
+  { value: 'shell', name: 'Bash', keywords: ['shell', 'sh', 'bash'] },
   { value: 'sol', name: 'Solidity (Ethereum)' },
   { value: 'sql', name: 'SQL' },
   { value: 'st', name: 'Structured Text' },
   { value: 'swift', name: 'Swift' },
-  { value: 'typescript', name: 'TypeScript' },
+  { value: 'typescript', name: 'TypeScript', keywords: ['typescript', 'ts'] },
   { value: 'vb', name: 'Visual Basic' },
   { value: 'xml', name: 'XML' },
   { value: 'yaml', name: 'YAML' },
