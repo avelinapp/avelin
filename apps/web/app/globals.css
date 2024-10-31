@@ -8,6 +8,6 @@
   }
 
   body {
-    @apply text-color-text;
+    @apply text-color-text-primary;
   }
 }

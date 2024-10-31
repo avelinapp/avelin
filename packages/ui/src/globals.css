@@ -13,13 +13,17 @@
     /* Backgrounds */
     --color-background: var(--gray-1);
     /* Lightest gray for main backgrounds */
+    /*--color-popover: 0 0% 100%;*/
+    /*--color-popover-background: 0 0% 100%;*/
+    --color-popover-bg: 0 0% 100%;
+    /*--color-popover-bg: var(--gray-1);*/
 
     /* Text Colors */
 
-    --color-text: var(--gray-12);
-    /* Primary text color */
-    --color-text-accent: var(--gray-11);
-    /* Accent text, such as links */
+    --color-text-primary: var(--gray-12);
+    --color-text-secondary: var(--gray-12) / 0.95;
+    --color-text-tertiary: var(--gray-12) / 0.9;
+    --color-text-quaternary: var(--gray-12) / 0.8;
 
     /* Border and Divider Colors */
     --color-border-subtle: var(--gray-6);
@@ -45,5 +49,9 @@
     /* Light text for contrast */
 
     --radius: 0.75rem;
+  }
+
+  .dark {
+    --color-popover-bg: #ffffff;
   }
 }

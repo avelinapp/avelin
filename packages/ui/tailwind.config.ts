@@ -8,13 +8,7 @@ function color(cssVar: string) {
 
 export default {
   darkMode: ['class'],
-  content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-    '../../packages/ui/src/**/*.{ts,tsx}',
-  ],
+  content: ['./src/**/*.{ts,tsx}'],
   theme: {
     container: {
       center: true,
@@ -41,11 +35,19 @@ export default {
         },
         // Semantic Color Variables
         'color-background': 'hsl(var(--color-background))',
-        'color-text': 'hsl(var(--color-text))',
-        'color-text-accent': 'hsl(var(--color-text-accent))',
+        // Text
+        'color-text-primary': 'hsl(var(--color-text-primary))',
+        'color-text-secondary': 'hsl(var(--color-text-secondary))',
+        'color-text-tertiary': 'hsl(var(--color-text-tertiary))',
+        'color-text-quaternary': 'hsl(var(--color-text-quaternary))',
+        // Borders
         'color-border-subtle': 'hsl(var(--color-border-subtle))',
         'color-border': 'hsl(var(--color-border-normal))',
         'color-border-strong': 'hsl(var(--color-border-strong))',
+        // Popover
+        popover: {
+          bg: 'hsl(var(--color-popover-bg))',
+        },
         // Buttons
         primary: {
           bg: 'hsl(var(--color-primary-bg))',

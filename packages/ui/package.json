@@ -16,6 +16,7 @@
   "exports": {
     "./avatar": "./src/components/ui/avatar.tsx",
     "./button": "./src/components/ui/button.tsx",
+    "./dropdown-menu": "./src/components/ui/dropdown-menu.tsx",
     "./globals.css": "./src/globals.css",
     "./tailwind": "./tailwind.config.ts",
     "./postcss": "./postcss.config.mjs",
@@ -40,11 +41,13 @@
   "dependencies": {
     "@radix-ui/colors": "^3.0.0",
     "@radix-ui/react-avatar": "^1.1.1",
+    "@radix-ui/react-dropdown-menu": "^2.1.2",
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "hsl-radix-colors": "^1.0.2",
     "next": "catalog:react18",
+    "lucide-react": "^0.453.0",
     "next-themes": "^0.3.0",
     "react": "catalog:react18",
     "tailwind-merge": "^2.5.4",
