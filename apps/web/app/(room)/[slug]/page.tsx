@@ -1,17 +1,17 @@
 'use client'
 
-import { use, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useCodeRoom } from '@/providers/code-room-provider'
 import { useRoom } from '@/hooks/use-room'
 import LazySuspense from '@avelin/ui/suspense'
 import { EditorToolbar } from '@/components/editor/editor-toolbar'
 
-type Params = Promise<{ slug: string }>
+type Params = { slug: string }
 
 export default function Page({ params }: { params: Params }) {
-  const { slug } = use(params)
+  const { slug } = params
   const { initialize, destroy } = useCodeRoom()
-  const { data: room, isPending, isError } = useRoom(slug)
+  const { data: room } = useRoom(slug)
 
   useEffect(() => {
     if (!room) return

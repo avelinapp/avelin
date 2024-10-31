@@ -28,7 +28,7 @@
     "@avelin/eslint-config": "workspace:*",
     "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
-    "@types/react": "catalog:react19",
+    "@types/react": "catalog:react18",
     "autoprefixer": "^10",
     "eslint": "catalog:",
     "postcss": "^8",
@@ -44,9 +44,9 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "hsl-radix-colors": "^1.0.2",
-    "next": "catalog:react19",
+    "next": "catalog:react18",
     "next-themes": "^0.3.0",
-    "react": "catalog:react19",
+    "react": "catalog:react18",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"
   }
