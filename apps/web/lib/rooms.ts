@@ -13,14 +13,77 @@ const config: Config = {
 
 export const generateUniqueName = () => uniqueNamesGenerator(config)
 
+export const baseColors = [
+  'red',
+  'orange',
+  'yellow',
+  'green',
+  'blue',
+  'purple',
+  'pink',
+] as const
+
+export type ClassName = string
+export type BaseColor = (typeof baseColors)[number]
+
+export type ColorDetails = {
+  name: BaseColor
+  avatar_bg: ClassName
+  avatar_placeholder_text: ClassName
+  cursor: ClassName
+  cursor_selection: ClassName
+}
+
 export const colors = {
-  red: '#ef4444',
-  orange: '#f97316',
-  yellow: '#fbbf24',
-  green: '#4ade80',
-  blue: '#22c3f6',
-  purple: '#9b6cf6',
-  pink: '#f77ee0',
+  red: {
+    name: 'red',
+    avatar_bg: 'bg-red-600',
+    avatar_placeholder_text: 'text-primary-text',
+    cursor: '#ef4444',
+    cursor_selection: '#ef4444',
+  },
+  orange: {
+    name: 'orange',
+    avatar_bg: 'bg-orange-600',
+    avatar_placeholder_text: 'text-primary-text',
+    cursor: '#f97316',
+    cursor_selection: '#f97316',
+  },
+  yellow: {
+    name: 'yellow',
+    avatar_bg: 'bg-yellow-600',
+    avatar_placeholder_text: 'text-primary-text',
+    cursor: '#fbbf24',
+    cursor_selection: '#fbbf24',
+  },
+  green: {
+    name: 'green',
+    avatar_bg: 'bg-green-600',
+    avatar_placeholder_text: 'text-primary-text',
+    cursor: '#4ade80',
+    cursor_selection: '#4ade80',
+  },
+  blue: {
+    name: 'blue',
+    avatar_bg: 'bg-blue-600',
+    avatar_placeholder_text: 'text-primary-text',
+    cursor: '#22c3f6',
+    cursor_selection: '#22c3f6',
+  },
+  purple: {
+    name: 'purple',
+    avatar_bg: 'bg-purple-600',
+    avatar_placeholder_text: 'text-primary-text',
+    cursor: '#9b6cf6',
+    cursor_selection: '#9b6cf6',
+  },
+  pink: {
+    name: 'pink',
+    avatar_bg: 'bg-pink-600',
+    avatar_placeholder_text: 'text-primary-text',
+    cursor: '#f77ee0',
+    cursor_selection: '#f77ee0',
+  },
 } as const
 
 /**
