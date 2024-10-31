@@ -3,6 +3,7 @@
 import { BaseColor, colors } from '@/lib/rooms'
 import { type UserInfo } from '@/lib/sync'
 import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
+import { Combobox } from '@avelin/ui/combobox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +14,8 @@ import {
 } from '@avelin/ui/dropdown-menu'
 import { cn } from '@avelin/ui/cn'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
+import { Button } from '@avelin/ui/button'
+import { languages } from '@/lib/constants'
 
 const users: UserInfo[] = [
   {
@@ -117,7 +120,7 @@ function UsersListMenu({ users }: { users: UserInfo[] }) {
           key={user.name}
         >
           <UserAvatar user={user} />
-          <span className='text-sm font-medium'>{user.name}</span>
+          <span className='text-sm'>{user.name}</span>
         </DropdownMenuItem>
       ))}
     </>
@@ -143,10 +146,30 @@ function UsersList() {
   )
 }
 
+const languageOptions = languages.map((l) => ({
+  value: l.value,
+  label: l.name,
+}))
+
+function EditorLanguage() {
+  return (
+    <div className='flex items-center gap-2'>
+      <Combobox
+        name='language'
+        namePlural='languages'
+        options={languageOptions}
+      />
+    </div>
+  )
+}
+
 export function EditorToolbar() {
   return (
-    <div className='flex items-center m-2 drop-shadow-sm h-12 py-2 px-4 max-w-full bg-white rounded-full border border-color-border-subtle'>
-      <UsersList />
+    <div className='flex items-center m-2 drop-shadow-sm py-2 px-2 max-w-full bg-white rounded-lg border border-color-border-subtle'>
+      <div className='w-full flex items-center justify-between'>
+        <UsersList />
+        <EditorLanguage />
+      </div>
     </div>
   )
 }
