@@ -1,4 +1,10 @@
-import { assignOption, baseColors, generateUniqueName } from '@/lib/rooms'
+import {
+  assignOption,
+  BaseColor,
+  baseColors,
+  colors,
+  generateUniqueName,
+} from '@/lib/rooms'
 import { AwarenessList, USER_IDLE_TIMEOUT, UserAwareness } from '@/lib/sync'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 import { useEffect, useMemo, useState } from 'react'
@@ -79,21 +85,22 @@ export function Cursors({ provider }: CursorsProps) {
     for (const [clientId, client] of awarenessUsers) {
       if (client?.user) {
         const isActive = Date.now() - client.user.lastActive < USER_IDLE_TIMEOUT
+        const color = colors[client.user.color as BaseColor]
 
         cursorStyles += `
           .yRemoteSelection-${clientId}, 
           .yRemoteSelectionHead-${clientId}  {
-            --user-color: ${client.user.color};
+            --user-color: ${color.name};
+            --user-cursor: ${color.cursor};
+            --user-cursor-selection: ${color.cursor_selection};
           }
 
           .yRemoteSelectionHead-${clientId}::after  {
             content: "${client.user.name}";
+            --user-cursor: ${color.cursor};
             --name-opacity: ${isActive ? 1 : 0};
             --name-visibility: ${isActive ? 'visible' : 'hidden'};
-          }
-
-          .yRemoteSelection-${clientId} {
-            background-color: ${client.user.color};
+            --name-scale: ${isActive ? 1 : 0.9};
           }
         `
       }

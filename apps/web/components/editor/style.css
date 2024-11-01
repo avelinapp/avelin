@@ -1,9 +1,9 @@
 /* Cursor selection background */
 .yRemoteSelection {
-  opacity: 0.3;
-  background-color: var(--user-color);
+  background-color: var(--user-cursor-selection);
   padding-left: 1px;
   padding-right: 1px;
+  border-radius: 2px;
 }
 
 /* Cursor caret */
@@ -11,21 +11,24 @@
   position: absolute;
   box-sizing: border-box;
   height: 100%;
-  border-left: 2px solid var(--user-color);
+  border-left: 2px solid var(--user-cursor);
 }
 
 /* Cursor name */
 .yRemoteSelectionHead::after {
   visibility: var(--name-visibility);
   opacity: var(--name-opacity);
+  transform: scale(var(--name-scale));
+  transform-origin: bottom left;
   transition:
-    opacity 0.3s,
-    visibility 0.3s ease-in-out;
+    opacity 0.2s var(--ease-in-out-quad),
+    visibility 0.2s var(--ease-in-out-quad),
+    transform 0.2s var(--ease-in-out-quad);
   position: absolute;
   top: -1.4em;
   left: -2px;
   padding: 2px 6px;
-  background: var(--user-color);
+  background-color: var(--user-cursor);
   color: #fcfcfc;
   border: 0;
   border-radius: 6px;
