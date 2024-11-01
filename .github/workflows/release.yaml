@@ -1,0 +1,133 @@
+name: Release
+on:
+  workflow_dispatch:
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Login to git
+        run: |
+          git pull
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+          architecture: 'x64'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Determine next version
+        id: next_version
+        run: |
+          NEW_VERSION=$(pnpm release --ci --release-version | tail -n1)
+
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v3
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build @avelin/app
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./apps/web/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/avelinapp/web:latest
+            ghcr.io/avelinapp/web:${{ steps.next_version.outputs.new_version }}
+            ghcr.io/avelinapp/web:v${{ steps.next_version.outputs.new_version }}
+          build-args: |
+            NEXT_PUBLIC_APP_URL=https://avelin.app
+            NEXT_PUBLIC_API_URL=https://api.avelin.app
+            NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+          platforms: linux/amd64
+
+      - name: Build @avelin/api
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./apps/api/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/avelinapp/api:latest
+            ghcr.io/avelinapp/api:${{ steps.next_version.outputs.new_version }}
+            ghcr.io/avelinapp/api:v${{ steps.next_version.outputs.new_version }}
+          platforms: linux/amd64
+
+      - name: Build @avelin/sync
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./apps/sync/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/avelinapp/sync:latest
+            ghcr.io/avelinapp/sync:${{ steps.next_version.outputs.new_version }}
+            ghcr.io/avelinapp/sync:v${{ steps.next_version.outputs.new_version }}
+          platforms: linux/amd64
+
+      - name: Bump version
+        run: |
+          pnpm release --ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # This should already be installed!
+      # - name: Install yq
+      #   run: |
+      #     wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+      #     chmod +x /usr/bin/yq
+
+      - name: Update K8s manifests
+        run: |
+          VERSION=v${{ steps.next_version.outputs.new_version }}
+          apps=("web" "api" "sync")
+          manifests_dir="deploy/k8s"
+          for app in "${apps[@]}"; do
+            manifest="$manifests_dir/${app}-deploy.yaml"
+            if [ -f "$manifest" ]; then
+              echo "Updating image tag in $manifest to $VERSION"
+              yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/$app:$VERSION\"" "$manifest"
+            else
+              echo "Manifest file $manifest not found!"
+              exit 1
+            fi
+          done
+
+      - name: Create release PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          title: 'v${{ steps.next_version.outputs.new_version }}'
+          assignees: 'bazzadev'
