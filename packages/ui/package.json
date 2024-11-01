@@ -20,6 +20,7 @@
     "./command": "./src/components/ui/command.tsx",
     "./dialog": "./src/components/ui/dialog.tsx",
     "./dropdown-menu": "./src/components/ui/dropdown-menu.tsx",
+    "./input": "./src/components/ui/input.tsx",
     "./popover": "./src/components/ui/popover.tsx",
     "./globals.css": "./src/globals.css",
     "./tailwind": "./tailwind.config.ts",

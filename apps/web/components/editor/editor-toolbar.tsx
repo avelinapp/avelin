@@ -12,6 +12,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@avelin/ui/dropdown-menu'
+import { Input } from '@avelin/ui/input'
 import { cn } from '@avelin/ui/cn'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import { languages } from '@/lib/constants'
@@ -160,6 +161,7 @@ function EditorLanguage() {
         name='language'
         namePlural='languages'
         options={languageOptions}
+        value='typescript'
       />
     </div>
   )
@@ -190,7 +192,10 @@ export function EditorToolbar() {
           <CopyRoomURL />
         </div>
         <div className='place-self-center'>
-          <input></input>
+          <Input
+            size='xs'
+            className='font-medium'
+          />
         </div>
         <div className='place-self-end'>
           <EditorLanguage />
