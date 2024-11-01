@@ -12,6 +12,7 @@
   box-sizing: border-box;
   height: 100%;
   border-left: 2px solid var(--user-cursor);
+  border-top: 0.5px solid var(--user-cursor);
   border-radius: 4px;
 }
 
