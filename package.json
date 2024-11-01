@@ -1,5 +1,6 @@
 {
   "name": "avelin",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "build": "turbo build",
@@ -8,10 +9,13 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "db:push": "turbo run db:push",
-    "ui:add": "turbo run ui:add"
+    "ui:add": "turbo run ui:add",
+    "release": "release-it minor"
   },
   "devDependencies": {
     "prettier": "catalog:",
+    "release-it": "^17.10.0",
+    "release-it-pnpm": "^4.6.3",
     "turbo": "catalog:",
     "typescript": "catalog:"
   },

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://unpkg.com/release-it/schema/release-it.json",
+  "plugins": {
+    "release-it-pnpm": {}
+  },
+  "github": {
+    "release": false
+  },
+  "git": {
+    "requireBranch": "main",
+    "commitMessage": "v${version}",
+    "tagName": "v${version}",
+    "push": false,
+    "requireCleanWorkingDir": false
+  },
+  "hooks": {
+    "after:bump": "node scripts/sync-versions.js",
+    "after:release": "echo 'Release v${version} completed.'"
+  }
+}
