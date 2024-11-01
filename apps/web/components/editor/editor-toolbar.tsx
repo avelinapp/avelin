@@ -2,7 +2,7 @@
 
 import { BaseColor, colors } from '@/lib/rooms'
 import { type UserInfo } from '@/lib/sync'
-import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
+import { Avatar, AvatarFallback } from '@avelin/ui/avatar'
 import { Combobox } from '@avelin/ui/combobox'
 import {
   DropdownMenu,
@@ -14,8 +14,9 @@ import {
 } from '@avelin/ui/dropdown-menu'
 import { cn } from '@avelin/ui/cn'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
-import { Button } from '@avelin/ui/button'
 import { languages } from '@/lib/constants'
+import { Button } from '@avelin/ui/button'
+import { CopyIcon } from '@avelin/icons'
 
 const users: UserInfo[] = [
   {
@@ -66,7 +67,7 @@ const UserAvatar = ({
     <Avatar
       key={user.name}
       className={cn(
-        'h-6 w-6 text-[11px] drop-shadow-sm border-[0.5px] border-white',
+        'h-6 w-6 text-[11px] font-medium drop-shadow-sm border-[0.5px] border-white',
         colors[user.color as BaseColor].avatar_bg,
         colors[user.color as BaseColor].avatar_placeholder_text,
         className,
@@ -164,12 +165,36 @@ function EditorLanguage() {
   )
 }
 
+function CopyRoomURL() {
+  return (
+    <Button
+      variant='secondary'
+      size='xs'
+      className='text-secondary-text'
+    >
+      <CopyIcon
+        className='size-4 shrink-0 text-color-text-secondary'
+        strokeWidth={2.25}
+      />
+      Copy URL
+    </Button>
+  )
+}
+
 export function EditorToolbar() {
   return (
     <div className='flex items-center m-2 drop-shadow-sm py-2 px-2 max-w-full bg-white rounded-lg border border-color-border-subtle'>
-      <div className='w-full flex items-center justify-between'>
-        <UsersList />
-        <EditorLanguage />
+      <div className='w-full grid grid-cols-3'>
+        <div className='flex items-center gap-4 place-self-start'>
+          <UsersList />
+          <CopyRoomURL />
+        </div>
+        <div className='place-self-center'>
+          <input></input>
+        </div>
+        <div className='place-self-end'>
+          <EditorLanguage />
+        </div>
       </div>
     </div>
   )

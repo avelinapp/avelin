@@ -47,7 +47,7 @@ export const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
           <Button
             ref={ref}
             variant='secondary'
-            size='sm'
+            size='xs'
             role='combobox'
             aria-expanded={open}
             className='w-[200px] justify-between'
@@ -60,7 +60,7 @@ export const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className='w-fit min-w-[100px] p-0'
+          className='w-fit min-w-[100px] p-0 shadow-lg'
           align='end'
         >
           <Command>
