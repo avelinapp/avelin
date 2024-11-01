@@ -70,7 +70,6 @@ const UserAvatar = ({
       className={cn(
         'h-6 w-6 text-[11px] font-medium drop-shadow-sm border-[0.5px] border-white',
         colors[user.color as BaseColor].avatar_bg,
-        colors[user.color as BaseColor].avatar_placeholder_text,
         className,
       )}
     >

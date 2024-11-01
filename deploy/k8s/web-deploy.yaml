@@ -20,6 +20,7 @@ spec:
       containers:
         - name: avelin-web
           image: ghcr.io/avelinapp/web:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
               protocol: TCP
