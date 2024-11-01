@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: avelin
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/avelinapp/avelin.git'
+    targetRevision: '>=v0.0.0'
+    path: 'deploy/k8s'
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: avelin
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
