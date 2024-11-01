@@ -19,7 +19,7 @@ interface EditorProps
 
 export function EditorTextArea({
   value = '',
-  language = 'javascript',
+  language = 'typescript',
   className,
 }: EditorProps) {
   const { ydoc, networkProvider } = useCodeRoom()
