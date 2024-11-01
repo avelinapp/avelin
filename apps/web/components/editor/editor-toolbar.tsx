@@ -94,7 +94,7 @@ const UsersListDisplay = forwardRef<
   return (
     <div
       ref={ref}
-      className='flex items-center select-none'
+      className='flex items-center select-none h-8'
       {...props}
     >
       {displayedUsers.map((user) => (
@@ -137,7 +137,7 @@ function UsersList() {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align='start'
-        className='bg-popover-bg'
+        className='min-w-[200px]'
       >
         <DropdownMenuGroup title='Active users'>
           <DropdownMenuLabel>Active Users</DropdownMenuLabel>
