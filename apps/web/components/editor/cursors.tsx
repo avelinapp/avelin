@@ -1,4 +1,4 @@
-import { assignOption, colors, generateUniqueName } from '@/lib/rooms'
+import { assignOption, baseColors, generateUniqueName } from '@/lib/rooms'
 import { AwarenessList, USER_IDLE_TIMEOUT, UserAwareness } from '@/lib/sync'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 import { useEffect, useMemo, useState } from 'react'
@@ -16,7 +16,7 @@ export function Cursors({ provider }: CursorsProps) {
       provider.awareness!.getStates().values(),
     ).map(({ user }) => user?.color)
 
-    const color = assignOption(Object.values(colors), assignedColors)
+    const color = assignOption(Object.values(baseColors), assignedColors)
 
     const localUser: UserAwareness['user'] = {
       name: generateUniqueName(),

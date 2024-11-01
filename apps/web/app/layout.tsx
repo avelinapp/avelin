@@ -18,7 +18,7 @@ export default async function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${jetbrainsMono.variable} font-sans antialiased bg-color-background`}
+        className={`${jetbrainsMono.variable} font-sans antialiased bg-color-background h-screen w-screen`}
       >
         <Providers>{children}</Providers>
       </body>

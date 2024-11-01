@@ -25,8 +25,16 @@ catalog:
   tailwindcss: ^3.4.14
 catalogs:
   react19:
+    '@types/react': npm:types-react-dom@rc
+    '@types/react-dom': npm:types-react-dom@rc
+    react: 19.0.0-rc-603e6108-20241029
+    react-dom: 19.0.0-rc-603e6108-20241029
+    next: 15.0.2
+    eslint-config-next: 15.0.2
+  react18:
     '@types/react': ^18
     '@types/react-dom': ^18
-    react: 19.0.0-rc-69d4b800-20241021
-    react-dom: 19.0.0-rc-69d4b800-20241021
-    next: 15.0.1
+    react: ^18
+    react-dom: ^18
+    next: 14.2.16
+    eslint-config-next: 14.2.16

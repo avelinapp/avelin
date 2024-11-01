@@ -7,7 +7,8 @@
     "dev": "turbo dev --concurrency=15",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "db:push": "turbo run db:push"
+    "db:push": "turbo run db:push",
+    "ui:add": "turbo run ui:add"
   },
   "devDependencies": {
     "prettier": "catalog:",

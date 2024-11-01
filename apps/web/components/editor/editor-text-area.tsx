@@ -9,15 +9,18 @@ import { jetbrainsMono } from '@/lib/fonts'
 import { themes } from './themes'
 import { Cursors } from './cursors'
 import './style.css'
+import { cn } from '@avelin/ui/cn'
 
-interface EditorProps {
+interface EditorProps
+  extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className'> {
   value?: string
   language?: string
 }
 
-export default function Editor({
+export function EditorTextArea({
   value = '',
-  language = 'javascript',
+  language = 'typescript',
+  className,
 }: EditorProps) {
   const { ydoc, networkProvider } = useCodeRoom()
 
@@ -46,25 +49,27 @@ export default function Editor({
   )
 
   return (
-    <>
+    <div className={cn(className, 'h-full w-full')}>
       {networkProvider ? <Cursors provider={networkProvider} /> : null}
       <MonacoEditor
         width='100vw'
-        height='100vh'
         theme='light'
         loading={null}
         language={language}
         value={value}
         onMount={setupEditor}
         options={{
-          padding: { top: 30, bottom: 30 },
+          padding: { top: 16, bottom: 16 },
           fontSize: 16,
           fontFamily: `${jetbrainsMono.style.fontFamily}`,
           fontLigatures: true,
           minimap: { enabled: false },
           renderLineHighlight: 'none',
+          scrollBeyondLastLine: false,
         }}
       />
-    </>
+    </div>
   )
 }
+
+export default EditorTextArea
