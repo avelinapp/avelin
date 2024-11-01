@@ -8,7 +8,7 @@ import { useMonacoBinding } from '@/hooks/use-monaco-binding'
 import { jetbrainsMono } from '@/lib/fonts'
 import { themes } from './themes'
 import { Cursors } from './cursors'
-import './style.css'
+import './cursors.css'
 import { cn } from '@avelin/ui/cn'
 
 interface EditorProps
