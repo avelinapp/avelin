@@ -12,6 +12,7 @@
   box-sizing: border-box;
   height: 100%;
   border-left: 2px solid var(--user-cursor);
+  border-radius: 4px;
 }
 
 /* Cursor name */
@@ -41,5 +42,5 @@
   font-weight: 600;
   pointer-events: none;
   user-select: none;
-  z-index: 1000;
+  z-index: 10;
 }
