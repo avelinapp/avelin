@@ -20,6 +20,7 @@ spec:
       containers:
         - name: avelin-sync
           image: ghcr.io/avelinapp/sync:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 4100
               protocol: TCP
