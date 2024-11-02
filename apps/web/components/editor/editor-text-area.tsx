@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import { Monaco, default as MonacoEditor } from '@monaco-editor/react'
 import { editor } from 'monaco-editor'
 import { useCodeRoom } from '@/providers/code-room-provider'
@@ -17,25 +17,24 @@ interface EditorProps
   language?: string
 }
 
-export function EditorTextArea({
-  value = '',
-  language = 'typescript',
-  className,
-}: EditorProps) {
-  const { ydoc, networkProvider } = useCodeRoom()
+export function EditorTextArea({ className }: EditorProps) {
+  const { ydoc, networkProvider, editorLanguage } = useCodeRoom()
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
+  const monacoRef = useRef<Monaco | null>(null)
   const [editorMounted, setEditorMounted] = useState(false)
 
   const setupEditor = useCallback(
-    (editorInstance: editor.IStandaloneCodeEditor, monacoRef: Monaco) => {
+    (editorInstance: editor.IStandaloneCodeEditor, monacoInstance: Monaco) => {
+      console.log('Setting up editor...')
       editorInstance.focus()
       editorRef.current = editorInstance
+      monacoRef.current = monacoInstance
 
-      monacoRef.editor.defineTheme('avelin-dark', themes.dark)
-      monacoRef.editor.defineTheme('avelin-light', themes.light)
+      monacoInstance.editor.defineTheme('avelin-dark', themes.dark)
+      monacoInstance.editor.defineTheme('avelin-light', themes.light)
 
-      monacoRef.editor.setTheme('avelin-light')
+      monacoInstance.editor.setTheme('avelin-light')
 
       setEditorMounted(true)
     },
@@ -48,6 +47,19 @@ export function EditorTextArea({
     networkProvider,
   )
 
+  useEffect(() => {
+    if (editorMounted && editorRef.current && monacoRef.current) {
+      if (!!editorRef.current.getModel()) {
+        monacoRef.current!.editor.setModelLanguage(
+          editorRef.current.getModel()!,
+          editorLanguage ?? 'plaintext',
+        )
+      }
+    } else {
+      console.log('Editor not mounted, do not change language.')
+    }
+  }, [editorMounted, editorLanguage])
+
   return (
     <div className={cn(className, 'h-full w-full')}>
       {networkProvider ? <Cursors provider={networkProvider} /> : null}
@@ -55,8 +67,9 @@ export function EditorTextArea({
         width='100vw'
         theme='light'
         loading={null}
-        language={language}
-        value={value}
+        defaultValue=''
+        defaultLanguage='plaintext'
+        // language={editorLanguage}
         onMount={setupEditor}
         options={{
           padding: { top: 16, bottom: 16 },

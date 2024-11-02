@@ -7,6 +7,7 @@ import { IndexeddbPersistence } from 'y-indexeddb'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 import type { Room, Session } from '@avelin/database'
 import { USER_IDLE_TIMEOUT } from '@/lib/sync'
+import { Language } from '@/lib/constants'
 
 const CodeRoomContext = createContext<StoreApi<CodeRoomStore> | null>(null)
 
@@ -20,6 +21,7 @@ export type CodeRoomState = {
   persistenceProvider?: IndexeddbPersistence
   room?: Room
   activeUsers: Map<number, number>
+  editorLanguage?: Language['value']
 }
 
 export type CodeRoomActions = {
@@ -28,6 +30,7 @@ export type CodeRoomActions = {
   setUserActive: (userId: number) => void
   setUserInactive: (userId: number) => void
   cleanIdleUsers: () => void
+  setEditorLanguage: (language: Language['value']) => void
 }
 
 export type CodeRoomStore = CodeRoomState & CodeRoomActions
@@ -39,6 +42,7 @@ export const createCodeRoomStore = () =>
     persistenceProvider: undefined,
     room: undefined,
     activeUsers: new Map<number, number>(),
+    editorLanguage: undefined,
     initialize: ({ room, session }) => {
       if (!room) throw new Error('Cannot initialize code room without a room')
 
@@ -116,6 +120,14 @@ export const createCodeRoomStore = () =>
       })
 
       set({ activeUsers: users })
+    },
+    setEditorLanguage: (language) => {
+      const { ydoc } = get()
+
+      ydoc.getMap('editor').set('language', language)
+      set({ editorLanguage: language })
+
+      console.log('Editor language set to:', language)
     },
   }))
 

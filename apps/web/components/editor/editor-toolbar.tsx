@@ -18,6 +18,7 @@ import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import { languages } from '@/lib/constants'
 import { Button } from '@avelin/ui/button'
 import { CopyIcon } from '@avelin/icons'
+import { useCodeRoom } from '@/providers/code-room-provider'
 
 const users: UserInfo[] = [
   {
@@ -154,13 +155,17 @@ const languageOptions = languages.map((l) => ({
 }))
 
 function EditorLanguage() {
+  const { editorLanguage, setEditorLanguage } = useCodeRoom()
   return (
     <div className='flex items-center gap-2'>
       <Combobox
         name='language'
         namePlural='languages'
         options={languageOptions}
-        value='typescript'
+        value={editorLanguage}
+        onValueChange={(value) => {
+          setEditorLanguage(value)
+        }}
       />
     </div>
   )
