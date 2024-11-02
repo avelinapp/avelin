@@ -4,6 +4,7 @@ import './globals.css'
 import '@/lib/fonts/fonts.css'
 import '@avelin/ui/globals.css'
 import Providers from '@/providers'
+import { Toaster } from '@avelin/ui/sonner'
 
 export const metadata: Metadata = {
   title: 'Avelin',
@@ -20,7 +21,10 @@ export default async function RootLayout({
       <body
         className={`${jetbrainsMono.variable} font-sans antialiased bg-color-background h-screen w-screen`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <Toaster richColors />
+        </Providers>
       </body>
     </html>
   )

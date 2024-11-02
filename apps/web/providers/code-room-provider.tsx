@@ -7,7 +7,8 @@ import { IndexeddbPersistence } from 'y-indexeddb'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 import type { Room, Session } from '@avelin/database'
 import { USER_IDLE_TIMEOUT } from '@/lib/sync'
-import { Language } from '@/lib/constants'
+import { Language, languages } from '@/lib/constants'
+import { toast } from '@avelin/ui/sonner'
 
 const CodeRoomContext = createContext<StoreApi<CodeRoomStore> | null>(null)
 
@@ -67,7 +68,13 @@ export const createCodeRoomStore = () =>
         const observer = (event: Y.YMapEvent<any>) => {
           if (event.keysChanged.has('language')) {
             const newLanguage = editorMap.get('language') as Language['value']
+            const languageDetails = languages.find(
+              (l) => l.value === newLanguage,
+            )
             set({ editorLanguage: newLanguage })
+            toast.info(
+              `Editor language set to ${languageDetails?.name ?? newLanguage}.`,
+            )
             console.log(
               'Editor language update received from ydoc and applied to:',
               newLanguage,

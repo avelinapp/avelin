@@ -22,6 +22,7 @@
     "./dropdown-menu": "./src/components/ui/dropdown-menu.tsx",
     "./input": "./src/components/ui/input.tsx",
     "./popover": "./src/components/ui/popover.tsx",
+    "./sonner": "./src/components/ui/sonner.tsx",
     "./globals.css": "./src/globals.css",
     "./tailwind": "./tailwind.config.ts",
     "./postcss": "./postcss.config.mjs",
@@ -58,6 +59,7 @@
     "next": "catalog:react18",
     "next-themes": "^0.3.0",
     "react": "catalog:react18",
+    "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"
   }
