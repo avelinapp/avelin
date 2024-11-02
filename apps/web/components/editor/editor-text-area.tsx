@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useCallback, useEffect } from 'react'
+import { useRef, useState, useCallback } from 'react'
 import { Monaco, default as MonacoEditor } from '@monaco-editor/react'
 import { editor } from 'monaco-editor'
 import { useCodeRoom } from '@/providers/code-room-provider'
@@ -26,7 +26,6 @@ export function EditorTextArea({ className }: EditorProps) {
 
   const setupEditor = useCallback(
     (editorInstance: editor.IStandaloneCodeEditor, monacoInstance: Monaco) => {
-      console.log('Setting up editor...')
       editorInstance.focus()
       editorRef.current = editorInstance
       monacoRef.current = monacoInstance
@@ -46,19 +45,6 @@ export function EditorTextArea({ className }: EditorProps) {
     ydoc,
     networkProvider,
   )
-  //
-  // useEffect(() => {
-  //   if (editorMounted && editorRef.current && monacoRef.current) {
-  //     if (!!editorRef.current.getModel()) {
-  //       monacoRef.current!.editor.setModelLanguage(
-  //         editorRef.current.getModel()!,
-  //         editorLanguage ?? 'plaintext',
-  //       )
-  //     }
-  //   } else {
-  //     console.log('Editor not mounted, do not change language.')
-  //   }
-  // }, [editorMounted, editorLanguage])
 
   return (
     <div className={cn(className, 'h-full w-full')}>
@@ -68,7 +54,6 @@ export function EditorTextArea({ className }: EditorProps) {
         theme='light'
         loading={null}
         defaultValue=''
-        defaultLanguage='plaintext'
         language={editorLanguage}
         onMount={setupEditor}
         options={{

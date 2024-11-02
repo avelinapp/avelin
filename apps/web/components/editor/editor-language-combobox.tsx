@@ -1,7 +1,6 @@
 import { languages } from '@/lib/constants'
 import { useCodeRoom } from '@/providers/code-room-provider'
 import { Combobox } from '@avelin/ui/combobox'
-import { useEffect } from 'react'
 
 const languageOptions = languages.map((l) => ({
   value: l.value,

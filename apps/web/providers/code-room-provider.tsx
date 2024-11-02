@@ -51,6 +51,37 @@ export const createCodeRoomStore = () =>
 
       const { ydoc, networkProvider, persistenceProvider } = get()
 
+      function setupEditorLanguageObserver() {
+        const editorMap = ydoc.getMap('editor')
+        if (!editorMap.has('language')) {
+          console.log('Editor language not set, setting to plaintext.')
+          editorMap.set('language', 'plaintext') // Set your default language here
+        }
+
+        // Set the initial editorLanguage state from Yjs
+        set({
+          editorLanguage: editorMap.get('language') as Language['value'],
+        })
+
+        // Define the observer function
+        const observer = (event: Y.YMapEvent<any>) => {
+          if (event.keysChanged.has('language')) {
+            const newLanguage = editorMap.get('language') as Language['value']
+            set({ editorLanguage: newLanguage })
+            console.log(
+              'Editor language update received from ydoc and applied to:',
+              newLanguage,
+            )
+          }
+        }
+
+        // Add the observer to the 'editor' map
+        editorMap.observe(observer)
+
+        // Store the observer for later cleanup
+        set({ editorObserver: observer })
+      }
+
       if (!persistenceProvider) {
         const idbProvider = new IndexeddbPersistence(room.id, ydoc)
 
@@ -58,6 +89,9 @@ export const createCodeRoomStore = () =>
           console.log(
             `Content restored for ${idbPersistence.name} from IndexedDB.`,
           )
+
+          // We only want to set up observers once there is content restored from the local store
+          setupEditorLanguageObserver()
         })
 
         set({ persistenceProvider: idbProvider })
@@ -80,32 +114,6 @@ export const createCodeRoomStore = () =>
       } else {
         console.log('Network provider already initialized.')
       }
-
-      const editorMap = ydoc.getMap('editor')
-      if (!editorMap.has('language')) {
-        editorMap.set('language', 'javascript') // Set your default language here
-      }
-
-      // Set the initial editorLanguage state from Yjs
-      set({ editorLanguage: editorMap.get('language') as Language['value'] })
-
-      // Define the observer function
-      const observer = (event: Y.YMapEvent<any>) => {
-        if (event.keysChanged.has('language')) {
-          const newLanguage = editorMap.get('language') as Language['value']
-          set({ editorLanguage: newLanguage })
-          console.log(
-            'Editor language update received from ydoc and applied to:',
-            newLanguage,
-          )
-        }
-      }
-
-      // Add the observer to the 'editor' map
-      editorMap.observe(observer)
-
-      // Store the observer for later cleanup
-      set({ editorObserver: observer })
     },
     destroy: () => {
       const { ydoc, networkProvider, persistenceProvider, editorObserver } =
