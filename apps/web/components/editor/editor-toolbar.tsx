@@ -3,7 +3,6 @@
 import { BaseColor, colors } from '@/lib/rooms'
 import { type UserInfo } from '@/lib/sync'
 import { Avatar, AvatarFallback } from '@avelin/ui/avatar'
-import { Combobox } from '@avelin/ui/combobox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,10 +14,9 @@ import {
 import { Input } from '@avelin/ui/input'
 import { cn } from '@avelin/ui/cn'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
-import { languages } from '@/lib/constants'
 import { Button } from '@avelin/ui/button'
 import { CopyIcon } from '@avelin/icons'
-import { useCodeRoom } from '@/providers/code-room-provider'
+import { EditorLanguageCombobox } from './editor-language-combobox'
 
 const users: UserInfo[] = [
   {
@@ -148,29 +146,6 @@ function UsersList() {
   )
 }
 
-const languageOptions = languages.map((l) => ({
-  value: l.value,
-  label: l.name,
-  keywords: l.keywords,
-}))
-
-function EditorLanguage() {
-  const { editorLanguage, setEditorLanguage } = useCodeRoom()
-  return (
-    <div className='flex items-center gap-2'>
-      <Combobox
-        name='language'
-        namePlural='languages'
-        options={languageOptions}
-        value={editorLanguage}
-        onValueChange={(value) => {
-          setEditorLanguage(value)
-        }}
-      />
-    </div>
-  )
-}
-
 function CopyRoomURL() {
   return (
     <Button
@@ -202,7 +177,7 @@ export function EditorToolbar() {
           />
         </div>
         <div className='place-self-end'>
-          <EditorLanguage />
+          <EditorLanguageCombobox />
         </div>
       </div>
     </div>

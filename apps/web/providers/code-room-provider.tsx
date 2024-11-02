@@ -22,6 +22,7 @@ export type CodeRoomState = {
   room?: Room
   activeUsers: Map<number, number>
   editorLanguage?: Language['value']
+  editorObserver?: (event: Y.YMapEvent<any>) => void
 }
 
 export type CodeRoomActions = {
@@ -79,9 +80,36 @@ export const createCodeRoomStore = () =>
       } else {
         console.log('Network provider already initialized.')
       }
+
+      const editorMap = ydoc.getMap('editor')
+      if (!editorMap.has('language')) {
+        editorMap.set('language', 'javascript') // Set your default language here
+      }
+
+      // Set the initial editorLanguage state from Yjs
+      set({ editorLanguage: editorMap.get('language') as Language['value'] })
+
+      // Define the observer function
+      const observer = (event: Y.YMapEvent<any>) => {
+        if (event.keysChanged.has('language')) {
+          const newLanguage = editorMap.get('language') as Language['value']
+          set({ editorLanguage: newLanguage })
+          console.log(
+            'Editor language update received from ydoc and applied to:',
+            newLanguage,
+          )
+        }
+      }
+
+      // Add the observer to the 'editor' map
+      editorMap.observe(observer)
+
+      // Store the observer for later cleanup
+      set({ editorObserver: observer })
     },
     destroy: () => {
-      const { ydoc, networkProvider, persistenceProvider } = get()
+      const { ydoc, networkProvider, persistenceProvider, editorObserver } =
+        get()
 
       ydoc.destroy()
       networkProvider?.awareness?.destroy()
@@ -89,12 +117,19 @@ export const createCodeRoomStore = () =>
       networkProvider?.destroy()
       persistenceProvider?.destroy()
 
+      if (editorObserver) {
+        const editorMap = ydoc.getMap('editor')
+        editorMap.unobserve(editorObserver)
+      }
+
       set({
         ydoc: new Y.Doc(),
         networkProvider: undefined,
         persistenceProvider: undefined,
         room: undefined,
         activeUsers: undefined,
+        editorLanguage: undefined,
+        editorObserver: undefined,
       })
     },
     setUserActive: (userId) => {
@@ -125,9 +160,8 @@ export const createCodeRoomStore = () =>
       const { ydoc } = get()
 
       ydoc.getMap('editor').set('language', language)
-      set({ editorLanguage: language })
 
-      console.log('Editor language set to:', language)
+      console.log('Editor language set by you to:', language)
     },
   }))
 

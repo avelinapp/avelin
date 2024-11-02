@@ -46,19 +46,19 @@ export function EditorTextArea({ className }: EditorProps) {
     ydoc,
     networkProvider,
   )
-
-  useEffect(() => {
-    if (editorMounted && editorRef.current && monacoRef.current) {
-      if (!!editorRef.current.getModel()) {
-        monacoRef.current!.editor.setModelLanguage(
-          editorRef.current.getModel()!,
-          editorLanguage ?? 'plaintext',
-        )
-      }
-    } else {
-      console.log('Editor not mounted, do not change language.')
-    }
-  }, [editorMounted, editorLanguage])
+  //
+  // useEffect(() => {
+  //   if (editorMounted && editorRef.current && monacoRef.current) {
+  //     if (!!editorRef.current.getModel()) {
+  //       monacoRef.current!.editor.setModelLanguage(
+  //         editorRef.current.getModel()!,
+  //         editorLanguage ?? 'plaintext',
+  //       )
+  //     }
+  //   } else {
+  //     console.log('Editor not mounted, do not change language.')
+  //   }
+  // }, [editorMounted, editorLanguage])
 
   return (
     <div className={cn(className, 'h-full w-full')}>
@@ -69,7 +69,7 @@ export function EditorTextArea({ className }: EditorProps) {
         loading={null}
         defaultValue=''
         defaultLanguage='plaintext'
-        // language={editorLanguage}
+        language={editorLanguage}
         onMount={setupEditor}
         options={{
           padding: { top: 16, bottom: 16 },
