@@ -4,17 +4,20 @@
     "release-it-pnpm": {}
   },
   "github": {
-    "release": false
+    "release": true,
+    "releaseName": "v${version}",
+    "draft": true
   },
   "git": {
-    "requireBranch": "main",
     "commitMessage": "v${version}",
     "tagName": "v${version}",
     "push": false,
     "requireCleanWorkingDir": false
   },
   "hooks": {
+    "before:bump": "git checkout -b release/v${version}",
     "after:bump": "node scripts/sync-versions.js",
+    "before:release": "git add package.json apps/**/package.json packages/**/package.json && git commit -m \"Bump package versions to v${version}\" && git push origin release/v${version}",
     "after:release": "echo 'Release v${version} completed.'"
   }
 }
