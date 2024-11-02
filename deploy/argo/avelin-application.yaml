@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/avelinapp/avelin.git'
-    targetRevision: '>=v0.0.0'
+    targetRevision: 'main'
     path: 'deploy/k8s'
   destination:
     server: 'https://kubernetes.default.svc'
