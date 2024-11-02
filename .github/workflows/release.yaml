@@ -35,27 +35,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Generate release
-        id: release
+      - name: Determine next version
+        id: next-version
         run: |
-          NEW_VERSION=$(pnpm release --ci)
+          NEW_VERSION=$(pnpm release --ci --release-version | tail -n1)
 
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "new_branch=$NEW_BRANCH" >> $GITHUB_OUTPUT
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create release branch
-        run: |
-          NEW_BRANCH="release/v$(date +%Y%m%d%H%M%S)"
-          git checkout -b "$NEW_BRANCH"
-          echo "Created release branch: $NEW_BRANCH"
-
-      - name: Commit & push version bump
-        run: |
-          git add package.json apps/**/package.json packages/**/package.json
-          git commit -m "Bump version to v${{ steps.release.outputs.new_version }}"
-          git push origin ${{ steps.release.outputs.new_branch }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -76,6 +61,35 @@ jobs:
           context: .
           file: ./apps/web/Dockerfile
           push: true
-          tags: ghcr.io/avelinapp/web:latest,ghcr.io/avelinapp/web:${{ steps.release.outputs.new_version }},ghcr.io/avelinapp/web:v${{ steps.release.outputs.new_version }}
+          tags: ghcr.io/avelinapp/web:latest,ghcr.io/avelinapp/web:${{ steps.next_version.outputs.new_version }},ghcr.io/avelinapp/web:v${{ steps.next_version.outputs.new_version }}
           build-args: NEXT_PUBLIC_APP_URL=https://avelin.app,NEXT_PUBLIC_API_URL=https://api.avelin.app,NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
+
+      - name: Build @avelin/api
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./apps/api/Dockerfile
+          push: true
+          tags: ghcr.io/avelinapp/api:latest,ghcr.io/avelinapp/api:${{ steps.next_version.outputs.new_version }},ghcr.io/avelinapp/api:v${{ steps.next_version.outputs.new_version }}
+          platforms: linux/amd64
+
+      - name: Build @avelin/sync
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./apps/sync/Dockerfile
+          push: true
+          tags: ghcr.io/avelinapp/sync:latest,ghcr.io/avelinapp/sync:${{ steps.next_version.outputs.new_version }},ghcr.io/avelinapp/sync:v${{ steps.next_version.outputs.new_version }}
+          platforms: linux/amd64
+
+      - name: Bump version
+        run: |
+          git checkout -b release/v${{ steps.next_version.outputs.new_version }}
+          pnpm release --ci
+          git add package.json apps/**/package.json packages/**/package.json
+          git commit -m "Bump package verisons to v${{ steps.next_version.outputs.new_version }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push changes
