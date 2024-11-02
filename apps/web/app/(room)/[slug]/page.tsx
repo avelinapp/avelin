@@ -3,8 +3,12 @@
 import { useEffect } from 'react'
 import { useCodeRoom } from '@/providers/code-room-provider'
 import { useRoom } from '@/hooks/use-room'
-import LazySuspense from '@avelin/ui/suspense'
 import { EditorToolbar } from '@/components/editor/editor-toolbar'
+import dynamic from 'next/dynamic'
+const EditorTextArea = dynamic(
+  () => import('@/components/editor/editor-text-area'),
+  { ssr: false },
+)
 
 type Params = { slug: string }
 
@@ -26,13 +30,7 @@ export default function Page({ params }: { params: Params }) {
   return (
     <div className='flex flex-col h-full w-full'>
       <EditorToolbar />
-      <LazySuspense
-        component={() => import('@/components/editor/editor-text-area')}
-        delay={500}
-        containerProps={{
-          className: 'flex-1',
-        }}
-      />
+      <EditorTextArea className='flex-1' />
     </div>
   )
 }
