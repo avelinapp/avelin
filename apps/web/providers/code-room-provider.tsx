@@ -6,7 +6,12 @@ import * as Y from 'yjs'
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 import type { Room, Session } from '@avelin/database'
-import { USER_IDLE_TIMEOUT } from '@/lib/sync'
+import {
+  AwarenessChange,
+  AwarenessList,
+  USER_IDLE_TIMEOUT,
+  UserInfo,
+} from '@/lib/sync'
 import { Language, languages } from '@/lib/constants'
 import { toast } from '@avelin/ui/sonner'
 
@@ -21,14 +26,20 @@ export type CodeRoomState = {
   networkProvider?: HocuspocusProvider
   persistenceProvider?: IndexeddbPersistence
   room?: Room
+  users: Map<number, UserInfo>
   activeUsers: Map<number, number>
+  isInitialAwarenessUpdate: boolean
   editorLanguage?: Language['value']
+  // eslint-disable-next-line
   editorObserver?: (event: Y.YMapEvent<any>) => void
+  usersObserver?: (data: AwarenessChange) => void
 }
 
 export type CodeRoomActions = {
   initialize: ({ room, session }: { room: Room; session?: Session }) => void
   destroy: () => void
+  setIsInitialAwarenessUpdate: (isInitialLoad: boolean) => void
+  setUsers: (users: Map<number, UserInfo>) => void
   setUserActive: (userId: number) => void
   setUserInactive: (userId: number) => void
   cleanIdleUsers: () => void
@@ -43,8 +54,14 @@ export const createCodeRoomStore = () =>
     networkProvider: undefined,
     persistenceProvider: undefined,
     room: undefined,
+    users: new Map<number, UserInfo>(),
     activeUsers: new Map<number, number>(),
     editorLanguage: undefined,
+    usersObserver: undefined,
+    isInitialAwarenessUpdate: true,
+    setIsInitialAwarenessUpdate: (value) => {
+      set({ isInitialAwarenessUpdate: value })
+    },
     initialize: ({ room, session }) => {
       if (!room) throw new Error('Cannot initialize code room without a room')
 
@@ -65,6 +82,7 @@ export const createCodeRoomStore = () =>
         })
 
         // Define the observer function
+        // eslint-disable-next-line
         const observer = (event: Y.YMapEvent<any>) => {
           if (event.keysChanged.has('language')) {
             const newLanguage = editorMap.get('language') as Language['value']
@@ -87,6 +105,66 @@ export const createCodeRoomStore = () =>
 
         // Store the observer for later cleanup
         set({ editorObserver: observer })
+      }
+
+      function setupUsersObserver(networkProvider: HocuspocusProvider) {
+        const awareness = networkProvider.awareness!
+
+        const initialUsers = [...awareness.getStates()] as AwarenessList
+        const initialUsersInfo = initialUsers.map(([clientId, client]) => {
+          return [clientId, client.user!]
+        }) as Array<[number, UserInfo]>
+
+        set({
+          users: new Map(initialUsersInfo),
+        })
+
+        const observer = ({ added, removed }: AwarenessChange) => {
+          const { isInitialAwarenessUpdate } = get()
+          console.log('Is initial load:', isInitialAwarenessUpdate)
+          if (isInitialAwarenessUpdate) {
+            set({ isInitialAwarenessUpdate: false })
+            return
+          }
+
+          const newAwareness = [...awareness.getStates()] as AwarenessList
+          console.log('Current room users:', get().users)
+
+          added.forEach((id) => {
+            console.log('User joined:', id)
+
+            const userAwareness = newAwareness.find(
+              ([clientId]) => clientId === id,
+            )
+
+            const [, client] = userAwareness!
+
+            toast.info(`${client.user?.name} joined the room.`)
+          })
+
+          removed.forEach((id) => {
+            console.log('User left:', id)
+
+            const removedUser = get().users.get(id)
+
+            if (!removedUser) return
+
+            toast.info(`${removedUser.name} left the room.`)
+          })
+
+          set({
+            users: new Map(
+              newAwareness.map(([clientId, client]) => [
+                clientId,
+                client.user!,
+              ]),
+            ),
+          })
+        }
+
+        awareness.on('change', observer)
+
+        set({ usersObserver: observer })
       }
 
       if (!persistenceProvider) {
@@ -115,6 +193,11 @@ export const createCodeRoomStore = () =>
           onStatus: ({ status }) => {
             console.log('Avelin Sync - connection status:', status)
           },
+          onConnect: () => {
+            console.log('Avelin Sync - connected to room.')
+
+            setupUsersObserver(ws)
+          },
         })
 
         set({ networkProvider: ws })
@@ -123,8 +206,13 @@ export const createCodeRoomStore = () =>
       }
     },
     destroy: () => {
-      const { ydoc, networkProvider, persistenceProvider, editorObserver } =
-        get()
+      const {
+        ydoc,
+        networkProvider,
+        persistenceProvider,
+        editorObserver,
+        usersObserver,
+      } = get()
 
       ydoc.destroy()
       networkProvider?.awareness?.destroy()
@@ -137,15 +225,25 @@ export const createCodeRoomStore = () =>
         editorMap.unobserve(editorObserver)
       }
 
+      if (usersObserver) {
+        networkProvider?.awareness?.off('change', usersObserver)
+      }
+
       set({
         ydoc: new Y.Doc(),
         networkProvider: undefined,
         persistenceProvider: undefined,
         room: undefined,
+        users: new Map<number, UserInfo>(),
         activeUsers: undefined,
         editorLanguage: undefined,
         editorObserver: undefined,
+        isInitialAwarenessUpdate: true,
       })
+    },
+    setUsers: (users) => {
+      console.log('setting room users', users)
+      set({ users: new Map([...users]) })
     },
     setUserActive: (userId) => {
       const { activeUsers } = get()
