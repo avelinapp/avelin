@@ -9,9 +9,6 @@
       "dependsOn": ["^build"],
       "outputs": ["./api"]
     },
-    "@avelin/sync#compile": {
-      "outputs": ["./sync"]
-    },
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
@@ -20,6 +17,7 @@
         "DATABASE_URL",
         "API_URL",
         "APP_URL",
+        "API_PORT",
         "GOOGLE_CLIENT_ID",
         "GOOGLE_CLIENT_SECRET",
         "NODE_ENV"
