@@ -1,6 +1,11 @@
 // import { validateSession } from '@avelin/auth'
 import { Logger } from '@hocuspocus/extension-logger'
 import { Hocuspocus } from '@hocuspocus/server'
+import dotenv from 'dotenv'
+import express from 'express'
+import expressWebsockets from 'express-ws'
+
+dotenv.config()
 
 const server = new Hocuspocus({
   port: 4100,
@@ -40,4 +45,12 @@ const server = new Hocuspocus({
   // },
 })
 
-server.listen()
+const { app } = expressWebsockets(express())
+
+app.ws('/', (websocket, request) => {
+  server.handleConnection(websocket, request)
+})
+
+app.listen(process.env.API_PORT || 4100, () => {
+  console.log(`Listening on port ${process.env.API_PORT || 4100}`)
+})

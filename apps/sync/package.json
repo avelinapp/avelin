@@ -1,15 +1,21 @@
 {
   "name": "@avelin/sync",
+  "main": "dist/index.js",
+  "type": "module",
   "scripts": {
-    "dev": "bun run --watch src/index.ts",
-    "compile": "bun build src/index.ts --compile --minify --sourcemap ./src/index.ts --outfile sync"
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc"
   },
   "dependencies": {
     "@avelin/auth": "workspace:*",
     "@avelin/database": "workspace:*",
     "@hocuspocus/extension-logger": "^2.13.7",
     "@hocuspocus/server": "^2.13.7",
+    "dotenv": "^16.4.5",
     "drizzle-orm": "catalog:",
+    "express": "^5.0.1",
+    "express-ws": "^5.0.2",
+    "ws": "^8.18.0",
     "y-protocols": "^1.0.6",
     "yjs": "^13.6.20"
   },
@@ -17,9 +23,15 @@
     "@avelin/eslint-config": "workspace:*",
     "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
-    "@types/bun": "catalog:",
+    "@types/express": "^5.0.0",
+    "@types/express-ws": "^3.0.5",
+    "@types/node": "^20",
+    "@types/ws": "^8.5.13",
     "eslint": "catalog:",
+    "nodemon": "^3.1.7",
     "prettier": "catalog:",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
     "typescript": "catalog:"
   },
   "version": "0.1.0"
