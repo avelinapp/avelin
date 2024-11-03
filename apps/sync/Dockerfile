@@ -1,12 +1,11 @@
 ARG NODE_VERSION=20
-ARG BUN_VERSION=1.1.33
 ARG PROJECT=sync
 ARG PACKAGE=@avelin/${PROJECT}
 
 # 1. Alpine image
-FROM imbios/bun-node:${BUN_VERSION}-${NODE_VERSION}-alpine AS alpine
-RUN apk update
-# RUN apk add --no-cache libc6-compat
+FROM node:${NODE_VERSION}-alpine AS alpine
+RUN apk update && \
+  apk add --no-cache libc6-compat
 
 # Setup pnpm and turbo on the alpine base
 FROM alpine AS base
@@ -27,11 +26,11 @@ WORKDIR /app
 
 # It might be the path to <ROOT> turborepo
 COPY . .
- 
+
 # Generate a partial monorepo with a pruned lockfile for a target workspace.
 # Assuming "@acme/nextjs" is the name entered in the project's package.json: { name: "@acme/nextjs" }
 RUN turbo prune --scope=${PACKAGE} --docker
- 
+
 # 3. Build the project
 FROM base AS builder
 ARG PACKAGE
@@ -48,29 +47,31 @@ COPY --from=pruner /app/out/json/ .
 
 # First install the dependencies (as they change less often)
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-    pnpm config set store-dir /pnpm/store && \
-    pnpm set package-import-method copy && \
-    pnpm install --no-frozen-lockfile
- 
+  pnpm config set store-dir /pnpm/store && \
+  pnpm set package-import-method copy && \
+  pnpm install --no-frozen-lockfile
+
 # Copy source code of isolated subworkspace
 COPY --from=pruner /app/out/full/ .
 
-RUN pnpm compile --filter=${PACKAGE}
+RUN pnpm build --filter=${PACKAGE}
 
 ###### @avelin/sync
-FROM oven/bun:${BUN_VERSION}-alpine AS runner 
+FROM alpine AS runner 
 ARG PROJECT
+
+ENV NODE_ENV=production
 
 # Don't run production as root
 USER 1001 
 
 WORKDIR /app
 
-COPY --from=builder --chown=1001:1001 /app/apps/${PROJECT}/sync .
+COPY --from=builder --chown=1001:1001 /app/ .
 
 ARG API_PORT=4100
 ENV API_PORT=${API_PORT}
 
 EXPOSE ${API_PORT}
 
-CMD ["sh", "-c", "./sync"] 
+CMD ["node", "apps/sync/dist/index.js"]
