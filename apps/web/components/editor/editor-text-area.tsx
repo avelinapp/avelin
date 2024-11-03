@@ -17,25 +17,23 @@ interface EditorProps
   language?: string
 }
 
-export function EditorTextArea({
-  value = '',
-  language = 'typescript',
-  className,
-}: EditorProps) {
-  const { ydoc, networkProvider } = useCodeRoom()
+export function EditorTextArea({ className }: EditorProps) {
+  const { ydoc, networkProvider, editorLanguage } = useCodeRoom()
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
+  const monacoRef = useRef<Monaco | null>(null)
   const [editorMounted, setEditorMounted] = useState(false)
 
   const setupEditor = useCallback(
-    (editorInstance: editor.IStandaloneCodeEditor, monacoRef: Monaco) => {
+    (editorInstance: editor.IStandaloneCodeEditor, monacoInstance: Monaco) => {
       editorInstance.focus()
       editorRef.current = editorInstance
+      monacoRef.current = monacoInstance
 
-      monacoRef.editor.defineTheme('avelin-dark', themes.dark)
-      monacoRef.editor.defineTheme('avelin-light', themes.light)
+      monacoInstance.editor.defineTheme('avelin-dark', themes.dark)
+      monacoInstance.editor.defineTheme('avelin-light', themes.light)
 
-      monacoRef.editor.setTheme('avelin-light')
+      monacoInstance.editor.setTheme('avelin-light')
 
       setEditorMounted(true)
     },
@@ -55,8 +53,8 @@ export function EditorTextArea({
         width='100vw'
         theme='light'
         loading={null}
-        language={language}
-        value={value}
+        defaultValue=''
+        language={editorLanguage}
         onMount={setupEditor}
         options={{
           padding: { top: 16, bottom: 16 },

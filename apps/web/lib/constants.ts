@@ -1,4 +1,4 @@
-type Language = { value: string; name: string; keywords?: string[] }
+export type Language = { value: string; name: string; keywords?: string[] }
 
 export const languages: Language[] = [
   { value: 'bat', name: 'Batch Script', keywords: ['cmd', 'batch', 'bat'] },

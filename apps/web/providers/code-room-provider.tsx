@@ -7,6 +7,8 @@ import { IndexeddbPersistence } from 'y-indexeddb'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 import type { Room, Session } from '@avelin/database'
 import { USER_IDLE_TIMEOUT } from '@/lib/sync'
+import { Language, languages } from '@/lib/constants'
+import { toast } from '@avelin/ui/sonner'
 
 const CodeRoomContext = createContext<StoreApi<CodeRoomStore> | null>(null)
 
@@ -20,6 +22,8 @@ export type CodeRoomState = {
   persistenceProvider?: IndexeddbPersistence
   room?: Room
   activeUsers: Map<number, number>
+  editorLanguage?: Language['value']
+  editorObserver?: (event: Y.YMapEvent<any>) => void
 }
 
 export type CodeRoomActions = {
@@ -28,6 +32,7 @@ export type CodeRoomActions = {
   setUserActive: (userId: number) => void
   setUserInactive: (userId: number) => void
   cleanIdleUsers: () => void
+  setEditorLanguage: (language: Language['value']) => void
 }
 
 export type CodeRoomStore = CodeRoomState & CodeRoomActions
@@ -39,12 +44,50 @@ export const createCodeRoomStore = () =>
     persistenceProvider: undefined,
     room: undefined,
     activeUsers: new Map<number, number>(),
+    editorLanguage: undefined,
     initialize: ({ room, session }) => {
       if (!room) throw new Error('Cannot initialize code room without a room')
 
       set({ room })
 
       const { ydoc, networkProvider, persistenceProvider } = get()
+
+      function setupEditorLanguageObserver() {
+        const editorMap = ydoc.getMap('editor')
+        if (!editorMap.has('language')) {
+          console.log('Editor language not set, setting to plaintext.')
+          editorMap.set('language', 'plaintext') // Set your default language here
+        }
+
+        // Set the initial editorLanguage state from Yjs
+        set({
+          editorLanguage: editorMap.get('language') as Language['value'],
+        })
+
+        // Define the observer function
+        const observer = (event: Y.YMapEvent<any>) => {
+          if (event.keysChanged.has('language')) {
+            const newLanguage = editorMap.get('language') as Language['value']
+            const languageDetails = languages.find(
+              (l) => l.value === newLanguage,
+            )
+            set({ editorLanguage: newLanguage })
+            toast.info(
+              `Editor language set to ${languageDetails?.name ?? newLanguage}.`,
+            )
+            console.log(
+              'Editor language update received from ydoc and applied to:',
+              newLanguage,
+            )
+          }
+        }
+
+        // Add the observer to the 'editor' map
+        editorMap.observe(observer)
+
+        // Store the observer for later cleanup
+        set({ editorObserver: observer })
+      }
 
       if (!persistenceProvider) {
         const idbProvider = new IndexeddbPersistence(room.id, ydoc)
@@ -53,6 +96,9 @@ export const createCodeRoomStore = () =>
           console.log(
             `Content restored for ${idbPersistence.name} from IndexedDB.`,
           )
+
+          // We only want to set up observers once there is content restored from the local store
+          setupEditorLanguageObserver()
         })
 
         set({ persistenceProvider: idbProvider })
@@ -77,7 +123,8 @@ export const createCodeRoomStore = () =>
       }
     },
     destroy: () => {
-      const { ydoc, networkProvider, persistenceProvider } = get()
+      const { ydoc, networkProvider, persistenceProvider, editorObserver } =
+        get()
 
       ydoc.destroy()
       networkProvider?.awareness?.destroy()
@@ -85,12 +132,19 @@ export const createCodeRoomStore = () =>
       networkProvider?.destroy()
       persistenceProvider?.destroy()
 
+      if (editorObserver) {
+        const editorMap = ydoc.getMap('editor')
+        editorMap.unobserve(editorObserver)
+      }
+
       set({
         ydoc: new Y.Doc(),
         networkProvider: undefined,
         persistenceProvider: undefined,
         room: undefined,
         activeUsers: undefined,
+        editorLanguage: undefined,
+        editorObserver: undefined,
       })
     },
     setUserActive: (userId) => {
@@ -116,6 +170,13 @@ export const createCodeRoomStore = () =>
       })
 
       set({ activeUsers: users })
+    },
+    setEditorLanguage: (language) => {
+      const { ydoc } = get()
+
+      ydoc.getMap('editor').set('language', language)
+
+      console.log('Editor language set by you to:', language)
     },
   }))
 
