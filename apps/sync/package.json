@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "@avelin/auth": "workspace:*",
@@ -28,9 +29,7 @@
     "@types/node": "^20",
     "@types/ws": "^8.5.13",
     "eslint": "catalog:",
-    "nodemon": "^3.1.7",
     "prettier": "catalog:",
-    "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "catalog:"
   },
