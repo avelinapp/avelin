@@ -31,7 +31,7 @@ const UserAvatar = ({
     <Avatar
       key={user.name}
       className={cn(
-        'h-6 w-6 text-[11px] font-medium drop-shadow-sm border-[0.5px] border-white text-primary-text',
+        'h-6 w-6 text-[11px] font-medium drop-shadow-sm border-[1.5px] border-white text-primary-text',
         colors[user.color as BaseColor].avatar_bg,
         className,
       )}
@@ -63,11 +63,11 @@ const UsersListDisplay = forwardRef<
         <UserAvatar
           key={user.name}
           user={user}
-          className='first:-ml-0 -ml-2'
+          className='first:-ml-0 -ml-2.5'
         />
       ))}
       {remainingUsersCount > 0 && (
-        <div className='h-6 w-6 leading-none tabular-nums rounded-full z-10 font-medium -ml-2 text-[11px] bg-gray-3 flex items-center justify-center'>
+        <div className='h-6 w-6 leading-none tabular-nums rounded-full z-10 font-medium -ml-2.5 text-[11px] bg-gray-3 flex items-center justify-center'>
           <span>+{remainingUsersCount}</span>
         </div>
       )}
