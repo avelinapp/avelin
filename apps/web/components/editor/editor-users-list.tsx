@@ -63,7 +63,7 @@ const UserAvatar = ({
     <Avatar
       key={user.name}
       className={cn(
-        'h-6 w-6 text-[11px] font-medium drop-shadow-sm border-[0.5px] border-white',
+        'h-6 w-6 text-[11px] font-medium drop-shadow-sm border-[0.5px] border-white text-primary-text',
         colors[user.color as BaseColor].avatar_bg,
         className,
       )}
