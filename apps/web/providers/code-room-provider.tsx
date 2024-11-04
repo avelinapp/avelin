@@ -72,7 +72,6 @@ export const createCodeRoomStore = () =>
       function setupEditorLanguageObserver() {
         const editorMap = ydoc.getMap('editor')
         if (!editorMap.has('language')) {
-          console.log('Editor language not set, setting to plaintext.')
           editorMap.set('language', 'plaintext') // Set your default language here
         }
 
@@ -92,10 +91,6 @@ export const createCodeRoomStore = () =>
             set({ editorLanguage: newLanguage })
             toast.info(
               `Editor language set to ${languageDetails?.name ?? newLanguage}.`,
-            )
-            console.log(
-              'Editor language update received from ydoc and applied to:',
-              newLanguage,
             )
           }
         }
@@ -121,26 +116,20 @@ export const createCodeRoomStore = () =>
             return [clientId, client.user!]
           }) as Array<[number, UserInfo]>
 
-        console.log('Initial users:', initialUsersInfo)
-
         set({
           users: new Map(initialUsersInfo),
         })
 
         const observer = ({ added, removed }: AwarenessChange) => {
           const { isInitialAwarenessUpdate } = get()
-          console.log('Is initial load:', isInitialAwarenessUpdate)
           if (isInitialAwarenessUpdate) {
             set({ isInitialAwarenessUpdate: false })
             return
           }
 
           const newAwareness = [...awareness.getStates()] as AwarenessList
-          console.log('Current room users:', get().users)
 
           added.forEach((id) => {
-            console.log('User joined:', id)
-
             const userAwareness = newAwareness.find(
               ([clientId]) => clientId === id,
             )
@@ -151,8 +140,6 @@ export const createCodeRoomStore = () =>
           })
 
           removed.forEach((id) => {
-            console.log('User left:', id)
-
             const removedUser = get().users.get(id)
 
             if (!removedUser) return
@@ -202,8 +189,6 @@ export const createCodeRoomStore = () =>
             console.log('Avelin Sync - connection status:', status)
           },
           onConnect: () => {
-            console.log('Avelin Sync - connected to room.')
-
             setupUsersObserver(ws)
           },
         })
@@ -250,7 +235,6 @@ export const createCodeRoomStore = () =>
       })
     },
     setUsers: (users) => {
-      console.log('setting room users', users)
       set({ users: new Map([...users]) })
     },
     setUserActive: (userId) => {
@@ -281,8 +265,6 @@ export const createCodeRoomStore = () =>
       const { ydoc } = get()
 
       ydoc.getMap('editor').set('language', language)
-
-      console.log('Editor language set by you to:', language)
     },
   }))
 

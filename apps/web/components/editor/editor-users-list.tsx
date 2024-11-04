@@ -96,8 +96,6 @@ function UsersListMenu({ users }: { users: UserInfo[] }) {
 export function UsersList() {
   const { users: roomUsers } = useCodeRoom()
 
-  console.log('room users', roomUsers)
-
   const users = Array.from(roomUsers.values())
 
   if (!users || !users.length) return null

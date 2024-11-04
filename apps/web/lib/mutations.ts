@@ -7,10 +7,4 @@ export const useCreateRoom = () =>
       const res = await api.rooms.create.$post()
       return await res.json()
     },
-    onError: (err) => {
-      console.log(err)
-    },
-    onSuccess: (data) => {
-      console.log(data)
-    },
   })
