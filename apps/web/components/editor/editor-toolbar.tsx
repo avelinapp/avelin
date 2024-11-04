@@ -1,11 +1,13 @@
 'use client'
 
+// eslint-disable-next-line
 import { Input } from '@avelin/ui/input'
 import { Button } from '@avelin/ui/button'
 import { CopyIcon } from '@avelin/icons'
 import { EditorLanguageCombobox } from './editor-language-combobox'
 import { UsersList } from './editor-users-list'
 
+// eslint-disable-next-line
 function CopyRoomURL() {
   return (
     <Button
@@ -28,13 +30,13 @@ export function EditorToolbar() {
       <div className='w-full grid grid-cols-3'>
         <div className='flex items-center gap-4 place-self-start'>
           <UsersList />
-          <CopyRoomURL />
+          {/* <CopyRoomURL /> */}
         </div>
         <div className='place-self-center'>
-          <Input
-            size='xs'
-            className='font-medium'
-          />
+          {/* <Input */}
+          {/*   size='xs' */}
+          {/*   className='font-medium' */}
+          {/* /> */}
         </div>
         <div className='place-self-end'>
           <EditorLanguageCombobox />
