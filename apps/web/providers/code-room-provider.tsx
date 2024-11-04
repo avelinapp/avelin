@@ -111,9 +111,17 @@ export const createCodeRoomStore = () =>
         const awareness = networkProvider.awareness!
 
         const initialUsers = [...awareness.getStates()] as AwarenessList
-        const initialUsersInfo = initialUsers.map(([clientId, client]) => {
-          return [clientId, client.user!]
-        }) as Array<[number, UserInfo]>
+        const initialUsersInfo = initialUsers
+          // Initial awareness state can be provided without UserInfo defined
+          // Makes sure we only include users with UserInfo
+          .filter(
+            ([, client]) => client !== undefined && client.user !== undefined,
+          )
+          .map(([clientId, client]) => {
+            return [clientId, client.user!]
+          }) as Array<[number, UserInfo]>
+
+        console.log('Initial users:', initialUsersInfo)
 
         set({
           users: new Map(initialUsersInfo),
