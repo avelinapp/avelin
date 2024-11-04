@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@avelin/ui/dropdown-menu'
 import { cn } from '@avelin/ui/cn'
-import { ComponentPropsWithoutRef, forwardRef, useMemo } from 'react'
+import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import { useCodeRoom } from '@/providers/code-room-provider'
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
 
