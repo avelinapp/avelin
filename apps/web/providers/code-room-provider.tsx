@@ -150,30 +150,28 @@ export const createCodeRoomStore = () =>
 
         const observer = ({ added, removed }: AwarenessChange) => {
           const { isInitialAwarenessUpdate } = get()
-          if (isInitialAwarenessUpdate) {
-            set({ isInitialAwarenessUpdate: false })
-            return
-          }
 
           const newAwareness = [...awareness.getStates()] as AwarenessList
 
-          added.forEach((id) => {
-            const userAwareness = newAwareness.find(
-              ([clientId]) => clientId === id,
-            )
+          if (!isInitialAwarenessUpdate) {
+            added.forEach((id) => {
+              const userAwareness = newAwareness.find(
+                ([clientId]) => clientId === id,
+              )
 
-            const [, client] = userAwareness!
+              const [, client] = userAwareness!
 
-            toast.info(`${client.user?.name} joined the room.`)
-          })
+              toast.info(`${client.user?.name} joined the room.`)
+            })
 
-          removed.forEach((id) => {
-            const removedUser = get().users.get(id)
+            removed.forEach((id) => {
+              const removedUser = get().users.get(id)
 
-            if (!removedUser) return
+              if (!removedUser) return
 
-            toast.info(`${removedUser.name} left the room.`)
-          })
+              toast.info(`${removedUser.name} left the room.`)
+            })
+          }
 
           set({
             users: new Map(
@@ -183,6 +181,10 @@ export const createCodeRoomStore = () =>
               ]),
             ),
           })
+
+          if (isInitialAwarenessUpdate) {
+            set({ isInitialAwarenessUpdate: false })
+          }
         }
 
         awareness.on('change', observer)
