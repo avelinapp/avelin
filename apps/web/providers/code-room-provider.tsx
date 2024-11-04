@@ -10,10 +10,12 @@ import {
   AwarenessChange,
   AwarenessList,
   USER_IDLE_TIMEOUT,
+  UserAwareness,
   UserInfo,
 } from '@/lib/sync'
 import { Language, languages } from '@/lib/constants'
 import { toast } from '@avelin/ui/sonner'
+import { assignOption, baseColors, generateUniqueName } from '@/lib/rooms'
 
 const CodeRoomContext = createContext<StoreApi<CodeRoomStore> | null>(null)
 
@@ -100,6 +102,32 @@ export const createCodeRoomStore = () =>
 
         // Store the observer for later cleanup
         set({ editorObserver: observer })
+      }
+
+      function initializeLocalUserInfo(networkProvider: HocuspocusProvider) {
+        const awareness = networkProvider.awareness!
+
+        const currentUserInfo = awareness.getLocalState() as UserAwareness
+
+        if (!!currentUserInfo.user) {
+          // Local user info already initialized
+          // Do not overwrite with new user info
+          return
+        }
+
+        const assignedColors = Array.from(awareness.getStates().values()).map(
+          ({ user }) => user?.color,
+        )
+
+        const color = assignOption(Object.values(baseColors), assignedColors)
+
+        const localUser: UserAwareness['user'] = {
+          name: generateUniqueName(),
+          color: color,
+          lastActive: Date.now(),
+        }
+
+        awareness.setLocalStateField('user', localUser)
       }
 
       function setupUsersObserver(networkProvider: HocuspocusProvider) {
@@ -189,6 +217,7 @@ export const createCodeRoomStore = () =>
             console.log('Avelin Sync - connection status:', status)
           },
           onConnect: () => {
+            initializeLocalUserInfo(ws)
             setupUsersObserver(ws)
           },
         })
