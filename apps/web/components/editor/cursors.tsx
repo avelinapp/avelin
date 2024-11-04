@@ -18,20 +18,6 @@ export function Cursors({ provider }: CursorsProps) {
   const [tick, setTick] = useState(false)
 
   useEffect(() => {
-    const assignedColors = Array.from(
-      provider.awareness!.getStates().values(),
-    ).map(({ user }) => user?.color)
-
-    const color = assignOption(Object.values(baseColors), assignedColors)
-
-    const localUser: UserAwareness['user'] = {
-      name: generateUniqueName(),
-      color: color,
-      lastActive: Date.now(),
-    }
-
-    provider.awareness?.setLocalStateField('user', localUser)
-
     // On changes, update `awarenessUsers`
     function setUsers({
       added,
