@@ -12,9 +12,11 @@ import {
   DropdownMenuTrigger,
 } from '@avelin/ui/dropdown-menu'
 import { cn } from '@avelin/ui/cn'
-import { ComponentPropsWithoutRef, forwardRef } from 'react'
+import { ComponentPropsWithoutRef, forwardRef, useState } from 'react'
 import { useCodeRoom } from '@/providers/code-room-provider'
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
+import { Button } from '@avelin/ui/button'
+import { ChevronDownIcon } from '@avelin/icons'
 
 type UsersListDisplayProps = {
   users: UserInfo[]
@@ -120,7 +122,7 @@ const UsersListDisplay = forwardRef<
                 ease: 'easeOut',
               }}
             >
-              <div className='h-6 w-6 leading-none tabular-nums rounded-full z-10 font-medium -ml-2.5 text-[11px] bg-gray-3 flex items-center justify-center'>
+              <div className='h-6 w-6 leading-none tabular-nums border-[1.5px] border-white rounded-full z-10 font-medium -ml-2.5 text-[11px] bg-gray-3 flex items-center justify-center'>
                 <span>+{remainingUsersCount}</span>
               </div>
             </motion.div>
@@ -150,6 +152,7 @@ function UsersListMenu({ users }: { users: UserInfo[] }) {
 }
 
 export function UsersList() {
+  const [open, setOpen] = useState(false)
   const { users: roomUsers } = useCodeRoom()
 
   const users = Array.from(roomUsers.values())
@@ -157,9 +160,22 @@ export function UsersList() {
   if (!users || !users.length) return null
 
   return (
-    <DropdownMenu>
+    <DropdownMenu
+      open={open}
+      onOpenChange={setOpen}
+    >
       <DropdownMenuTrigger asChild>
-        <UsersListDisplay users={users} />
+        <Button
+          size='xs'
+          variant='ghost'
+          className={cn(
+            'flex items-center justify-between gap-2',
+            open && 'bg-secondary-bg text-secondary-text',
+          )}
+        >
+          <UsersListDisplay users={users} />
+          <ChevronDownIcon className='group-hover:visible text-secondary-text' />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align='start'
