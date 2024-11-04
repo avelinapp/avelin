@@ -12,8 +12,9 @@ import {
   DropdownMenuTrigger,
 } from '@avelin/ui/dropdown-menu'
 import { cn } from '@avelin/ui/cn'
-import { ComponentPropsWithoutRef, forwardRef } from 'react'
+import { ComponentPropsWithoutRef, forwardRef, useMemo } from 'react'
 import { useCodeRoom } from '@/providers/code-room-provider'
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
 
 type UsersListDisplayProps = {
   users: UserInfo[]
@@ -36,7 +37,7 @@ const UserAvatar = ({
         className,
       )}
     >
-      <AvatarFallback className='leading-none animate-in zoom-in-95 fade-in-0 slide-in-from-left-2 ease-out'>
+      <AvatarFallback className='leading-none'>
         {user.name
           .split('-')
           .map((s) => s[0]?.toUpperCase())
@@ -59,18 +60,73 @@ const UsersListDisplay = forwardRef<
       className='flex items-center select-none h-8'
       {...props}
     >
-      {displayedUsers.map((user) => (
-        <UserAvatar
-          key={user.name}
-          user={user}
-          className='first:-ml-0 -ml-2.5'
-        />
-      ))}
-      {remainingUsersCount > 0 && (
-        <div className='h-6 w-6 leading-none tabular-nums rounded-full z-10 font-medium -ml-2.5 text-[11px] bg-gray-3 flex items-center justify-center'>
-          <span>+{remainingUsersCount}</span>
-        </div>
-      )}
+      <LayoutGroup>
+        <AnimatePresence
+          initial={false}
+          mode='popLayout'
+        >
+          {displayedUsers.map((user) => (
+            <motion.div
+              layout
+              key={user.name}
+              className='first:-ml-0 -ml-2.5'
+              initial={{
+                opacity: 0,
+                filter: 'blur(2px)',
+                transform: 'translateX(-10px)',
+              }}
+              animate={{
+                opacity: 1,
+                filter: 'blur(0px)',
+                transform: 'translateX(0px)',
+              }}
+              exit={{
+                opacity: 0,
+                filter: 'blur(2px)',
+                transform: 'translateX(-10px)',
+              }}
+              transition={{
+                duration: 0.2,
+                ease: 'easeOut',
+              }}
+            >
+              <UserAvatar user={user} />
+            </motion.div>
+          ))}
+          {remainingUsersCount > 0 && (
+            <motion.div
+              layout
+              key='remaining'
+              initial={{
+                opacity: 0,
+                filter: 'blur(2px)',
+                transform: 'translateX(-1px)',
+                scale: 0.8,
+              }}
+              animate={{
+                opacity: 1,
+                filter: 'blur(0px)',
+                transform: 'translateX(0px)',
+                scale: 1,
+              }}
+              exit={{
+                opacity: 0,
+                filter: 'blur(2px)',
+                transform: 'translateX(-1px)',
+                scale: 0.8,
+              }}
+              transition={{
+                duration: 0.3,
+                ease: 'easeOut',
+              }}
+            >
+              <div className='h-6 w-6 leading-none tabular-nums rounded-full z-10 font-medium -ml-2.5 text-[11px] bg-gray-3 flex items-center justify-center'>
+                <span>+{remainingUsersCount}</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </LayoutGroup>
     </div>
   )
 })
