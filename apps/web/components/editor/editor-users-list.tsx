@@ -13,39 +13,7 @@ import {
 } from '@avelin/ui/dropdown-menu'
 import { cn } from '@avelin/ui/cn'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
-
-const users: UserInfo[] = [
-  {
-    name: 'burnt-flamingo',
-    color: colors.red.name,
-    lastActive: Date.now(),
-  },
-  {
-    name: 'toasty-llama',
-    color: colors.orange.name,
-    lastActive: Date.now(),
-  },
-  {
-    name: 'salty-seahorse',
-    color: colors.blue.name,
-    lastActive: Date.now(),
-  },
-  {
-    name: 'sunny-horse',
-    color: colors.purple.name,
-    lastActive: Date.now(),
-  },
-  {
-    name: 'snowy-duck',
-    color: colors.pink.name,
-    lastActive: Date.now(),
-  },
-  {
-    name: 'cool-cucumber',
-    color: colors.green.name,
-    lastActive: Date.now(),
-  },
-]
+import { useCodeRoom } from '@/providers/code-room-provider'
 
 type UsersListDisplayProps = {
   users: UserInfo[]
@@ -68,7 +36,7 @@ const UserAvatar = ({
         className,
       )}
     >
-      <AvatarFallback className='leading-none'>
+      <AvatarFallback className='leading-none animate-in zoom-in-95 fade-in-0 slide-in-from-left-2 ease-out'>
         {user.name
           .split('-')
           .map((s) => s[0]?.toUpperCase())
@@ -98,9 +66,11 @@ const UsersListDisplay = forwardRef<
           className='first:-ml-0 -ml-2'
         />
       ))}
-      <div className='h-6 w-6 leading-none tabular-nums rounded-full z-10 font-medium -ml-2 text-[11px] bg-gray-3 flex items-center justify-center'>
-        <span>+{remainingUsersCount}</span>
-      </div>
+      {remainingUsersCount > 0 && (
+        <div className='h-6 w-6 leading-none tabular-nums rounded-full z-10 font-medium -ml-2 text-[11px] bg-gray-3 flex items-center justify-center'>
+          <span>+{remainingUsersCount}</span>
+        </div>
+      )}
     </div>
   )
 })
@@ -124,6 +94,14 @@ function UsersListMenu({ users }: { users: UserInfo[] }) {
 }
 
 export function UsersList() {
+  const { users: roomUsers } = useCodeRoom()
+
+  console.log('room users', roomUsers)
+
+  const users = Array.from(roomUsers.values())
+
+  if (!users || !users.length) return null
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
