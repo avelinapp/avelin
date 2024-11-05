@@ -50,7 +50,7 @@ const server = new Hocuspocus({
             })
             .returning()
             .then(
-              (result) => {
+              () => {
                 resolve()
               },
               (reason) => {
@@ -61,10 +61,6 @@ const server = new Hocuspocus({
       },
     }),
   ],
-  // async onAuthenticate(data) {
-  //   console.log('Here!')
-  //   return
-  // },
 })
 
 const { app } = expressWebsockets(express())
