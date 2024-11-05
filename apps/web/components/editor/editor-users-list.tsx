@@ -178,7 +178,7 @@ export function UsersList() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        align='start'
+        align='end'
         className='min-w-[200px]'
       >
         <DropdownMenuGroup title='Active users'>
