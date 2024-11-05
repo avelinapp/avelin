@@ -1,4 +1,5 @@
 import { pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
+import { bytea } from './db'
 
 export const users = pgTable('users', {
   id: text().primaryKey(),
@@ -16,11 +17,11 @@ export const oauthAccounts = pgTable(
       .notNull()
       .references(() => users.id),
   },
-  // (table) => {
-  //   return {
-  //     pk: primaryKey({ columns: [table.providerId, table.providerUserId] }),
-  //   }
-  // },
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.providerId, table.providerUserId] }),
+    }
+  },
 )
 
 export const sessions = pgTable('sessions', {
@@ -37,6 +38,7 @@ export const sessions = pgTable('sessions', {
 export const rooms = pgTable('rooms', {
   id: text().primaryKey(),
   slug: text().unique(),
+  ydoc: bytea(),
 })
 
 export const schema = {
