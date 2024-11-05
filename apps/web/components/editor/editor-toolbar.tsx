@@ -15,6 +15,7 @@ import {
 import { useMemo } from 'react'
 import { toast } from '@avelin/ui/sonner'
 import { useCopyToClipboard } from '@avelin/ui/hooks'
+import { NetworkStatus } from './network-status'
 
 function CopyRoomURL({ roomSlug }: { roomSlug: string }) {
   const [, copy] = useCopyToClipboard()
@@ -95,6 +96,7 @@ export function EditorToolbar() {
           {/* /> */}
         </div>
         <div className='place-self-end flex items-center gap-1'>
+          <NetworkStatus />
           <UsersList />
           <CopyRoomURL roomSlug={room?.slug ?? ''} />
         </div>
