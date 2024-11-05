@@ -1,10 +1,4 @@
-import {
-  assignOption,
-  BaseColor,
-  baseColors,
-  colors,
-  generateUniqueName,
-} from '@/lib/rooms'
+import { BaseColor, colors } from '@/lib/rooms'
 import { AwarenessList, USER_IDLE_TIMEOUT, UserAwareness } from '@/lib/sync'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 import { useEffect, useMemo, useState } from 'react'
