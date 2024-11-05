@@ -4,6 +4,9 @@
   "private": true,
   "license": "MIT",
   "main": "./index.mjs",
+  "scripts": {
+    "lint": "prettier . --write"
+  },
   "publishConfig": {
     "access": "public"
   },

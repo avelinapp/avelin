@@ -379,6 +379,9 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.1
+      prettier:
+        specifier: 'catalog:'
+        version: 3.3.3
       typescript:
         specifier: 'catalog:'
         version: 5.6.3
@@ -413,12 +416,18 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.1
+      prettier:
+        specifier: 'catalog:'
+        version: 3.3.3
       typescript:
         specifier: 'catalog:'
         version: 5.6.3
 
   packages/eslint-config:
     devDependencies:
+      '@avelin/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
       '@typescript-eslint/eslint-plugin':
         specifier: 'catalog:'
         version: 7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1)(typescript@5.6.3)
@@ -437,6 +446,9 @@ importers:
       eslint-plugin-only-warn:
         specifier: 'catalog:'
         version: 1.1.0
+      prettier:
+        specifier: 'catalog:'
+        version: 3.3.3
       typescript:
         specifier: 'catalog:'
         version: 5.6.3
@@ -497,8 +509,14 @@ importers:
         specifier: 'catalog:'
         version: 10.0.0
       eslint:
-        specifier: ^8
+        specifier: 'catalog:'
         version: 8.57.1
+      prettier:
+        specifier: 'catalog:'
+        version: 3.3.3
+      typescript:
+        specifier: 'catalog:'
+        version: 5.6.3
 
   packages/prettier-config:
     devDependencies:
@@ -506,7 +524,14 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
 
-  packages/typescript-config: {}
+  packages/typescript-config:
+    devDependencies:
+      '@avelin/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
+      prettier:
+        specifier: 'catalog:'
+        version: 3.3.3
 
   packages/ui:
     dependencies:

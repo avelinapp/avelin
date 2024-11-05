@@ -1,7 +1,9 @@
 {
   "name": "@avelin/api",
+  "version": "0.2.0",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
+    "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc",
     "compile": "bun build src/index.ts --compile --minify --sourcemap ./src/index.ts --outfile api"
   },
@@ -27,6 +29,5 @@
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
-  },
-  "version": "0.2.0"
+  }
 }

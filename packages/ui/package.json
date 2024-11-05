@@ -6,6 +6,7 @@
     "ui:init": "pnpm dlx shadcn@latest init",
     "ui:add": "pnpm dlx shadcn@latest add",
     "dev": "tsc --watch",
+    "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc"
   },
   "files": [

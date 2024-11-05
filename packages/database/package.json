@@ -2,10 +2,6 @@
   "name": "@avelin/database",
   "version": "0.2.0",
   "private": true,
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -15,6 +11,7 @@
   "scripts": {
     "dev": "tsc --watch",
     "dev:studio": "pnpm run db:studio",
+    "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio"
@@ -31,6 +28,7 @@
     "@types/node": "^20",
     "drizzle-kit": "catalog:",
     "eslint": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "prettier": "catalog:"
   }
 }

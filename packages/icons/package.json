@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "tsc --watch",
+    "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc"
   },
   "exports": {
