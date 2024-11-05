@@ -3,11 +3,9 @@
   "version": "0.2.0",
   "type": "module",
   "private": true,
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
     "dev": "tsc --watch",
+    "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc"
   },
   "exports": {
@@ -21,7 +19,9 @@
     "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
     "@types/uuid": "catalog:",
-    "eslint": "^8"
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
   },
   "dependencies": {
     "nanoid": "^5.0.7",

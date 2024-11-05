@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "tsc --watch",
+    "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc"
   },
   "exports": {
@@ -26,6 +27,7 @@
     "@avelin/typescript-config": "workspace:*",
     "@types/bun": "catalog:",
     "eslint": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "prettier": "catalog:"
   }
 }

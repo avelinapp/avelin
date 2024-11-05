@@ -3,7 +3,14 @@
   "version": "0.2.0",
   "private": true,
   "license": "MIT",
+  "scripts": {
+    "lint": "prettier . --write"
+  },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@avelin/prettier-config": "workspace:*",
+    "prettier": "catalog:"
   }
 }

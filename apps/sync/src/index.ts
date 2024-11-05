@@ -20,7 +20,7 @@ const server = new Hocuspocus({
     new Database({
       fetch: async ({ documentName }) => {
         console.log('fetching ydoc for:', documentName)
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
           db.select({ ydoc: schema.rooms.ydoc })
             .from(schema.rooms)
             .where(eq(schema.rooms.id, documentName))
@@ -37,7 +37,7 @@ const server = new Hocuspocus({
       },
       store: async ({ documentName, state }) => {
         console.log('storing ydoc for:', documentName)
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
           db.insert(schema.rooms)
             .values({
               id: documentName,
