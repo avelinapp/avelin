@@ -12,7 +12,10 @@ export const roomApp = new Hono()
           id: newId('room'),
           slug: newRoomSlug(),
         })
-        .returning()
+        .returning({
+          id: schema.rooms.id,
+          slug: schema.rooms.slug,
+        })
 
       return room
     })
@@ -23,7 +26,10 @@ export const roomApp = new Hono()
     const slug = c.req.param('slug')
 
     const [room] = await db
-      .select()
+      .select({
+        id: schema.rooms.id,
+        slug: schema.rooms.slug,
+      })
       .from(schema.rooms)
       .where(eq(schema.rooms.slug, slug))
       .limit(1)
