@@ -18,6 +18,8 @@
   "devDependencies": {
     "@release-it/conventional-changelog": "^9.0.2",
     "auto-changelog": "^2.5.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "prettier": "catalog:",
     "release-it": "^17.10.0",
     "turbo": "catalog:",
