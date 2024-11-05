@@ -13,7 +13,8 @@
     "release": "release-it",
     "release:patch": "release-it patch",
     "release:minor": "release-it minor",
-    "release:major": "release-it major"
+    "release:major": "release-it major",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^9.0.2",
