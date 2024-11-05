@@ -61,7 +61,7 @@ export const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
         </PopoverTrigger>
         <PopoverContent
           className='w-fit min-w-[100px] p-0 shadow-lg'
-          align='end'
+          align='start'
         >
           <Command>
             <CommandInput placeholder={`Search ${name}...`} />
