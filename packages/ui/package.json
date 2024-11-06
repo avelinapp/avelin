@@ -16,6 +16,7 @@
   ],
   "exports": {
     "./avatar": "./src/components/ui/avatar.tsx",
+    "./badge": "./src/components/ui/badge.tsx",
     "./button": "./src/components/ui/button.tsx",
     "./combobox": "./src/components/ui/combobox.tsx",
     "./command": "./src/components/ui/command.tsx",
