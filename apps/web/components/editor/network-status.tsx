@@ -24,13 +24,16 @@ export function NetworkStatusBadge({ className }: NetworkStatusBadgeProps) {
 
   return (
     <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
+      <Tooltip delayDuration={0}>
+        <TooltipTrigger
+          asChild
+          className='font-mono tracking-tight'
+        >
           {!isOnline ? (
             <Badge
               variant='secondary'
               className={cn(
-                'inline-flex items-center gap-0.5',
+                'inline-flex items-center gap-1',
                 'animate-in fade-in-5 zoom-in-95 ease-out',
                 className,
               )}
@@ -52,8 +55,22 @@ export function NetworkStatusBadge({ className }: NetworkStatusBadgeProps) {
             </Badge>
           ) : null}
         </TooltipTrigger>
-        <TooltipContent align='end'>
-          You are currently not connected to the network.
+        <TooltipContent
+          align='end'
+          collisionPadding={8}
+          className='text-xs space-y-1 max-w-[250px] py-4'
+        >
+          <p className='font-semibold'>You are offline.</p>
+          <p>
+            Your changes will be saved locally until you establish a network
+            connection.
+          </p>
+          <p>
+            {
+              "When you're back online, your work will be merged with the latest changes."
+            }
+          </p>
+          <p>Please reconnect your network and try again.</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
