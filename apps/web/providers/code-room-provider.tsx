@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from 'react'
 import { createStore, StoreApi, useStore } from 'zustand'
 import * as Y from 'yjs'
 import { IndexeddbPersistence } from 'y-indexeddb'
-import { HocuspocusProvider } from '@hocuspocus/provider'
+import { HocuspocusProvider, WebSocketStatus } from '@hocuspocus/provider'
 import type { Room, Session } from '@avelin/database'
 import {
   AwarenessChange,
@@ -26,10 +26,12 @@ export interface CodeRoomProviderProps {
 export type CodeRoomState = {
   ydoc: Y.Doc
   networkProvider?: HocuspocusProvider
+  networkProviderStatus?: WebSocketStatus
   persistenceProvider?: IndexeddbPersistence
   room?: Room
   users: Map<number, UserInfo>
   activeUsers: Map<number, number>
+  isInitialSyncConnect: boolean
   isInitialAwarenessUpdate: boolean
   editorLanguage?: Language['value']
   // eslint-disable-next-line
@@ -54,12 +56,14 @@ export const createCodeRoomStore = () =>
   createStore<CodeRoomStore>((set, get) => ({
     ydoc: new Y.Doc(),
     networkProvider: undefined,
+    networkProviderStatus: undefined,
     persistenceProvider: undefined,
     room: undefined,
     users: new Map<number, UserInfo>(),
     activeUsers: new Map<number, number>(),
     editorLanguage: undefined,
     usersObserver: undefined,
+    isInitialSyncConnect: false,
     isInitialAwarenessUpdate: true,
     setIsInitialAwarenessUpdate: (value) => {
       set({ isInitialAwarenessUpdate: value })
@@ -217,14 +221,16 @@ export const createCodeRoomStore = () =>
           token: session?.id,
           onStatus: ({ status }) => {
             console.log('Avelin Sync - connection status:', status)
+            set({ networkProviderStatus: status })
           },
           onConnect: () => {
+            set({ isInitialSyncConnect: false })
             initializeLocalUserInfo(ws)
             setupUsersObserver(ws)
           },
         })
 
-        set({ networkProvider: ws })
+        set({ networkProvider: ws, isInitialSyncConnect: true })
       } else {
         console.log('Network provider already initialized.')
       }

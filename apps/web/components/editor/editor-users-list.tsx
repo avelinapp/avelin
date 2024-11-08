@@ -17,6 +17,7 @@ import { useCodeRoom } from '@/providers/code-room-provider'
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
 import { Button } from '@avelin/ui/button'
 import { ChevronDownIcon } from '@avelin/icons'
+import { useNetworkStatus } from '@avelin/ui/hooks'
 
 type UsersListDisplayProps = {
   users: UserInfo[]
@@ -154,10 +155,11 @@ function UsersListMenu({ users }: { users: UserInfo[] }) {
 export function UsersList() {
   const [open, setOpen] = useState(false)
   const { users: roomUsers } = useCodeRoom()
+  const { isOnline } = useNetworkStatus()
 
   const users = Array.from(roomUsers.values())
 
-  if (!users || !users.length) return null
+  if (!isOnline || !users || !users.length) return null
 
   return (
     <DropdownMenu
