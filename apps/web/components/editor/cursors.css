@@ -16,7 +16,6 @@
   border-radius: 4px;
 }
 
-/* Extend hover area with a transparent pseudo-element */
 .yRemoteSelectionHead::before {
   content: '';
   position: absolute;
@@ -28,6 +27,8 @@
   background: transparent;
   /* Allow this area to capture hover events */
   pointer-events: all;
+  /* Ensure the hover area is above the cursor */
+  z-index: 10;
 }
 
 /* Cursor name */
