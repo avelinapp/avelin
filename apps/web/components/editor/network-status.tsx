@@ -11,14 +11,43 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@avelin/ui/tooltip'
+import { useEffect, useState } from 'react'
+import { WebSocketStatus } from '@hocuspocus/provider'
 
 // eslint-disable-next-line
 interface NetworkStatusBadgeProps
   extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function NetworkStatusBadge({ className }: NetworkStatusBadgeProps) {
-  const { networkProvider: provider } = useCodeRoom()
+  const {
+    networkProvider: provider,
+    networkProviderStatus: syncStatus,
+    isInitialSyncConnect,
+  } = useCodeRoom()
   const { isOnline } = useNetworkStatus()
+  const [show, setShow] = useState(false)
+
+  useEffect(() => {
+    if (!provider) {
+      setShow(false)
+      return
+    }
+
+    if (isInitialSyncConnect) {
+      const timer = setTimeout(() => {
+        if (syncStatus !== WebSocketStatus.Connected || !isOnline) {
+          setShow(true)
+        }
+      }, 3000)
+
+      return () => clearTimeout(timer)
+    } else {
+      setShow(true)
+    }
+  }, [provider, syncStatus, isInitialSyncConnect, isOnline])
+
+  const shouldRender =
+    !isOnline || (show && provider?.status !== WebSocketStatus.Connected)
 
   if (!provider) return null
 
@@ -29,7 +58,7 @@ export function NetworkStatusBadge({ className }: NetworkStatusBadgeProps) {
           asChild
           className='font-mono tracking-tight'
         >
-          {!isOnline ? (
+          {!shouldRender ? null : !isOnline ? (
             <Badge
               variant='secondary'
               className={cn(
@@ -45,13 +74,13 @@ export function NetworkStatusBadge({ className }: NetworkStatusBadgeProps) {
             <Badge
               variant='secondary'
               className={cn(
-                'inline-flex items-center gap-0.5',
+                'inline-flex items-center gap-1 bg-orange-500/10 hover:bg-orange-500/15 border border-orange-500/25',
                 'animate-in fade-in-5 zoom-in-95 ease-out',
                 className,
               )}
             >
-              <ZapIcon className='size-3 shrink-0' />
-              Sync offline
+              <ZapIcon className='size-3 shrink-0 text-orange-500' />
+              Offline
             </Badge>
           ) : null}
         </TooltipTrigger>
@@ -60,17 +89,25 @@ export function NetworkStatusBadge({ className }: NetworkStatusBadgeProps) {
           collisionPadding={8}
           className='text-xs space-y-1 max-w-[250px] py-4'
         >
-          <p className='font-semibold'>You are offline.</p>
-          <p>
-            Your changes will be saved locally until you establish a network
-            connection.
-          </p>
+          {!isOnline ? (
+            <p className='font-semibold'>You are offline.</p>
+          ) : (
+            <p className='font-semibold'>
+              You are not connected to Avelin Sync.
+            </p>
+          )}
+          {isOnline && (
+            <p>
+              You may need to adjust your firewall to allow Avelin Sync to
+              connect you with our services.
+            </p>
+          )}
+          <p>Your changes will be saved locally until you re-connect.</p>
           <p>
             {
               "When you're back online, your work will be merged with the latest changes."
             }
           </p>
-          <p>Please reconnect your network and try again.</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
