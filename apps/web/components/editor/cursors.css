@@ -16,6 +16,20 @@
   border-radius: 4px;
 }
 
+/* Extend hover area with a transparent pseudo-element */
+.yRemoteSelectionHead::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  /* Transparent background to extend the hoverable area */
+  background: transparent;
+  /* Allow this area to capture hover events */
+  pointer-events: all;
+}
+
 /* Cursor name */
 .yRemoteSelectionHead::after {
   visibility: var(--name-visibility);
@@ -44,4 +58,11 @@
   pointer-events: none;
   user-select: none;
   z-index: 10;
+}
+
+/* Show the username tag on hover */
+.yRemoteSelectionHead:hover::after {
+  visibility: visible;
+  opacity: 1;
+  transform: scale(1);
 }
