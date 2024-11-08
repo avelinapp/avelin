@@ -11,7 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@avelin/ui/tooltip'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { WebSocketStatus } from '@hocuspocus/provider'
 
 // eslint-disable-next-line
@@ -26,6 +26,14 @@ export function NetworkStatusBadge({ className }: NetworkStatusBadgeProps) {
   } = useCodeRoom()
   const { isOnline } = useNetworkStatus()
   const [show, setShow] = useState(false)
+
+  const handleReconnect = useCallback(() => {
+    console.log('Handling reconnect...')
+    if (!!provider && provider.status !== WebSocketStatus.Connected) {
+      console.log('Reconnecting...')
+      provider.connect()
+    }
+  }, [provider])
 
   useEffect(() => {
     if (!provider) {
@@ -108,6 +116,14 @@ export function NetworkStatusBadge({ className }: NetworkStatusBadgeProps) {
               "When you're back online, your work will be merged with the latest changes."
             }
           </p>
+          {isOnline && (
+            <p
+              className='mt-1 font-semibold hover:underline'
+              onClick={handleReconnect}
+            >
+              Click here to reconnect.
+            </p>
+          )}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
