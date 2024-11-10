@@ -20,11 +20,7 @@ type AuthProviderProps = {
 }
 
 export default function AuthProvider({ children }: AuthProviderProps) {
-  const {
-    data: auth,
-    isPending,
-    isRefetching,
-  } = useSuspenseQuery({
+  const { data, isPending, isRefetching } = useSuspenseQuery({
     ...queries.auth.check(),
     retry: false,
     staleTime: 30 * 60 * 1000, // Data considered fresh for 5 minutes
@@ -40,9 +36,9 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     if (isRefetching) {
       console.log('Auth refetch...')
     }
-  }, [isPending, isRefetching])
+  }, [isPending, isRefetching, data])
 
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={data}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {
