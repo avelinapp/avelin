@@ -99,14 +99,37 @@ export const authApp = new Hono()
     const sessionId = getCookie(c, 'avelin_session_id')
 
     if (!sessionId) {
-      return c.json({ error: 'Session not defined in request.' }, 400)
+      return c.text(
+        superjson.stringify({
+          isAuthenticated: false,
+          error: 'Session not defined in request',
+          user: null,
+          session: null,
+        }),
+        400,
+      )
     }
 
     const auth = await validateSession(sessionId)
 
     if (!auth) {
-      return c.json({ error: 'Session not found.' }, 400)
+      return c.text(
+        superjson.stringify({
+          isAuthenticated: false,
+          error: 'Invalid session',
+          user: null,
+          session: null,
+        }),
+        404,
+      )
     }
 
-    return c.json(superjson.stringify(auth))
+    return c.text(
+      superjson.stringify({
+        isAuthenticated: true,
+        user: auth.user,
+        session: auth.session,
+      }),
+      200,
+    )
   })

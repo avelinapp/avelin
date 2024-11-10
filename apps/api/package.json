@@ -3,6 +3,7 @@
   "version": "0.3.0",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
+    "dev:tsc": "tsc --watch",
     "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc",
     "compile": "bun build src/index.ts --compile --minify --sourcemap ./src/index.ts --outfile api"
@@ -11,6 +12,10 @@
     "./client": {
       "types": "./src/client.ts",
       "default": "./dist/client.js"
+    },
+    "./types": {
+      "types": "./src/types.ts",
+      "default": "./dist/types.js"
     }
   },
   "dependencies": {

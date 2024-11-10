@@ -13,6 +13,7 @@ import CreateRoomButton from './_components/create-room-button'
 export default function Home() {
   return (
     <div className='h-screen flex w-full flex-1 flex-col items-center justify-center gap-12 p-4'>
+      <div></div>
       <div className='flex flex-col items-center gap-12'>
         <LogoAvelin className='size-24 text-primary-bg sm:size-64 drop-shadow-xl' />
         <Title />
