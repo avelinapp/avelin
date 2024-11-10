@@ -9,11 +9,11 @@ import {
 import Title from './_components/title'
 import Link from 'next/link'
 import CreateRoomButton from './_components/create-room-button'
+import { Button } from '@avelin/ui/button'
 
 export default function Home() {
   return (
     <div className='h-screen flex w-full flex-1 flex-col items-center justify-center gap-12 p-4'>
-      <div></div>
       <div className='flex flex-col items-center gap-12'>
         <LogoAvelin className='size-24 text-primary-bg sm:size-64 drop-shadow-xl' />
         <Title />
@@ -66,7 +66,25 @@ export default function Home() {
           </li>
         </ul>
       </div>
-      <CreateRoomButton />
+      <div className='inline-flex items-center gap-4 mt-4'>
+        <CreateRoomButton />
+        <div className='inline-flex gap-2'>
+          <Button
+            size='lg'
+            variant='secondary'
+            className='text-lg'
+          >
+            Log in
+          </Button>
+          <Button
+            size='lg'
+            variant='default'
+            className='text-lg'
+          >
+            Sign up
+          </Button>
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@avelin/ui/button'
-import { PlusIcon } from '@avelin/icons'
+import { CodeIcon } from '@avelin/icons'
 import { useScramble } from 'use-scramble'
 import { useCreateRoom } from '@/lib/mutations'
 import { useRouter } from 'next/navigation'
@@ -17,7 +17,7 @@ export default function CreateRoomButton() {
       },
     })
 
-  const buttonText = !isPending ? 'Create a new room' : 'Building your room...'
+  const buttonText = !isPending ? 'Create room' : 'Building...'
   const { ref } = useScramble({
     text: buttonText,
     speed: 1,
@@ -27,12 +27,20 @@ export default function CreateRoomButton() {
   return (
     <Button
       size='lg'
-      className='inline-flex min-w-[275px] items-center font-mono text-base font-medium tracking-tight sm:min-w-[350px] sm:text-xl'
+      className='bg-indigo-9 hover:bg-indigo-9 text-gray-1 inline-flex items-center min-w-[275px] text-lg'
       disabled={isPending}
       onClick={createRoom}
     >
-      {!isPending && <PlusIcon className='mr-2 size-4 sm:size-6' />}
+      {!isPending && (
+        <CodeIcon
+          strokeWidth={3}
+          className='h-10 w-10 shrink-0'
+        />
+      )}
       <span ref={ref} />
+      <div className='ml-2 font-mono rounded-sm size-7 inline-flex items-center justify-center text-indigo-3 font-normal bg-indigo-11 text-base'>
+        C
+      </div>
     </Button>
   )
 }
