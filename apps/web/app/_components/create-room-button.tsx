@@ -23,8 +23,8 @@ export default function CreateRoomButton() {
   const buttonText = !isPending ? 'Create room' : 'Building...'
   const { ref } = useScramble({
     text: buttonText,
-    speed: 1,
-    scramble: 1,
+    speed: 0.75,
+    scramble: 6,
   })
 
   return (

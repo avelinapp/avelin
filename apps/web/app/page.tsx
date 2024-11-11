@@ -8,8 +8,7 @@ import {
 } from '@avelin/icons'
 import Title from './_components/title'
 import Link from 'next/link'
-import CreateRoomButton from './_components/create-room-button'
-import { Button } from '@avelin/ui/button'
+import { Actions } from './_components/actions'
 
 export default function Home() {
   return (
@@ -66,29 +65,7 @@ export default function Home() {
           </li>
         </ul>
       </div>
-      <div className='inline-flex items-center gap-4 mt-4'>
-        <CreateRoomButton />
-        <div className='inline-flex gap-2'>
-          <Link href='/login'>
-            <Button
-              size='lg'
-              variant='secondary'
-              className='text-lg'
-            >
-              Log in
-            </Button>
-          </Link>
-          <Link href='/login'>
-            <Button
-              size='lg'
-              variant='default'
-              className='text-lg'
-            >
-              Sign up
-            </Button>
-          </Link>
-        </div>
-      </div>
+      <Actions />
     </div>
   )
 }
