@@ -64,11 +64,19 @@ const roomQueries = {
 
 const authQueries = {
   all: () => ['auth'],
-  check: () =>
+  // eslint-disable-next-line
+  check: (headers: any = undefined) =>
     queryOptions({
       queryKey: [...authQueries.all(), 'check'],
       queryFn: async () => {
-        const res = await api.auth.verify.$get({}, {})
+        const res = await api.auth.verify.$get(
+          {},
+          {
+            headers: {
+              ...headers,
+            },
+          },
+        )
 
         const text = await res.text()
         const data = superjson.parse<AuthVerifyGETResponse>(text)
