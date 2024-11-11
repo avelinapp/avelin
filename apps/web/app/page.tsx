@@ -8,7 +8,7 @@ import {
 } from '@avelin/icons'
 import Title from './_components/title'
 import Link from 'next/link'
-import Actions from './_components/actions'
+import { Actions } from './_components/actions'
 
 export default function Home() {
   return (
