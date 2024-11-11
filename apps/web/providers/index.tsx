@@ -1,17 +1,19 @@
-import { checkAuth } from '@/lib/actions'
 import AuthProvider from './auth-provider'
-import QueryClientProvider from './query-client-provider'
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
+import { getQueryClient, queries } from '@/lib/queries'
+import { headers } from 'next/headers'
 
 export default async function Providers({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const auth = await checkAuth()
+  const queryClient = getQueryClient()
+  await queryClient.prefetchQuery(queries.auth.check(headers()))
 
   return (
-    <QueryClientProvider>
-      <AuthProvider initialData={auth ?? undefined}>{children}</AuthProvider>
-    </QueryClientProvider>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <AuthProvider>{children}</AuthProvider>
+    </HydrationBoundary>
   )
 }

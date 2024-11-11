@@ -5,14 +5,14 @@ import { useEffect, useState } from 'react'
 import { useScramble } from 'use-scramble'
 
 export default function Title() {
-  const texts = ['code?', 'develop?', 'share?', 'work?']
+  const texts = ['code', 'develop', 'share', 'work']
   const [index, setIndex] = useState(0)
 
   const { ref: titleRef } = useScramble({
     text: texts[index],
     overflow: true,
     speed: 0.75,
-    scramble: 6,
+    scramble: 10,
   })
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function Title() {
         'drop-shadow-2xl',
       )}
     >
-      Ready to <span ref={titleRef} />
+      Ready to <span ref={titleRef} />?
     </h1>
   )
 }

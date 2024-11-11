@@ -5,6 +5,7 @@ import { PlusIcon } from '@avelin/icons'
 import { useScramble } from 'use-scramble'
 import { useCreateRoom } from '@/lib/mutations'
 import { useRouter } from 'next/navigation'
+import { useKeyPress } from '@avelin/ui/hooks'
 
 export default function CreateRoomButton() {
   const router = useRouter()
@@ -17,7 +18,9 @@ export default function CreateRoomButton() {
       },
     })
 
-  const buttonText = !isPending ? 'Create a new room' : 'Building your room...'
+  useKeyPress(['c'], createRoom)
+
+  const buttonText = !isPending ? 'Create room' : 'Building...'
   const { ref } = useScramble({
     text: buttonText,
     speed: 1,
@@ -27,12 +30,27 @@ export default function CreateRoomButton() {
   return (
     <Button
       size='lg'
-      className='inline-flex min-w-[275px] items-center font-mono text-base font-medium tracking-tight sm:min-w-[350px] sm:text-xl'
+      className='bg-indigo-9 hover:bg-indigo-10 group text-indigo-1 inline-flex items-center min-w-[275px] text-lg'
       disabled={isPending}
       onClick={createRoom}
     >
-      {!isPending && <PlusIcon className='mr-2 size-4 sm:size-6' />}
-      <span ref={ref} />
+      {!isPending && (
+        <PlusIcon
+          strokeWidth={3}
+          className='size-24 shrink-0'
+        />
+      )}
+      <span
+        className='text-indigo-2'
+        ref={ref}
+      />
+      {!isPending && <KeyboardShortcut />}
     </Button>
   )
 }
+
+const KeyboardShortcut = () => (
+  <div className='ml-2 font-mono rounded-sm size-7 inline-flex items-center justify-center text-indigo-3 font-normal bg-indigo-12/50 text-base'>
+    C
+  </div>
+)

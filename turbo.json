@@ -28,8 +28,11 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true,
-      "dependsOn": ["@avelin/api#build"]
+      "persistent": true
+    },
+    "dev:tsc": {
+      "cache": false,
+      "persistent": true
     },
     "db:push": {
       "cache": false

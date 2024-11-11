@@ -74,6 +74,9 @@ export const authApp = new Hono()
     if (existingUser) {
       const session = await createSession(existingUser.id)
       setCookie(c, 'avelin_session_id', session.id, {
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        httpOnly: true,
         expires: session.expiresAt,
       })
 
@@ -89,24 +92,49 @@ export const authApp = new Hono()
     const session = await createSession(newUser.id)
 
     setCookie(c, 'avelin_session_id', session.id, {
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      httpOnly: true,
       expires: session.expiresAt,
     })
 
     return c.redirect(process.env.APP_URL ?? '/')
   })
   .get('/verify', async (c) => {
-    console.log(getCookie(c))
     const sessionId = getCookie(c, 'avelin_session_id')
 
     if (!sessionId) {
-      return c.json({ error: 'Session not defined in request.' }, 400)
+      return c.text(
+        superjson.stringify({
+          isAuthenticated: false,
+          error: 'Session not defined in request',
+          user: null,
+          session: null,
+        }),
+        400,
+      )
     }
 
     const auth = await validateSession(sessionId)
 
     if (!auth) {
-      return c.json({ error: 'Session not found.' }, 400)
+      return c.text(
+        superjson.stringify({
+          isAuthenticated: false,
+          error: 'Invalid session',
+          user: null,
+          session: null,
+        }),
+        404,
+      )
     }
 
-    return c.json(superjson.stringify(auth))
+    return c.text(
+      superjson.stringify({
+        isAuthenticated: true,
+        user: auth.user,
+        session: auth.session,
+      }),
+      200,
+    )
   })
