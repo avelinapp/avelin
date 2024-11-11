@@ -74,6 +74,9 @@ export const authApp = new Hono()
     if (existingUser) {
       const session = await createSession(existingUser.id)
       setCookie(c, 'avelin_session_id', session.id, {
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        httpOnly: true,
         expires: session.expiresAt,
       })
 
@@ -89,13 +92,15 @@ export const authApp = new Hono()
     const session = await createSession(newUser.id)
 
     setCookie(c, 'avelin_session_id', session.id, {
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      httpOnly: true,
       expires: session.expiresAt,
     })
 
     return c.redirect(process.env.APP_URL ?? '/')
   })
   .get('/verify', async (c) => {
-    console.log(getCookie(c))
     const sessionId = getCookie(c, 'avelin_session_id')
 
     if (!sessionId) {
