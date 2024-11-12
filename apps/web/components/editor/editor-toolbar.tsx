@@ -1,11 +1,7 @@
 'use client'
 
 import { Separator } from '@avelin/ui/separator'
-import {
-  LogInIcon,
-  LogoAvelin,
-  // SaveIcon
-} from '@avelin/icons'
+import { LogInIcon, LogoAvelin } from '@avelin/icons'
 import { EditorLanguageCombobox } from './editor-language-combobox'
 import { UsersList } from './editor-users-list'
 import { useCodeRoom } from '@/providers/code-room-provider'
@@ -44,16 +40,6 @@ export function EditorToolbar() {
           <div className='flex items-center gap-1'>
             <UsersList />
             <CopyRoomURL roomSlug={room?.slug ?? ''} />
-            {/* <Button */}
-            {/*   size='xs' */}
-            {/*   variant='outline' */}
-            {/*   disabled */}
-            {/* > */}
-            {/*   <SaveIcon */}
-            {/*     strokeWidth={2.25} */}
-            {/*     className='size-4 shrink-0' */}
-            {/*   /> */}
-            {/* </Button> */}
           </div>
           <Separator
             className='mx-3'
