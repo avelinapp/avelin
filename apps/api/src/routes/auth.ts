@@ -5,6 +5,7 @@ import {
   generateGoogleAuthorizationUrl,
   getUserByGoogleId,
   google,
+  invalidateSession,
   validateSession,
 } from '@avelin/auth'
 import { getCookie, setCookie } from 'hono/cookie'
@@ -160,4 +161,25 @@ export const authApp = new Hono()
       }),
       200,
     )
+  })
+  .post('/logout', async (c) => {
+    const sessionId = getCookie(c, 'avelin_session_id')
+
+    if (!sessionId) {
+      return c.json({ error: 'Session not defined in request.' }, 400)
+    }
+
+    const session = await validateSession(sessionId)
+
+    if (!session) {
+      return c.json({ error: 'Session not found.' }, 400)
+    }
+
+    await invalidateSession(sessionId)
+    setCookie(c, 'avelin_session_id', '', {
+      path: '/',
+      expires: new Date(0),
+    })
+
+    return c.json({ message: 'Logged out successfully.' }, 200)
   })
