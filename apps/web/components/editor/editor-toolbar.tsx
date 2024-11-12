@@ -14,8 +14,12 @@ import { CopyRoomURL } from './copy-room-url'
 import { Button } from '@avelin/ui/button'
 import { useAuth } from '@/providers/auth-provider'
 import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export function EditorToolbar() {
+  const pathname = usePathname()
+
   const { room } = useCodeRoom()
   const { isPending, isAuthenticated, user } = useAuth()
 
@@ -54,14 +58,17 @@ export function EditorToolbar() {
           />
           {isPending ? null : !isAuthenticated ? (
             <Button
+              asChild
               size='xs'
               className='bg-indigo-9 hover:bg-indigo-10 text-indigo-1 inline-flex items-center'
             >
-              <LogInIcon
-                strokeWidth={2.25}
-                className='size-4 shrink-0'
-              />
-              Login
+              <Link href={`/login?redirect=${encodeURIComponent(pathname)}`}>
+                <LogInIcon
+                  strokeWidth={2.25}
+                  className='size-4 shrink-0'
+                />
+                Login
+              </Link>
             </Button>
           ) : (
             <Avatar className='size-6 shrink-0'>
