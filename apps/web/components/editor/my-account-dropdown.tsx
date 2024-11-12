@@ -1,5 +1,6 @@
 'use client'
 
+import { LOGOUT_ACTION_TOAST_ID } from '@/lib/constants'
 import { useLogout } from '@/lib/mutations'
 import { Auth } from '@avelin/database'
 import {
@@ -34,12 +35,14 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
     logout.mutate(undefined, {
       onSuccess: () => {
         toast('Logged out.', {
+          id: LOGOUT_ACTION_TOAST_ID,
           icon: <KeyRoundIcon className='size-4 shrink-0' />,
         })
         router.push('/login')
       },
       onError: (err) => {
         toast.error('Failed to log out.', {
+          id: LOGOUT_ACTION_TOAST_ID,
           icon: <KeyRoundIcon className='size-4 shrink-0' />,
           description: err.message,
         })
