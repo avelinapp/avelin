@@ -13,9 +13,10 @@ import { NetworkStatusBadge } from './network-status'
 import { CopyRoomURL } from './copy-room-url'
 import { Button } from '@avelin/ui/button'
 import { useAuth } from '@/providers/auth-provider'
-import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { MyAccountDropdown } from './my-account-dropdown'
+import { Auth } from '@avelin/database'
 
 export function EditorToolbar() {
   const pathname = usePathname()
@@ -73,15 +74,7 @@ export function EditorToolbar() {
               </Link>
             </Button>
           ) : (
-            <Avatar className='size-6 shrink-0'>
-              <AvatarImage src={user?.picture ?? undefined} />
-              <AvatarFallback className='leading-none bg-gray-3 text-sm'>
-                {user?.name
-                  .split(' ')
-                  .map((s) => s[0]?.toUpperCase())
-                  .join('')}
-              </AvatarFallback>
-            </Avatar>
+            <MyAccountDropdown user={user as Auth['user']} />
           )}
         </div>
       </div>
