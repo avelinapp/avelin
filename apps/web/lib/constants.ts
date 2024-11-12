@@ -63,3 +63,5 @@ export const languages: Language[] = [
   { value: 'xml', name: 'XML' },
   { value: 'yaml', name: 'YAML' },
 ] as const
+
+export const LOGOUT_ACTION_TOAST_ID = 'logout-action'

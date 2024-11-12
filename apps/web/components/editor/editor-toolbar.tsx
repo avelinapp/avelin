@@ -1,11 +1,7 @@
 'use client'
 
 import { Separator } from '@avelin/ui/separator'
-import {
-  LogInIcon,
-  LogoAvelin,
-  // SaveIcon
-} from '@avelin/icons'
+import { LogInIcon, LogoAvelin } from '@avelin/icons'
 import { EditorLanguageCombobox } from './editor-language-combobox'
 import { UsersList } from './editor-users-list'
 import { useCodeRoom } from '@/providers/code-room-provider'
@@ -13,9 +9,10 @@ import { NetworkStatusBadge } from './network-status'
 import { CopyRoomURL } from './copy-room-url'
 import { Button } from '@avelin/ui/button'
 import { useAuth } from '@/providers/auth-provider'
-import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { MyAccountDropdown } from './my-account-dropdown'
+import { Auth } from '@avelin/database'
 
 export function EditorToolbar() {
   const pathname = usePathname()
@@ -43,16 +40,6 @@ export function EditorToolbar() {
           <div className='flex items-center gap-1'>
             <UsersList />
             <CopyRoomURL roomSlug={room?.slug ?? ''} />
-            {/* <Button */}
-            {/*   size='xs' */}
-            {/*   variant='outline' */}
-            {/*   disabled */}
-            {/* > */}
-            {/*   <SaveIcon */}
-            {/*     strokeWidth={2.25} */}
-            {/*     className='size-4 shrink-0' */}
-            {/*   /> */}
-            {/* </Button> */}
           </div>
           <Separator
             className='mx-3'
@@ -73,15 +60,7 @@ export function EditorToolbar() {
               </Link>
             </Button>
           ) : (
-            <Avatar className='size-6 shrink-0'>
-              <AvatarImage src={user?.picture ?? undefined} />
-              <AvatarFallback className='leading-none bg-gray-3 text-sm'>
-                {user?.name
-                  .split(' ')
-                  .map((s) => s[0]?.toUpperCase())
-                  .join('')}
-              </AvatarFallback>
-            </Avatar>
+            <MyAccountDropdown user={user as Auth['user']} />
           )}
         </div>
       </div>
