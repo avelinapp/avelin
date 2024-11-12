@@ -39,19 +39,21 @@ export function EditorToolbar() {
             <EditorLanguageCombobox />
           </div>
         </div>
-        <div className='place-self-end flex items-center gap-1 h-6 my-auto'>
-          <UsersList />
-          <CopyRoomURL roomSlug={room?.slug ?? ''} />
-          {/* <Button */}
-          {/*   size='xs' */}
-          {/*   variant='outline' */}
-          {/*   disabled */}
-          {/* > */}
-          {/*   <SaveIcon */}
-          {/*     strokeWidth={2.25} */}
-          {/*     className='size-4 shrink-0' */}
-          {/*   /> */}
-          {/* </Button> */}
+        <div className='place-self-end flex items-center h-6 my-auto'>
+          <div className='flex items-center gap-1'>
+            <UsersList />
+            <CopyRoomURL roomSlug={room?.slug ?? ''} />
+            {/* <Button */}
+            {/*   size='xs' */}
+            {/*   variant='outline' */}
+            {/*   disabled */}
+            {/* > */}
+            {/*   <SaveIcon */}
+            {/*     strokeWidth={2.25} */}
+            {/*     className='size-4 shrink-0' */}
+            {/*   /> */}
+            {/* </Button> */}
+          </div>
           <Separator
             className='mx-3'
             orientation='vertical'
