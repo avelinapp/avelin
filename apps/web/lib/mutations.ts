@@ -8,3 +8,15 @@ export const useCreateRoom = () =>
       return await res.json()
     },
   })
+
+export const useLogout = () =>
+  useMutation({
+    mutationFn: async () => {
+      const res = await api.auth.logout.$post()
+
+      if (res.status >= 400) {
+        const { error } = (await res.json()) as { error: string }
+        throw new Error(error)
+      }
+    },
+  })
