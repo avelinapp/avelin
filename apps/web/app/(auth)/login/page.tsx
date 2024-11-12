@@ -1,8 +1,8 @@
-import { LogoGithub, LogoGoogle } from '@avelin/icons'
+import { LogoGithub } from '@avelin/icons'
 import { MailIcon } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { LogoAvelin } from '@avelin/icons'
-import Link from 'next/link'
+import { LoginWithGoogle } from './buttons'
 
 export default function Page() {
   return (
@@ -17,15 +17,7 @@ export default function Page() {
         </p>
       </div>
       <div className='w-full flex gap-2'>
-        <Button
-          className='w-full'
-          variant='secondary'
-          asChild
-        >
-          <Link href={process.env.NEXT_PUBLIC_API_URL + '/auth/google'}>
-            <LogoGoogle />
-          </Link>
-        </Button>
+        <LoginWithGoogle />
         <Button
           className='w-full'
           variant='secondary'

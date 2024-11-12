@@ -13,6 +13,8 @@ import superjson from 'superjson'
 
 export const authApp = new Hono()
   .get('/google', async (c) => {
+    const redirect = c.req.query('redirect') ?? '/'
+
     const { state, codeVerifier, url } = generateGoogleAuthorizationUrl()
 
     setCookie(c, 'google_oauth_state', state, {
@@ -31,6 +33,14 @@ export const authApp = new Hono()
       sameSite: 'lax',
     })
 
+    setCookie(c, 'post_login_redirect', redirect, {
+      path: '/',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 60 * 10, // 10 minutes
+      sameSite: 'lax',
+    })
+
     return c.redirect(url.toString())
   })
   .get('/google/callback', async (c) => {
@@ -39,6 +49,7 @@ export const authApp = new Hono()
     const state = url.searchParams.get('state')
     const storedState = getCookie(c, 'google_oauth_state')
     const codeVerifier = getCookie(c, 'google_code_verifier')
+    const redirectUrl = getCookie(c, 'post_login_redirect') ?? '/'
 
     if (!code || !state || !storedState || !codeVerifier) {
       return c.json({ error: 'Please restart the process.' }, 400)
@@ -80,7 +91,13 @@ export const authApp = new Hono()
         expires: session.expiresAt,
       })
 
-      return c.redirect(process.env.APP_URL ?? '/')
+      // Clear the redirect cookie after use
+      setCookie(c, 'post_login_redirect', '', {
+        path: '/',
+        expires: new Date(0),
+      })
+
+      return c.redirect(process.env.APP_URL + redirectUrl)
     }
 
     // If the user doesn't exist, create their account
@@ -98,7 +115,13 @@ export const authApp = new Hono()
       expires: session.expiresAt,
     })
 
-    return c.redirect(process.env.APP_URL ?? '/')
+    // Clear the redirect cookie after use
+    setCookie(c, 'post_login_redirect', '', {
+      path: '/',
+      expires: new Date(0),
+    })
+
+    return c.redirect(process.env.APP_URL + redirectUrl)
   })
   .get('/verify', async (c) => {
     const sessionId = getCookie(c, 'avelin_session_id')
