@@ -29,6 +29,7 @@ export type CodeRoomState = {
   networkProviderStatus?: WebSocketStatus
   persistenceProvider?: IndexeddbPersistence
   room?: Room
+  clientId?: number
   users: Map<number, UserInfo>
   activeUsers: Map<number, number>
   isInitialSyncConnect: boolean
@@ -67,6 +68,7 @@ export const createCodeRoomStore = () =>
     networkProviderStatus: undefined,
     persistenceProvider: undefined,
     room: undefined,
+    clientId: undefined,
     users: new Map<number, UserInfo>(),
     activeUsers: new Map<number, number>(),
     editorLanguage: undefined,
@@ -134,6 +136,7 @@ export const createCodeRoomStore = () =>
         const color = assignOption(Object.values(baseColors), assignedColors)
 
         const localUser: UserAwareness['user'] = {
+          clientId: awareness.clientID,
           name: user?.name ?? generateUniqueName(),
           color: color,
           picture: user?.picture ?? undefined,
@@ -141,6 +144,8 @@ export const createCodeRoomStore = () =>
         }
 
         awareness.setLocalStateField('user', localUser)
+
+        set({ clientId: awareness.clientID })
       }
 
       function setupUsersObserver(networkProvider: HocuspocusProvider) {
@@ -273,6 +278,7 @@ export const createCodeRoomStore = () =>
         networkProvider: undefined,
         persistenceProvider: undefined,
         room: undefined,
+        clientId: undefined,
         users: new Map<number, UserInfo>(),
         activeUsers: undefined,
         editorLanguage: undefined,
