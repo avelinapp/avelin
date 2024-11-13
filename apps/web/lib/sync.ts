@@ -2,7 +2,7 @@ export type UserInfo = {
   name: string
   color: string
   lastActive: number
-  // picture: string
+  picture?: string
 }
 
 export type UserAwareness = {

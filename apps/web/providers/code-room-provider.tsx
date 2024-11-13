@@ -5,7 +5,7 @@ import { createStore, StoreApi, useStore } from 'zustand'
 import * as Y from 'yjs'
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { HocuspocusProvider, WebSocketStatus } from '@hocuspocus/provider'
-import type { Room, Session } from '@avelin/database'
+import type { Room, User, Session } from '@avelin/database'
 import {
   AwarenessChange,
   AwarenessList,
@@ -40,7 +40,15 @@ export type CodeRoomState = {
 }
 
 export type CodeRoomActions = {
-  initialize: ({ room, session }: { room: Room; session?: Session }) => void
+  initialize: ({
+    room,
+    user,
+    session,
+  }: {
+    room: Room
+    user?: User
+    session?: Session
+  }) => void
   destroy: () => void
   setIsInitialAwarenessUpdate: (isInitialLoad: boolean) => void
   setUsers: (users: Map<number, UserInfo>) => void
@@ -68,7 +76,7 @@ export const createCodeRoomStore = () =>
     setIsInitialAwarenessUpdate: (value) => {
       set({ isInitialAwarenessUpdate: value })
     },
-    initialize: ({ room, session }) => {
+    initialize: ({ room, user, session }) => {
       if (!room) throw new Error('Cannot initialize code room without a room')
 
       set({ room })
@@ -126,8 +134,9 @@ export const createCodeRoomStore = () =>
         const color = assignOption(Object.values(baseColors), assignedColors)
 
         const localUser: UserAwareness['user'] = {
-          name: generateUniqueName(),
+          name: user?.name ?? generateUniqueName(),
           color: color,
+          picture: user?.picture ?? undefined,
           lastActive: Date.now(),
         }
 

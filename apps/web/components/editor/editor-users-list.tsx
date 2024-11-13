@@ -2,7 +2,7 @@
 
 import { BaseColor, colors } from '@/lib/rooms'
 import { type UserInfo } from '@/lib/sync'
-import { Avatar, AvatarFallback } from '@avelin/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,6 +40,7 @@ const UserAvatar = ({
         className,
       )}
     >
+      {user.picture && <AvatarImage src={user.picture} />}
       <AvatarFallback className='leading-none'>
         {user.name
           .split('-')
@@ -76,7 +77,7 @@ const UsersListDisplay = forwardRef<
               initial={{
                 opacity: 0,
                 filter: 'blur(2px)',
-                transform: 'translateX(-10px)',
+                transform: 'translateX(10px)',
               }}
               animate={{
                 opacity: 1,
@@ -86,7 +87,7 @@ const UsersListDisplay = forwardRef<
               exit={{
                 opacity: 0,
                 filter: 'blur(2px)',
-                transform: 'translateX(-10px)',
+                transform: 'translateX(10px)',
               }}
               transition={{
                 duration: 0.2,
