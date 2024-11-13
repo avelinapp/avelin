@@ -4,9 +4,10 @@ import { Auth } from '@avelin/database'
 import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
 import { Button } from '@avelin/ui/button'
 import { useKeyPress } from '@avelin/ui/hooks'
+import { toast } from '@avelin/ui/sonner'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div
@@ -42,32 +43,42 @@ export const UnauthenticatedActions = () => (
 )
 
 export const AuthenticatedActions = ({ user }: { user: Auth['user'] }) => {
-  const router = useRouter()
+  // const router = useRouter()
+
+  function handleDashboardNavigation() {
+    toast('Dashboard is coming soon...', {
+      id: 'dashboard-navigation-incomplete',
+      icon: '👀',
+    })
+  }
+
   useKeyPress(['a'], () => {
-    router.push('/dashboard')
+    // router.push('/dashboard')
+    handleDashboardNavigation()
   })
 
   return (
     <Wrapper>
       <Button
-        asChild
+        // asChild
         size='lg'
         variant='secondary'
         className='text-lg inline-flex items-center gap-2 group'
+        onClick={handleDashboardNavigation}
       >
-        <Link href='/dashboard'>
-          <Avatar className='size-7 shrink-0'>
-            <AvatarImage src={user.picture!} />
-            <AvatarFallback className='leading-none'>
-              {user.name
-                .split(' ')
-                .map((s) => s[0]?.toUpperCase())
-                .join('')}
-            </AvatarFallback>
-          </Avatar>
-          Dashboard
-          <KeyboardShortcut />
-        </Link>
+        {/* <Link href='/dashboard'> */}
+        <Avatar className='size-7 shrink-0'>
+          <AvatarImage src={user.picture!} />
+          <AvatarFallback className='leading-none'>
+            {user.name
+              .split(' ')
+              .map((s) => s[0]?.toUpperCase())
+              .join('')}
+          </AvatarFallback>
+        </Avatar>
+        Dashboard
+        <KeyboardShortcut />
+        {/* </Link> */}
       </Button>
     </Wrapper>
   )
