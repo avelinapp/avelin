@@ -5,7 +5,7 @@ import { createStore, StoreApi, useStore } from 'zustand'
 import * as Y from 'yjs'
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { HocuspocusProvider, WebSocketStatus } from '@hocuspocus/provider'
-import type { Room, Session } from '@avelin/database'
+import type { Room, User, Session } from '@avelin/database'
 import {
   AwarenessChange,
   AwarenessList,
@@ -29,6 +29,7 @@ export type CodeRoomState = {
   networkProviderStatus?: WebSocketStatus
   persistenceProvider?: IndexeddbPersistence
   room?: Room
+  clientId?: number
   users: Map<number, UserInfo>
   activeUsers: Map<number, number>
   isInitialSyncConnect: boolean
@@ -40,7 +41,15 @@ export type CodeRoomState = {
 }
 
 export type CodeRoomActions = {
-  initialize: ({ room, session }: { room: Room; session?: Session }) => void
+  initialize: ({
+    room,
+    user,
+    session,
+  }: {
+    room: Room
+    user?: User
+    session?: Session
+  }) => void
   destroy: () => void
   setIsInitialAwarenessUpdate: (isInitialLoad: boolean) => void
   setUsers: (users: Map<number, UserInfo>) => void
@@ -59,6 +68,7 @@ export const createCodeRoomStore = () =>
     networkProviderStatus: undefined,
     persistenceProvider: undefined,
     room: undefined,
+    clientId: undefined,
     users: new Map<number, UserInfo>(),
     activeUsers: new Map<number, number>(),
     editorLanguage: undefined,
@@ -68,7 +78,7 @@ export const createCodeRoomStore = () =>
     setIsInitialAwarenessUpdate: (value) => {
       set({ isInitialAwarenessUpdate: value })
     },
-    initialize: ({ room, session }) => {
+    initialize: ({ room, user, session }) => {
       if (!room) throw new Error('Cannot initialize code room without a room')
 
       set({ room })
@@ -126,12 +136,16 @@ export const createCodeRoomStore = () =>
         const color = assignOption(Object.values(baseColors), assignedColors)
 
         const localUser: UserAwareness['user'] = {
-          name: generateUniqueName(),
+          clientId: awareness.clientID,
+          name: user?.name ?? generateUniqueName(),
           color: color,
+          picture: user?.picture ?? undefined,
           lastActive: Date.now(),
         }
 
         awareness.setLocalStateField('user', localUser)
+
+        set({ clientId: awareness.clientID })
       }
 
       function setupUsersObserver(networkProvider: HocuspocusProvider) {
@@ -264,6 +278,7 @@ export const createCodeRoomStore = () =>
         networkProvider: undefined,
         persistenceProvider: undefined,
         room: undefined,
+        clientId: undefined,
         users: new Map<number, UserInfo>(),
         activeUsers: undefined,
         editorLanguage: undefined,

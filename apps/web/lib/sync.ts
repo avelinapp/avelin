@@ -1,8 +1,9 @@
 export type UserInfo = {
+  clientId: number
   name: string
   color: string
   lastActive: number
-  // picture: string
+  picture?: string
 }
 
 export type UserAwareness = {

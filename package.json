@@ -6,7 +6,7 @@
     "build": "turbo run build",
     "compile": "turbo run compile",
     "dev": "turbo run dev dev:tsc --concurrency=15",
-    "lint": "turbo run lint",
+    "lint": "turbo run lint --concurrency=100%",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "db:push": "turbo run db:push",
     "ui:add": "turbo run ui:add",
