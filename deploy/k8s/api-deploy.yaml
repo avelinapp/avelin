@@ -19,7 +19,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: avelin-api
-          image: ghcr.io/avelinapp/api:v0.3.0
+          image: ghcr.io/avelinapp/api:v0.4.0
           imagePullPolicy: Always
           ports:
             - containerPort: 4000
