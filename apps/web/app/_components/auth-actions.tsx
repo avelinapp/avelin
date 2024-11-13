@@ -1,10 +1,10 @@
 'use client'
 
+import { dashboardComingSoonToast } from '@/lib/toasts'
 import { Auth } from '@avelin/database'
 import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
 import { Button } from '@avelin/ui/button'
 import { useKeyPress } from '@avelin/ui/hooks'
-import { toast } from '@avelin/ui/sonner'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 // import { useRouter } from 'next/navigation'
@@ -45,16 +45,9 @@ export const UnauthenticatedActions = () => (
 export const AuthenticatedActions = ({ user }: { user: Auth['user'] }) => {
   // const router = useRouter()
 
-  function handleDashboardNavigation() {
-    toast('Dashboard is coming soon...', {
-      id: 'dashboard-navigation-incomplete',
-      icon: '👀',
-    })
-  }
-
   useKeyPress(['a'], () => {
     // router.push('/dashboard')
-    handleDashboardNavigation()
+    dashboardComingSoonToast()
   })
 
   return (
@@ -64,7 +57,7 @@ export const AuthenticatedActions = ({ user }: { user: Auth['user'] }) => {
         size='lg'
         variant='secondary'
         className='text-lg inline-flex items-center gap-2 group'
-        onClick={handleDashboardNavigation}
+        onClick={dashboardComingSoonToast}
       >
         {/* <Link href='/dashboard'> */}
         <Avatar className='size-7 shrink-0'>
