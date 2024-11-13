@@ -1,4 +1,5 @@
 export type UserInfo = {
+  clientId: number
   name: string
   color: string
   lastActive: number
