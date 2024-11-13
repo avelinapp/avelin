@@ -33,7 +33,7 @@ const UserAvatar = ({
 }) => {
   return (
     <Avatar
-      key={user.name}
+      key={user.clientId}
       className={cn(
         'h-6 w-6 text-[11px] font-medium drop-shadow-sm border-[1.5px] border-white text-primary-text',
         colors[user.color as BaseColor].avatar_bg,
@@ -72,7 +72,7 @@ const UsersListDisplay = forwardRef<
           {displayedUsers.map((user) => (
             <motion.div
               layout
-              key={user.name}
+              key={user.clientId}
               className='first:-ml-0 -ml-2.5'
               initial={{
                 opacity: 0,
@@ -149,7 +149,7 @@ function UsersListMenu({
       {users.map((user) => (
         <DropdownMenuItem
           className='flex items-center justify-between gap-2'
-          key={user.name}
+          key={user.clientId}
         >
           <div className='flex items-center gap-2'>
             <UserAvatar user={user} />
