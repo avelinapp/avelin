@@ -137,16 +137,29 @@ const UsersListDisplay = forwardRef<
 
 UsersListDisplay.displayName = 'UsersListDisplay'
 
-function UsersListMenu({ users }: { users: UserInfo[] }) {
+function UsersListMenu({
+  users,
+  clientId,
+}: {
+  users: UserInfo[]
+  clientId: number
+}) {
   return (
     <>
       {users.map((user) => (
         <DropdownMenuItem
-          className='flex items-center gap-2'
+          className='flex items-center justify-between gap-2'
           key={user.name}
         >
-          <UserAvatar user={user} />
-          <span className='text-sm'>{user.name}</span>
+          <div className='flex items-center gap-2'>
+            <UserAvatar user={user} />
+            <span>{user.name}</span>
+          </div>
+          {user.clientId === clientId && (
+            <span className='font-medium text-color-text-quaternary'>
+              (You)
+            </span>
+          )}
         </DropdownMenuItem>
       ))}
     </>
@@ -155,12 +168,12 @@ function UsersListMenu({ users }: { users: UserInfo[] }) {
 
 export function UsersList() {
   const [open, setOpen] = useState(false)
-  const { users: roomUsers } = useCodeRoom()
+  const { users: roomUsers, clientId } = useCodeRoom()
   const { isOnline } = useNetworkStatus()
 
   const users = Array.from(roomUsers.values())
 
-  if (!isOnline || !users || !users.length) return null
+  if (!isOnline || !users || !users.length || !clientId) return null
 
   return (
     <DropdownMenu
@@ -186,7 +199,10 @@ export function UsersList() {
       >
         <DropdownMenuGroup title='Active users'>
           <DropdownMenuLabel>Active Users</DropdownMenuLabel>
-          <UsersListMenu users={users} />
+          <UsersListMenu
+            users={users}
+            clientId={clientId}
+          />
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
