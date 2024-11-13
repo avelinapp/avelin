@@ -6,6 +6,7 @@ import { useRoom } from '@/hooks/use-room'
 import { EditorToolbar } from '@/components/editor/editor-toolbar'
 import dynamic from 'next/dynamic'
 import { useAuth } from '@/providers/auth-provider'
+import { LoadingRoom } from './_components/loading-room'
 const EditorTextArea = dynamic(
   () => import('@/components/editor/editor-text-area'),
   { ssr: false },
@@ -16,20 +17,28 @@ type Params = { slug: string }
 export default function Page({ params }: { params: Params }) {
   const { slug } = params
   const { initialize, destroy } = useCodeRoom()
-  const { data: room } = useRoom(slug)
+  const room = useRoom(slug)
   const { isPending: isAuthPending, user, session } = useAuth()
 
   useEffect(() => {
-    if (!room || isAuthPending) return
+    if (!room.data || isAuthPending) return
 
     initialize({
-      room,
+      room: room.data,
       user,
       session,
     })
 
     return () => destroy()
-  }, [initialize, destroy, room, isAuthPending, user, session])
+  }, [initialize, destroy, room.data, isAuthPending, user, session])
+
+  if (room.isPending || room.isError)
+    return (
+      <LoadingRoom
+        isPending={room.isPending}
+        error={room.error}
+      />
+    )
 
   return (
     <div className='flex flex-col h-full w-full'>
