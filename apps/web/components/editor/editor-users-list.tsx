@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@avelin/ui/dropdown-menu'
 import { cn } from '@avelin/ui/cn'
-import { ComponentPropsWithoutRef, forwardRef, useState } from 'react'
+import { ComponentPropsWithoutRef, forwardRef, useMemo, useState } from 'react'
 import { useCodeRoom } from '@/providers/code-room-provider'
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
 import { Button } from '@avelin/ui/button'
@@ -171,7 +171,7 @@ export function UsersList() {
   const { users: roomUsers, clientId } = useCodeRoom()
   const { isOnline } = useNetworkStatus()
 
-  const users = Array.from(roomUsers.values())
+  const users = useMemo(() => Array.from(roomUsers.values()), [roomUsers])
 
   if (!isOnline || !users || !users.length || !clientId) return null
 
