@@ -37,19 +37,7 @@ export function LoadingRoom({
           layout='position'
           className='text-4xl font-semibold tracking-tighter w-[600px] text-center'
         >
-          {isPending ? (
-            <>
-              Patience,{' '}
-              <span className='text-secondary-text'>young grasshopper.</span>
-            </>
-          ) : error ? (
-            <span>
-              Oops!{' '}
-              <span className='text-secondary-text'>We ran into an issue.</span>
-            </span>
-          ) : (
-            'Done.'
-          )}
+          {isPending ? <LoadingHeader /> : error ? <ErrorHeader /> : 'Done.'}
         </motion.h1>
         <motion.p
           layout='position'
@@ -82,6 +70,18 @@ export function LoadingRoom({
     </motion.div>
   )
 }
+
+const LoadingHeader = () => (
+  <>
+    Patience, <span className='text-secondary-text'>young grasshopper.</span>
+  </>
+)
+
+const ErrorHeader = () => (
+  <>
+    Oops! <span className='text-secondary-text'>We ran into an issue.</span>
+  </>
+)
 
 const Error404 = () => (
   <div className='text-[24rem] font-black tracking-tighter bg-gradient-to-b from-gray-4 to-gray-1 text-transparent bg-clip-text '>
