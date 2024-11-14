@@ -30,8 +30,13 @@ export function LoadingRoom({
         layout='position'
         className={cn('flex flex-col items-center justify-center gap-6 p-12')}
       >
-        <LogoAvelin className={cn('size-24', isPending && 'animate-pulse')} />
-        <h1 className='text-4xl font-semibold tracking-tighter'>
+        <motion.div layout='position'>
+          <LogoAvelin className={cn('size-24', isPending && 'animate-pulse')} />
+        </motion.div>
+        <motion.h1
+          layout='position'
+          className='text-4xl font-semibold tracking-tighter w-[600px] text-center'
+        >
           {isPending ? (
             <>
               Patience,{' '}
@@ -45,10 +50,10 @@ export function LoadingRoom({
           ) : (
             'Done.'
           )}
-        </h1>
+        </motion.h1>
         <motion.p
           layout='position'
-          className='text-color-text-secondary mt-2'
+          className='text-color-text-secondary mt-2 w-[600px] text-center'
         >
           {isPending && "We're loading your code room..."}
           {error && "We couldn't find the room you were looking for."}
