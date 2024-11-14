@@ -21,6 +21,8 @@ export function LoadingRoom({
         opacity: 1,
         filter: 'blur(0px)',
         scale: 1,
+        // This delay is to prevent flashing the loading screen when the room loads quickly
+        // Ideally, loading states should be avoided for fast operations.
         transition: { delay: 0.5 },
       }}
       exit={{ opacity: 0, filter: 'blur(2px)', scale: 0.95 }}
