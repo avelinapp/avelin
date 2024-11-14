@@ -59,6 +59,7 @@ const roomQueries = {
 
         return data as Room
       },
+      retry: 2,
     }),
 }
 

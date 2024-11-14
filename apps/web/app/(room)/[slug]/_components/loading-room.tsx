@@ -1,5 +1,7 @@
+import CreateRoomButton from '@/app/_components/create-room-button'
 import { LogoAvelin } from '@avelin/icons'
 import { cn } from '@avelin/ui/cn'
+import { motion } from 'framer-motion'
 
 export function LoadingRoom({
   isPending,
@@ -9,25 +11,75 @@ export function LoadingRoom({
   error: Error | null
 }) {
   return (
-    <div
-      className={cn('flex flex-col items-center justify-center h-full w-full')}
+    <motion.div
+      layout
+      className={cn(
+        'relative flex flex-col items-center justify-center h-full w-full',
+      )}
+      initial={{ opacity: 0, filter: 'blur(2px)', scale: 0.95 }}
+      animate={{
+        opacity: 1,
+        filter: 'blur(0px)',
+        scale: 1,
+        transition: { delay: 0.5 },
+      }}
+      exit={{ opacity: 0, filter: 'blur(2px)', scale: 0.95 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
     >
-      <div
-        className={cn(
-          'flex flex-col items-center justify-center gap-6 p-12',
-          'animate-in fade-in-0 zoom-in-95',
-        )}
+      <motion.div
+        layout='position'
+        className={cn('flex flex-col items-center justify-center gap-6 p-12')}
       >
-        <LogoAvelin className='size-24' />
-        <h1 className='text-2xl font-medium tracking-tight'>
-          {isPending
-            ? 'Loading your code room...'
-            : error
-              ? 'We ran into an issue.'
-              : 'Done.'}
+        <LogoAvelin className={cn('size-24', isPending && 'animate-pulse')} />
+        <h1 className='text-4xl font-semibold tracking-tighter'>
+          {isPending ? (
+            <>
+              Patience,{' '}
+              <span className='text-secondary-text'>young grasshopper.</span>
+            </>
+          ) : error ? (
+            <span>
+              Oops!{' '}
+              <span className='text-secondary-text'>We ran into an issue.</span>
+            </span>
+          ) : (
+            'Done.'
+          )}
         </h1>
-        <p className='text-color-text-secondary mt-2'>{error?.message}</p>
-      </div>
-    </div>
+        <motion.p
+          layout='position'
+          className='text-color-text-secondary mt-2'
+        >
+          {isPending && "We're loading your code room..."}
+          {error && "We couldn't find the room you were looking for."}
+        </motion.p>
+      </motion.div>
+      {error && (
+        <motion.div layout='position'>
+          <CreateRoomButton />
+        </motion.div>
+      )}
+      {error && (
+        <motion.div
+          layout='position'
+          className='absolute bottom-[-175px]'
+          initial={{ opacity: 0, filter: 'blur(2px)', y: 100 }}
+          animate={{
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            transition: { delay: 0.5, ease: 'easeOut' },
+          }}
+        >
+          <Error404 />
+        </motion.div>
+      )}
+    </motion.div>
   )
 }
+
+const Error404 = () => (
+  <div className='text-[24rem] font-black tracking-tighter bg-gradient-to-b from-gray-4 to-gray-1 text-transparent bg-clip-text '>
+    404
+  </div>
+)

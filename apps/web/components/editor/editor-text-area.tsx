@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import { Monaco, default as MonacoEditor } from '@monaco-editor/react'
 import { editor } from 'monaco-editor'
 import { useCodeRoom } from '@/providers/code-room-provider'
@@ -10,6 +10,7 @@ import { themes } from './themes'
 import { Cursors } from './cursors'
 import './cursors.css'
 import { cn } from '@avelin/ui/cn'
+import { useAnimate } from 'framer-motion/mini'
 
 interface EditorProps
   extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className'> {
@@ -23,6 +24,8 @@ export function EditorTextArea({ className }: EditorProps) {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
   const monacoRef = useRef<Monaco | null>(null)
   const [editorMounted, setEditorMounted] = useState(false)
+
+  const [scope, animate] = useAnimate()
 
   const setupEditor = useCallback(
     (editorInstance: editor.IStandaloneCodeEditor, monacoInstance: Monaco) => {
@@ -46,8 +49,24 @@ export function EditorTextArea({ className }: EditorProps) {
     networkProvider,
   )
 
+  useEffect(() => {
+    if (editorMounted) {
+      animate(
+        scope.current,
+        { opacity: 1, filter: 'blur(0px)', scale: 1 },
+        { ease: 'easeOut', duration: 0.2 },
+      )
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editorMounted])
+
   return (
-    <div className={cn(className, 'h-full w-full')}>
+    <div
+      ref={scope}
+      className={cn(className, 'editor-text-area h-full w-full')}
+      style={{ opacity: 0, filter: 'blur(2px)', scale: 0.995 }}
+    >
       {networkProvider ? <Cursors provider={networkProvider} /> : null}
       <MonacoEditor
         width='100vw'
