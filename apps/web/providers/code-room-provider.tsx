@@ -248,16 +248,14 @@ export const createCodeRoomStore = () =>
             console.log('Avelin Sync - connection status:', status)
             set({ networkProviderStatus: status })
           },
-          onConnect: () => {
-            set({ isInitialSyncConnect: false })
+          onOpen: () => {
+            // Related to AVELIN-60 - see the GitHub issue for more details:
+            // https://github.com/avelinapp/avelin/issues/117
             initializeLocalUserInfo(ws)
             setupUsersObserver(ws)
           },
-          onAwarenessChange: (data) => {
-            console.log('Awareness change:', JSON.stringify(data, null, '\t'))
-          },
-          onAwarenessUpdate: (data) => {
-            console.log('Awareness update:', JSON.stringify(data, null, '\t'))
+          onConnect: () => {
+            set({ isInitialSyncConnect: false })
           },
         })
 
