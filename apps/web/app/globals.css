@@ -7,6 +7,21 @@
     cursor: default;
   }
 
+  /* Opt the editor out of "forced" default cursor */
+  .monaco-editor,
+  .monaco-editor * {
+    cursor: text;
+  }
+
+  /* Opt text-based inputs out of "forced" default cursor */
+  input[type='text'],
+  input[type='password'],
+  input[type='email'],
+  textarea,
+  select {
+    cursor: text;
+  }
+
   body {
     @apply text-color-text-primary;
   }
