@@ -19,7 +19,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: avelin-sync
-          image: ghcr.io/avelinapp/sync:v0.4.1
+          image: ghcr.io/avelinapp/sync:v0.5.0
           imagePullPolicy: Always
           ports:
             - containerPort: 4100
