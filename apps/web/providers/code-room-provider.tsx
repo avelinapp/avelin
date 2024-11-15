@@ -187,7 +187,18 @@ export const createCodeRoomStore = () =>
 
               if (!removedUser) return
 
-              toast.info(`${removedUser.name} left the room.`)
+              // WORKAROUND: Currently, there is an awareness-related bug where a remote user's
+              // awareness to be removed, then immediately added again. This happens on some interval.
+              //
+              // This causes a join toast to be displayed, even though the user has not left the room.
+              //
+              // As a workaround, we wait a short time (50ms), then check if the user is still in the room.
+              // If they are, we display the leave toast.
+              setTimeout(() => {
+                if (!awareness.getStates().has(id)) {
+                  toast.info(`${removedUser.name} left the room.`)
+                }
+              }, 50)
             })
           }
 
@@ -241,6 +252,12 @@ export const createCodeRoomStore = () =>
             set({ isInitialSyncConnect: false })
             initializeLocalUserInfo(ws)
             setupUsersObserver(ws)
+          },
+          onAwarenessChange: (data) => {
+            console.log('Awareness change:', JSON.stringify(data, null, '\t'))
+          },
+          onAwarenessUpdate: (data) => {
+            console.log('Awareness update:', JSON.stringify(data, null, '\t'))
           },
         })
 
