@@ -1,5 +1,6 @@
 import { db, schema } from '@avelin/database'
 import { newId } from '@avelin/id'
+import { storage } from '@avelin/storage'
 import { eq } from 'drizzle-orm'
 
 export async function getUserByGoogleId(googleId: string) {
@@ -30,6 +31,8 @@ export async function createUserViaGoogle(data: CreateUserViaGoogle) {
     throw new Error('User already exists')
   }
 
+  const pictureUrl = await storage.upload({ imageUrl: data.picture })
+
   const newUser = await db.transaction(async (tx) => {
     const [user] = await tx
       .insert(schema.users)
@@ -37,7 +40,7 @@ export async function createUserViaGoogle(data: CreateUserViaGoogle) {
         id: newId('user'),
         name: data.name,
         email: data.email,
-        picture: data.picture,
+        picture: pictureUrl,
       })
       .returning()
 

@@ -16,6 +16,7 @@
   "dependencies": {
     "@avelin/database": "workspace:*",
     "@avelin/id": "workspace:*",
+    "@avelin/storage": "workspace:*",
     "@oslojs/crypto": "catalog:",
     "@oslojs/encoding": "catalog:",
     "arctic": "catalog:",
