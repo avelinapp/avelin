@@ -1,0 +1,29 @@
+{
+  "name": "@avelin/storage",
+  "version": "0.4.1",
+  "private": true,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "tsc --watch",
+    "lint": "tsc --noEmit && eslint . && prettier . --write",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.693.0",
+    "dotenv": "catalog:"
+  },
+  "devDependencies": {
+    "@avelin/eslint-config": "workspace:*",
+    "@avelin/prettier-config": "workspace:*",
+    "@avelin/typescript-config": "workspace:*",
+    "@types/node": "^20",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  }
+}

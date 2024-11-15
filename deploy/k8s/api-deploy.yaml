@@ -29,6 +29,8 @@ spec:
                 name: avelin-config
             - secretRef:
                 name: oauth-secret
+            - secretRef:
+                name: cf-r2-secret
           env:
             - name: DATABASE_URL
               valueFrom:
