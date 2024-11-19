@@ -3,7 +3,11 @@
 import { queries } from '@/lib/queries'
 import { Auth } from '@avelin/database'
 import { useQuery } from '@tanstack/react-query'
-import { createContext, useContext, useEffect } from 'react'
+import {
+  createContext,
+  useContext,
+  // useEffect
+} from 'react'
 
 const AuthContext = createContext<{
   isPending: boolean
@@ -30,10 +34,10 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     refetchOnMount: false,
   })
 
-  useEffect(() => {
-    console.log('Auth is pending:', isPending)
-    console.log('Auth data:', data)
-  }, [data, isPending])
+  // useEffect(() => {
+  //   console.log('Auth is pending:', isPending)
+  //   console.log('Auth data:', data)
+  // }, [data, isPending])
 
   return (
     <AuthContext.Provider
