@@ -3,6 +3,7 @@
 import { createContext, useContext, useState } from 'react'
 import { createStore, StoreApi, useStore } from 'zustand'
 import * as Y from 'yjs'
+import { Awareness } from 'y-protocols/awareness'
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { HocuspocusProvider, WebSocketStatus } from '@hocuspocus/provider'
 import type { Room, User, Session } from '@avelin/database'
@@ -25,6 +26,7 @@ export interface CodeRoomProviderProps {
 
 export type CodeRoomState = {
   ydoc: Y.Doc
+  awareness?: Awareness
   networkProvider?: HocuspocusProvider
   networkProviderStatus?: WebSocketStatus
   persistenceProvider?: IndexeddbPersistence
@@ -33,7 +35,7 @@ export type CodeRoomState = {
   users: Map<number, UserInfo>
   activeUsers: Map<number, number>
   isInitialSyncConnect: boolean
-  isInitialAwarenessUpdate: boolean
+  skipRoomAwarenessChangeEvent: boolean
   editorLanguage?: Language['value']
   // eslint-disable-next-line
   editorObserver?: (event: Y.YMapEvent<any>) => void
@@ -51,7 +53,6 @@ export type CodeRoomActions = {
     session?: Session
   }) => void
   destroy: () => void
-  setIsInitialAwarenessUpdate: (isInitialLoad: boolean) => void
   setUsers: (users: Map<number, UserInfo>) => void
   setUserActive: (userId: number) => void
   setUserInactive: (userId: number) => void
@@ -64,6 +65,7 @@ export type CodeRoomStore = CodeRoomState & CodeRoomActions
 export const createCodeRoomStore = () =>
   createStore<CodeRoomStore>((set, get) => ({
     ydoc: new Y.Doc(),
+    awareness: undefined,
     networkProvider: undefined,
     networkProviderStatus: undefined,
     persistenceProvider: undefined,
@@ -74,16 +76,15 @@ export const createCodeRoomStore = () =>
     editorLanguage: undefined,
     usersObserver: undefined,
     isInitialSyncConnect: false,
-    isInitialAwarenessUpdate: true,
-    setIsInitialAwarenessUpdate: (value) => {
-      set({ isInitialAwarenessUpdate: value })
-    },
+    skipRoomAwarenessChangeEvent: true,
     initialize: ({ room, user, session }) => {
       if (!room) throw new Error('Cannot initialize code room without a room')
 
       set({ room })
 
       const { ydoc, networkProvider, persistenceProvider } = get()
+
+      set({ awareness: new Awareness(ydoc) })
 
       function setupEditorLanguageObserver() {
         const editorMap = ydoc.getMap('editor')
@@ -118,9 +119,7 @@ export const createCodeRoomStore = () =>
         set({ editorObserver: observer })
       }
 
-      function initializeLocalUserInfo(networkProvider: HocuspocusProvider) {
-        const awareness = networkProvider.awareness!
-
+      function initializeLocalUserInfo(awareness: Awareness) {
         const currentUserInfo = awareness.getLocalState() as UserAwareness
 
         if (!!currentUserInfo.user) {
@@ -148,9 +147,7 @@ export const createCodeRoomStore = () =>
         set({ clientId: awareness.clientID })
       }
 
-      function setupUsersObserver(networkProvider: HocuspocusProvider) {
-        const awareness = networkProvider.awareness!
-
+      function setupUsersObserver(awareness: Awareness) {
         const initialUsers = [...awareness.getStates()] as AwarenessList
         const initialUsersInfo = initialUsers
           // Initial awareness state can be provided without UserInfo defined
@@ -167,11 +164,11 @@ export const createCodeRoomStore = () =>
         })
 
         const observer = ({ added, removed }: AwarenessChange) => {
-          const { isInitialAwarenessUpdate } = get()
+          const { skipRoomAwarenessChangeEvent } = get()
 
           const newAwareness = [...awareness.getStates()] as AwarenessList
 
-          if (!isInitialAwarenessUpdate) {
+          if (!skipRoomAwarenessChangeEvent) {
             added.forEach((id) => {
               const userAwareness = newAwareness.find(
                 ([clientId]) => clientId === id,
@@ -211,8 +208,8 @@ export const createCodeRoomStore = () =>
             ),
           })
 
-          if (isInitialAwarenessUpdate) {
-            set({ isInitialAwarenessUpdate: false })
+          if (skipRoomAwarenessChangeEvent) {
+            set({ skipRoomAwarenessChangeEvent: false })
           }
         }
 
@@ -220,6 +217,11 @@ export const createCodeRoomStore = () =>
 
         set({ usersObserver: observer })
       }
+
+      const { awareness } = get()
+
+      initializeLocalUserInfo(awareness!)
+      setupUsersObserver(awareness!)
 
       if (!persistenceProvider) {
         const idbProvider = new IndexeddbPersistence(room.id, ydoc)
@@ -243,19 +245,18 @@ export const createCodeRoomStore = () =>
           url: process.env.NEXT_PUBLIC_SYNC_URL as string,
           name: room.id,
           document: ydoc,
+          awareness: get().awareness,
           token: session?.id,
           onStatus: ({ status }) => {
             console.log('Avelin Sync - connection status:', status)
             set({ networkProviderStatus: status })
           },
-          onOpen: () => {
-            // Related to AVELIN-60 - see the GitHub issue for more details:
-            // https://github.com/avelinapp/avelin/issues/117
-            initializeLocalUserInfo(ws)
-            setupUsersObserver(ws)
-          },
           onConnect: () => {
             set({ isInitialSyncConnect: false })
+
+            setTimeout(() => {
+              set({ skipRoomAwarenessChangeEvent: false })
+            }, 50)
           },
         })
 
@@ -267,12 +268,14 @@ export const createCodeRoomStore = () =>
     destroy: () => {
       const {
         ydoc,
+        awareness,
         networkProvider,
         persistenceProvider,
         editorObserver,
         usersObserver,
       } = get()
 
+      awareness?.destroy()
       ydoc.destroy()
       networkProvider?.awareness?.destroy()
       networkProvider?.disconnect()
@@ -298,7 +301,7 @@ export const createCodeRoomStore = () =>
         activeUsers: undefined,
         editorLanguage: undefined,
         editorObserver: undefined,
-        isInitialAwarenessUpdate: true,
+        skipRoomAwarenessChangeEvent: true,
       })
     },
     setUsers: (users) => {
