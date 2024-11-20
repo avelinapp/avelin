@@ -255,7 +255,7 @@ export const createCodeRoomStore = () =>
             set({ isInitialSyncConnect: false })
 
             setTimeout(() => {
-              set({ skipRoomAwarenessChangeEvent: true })
+              set({ skipRoomAwarenessChangeEvent: false })
             }, 50)
           },
         })
