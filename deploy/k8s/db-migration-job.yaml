@@ -9,9 +9,11 @@ metadata:
 spec:
   template:
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
         - name: avelin-migrate
-          image: ghcr.io/avelinapp/migrate:v0.6.0
+          image: ghcr.io/avelinapp/migrate:v0.7.0
           env:
             - name: DATABASE_URL
               valueFrom:
