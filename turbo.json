@@ -39,7 +39,13 @@
       "cache": false,
       "persistent": true
     },
+    "db:check": {
+      "cache": false
+    },
     "db:push": {
+      "cache": false
+    },
+    "db:generate": {
       "cache": false
     },
     "db:migrate": {
