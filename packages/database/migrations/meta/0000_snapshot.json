@@ -33,12 +33,8 @@
           "name": "oauth_accounts_userId_users_id_fk",
           "tableFrom": "oauth_accounts",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -46,10 +42,7 @@
       "compositePrimaryKeys": {
         "oauth_accounts_providerId_providerUserId_pk": {
           "name": "oauth_accounts_providerId_providerUserId_pk",
-          "columns": [
-            "providerId",
-            "providerUserId"
-          ]
+          "columns": ["providerId", "providerUserId"]
         }
       },
       "uniqueConstraints": {},
@@ -85,9 +78,7 @@
         "rooms_slug_unique": {
           "name": "rooms_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "checkConstraints": {}
@@ -121,12 +112,8 @@
           "name": "sessions_userId_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -171,9 +158,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "checkConstraints": {}
