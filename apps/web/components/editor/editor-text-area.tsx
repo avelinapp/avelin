@@ -2,7 +2,7 @@
 
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { Monaco, default as MonacoEditor } from '@monaco-editor/react'
-import { editor } from 'monaco-editor'
+import { editor, KeyCode, KeyMod } from 'monaco-editor'
 import { useCodeRoom } from '@/providers/code-room-provider'
 import { useMonacoBinding } from '@/hooks/use-monaco-binding'
 import { jetbrainsMono } from '@/lib/fonts'
@@ -37,6 +37,13 @@ export function EditorTextArea({ className }: EditorProps) {
       monacoInstance.editor.defineTheme('avelin-light', themes.light)
 
       monacoInstance.editor.setTheme('avelin-light')
+
+      monacoInstance.editor.addKeybindingRules([
+        {
+          keybinding: KeyMod.CtrlCmd | KeyCode.KeyK,
+          command: null,
+        },
+      ])
 
       setEditorMounted(true)
     },
