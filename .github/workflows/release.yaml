@@ -98,25 +98,46 @@ jobs:
             ghcr.io/avelinapp/sync:v${{ steps.next_version.outputs.new_version }}
           platforms: linux/amd64
 
+      - name: Build @avelin/migrate
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./packages/database/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/avelinapp/migrate:latest
+            ghcr.io/avelinapp/migrate:${{ steps.next_version.outputs.new_version }}
+            ghcr.io/avelinapp/migrate:v${{ steps.next_version.outputs.new_version }}
+          platforms: linux/amd64
+
       - name: Bump version
         run: |
           pnpm release --ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # This should already be installed!
-      # - name: Install yq
-      #   run: |
-      #     wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
-      #     chmod +x /usr/bin/yq
-
-      - name: Update K8s manifests
+      - name: Update K8s manifests for apps
         run: |
           VERSION=v${{ steps.next_version.outputs.new_version }}
           apps=("web" "api" "sync")
           manifests_dir="deploy/k8s"
           for app in "${apps[@]}"; do
             manifest="$manifests_dir/${app}-deploy.yaml"
+            if [ -f "$manifest" ]; then
+              echo "Updating image tag in $manifest to $VERSION"
+              yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/$app:$VERSION\"" "$manifest"
+            else
+              echo "Manifest file $manifest not found!"
+              exit 1
+            fi
+          done
+
+      - name: Update K8s manifests for db migration helper
+        run: |
+          VERSION=v${{ steps.next_version.outputs.new_version }}
+          app="migrate"
+          manifests_dir="deploy/k8s"
+          manifest="$manifests_dir/db-migration-job.yaml"
             if [ -f "$manifest" ]; then
               echo "Updating image tag in $manifest to $VERSION"
               yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/$app:$VERSION\"" "$manifest"
