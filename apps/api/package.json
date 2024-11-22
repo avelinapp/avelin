@@ -1,6 +1,6 @@
 {
   "name": "@avelin/api",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "dev:tsc": "tsc --watch",
