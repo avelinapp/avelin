@@ -6,6 +6,7 @@ import '@avelin/ui/globals.css'
 import Providers from '@/providers'
 import { Toaster } from '@avelin/ui/sonner'
 import QueryClientProvider from '@/providers/query-client-provider'
+import CommandMenu from '@/components/command-menu/command-menu'
 
 export const metadata: Metadata = {
   title: 'Avelin',
@@ -26,6 +27,7 @@ export default function RootLayout({
           <Providers>
             {children}
             <Toaster richColors />
+            <CommandMenu />
           </Providers>
         </QueryClientProvider>
       </body>
