@@ -18,6 +18,7 @@ catalog:
   eslint-config-turbo: ^2.1.2
   eslint-plugin-only-warn: ^1.1.0
   hono: ^4.6.6
+  motion: ^11.11.17
   turbo: ^2.2.3
   uuid: ^10.0.0
   typescript: ^5.6.3

@@ -10,7 +10,7 @@ import { themes } from './themes'
 import { Cursors } from './cursors'
 import './cursors.css'
 import { cn } from '@avelin/ui/cn'
-import { useAnimate } from 'framer-motion/mini'
+import { useAnimate } from 'motion/react-mini'
 
 interface EditorProps
   extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className'> {

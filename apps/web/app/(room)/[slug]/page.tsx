@@ -6,7 +6,7 @@ import { useRoom } from '@/hooks/use-room'
 import { useAuth } from '@/providers/auth-provider'
 import { LoadingRoom } from './_components/loading-room'
 import CodeRoom from './_components/code-room'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from 'motion/react'
 
 type Params = { slug: string }
 

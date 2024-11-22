@@ -5,7 +5,7 @@ const EditorTextArea = dynamic(
   { ssr: false },
 )
 import { EditorToolbar } from '@/components/editor/editor-toolbar'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import dynamic from 'next/dynamic'
 
 export default function CodeRoom() {
