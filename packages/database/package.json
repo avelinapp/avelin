@@ -13,8 +13,11 @@
     "dev:studio": "pnpm run db:studio",
     "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc",
+    "db:check": "drizzle-kit check",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
     "@neondatabase/serverless": "catalog:",
@@ -28,7 +31,8 @@
     "@types/node": "^20",
     "drizzle-kit": "catalog:",
     "eslint": "catalog:",
-    "typescript": "catalog:",
-    "prettier": "catalog:"
+    "prettier": "catalog:",
+    "tsx": "^4.19.2",
+    "typescript": "catalog:"
   }
 }
