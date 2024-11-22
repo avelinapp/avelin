@@ -1,6 +1,6 @@
 'use client'
 
-import { LayoutGroup, motion } from 'framer-motion'
+import { LayoutGroup, motion } from 'motion/react'
 import CreateRoomButton from './create-room-button'
 import { useAuth } from '@/providers/auth-provider'
 import { AuthenticatedActions, UnauthenticatedActions } from './auth-actions'

@@ -5,7 +5,7 @@ import { Auth } from '@avelin/database'
 import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
 import { Button } from '@avelin/ui/button'
 import { useKeyPress } from '@avelin/ui/hooks'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import Link from 'next/link'
 // import { useRouter } from 'next/navigation'
 

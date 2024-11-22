@@ -14,7 +14,7 @@ import {
 import { cn } from '@avelin/ui/cn'
 import { ComponentPropsWithoutRef, forwardRef, useMemo, useState } from 'react'
 import { useCodeRoom } from '@/providers/code-room-provider'
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
+import { AnimatePresence, LayoutGroup, motion } from 'motion/react'
 import { Button } from '@avelin/ui/button'
 import { ChevronDownIcon } from '@avelin/icons'
 import { useNetworkStatus } from '@avelin/ui/hooks'
