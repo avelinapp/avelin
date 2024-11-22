@@ -57,9 +57,17 @@ export default function CommandMenu() {
       <DialogPortal>
         <DialogOverlay className='bg-color-text-primary/20 backdrop-blur-[1px]' />
         <DialogPrimitiveContent
+          onEscapeKeyDown={(e) => {
+            e.preventDefault()
+          }}
           onKeyDown={(e) => {
-            // Escape goes to previous page
+            // Escape closes menu when on the root page
+            // Escape goes to previous page when on a nested page
             // Backspace goes to previous page when search is empty
+            if (e.key === 'Escape' && !page) {
+              return closeMenu()
+            }
+
             if (e.key === 'Escape' || (e.key === 'Backspace' && !search)) {
               e.preventDefault()
               setPages((pages) => pages.slice(0, -1))
@@ -72,7 +80,7 @@ export default function CommandMenu() {
         >
           <AnimatedSizeContainer
             height
-            transition={{ ease: 'easeOut', duration: 0.1 }}
+            transition={{ ease: 'easeOut', duration: 0.15 }}
           >
             <VisuallyHidden>
               <DialogTitle />
@@ -82,7 +90,7 @@ export default function CommandMenu() {
               loop
               className={cn(
                 'h-full w-full ',
-                '[&_[cmdk-item]]:px-4 [&_[cmdk-item]]:py-3',
+                '[&_[cmdk-item]]:px-4 [&_[cmdk-item]]:py-3 [&_[cmdk-item]]:transition-colors [&_[cmdk-item]]:ease-out [&_[cmdk-item]]:duration-75',
                 '[&_[cmdk-item]_svg]:h-4 [&_[cmdk-item]_svg]:w-4 [&_[cmdk-item]_svg]:stroke-[2.25px] [&_[cmdk-item]_svg]:text-color-text-quaternary [&_[cmdk-item][data-selected=true]_svg]:text-color-text-primary',
               )}
             >
