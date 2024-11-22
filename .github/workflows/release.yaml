@@ -72,6 +72,7 @@ jobs:
             NEXT_PUBLIC_APP_URL=https://avelin.app
             NEXT_PUBLIC_API_URL=https://api.avelin.app
             NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+            NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
           platforms: linux/amd64
 
       - name: Build @avelin/api

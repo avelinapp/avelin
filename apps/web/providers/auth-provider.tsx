@@ -3,22 +3,30 @@
 import { queries } from '@/lib/queries'
 import { Auth } from '@avelin/database'
 import { useQuery } from '@tanstack/react-query'
-import {
-  createContext,
-  useContext,
-  // useEffect
-} from 'react'
+import { createContext, useContext } from 'react'
 
-const AuthContext = createContext<{
-  isPending: boolean
-  isAuthenticated: boolean
-  user?: Auth['user']
-  session?: Auth['session']
-}>({
+export type AuthContextType =
+  | {
+      isPending: true
+      isAuthenticated?: false
+      user?: undefined
+      session?: undefined
+    }
+  | {
+      isPending: false
+      isAuthenticated: true
+      user: Auth['user']
+      session: Auth['session']
+    }
+  | {
+      isPending: false
+      isAuthenticated: false
+      user?: undefined
+      session?: undefined
+    }
+
+const AuthContext = createContext<AuthContextType>({
   isPending: true,
-  isAuthenticated: false,
-  user: undefined,
-  session: undefined,
 })
 
 type AuthProviderProps = {
@@ -34,23 +42,37 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     refetchOnMount: false,
   })
 
-  // useEffect(() => {
-  //   console.log('Auth is pending:', isPending)
-  //   console.log('Auth data:', data)
-  // }, [data, isPending])
+  const isAuthenticated = !data || isPending ? false : data.isAuthenticated
+  const user =
+    !data || isPending ? undefined : isAuthenticated ? data.user! : undefined
+  const session =
+    !data || isPending ? undefined : isAuthenticated ? data.session! : undefined
 
-  return (
-    <AuthContext.Provider
-      value={{
-        isPending,
-        isAuthenticated: data?.isAuthenticated ?? false,
-        user: data?.user ?? undefined,
-        session: data?.session ?? undefined,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  )
+  // Construct the context value based on the current state
+  let value: AuthContextType
+
+  if (isPending) {
+    // When authentication is pending
+    value = { isPending: true }
+  } else if (isAuthenticated) {
+    // When authenticated
+    value = {
+      isPending: false,
+      isAuthenticated: true,
+      user: user!,
+      session: session!,
+    }
+  } else {
+    // When not authenticated
+    value = {
+      isPending: false,
+      isAuthenticated: false,
+    }
+  }
+
+  console.log('AUTHENTICATION:', JSON.stringify(value, null, '\t'))
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {

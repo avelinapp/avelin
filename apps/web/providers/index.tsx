@@ -3,6 +3,7 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 import { getQueryClient, queries } from '@/lib/queries'
 import { headers } from 'next/headers'
 import { CodeRoomProvider } from './code-room-provider'
+import { PostHogPageView, PostHogProvider } from './posthog-provider'
 
 export default async function Providers({
   children,
@@ -15,7 +16,10 @@ export default async function Providers({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <AuthProvider>
-        <CodeRoomProvider>{children}</CodeRoomProvider>
+        <PostHogProvider>
+          <PostHogPageView />
+          <CodeRoomProvider>{children}</CodeRoomProvider>
+        </PostHogProvider>
       </AuthProvider>
     </HydrationBoundary>
   )

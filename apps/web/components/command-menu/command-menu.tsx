@@ -23,8 +23,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChangeEditorLanguageCommands } from './commands/editor-language'
 import { CopyRoomUrlCommand } from './commands/copy-room-url'
 import { CodeXmlIcon } from '@avelin/icons'
+import { useFeatureFlagEnabled } from 'posthog-js/react'
 
 export default function CommandMenu() {
+  // Feature flag
+  const flagEnabled = useFeatureFlagEnabled('command-menu-v1')
+
   const [open, setOpen] = useState(false)
   const [pages, setPages] = useState<Array<string>>([])
   const [search, setSearch] = useState('')
@@ -48,6 +52,8 @@ export default function CommandMenu() {
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
   }, [])
+
+  if (!flagEnabled) return null
 
   return (
     <Dialog
