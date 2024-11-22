@@ -1,6 +1,5 @@
 'use client'
 
-import { ArrowRightIcon, ChevronRightIcon, CodeXmlIcon } from '@avelin/icons'
 import { AnimatedSizeContainer } from '@avelin/ui/animated-size-container'
 import { cn } from '@avelin/ui/cn'
 import {
@@ -8,7 +7,6 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandInput,
-  CommandItem,
   CommandList,
 } from '@avelin/ui/command'
 import {
@@ -20,10 +18,13 @@ import {
   DialogTitle,
 } from '@avelin/ui/dialog'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { ChangeEditorLanguageCommands } from './commands/editor-language'
 
 export default function CommandMenu() {
   const [open, setOpen] = useState(false)
+
+  const closeMenu = useCallback(() => setOpen(false), [setOpen])
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -61,22 +62,14 @@ export default function CommandMenu() {
               className={cn(
                 'h-full w-full ',
                 '[&_[cmdk-item]]:px-4 [&_[cmdk-item]]:py-3',
-                "[&_[cmdk-item]_svg]:h-4 [&_[cmdk-item]_svg]:w-4 [&_[cmdk-item]_svg]:stroke-[2.25px] [&_[cmdk-item]_svg]:opacity-75 [&_[cmdk-item]_svg]:data-[selected='true']:opacity-100",
+                "[&_[cmdk-item]_[icon]]:h-4 [&_[cmdk-item]_svg]:w-4 [&_[cmdk-item]_svg]:stroke-[2.25px] [&_[cmdk-item]_svg]:opacity-75 [&_[cmdk-item]_svg]:data-[selected='true']:opacity-100",
               )}
             >
               <CommandInput placeholder='Type a command or search...' />
               <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup heading='Code Rooms'>
-                  <CommandItem>
-                    <CodeXmlIcon />
-                    Change editor language
-                    <ChevronRightIcon className='mx-0' />
-                  </CommandItem>
-                  <CommandItem>
-                    <ArrowRightIcon />
-                    Copy room link
-                  </CommandItem>
+                  <ChangeEditorLanguageCommands closeMenu={closeMenu} />
                 </CommandGroup>
               </CommandList>
             </Command>
