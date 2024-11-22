@@ -3,6 +3,7 @@
 import { queries } from '@/lib/queries'
 import { Auth } from '@avelin/database'
 import { useQuery } from '@tanstack/react-query'
+import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { createContext, useContext } from 'react'
 
 export type AuthContextType =
@@ -34,6 +35,7 @@ type AuthProviderProps = {
 }
 
 export default function AuthProvider({ children }: AuthProviderProps) {
+  const authDebug = useFeatureFlagEnabled('auth-debug')
   const { data, isPending } = useQuery({
     ...queries.auth.check(),
     retry: false,
@@ -70,7 +72,9 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  console.log('AUTHENTICATION:', JSON.stringify(value, null, '\t'))
+  if (authDebug) {
+    console.log('AUTHENTICATION:', JSON.stringify(value, null, '\t'))
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

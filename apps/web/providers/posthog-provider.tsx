@@ -19,11 +19,24 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
+    console.log('Initializing PostHog...')
+    console.log(
+      'PostHog key:',
+      process.env.NEXT_PUBLIC_POSTHOG_KEY ?? 'UNDEFINED',
+    )
+
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
       api_host: '/ingest',
       person_profiles: 'identified_only',
       capture_pageview: false, // Disable automatic pageview capture, as we capture manually
-      debug: true,
+      autocapture: false, // Disable automatic event capture, as we capture manually
+    })
+
+    posthog.onFeatureFlags(() => {
+      if (posthog.isFeatureEnabled('posthog-client-debug')) {
+        posthog.debug(true)
+        console.log('PostHog client debugging enabled.')
+      }
     })
   }, [])
 
