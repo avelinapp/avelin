@@ -26,11 +26,11 @@ WORKDIR /app
 
 # It might be the path to <ROOT> turborepo
 COPY . .
- 
+
 # Generate a partial monorepo with a pruned lockfile for a target workspace.
 # Assuming "@acme/nextjs" is the name entered in the project's package.json: { name: "@acme/nextjs" }
 RUN turbo prune --scope=${PACKAGE} --docker
- 
+
 # 3. Build the project
 FROM base AS builder
 ARG PACKAGE
@@ -41,11 +41,13 @@ ENV CI=true
 # Environment variables for the client
 ARG NEXT_PUBLIC_APP_URL \
   NEXT_PUBLIC_API_URL \
-  NEXT_PUBLIC_SYNC_URL
+  NEXT_PUBLIC_SYNC_URL \
+  NEXT_PUBLIC_POSTHOG_KEY
 
 ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL} \
   NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL} \
-  NEXT_PUBLIC_SYNC_URL=${NEXT_PUBLIC_SYNC_URL}  
+  NEXT_PUBLIC_SYNC_URL=${NEXT_PUBLIC_SYNC_URL} \
+  NEXT_PUBLIC_POSTHOG_KEY=${NEXT_PUBLIC_POSTHOG_KEY}
 
 
 WORKDIR /app
@@ -57,10 +59,10 @@ COPY --from=pruner /app/out/json/ .
 
 # First install the dependencies (as they change less often)
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-    pnpm config set store-dir /pnpm/store && \
-    pnpm set package-import-method copy && \
-    pnpm install --frozen-lockfile
- 
+  pnpm config set store-dir /pnpm/store && \
+  pnpm set package-import-method copy && \
+  pnpm install --frozen-lockfile
+
 # Copy source code of isolated subworkspace
 COPY --from=pruner /app/out/full/ .
 
@@ -78,8 +80,8 @@ WORKDIR /app
 ARG APP_PORT=3000
 
 ENV NODE_ENV=production \
-    HOSTNAME="0.0.0.0" \
-    APP_PORT=${APP_PORT}
+  HOSTNAME="0.0.0.0" \
+  APP_PORT=${APP_PORT}
 
 EXPOSE ${APP_PORT}
 
