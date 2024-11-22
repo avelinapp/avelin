@@ -15,6 +15,7 @@
     "globals.css"
   ],
   "exports": {
+    "./animated-size-container": "./src/components/ui/animated-size-container.tsx",
     "./avatar": "./src/components/ui/avatar.tsx",
     "./badge": "./src/components/ui/badge.tsx",
     "./button": "./src/components/ui/button.tsx",
