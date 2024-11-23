@@ -4,6 +4,7 @@ import { getQueryClient, queries } from '@/lib/queries'
 import { headers } from 'next/headers'
 import { CodeRoomProvider } from './code-room-provider'
 import { PostHogPageView, PostHogProvider } from './posthog-provider'
+import { TooltipProvider } from '@avelin/ui/tooltip'
 
 export default async function Providers({
   children,
@@ -18,7 +19,9 @@ export default async function Providers({
       <AuthProvider>
         <PostHogProvider>
           <PostHogPageView />
-          <CodeRoomProvider>{children}</CodeRoomProvider>
+          <CodeRoomProvider>
+            <TooltipProvider>{children}</TooltipProvider>
+          </CodeRoomProvider>
         </PostHogProvider>
       </AuthProvider>
     </HydrationBoundary>
