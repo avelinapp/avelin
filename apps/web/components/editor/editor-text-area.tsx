@@ -20,7 +20,7 @@ interface EditorProps
 }
 
 export function EditorTextArea({ className }: EditorProps) {
-  const tighterTracking = useFeatureFlagEnabled(
+  const FF_tighterTracking = useFeatureFlagEnabled(
     'editor-tighter-character-spacing',
   )
 
@@ -90,7 +90,7 @@ export function EditorTextArea({ className }: EditorProps) {
           padding: { top: 16, bottom: 16 },
           fontSize: 16,
           fontFamily: `${jetbrainsMono.style.fontFamily}`,
-          letterSpacing: tighterTracking ? -0.25 : 0,
+          letterSpacing: FF_tighterTracking ? -0.25 : 0,
           fontLigatures: true,
           minimap: { enabled: false },
           renderLineHighlight: 'none',
