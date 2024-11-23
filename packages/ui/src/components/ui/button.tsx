@@ -1,8 +1,16 @@
+'use client'
+
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 import { cn } from '@avelin/ui/cn'
 import { forwardRef } from 'react'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './tooltip'
 
 const buttonVariants = cva(
   'inline-flex items-center select-none justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-color-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
@@ -37,11 +45,44 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  tooltip?: {
+    className?: string
+    content: React.ReactNode | string
+    delayDuration?: number
+    side?: 'top' | 'right' | 'bottom' | 'left'
+    align?: 'start' | 'center' | 'end'
+  }
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, tooltip, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button'
+
+    if (tooltip) {
+      return (
+        <Tooltip delayDuration={tooltip.delayDuration ?? 500}>
+          <TooltipTrigger asChild>
+            <Comp
+              className={cn(buttonVariants({ variant, size, className }))}
+              ref={ref}
+              {...props}
+            />
+          </TooltipTrigger>
+          <TooltipContent
+            className={cn(
+              'text-xs border-color-border-subtle',
+              'ease-out data-[side=bottom]:slide-out-to-top-1 data-[side=left]:slide-out-to-right-1 data-[side=right]:slide-out-to-left-1 data-[side=top]:slide-out-to-bottom-1',
+              tooltip.className,
+            )}
+            side={tooltip.side}
+            align={tooltip.align}
+          >
+            {tooltip.content}
+          </TooltipContent>
+        </Tooltip>
+      )
+    }
+
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
