@@ -11,6 +11,7 @@ import { Cursors } from './cursors'
 import './cursors.css'
 import { cn } from '@avelin/ui/cn'
 import { useAnimate } from 'motion/react-mini'
+import { useFeatureFlagEnabled } from 'posthog-js/react'
 
 interface EditorProps
   extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className'> {
@@ -19,6 +20,10 @@ interface EditorProps
 }
 
 export function EditorTextArea({ className }: EditorProps) {
+  const tighterTracking = useFeatureFlagEnabled(
+    'editor-tighter-character-spacing',
+  )
+
   const { ydoc, networkProvider, editorLanguage } = useCodeRoom()
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
@@ -64,7 +69,6 @@ export function EditorTextArea({ className }: EditorProps) {
         { ease: 'easeOut', duration: 0.2 },
       )
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editorMounted])
 
@@ -86,6 +90,7 @@ export function EditorTextArea({ className }: EditorProps) {
           padding: { top: 16, bottom: 16 },
           fontSize: 16,
           fontFamily: `${jetbrainsMono.style.fontFamily}`,
+          letterSpacing: tighterTracking ? -0.25 : 0,
           fontLigatures: true,
           minimap: { enabled: false },
           renderLineHighlight: 'none',
