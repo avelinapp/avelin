@@ -20,19 +20,14 @@
     }
   },
   "git": {
-    "commitMessage": "v${version}",
     "tagName": "v${version}",
     "push": false,
     "commit": false,
-    "requireCleanWorkingDir": false,
-    "changelog": "pnpm dlx auto-changelog --stdout --commit-limit false --unreleased --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
+    "requireCleanWorkingDir": false
   },
   "github": {
     "release": true,
     "releaseName": "v${version}",
-    "draft": true
-  },
-  "hooks": {
-    "after:bump": "node scripts/sync-versions.js && pnpm dlx auto-changelog -p"
+    "draft": false
   }
 }
