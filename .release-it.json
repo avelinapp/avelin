@@ -19,6 +19,7 @@
       }
     }
   },
+  "npm": false,
   "git": {
     "tagName": "v${version}",
     "push": false,
