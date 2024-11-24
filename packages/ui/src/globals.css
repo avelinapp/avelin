@@ -80,6 +80,6 @@
   }
 
   .dark {
-    --color-popover-bg: #ffffff;
+    --color-popover-bg: var(--gray-1);
   }
 }
