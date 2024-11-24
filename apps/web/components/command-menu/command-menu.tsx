@@ -25,6 +25,10 @@ import { CopyRoomUrlCommand } from './commands/copy-room-url'
 import { CodeXmlIcon } from '@avelin/icons'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { useFocusRestore } from '@avelin/ui/hooks'
+import {
+  ChangeInterfaceThemeCommands,
+  ChangeInterfaceThemeRootCommand,
+} from './commands/interface-theme'
 
 export default function CommandMenu() {
   // Feature flag
@@ -128,9 +132,18 @@ export default function CommandMenu() {
                         Change editor language...
                       </CommandItem>
                       {!!search && (
-                        <ChangeEditorLanguageCommands closeMenu={closeMenu} />
+                        <>
+                          <ChangeEditorLanguageCommands closeMenu={closeMenu} />
+                          <ChangeInterfaceThemeCommands closeMenu={closeMenu} />
+                        </>
                       )}
                       <CopyRoomUrlCommand closeMenu={closeMenu} />
+                      <ChangeInterfaceThemeRootCommand
+                        onSelect={() => {
+                          setPages([...pages, 'interface-theme'])
+                          setSearch('')
+                        }}
+                      />
                     </>
                   </CommandGroup>
                 )}
@@ -138,6 +151,9 @@ export default function CommandMenu() {
                   <CommandGroup>
                     <ChangeEditorLanguageCommands closeMenu={closeMenu} />
                   </CommandGroup>
+                )}
+                {page === 'interface-theme' && (
+                  <ChangeInterfaceThemeCommands closeMenu={closeMenu} />
                 )}
               </CommandList>
             </Command>

@@ -116,6 +116,8 @@ const CommandSeparator = React.forwardRef<
 ))
 CommandSeparator.displayName = CommandPrimitive.Separator.displayName
 
+type CommandItemProps = React.ComponentProps<typeof CommandPrimitive.Item>
+
 const CommandItem = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>
@@ -156,6 +158,7 @@ export {
   CommandEmpty,
   CommandGroup,
   CommandItem,
+  type CommandItemProps,
   CommandShortcut,
   CommandSeparator,
 }
