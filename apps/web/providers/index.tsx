@@ -6,6 +6,7 @@ import { CodeRoomProvider } from './code-room-provider'
 import { PostHogPageView, PostHogProvider } from './posthog-provider'
 import { TooltipProvider } from '@avelin/ui/tooltip'
 import { ThemeProvider } from './theme-provider'
+import { CommandMenuProvider } from './command-menu-provider'
 
 export default async function Providers({
   children,
@@ -26,9 +27,11 @@ export default async function Providers({
         <AuthProvider>
           <PostHogProvider>
             <PostHogPageView />
-            <CodeRoomProvider>
-              <TooltipProvider>{children}</TooltipProvider>
-            </CodeRoomProvider>
+            <CommandMenuProvider>
+              <CodeRoomProvider>
+                <TooltipProvider>{children}</TooltipProvider>
+              </CodeRoomProvider>
+            </CommandMenuProvider>
           </PostHogProvider>
         </AuthProvider>
       </ThemeProvider>

@@ -29,42 +29,51 @@ import {
   ChangeInterfaceThemeCommands,
   ChangeInterfaceThemeRootCommand,
 } from './commands/interface-theme'
+import { useCommandMenu } from '@/providers/command-menu-provider'
 
 export default function CommandMenu() {
   // Feature flag
   const flagEnabled = useFeatureFlagEnabled('command-menu-v1')
 
-  const [open, setOpen] = useState(false)
-  useFocusRestore(open)
+  // const [open, setOpen] = useState(false)
+  const { isOpen, open, close, toggle } = useCommandMenu()
+
+  useFocusRestore(isOpen)
   const [pages, setPages] = useState<Array<string>>([])
   const [search, setSearch] = useState('')
   const page = useMemo(() => pages[pages.length - 1], [pages])
 
   const closeMenu = useCallback(() => {
-    setOpen(false)
+    close()
     setTimeout(() => {
       setSearch('')
       setPages([])
     }, 200)
-  }, [])
+  }, [close])
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
-        setOpen((open) => !open)
+        toggle()
       }
     }
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
-  }, [])
+  }, [toggle])
 
   if (!flagEnabled) return null
 
   return (
     <Dialog
-      open={open}
-      onOpenChange={setOpen}
+      open={isOpen}
+      onOpenChange={(value) => {
+        if (value) {
+          open()
+        } else {
+          close()
+        }
+      }}
     >
       <DialogPortal>
         <DialogOverlay className='bg-color-text-primary/20 backdrop-blur-[1px]' />
