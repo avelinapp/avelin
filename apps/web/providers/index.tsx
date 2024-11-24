@@ -5,6 +5,7 @@ import { headers } from 'next/headers'
 import { CodeRoomProvider } from './code-room-provider'
 import { PostHogPageView, PostHogProvider } from './posthog-provider'
 import { TooltipProvider } from '@avelin/ui/tooltip'
+import { ThemeProvider } from './theme-provider'
 
 export default async function Providers({
   children,
@@ -16,14 +17,21 @@ export default async function Providers({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <AuthProvider>
-        <PostHogProvider>
-          <PostHogPageView />
-          <CodeRoomProvider>
-            <TooltipProvider>{children}</TooltipProvider>
-          </CodeRoomProvider>
-        </PostHogProvider>
-      </AuthProvider>
+      <ThemeProvider
+        attribute='class'
+        defaultTheme='system'
+        enableSystem
+        disableTransitionOnChange
+      >
+        <AuthProvider>
+          <PostHogProvider>
+            <PostHogPageView />
+            <CodeRoomProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </CodeRoomProvider>
+          </PostHogProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </HydrationBoundary>
   )
 }
