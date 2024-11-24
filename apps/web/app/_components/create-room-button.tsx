@@ -5,7 +5,7 @@ import { PlusIcon } from '@avelin/icons'
 import { useScramble } from 'use-scramble'
 import { useCreateRoom } from '@/lib/mutations'
 import { useRouter } from 'next/navigation'
-import { useKeyPress } from '@avelin/ui/hooks'
+import { useShortcut } from '@/hooks/use-shortcut'
 
 export default function CreateRoomButton() {
   const router = useRouter()
@@ -18,7 +18,7 @@ export default function CreateRoomButton() {
       },
     })
 
-  useKeyPress(['c'], createRoom)
+  useShortcut(['c'], createRoom)
 
   const buttonText = !isPending ? 'Create room' : 'Building...'
   const { ref } = useScramble({

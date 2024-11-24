@@ -1,13 +1,12 @@
 'use client'
 
+import { useShortcut } from '@/hooks/use-shortcut'
 import { dashboardComingSoonToast } from '@/lib/toasts'
 import { Auth } from '@avelin/database'
 import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
 import { Button } from '@avelin/ui/button'
-import { useKeyPress } from '@avelin/ui/hooks'
 import { motion } from 'motion/react'
 import Link from 'next/link'
-// import { useRouter } from 'next/navigation'
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div
@@ -43,23 +42,18 @@ export const UnauthenticatedActions = () => (
 )
 
 export const AuthenticatedActions = ({ user }: { user: Auth['user'] }) => {
-  // const router = useRouter()
-
-  useKeyPress(['a'], () => {
-    // router.push('/dashboard')
+  useShortcut(['a'], () => {
     dashboardComingSoonToast()
   })
 
   return (
     <Wrapper>
       <Button
-        // asChild
         size='lg'
         variant='secondary'
         className='text-lg inline-flex items-center gap-2 group'
         onClick={dashboardComingSoonToast}
       >
-        {/* <Link href='/dashboard'> */}
         <Avatar className='size-7 shrink-0'>
           <AvatarImage src={user.picture!} />
           <AvatarFallback className='leading-none'>
@@ -71,7 +65,6 @@ export const AuthenticatedActions = ({ user }: { user: Auth['user'] }) => {
         </Avatar>
         Dashboard
         <KeyboardShortcut />
-        {/* </Link> */}
       </Button>
     </Wrapper>
   )
