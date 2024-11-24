@@ -24,12 +24,14 @@ import { ChangeEditorLanguageCommands } from './commands/editor-language'
 import { CopyRoomUrlCommand } from './commands/copy-room-url'
 import { CodeXmlIcon } from '@avelin/icons'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
+import { useFocusRestore } from '@avelin/ui/hooks'
 
 export default function CommandMenu() {
   // Feature flag
   const flagEnabled = useFeatureFlagEnabled('command-menu-v1')
 
   const [open, setOpen] = useState(false)
+  useFocusRestore(open)
   const [pages, setPages] = useState<Array<string>>([])
   const [search, setSearch] = useState('')
   const page = useMemo(() => pages[pages.length - 1], [pages])
