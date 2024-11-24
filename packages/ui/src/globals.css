@@ -58,23 +58,17 @@
     --color-border-normal: var(--color-border);
     --color-border-strong: var(--gray-8);
 
-    /* Buttons */
     /* Primary Button */
     --color-primary-bg: var(--gray-12);
     --color-primary-hover: var(--gray-12) / 0.9;
-    /*--color-primary-active: var(--gray-11);*/
-    /* Almost black background */
     --color-primary-text: var(--gray-1);
-    /* Light text for contrast */
 
     /* Secondary Button */
     --color-secondary-bg-subtle: var(--gray-2);
     --color-secondary-bg: var(--gray-3);
     --color-secondary-hover: var(--gray-4);
     --color-secondary-active: var(--gray-5);
-    /* Dark gray background */
     --color-secondary-text: var(--gray-11);
-    /* Light text for contrast */
 
     --radius: 0.75rem;
   }
