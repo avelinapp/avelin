@@ -43,11 +43,7 @@
 
     /* Backgrounds */
     --color-background: var(--gray-1);
-    /* Lightest gray for main backgrounds */
-    /*--color-popover: 0 0% 100%;*/
-    /*--color-popover-background: 0 0% 100%;*/
     --color-popover-bg: 0 0% 100%;
-    /*--color-popover-bg: var(--gray-1);*/
 
     /* Text Colors */
 
