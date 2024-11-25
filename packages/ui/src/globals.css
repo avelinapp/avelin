@@ -74,6 +74,6 @@
   }
 
   .dark {
-    --color-popover-bg: var(--gray-1);
+    --color-popover-bg: var(--gray-2);
   }
 }

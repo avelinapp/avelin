@@ -18,12 +18,7 @@ export default async function Providers({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ThemeProvider
-        attribute='class'
-        defaultTheme='system'
-        enableSystem
-        disableTransitionOnChange
-      >
+      <ThemeProvider>
         <AuthProvider>
           <PostHogProvider>
             <PostHogPageView />

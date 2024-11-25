@@ -76,7 +76,7 @@ export default function CommandMenu() {
       }}
     >
       <DialogPortal>
-        <DialogOverlay className='bg-color-text-primary/20 backdrop-blur-[1px]' />
+        <DialogOverlay className='bg-gray-12/20 dark:bg-gray-1/20 backdrop-blur-[1px]' />
         <DialogPrimitiveContent
           onEscapeKeyDown={(e) => {
             e.preventDefault()
@@ -96,7 +96,7 @@ export default function CommandMenu() {
           }}
           className={cn(
             'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 bg-popover-bg p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg',
-            'max-h-[500px] p-0 border-2 border-color-border-subtle',
+            'max-h-[500px] p-0 border border-color-border-subtle',
           )}
         >
           <AnimatedSizeContainer
@@ -118,12 +118,15 @@ export default function CommandMenu() {
               <CommandInput
                 value={search}
                 onValueChange={setSearch}
+                className='dark:border-gray-12'
                 placeholder={
                   !page
                     ? 'Type a command or search...'
                     : page === 'editor-language'
                       ? 'Change the editor language...'
-                      : ''
+                      : page === 'interface-theme'
+                        ? 'Change the interface theme...'
+                        : ''
                 }
               />
               <CommandList>
@@ -162,7 +165,9 @@ export default function CommandMenu() {
                   </CommandGroup>
                 )}
                 {page === 'interface-theme' && (
-                  <ChangeInterfaceThemeCommands closeMenu={closeMenu} />
+                  <CommandGroup>
+                    <ChangeInterfaceThemeCommands closeMenu={closeMenu} />
+                  </CommandGroup>
                 )}
               </CommandList>
             </Command>

@@ -66,7 +66,10 @@ export function ChangeInterfaceThemeCommands({ closeMenu }: Props) {
     (themeValue: InterfaceTheme['value']) => {
       const theme = themes.find((t) => t.value === themeValue)!
       setTheme(theme.value)
-      toast(`Changed interface theme to ${theme.name}.`)
+      toast(`Switched to ${theme.name} theme.`, {
+        icon: <theme.icon className='size-4 shrink-0' />,
+        id: 'interface-theme-change',
+      })
     },
     [setTheme],
   )
