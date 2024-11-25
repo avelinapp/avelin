@@ -30,18 +30,20 @@ import {
   ChangeInterfaceThemeRootCommand,
 } from './commands/interface-theme'
 import { useCommandMenu } from '@/providers/command-menu-provider'
+import { usePathname } from 'next/navigation'
 
 export default function CommandMenu() {
   // Feature flag
   const flagEnabled = useFeatureFlagEnabled('command-menu-v1')
 
-  // const [open, setOpen] = useState(false)
   const { isOpen, open, close, toggle } = useCommandMenu()
 
   useFocusRestore(isOpen)
   const [pages, setPages] = useState<Array<string>>([])
   const [search, setSearch] = useState('')
   const page = useMemo(() => pages[pages.length - 1], [pages])
+
+  const pathname = usePathname()
 
   const closeMenu = useCallback(() => {
     close()
@@ -53,6 +55,11 @@ export default function CommandMenu() {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
+      // Don't show the command menu on landing, login/signup pages
+      if (pathname === '/login' || pathname === '/signup' || pathname === '/') {
+        return
+      }
+
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         toggle()
@@ -60,7 +67,7 @@ export default function CommandMenu() {
     }
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
-  }, [toggle])
+  }, [pathname, toggle])
 
   if (!flagEnabled) return null
 
