@@ -21,7 +21,7 @@ export function EditorToolbar() {
   const { isPending, isAuthenticated, user } = useAuth()
 
   return (
-    <div className='flex items-center m-2 drop-shadow-sm py-2 px-4 max-w-full bg-white rounded-lg border border-color-border-subtle'>
+    <div className='flex items-center m-2 drop-shadow-sm py-2 px-4 max-w-full bg-popover-bg rounded-lg border border-color-border-subtle'>
       <div className='w-full grid grid-cols-2'>
         <div className='flex items-center place-self-start'>
           <div className='flex items-center h-6'>

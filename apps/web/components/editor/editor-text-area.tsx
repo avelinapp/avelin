@@ -12,6 +12,7 @@ import './cursors.css'
 import { cn } from '@avelin/ui/cn'
 import { useAnimate } from 'motion/react-mini'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
+import { useTheme } from 'next-themes'
 
 interface EditorProps
   extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className'> {
@@ -24,6 +25,8 @@ export function EditorTextArea({ className }: EditorProps) {
     'editor-tighter-character-spacing',
   )
 
+  const { theme, systemTheme } = useTheme()
+
   const { ydoc, networkProvider, editorLanguage } = useCodeRoom()
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
@@ -31,6 +34,15 @@ export function EditorTextArea({ className }: EditorProps) {
   const [editorMounted, setEditorMounted] = useState(false)
 
   const [scope, animate] = useAnimate()
+
+  useEffect(() => {
+    if (editorMounted) {
+      const newTheme = theme === 'system' ? systemTheme : theme
+      monacoRef.current?.editor.setTheme(
+        newTheme === 'dark' ? 'avelin-dark' : 'avelin-light',
+      )
+    }
+  }, [editorMounted, theme, systemTheme])
 
   const setupEditor = useCallback(
     (editorInstance: editor.IStandaloneCodeEditor, monacoInstance: Monaco) => {
@@ -41,7 +53,10 @@ export function EditorTextArea({ className }: EditorProps) {
       monacoInstance.editor.defineTheme('avelin-dark', themes.dark)
       monacoInstance.editor.defineTheme('avelin-light', themes.light)
 
-      monacoInstance.editor.setTheme('avelin-light')
+      const themeActual = theme === 'system' ? systemTheme : theme
+      monacoInstance.editor.setTheme(
+        themeActual === 'dark' ? 'avelin-dark' : 'avelin-light',
+      )
 
       monacoInstance.editor.addKeybindingRules([
         {
@@ -52,6 +67,7 @@ export function EditorTextArea({ className }: EditorProps) {
 
       setEditorMounted(true)
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
 

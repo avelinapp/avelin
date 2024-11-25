@@ -60,7 +60,7 @@ export const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className='w-fit min-w-[100px] p-0 shadow-lg'
+          className='w-fit min-w-[100px] p-0 shadow-lg border-color-border-subtle'
           align='start'
         >
           <Command>

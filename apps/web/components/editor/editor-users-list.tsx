@@ -35,7 +35,7 @@ const UserAvatar = ({
     <Avatar
       key={user.clientId}
       className={cn(
-        'h-6 w-6 text-[11px] font-medium drop-shadow-sm border-[1.5px] border-white text-primary-text',
+        'h-6 w-6 text-[11px] font-medium drop-shadow-sm border-[1.5px] border-white dark:border-color-background-2 text-primary-text',
         colors[user.color as BaseColor].avatar_bg,
         className,
       )}

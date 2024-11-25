@@ -30,7 +30,7 @@ export default function CreateRoomButton() {
   return (
     <Button
       size='lg'
-      className='bg-indigo-9 hover:bg-indigo-10 group text-indigo-1 inline-flex items-center min-w-[275px] text-lg'
+      className='bg-indigo-9 dark:text-indigo-12 hover:bg-indigo-10 group text-indigo-1 inline-flex items-center min-w-[275px] text-lg'
       disabled={isPending}
       onClick={createRoom}
     >
@@ -41,7 +41,7 @@ export default function CreateRoomButton() {
         />
       )}
       <span
-        className='text-indigo-2'
+        className='text-indigo-2 dark:text-indigo-12'
         ref={ref}
       />
       {!isPending && <KeyboardShortcut />}
@@ -50,7 +50,7 @@ export default function CreateRoomButton() {
 }
 
 const KeyboardShortcut = () => (
-  <div className='ml-2 font-mono rounded-sm size-7 inline-flex items-center justify-center text-indigo-3 font-normal bg-indigo-12/50 text-base'>
+  <div className='ml-2 font-mono rounded-sm size-7 inline-flex items-center justify-center text-indigo-3 dark:text-indigo-12 font-normal bg-indigo-12/25 text-base'>
     C
   </div>
 )
