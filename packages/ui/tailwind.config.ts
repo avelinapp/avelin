@@ -133,6 +133,7 @@ export default {
         },
         // Semantic Color Variables
         'color-background': 'hsl(var(--color-background))',
+        'color-background-2': 'hsl(var(--color-background-2))',
         // Text
         'color-text-primary': 'hsl(var(--color-text-primary))',
         'color-text-secondary': 'hsl(var(--color-text-secondary))',
