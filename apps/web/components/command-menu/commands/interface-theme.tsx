@@ -10,6 +10,7 @@ import { cn } from '@avelin/ui/cn'
 import { CommandItem, CommandItemProps } from '@avelin/ui/command'
 import { toast } from '@avelin/ui/sonner'
 import { useTheme } from 'next-themes'
+import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { useCallback } from 'react'
 
 interface Props {
@@ -48,6 +49,12 @@ export function ChangeInterfaceThemeRootCommand({
   className,
   ...props
 }: CommandItemProps) {
+  const FF_darkMode = useFeatureFlagEnabled('theme-dark-mode')
+
+  if (!FF_darkMode) {
+    return null
+  }
+
   return (
     <CommandItem
       {...props}
@@ -60,6 +67,9 @@ export function ChangeInterfaceThemeRootCommand({
 }
 
 export function ChangeInterfaceThemeCommands({ closeMenu }: Props) {
+  // Feature flag
+  const FF_darkMode = useFeatureFlagEnabled('theme-dark-mode')
+
   const { setTheme } = useTheme()
 
   const changeTheme = useCallback(
@@ -73,6 +83,11 @@ export function ChangeInterfaceThemeCommands({ closeMenu }: Props) {
     },
     [setTheme],
   )
+
+  if (!FF_darkMode) {
+    return null
+  }
+
   return (
     <>
       {themes.map((theme) => (
