@@ -27,7 +27,7 @@ export default function RootLayout({
       {/*   /> */}
       {/* </head> */}
       <body
-        className={`${jetbrainsMono.variable} font-sans antialiased bg-color-background h-screen w-screen`}
+        className={`${jetbrainsMono.variable} font-sans bg-color-background h-screen w-screen`}
       >
         <QueryClientProvider>
           <Providers>

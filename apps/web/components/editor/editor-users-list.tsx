@@ -186,11 +186,11 @@ export function UsersList() {
           variant='ghost'
           className={cn(
             'flex items-center justify-between gap-2',
-            open && 'bg-secondary-bg text-secondary-text',
+            'data-[state=open]:bg-secondary-bg data-[state=open]:text-secondary-text',
           )}
         >
           <UsersListDisplay users={users} />
-          <ChevronDownIcon className='group-hover:visible text-secondary-text' />
+          <ChevronDownIcon className='text-secondary-text' />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent

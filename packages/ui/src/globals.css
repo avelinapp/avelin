@@ -47,7 +47,6 @@
     --color-popover-bg: 0 0% 100%;
 
     /* Text Colors */
-
     --color-text-primary: var(--gray-12);
     --color-text-secondary: var(--gray-12) / 0.95;
     --color-text-tertiary: var(--gray-12) / 0.9;
@@ -75,6 +74,8 @@
   }
 
   .dark {
+    /* Deep black */
+    /*--color-background: 210deg 11% 4%;*/
     --color-popover-bg: var(--gray-2);
   }
 }

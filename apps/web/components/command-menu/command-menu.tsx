@@ -7,7 +7,6 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandInput,
-  CommandItem,
   CommandList,
 } from '@avelin/ui/command'
 import {
@@ -20,9 +19,11 @@ import {
 } from '@avelin/ui/dialog'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ChangeEditorLanguageCommands } from './commands/editor-language'
+import {
+  ChangeEditorLanguageCommands,
+  ChangeEditorLanguageRootCommand,
+} from './commands/editor-language'
 import { CopyRoomUrlCommand } from './commands/copy-room-url'
-import { CodeXmlIcon } from '@avelin/icons'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { useFocusRestore } from '@avelin/ui/hooks'
 import {
@@ -30,18 +31,22 @@ import {
   ChangeInterfaceThemeRootCommand,
 } from './commands/interface-theme'
 import { useCommandMenu } from '@/providers/command-menu-provider'
+import { usePathname } from 'next/navigation'
+import { ROOM_PATH_REGEX } from '@/lib/constants'
 
 export default function CommandMenu() {
   // Feature flag
   const flagEnabled = useFeatureFlagEnabled('command-menu-v1')
 
-  // const [open, setOpen] = useState(false)
   const { isOpen, open, close, toggle } = useCommandMenu()
 
   useFocusRestore(isOpen)
   const [pages, setPages] = useState<Array<string>>([])
   const [search, setSearch] = useState('')
   const page = useMemo(() => pages[pages.length - 1], [pages])
+
+  const pathname = usePathname()
+  const isCodeRoom = pathname.match(ROOM_PATH_REGEX)
 
   const closeMenu = useCallback(() => {
     close()
@@ -53,6 +58,11 @@ export default function CommandMenu() {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
+      // Don't show the command menu on landing, login/signup pages
+      if (pathname === '/login' || pathname === '/signup' || pathname === '/') {
+        return
+      }
+
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         toggle()
@@ -60,7 +70,7 @@ export default function CommandMenu() {
     }
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
-  }, [toggle])
+  }, [pathname, toggle])
 
   if (!flagEnabled) return null
 
@@ -134,22 +144,27 @@ export default function CommandMenu() {
                 {!page && (
                   <CommandGroup heading='Code Rooms'>
                     <>
-                      <CommandItem
-                        onSelect={() => {
-                          setPages([...pages, 'editor-language'])
-                          setSearch('')
-                        }}
-                      >
-                        <CodeXmlIcon />
-                        Change editor language...
-                      </CommandItem>
+                      {isCodeRoom && (
+                        <ChangeEditorLanguageRootCommand
+                          onSelect={() => {
+                            setPages([...pages, 'editor-language'])
+                            setSearch('')
+                          }}
+                        />
+                      )}
                       {!!search && (
                         <>
-                          <ChangeEditorLanguageCommands closeMenu={closeMenu} />
+                          {isCodeRoom && (
+                            <ChangeEditorLanguageCommands
+                              closeMenu={closeMenu}
+                            />
+                          )}
                           <ChangeInterfaceThemeCommands closeMenu={closeMenu} />
                         </>
                       )}
-                      <CopyRoomUrlCommand closeMenu={closeMenu} />
+                      {isCodeRoom && (
+                        <CopyRoomUrlCommand closeMenu={closeMenu} />
+                      )}
                       <ChangeInterfaceThemeRootCommand
                         onSelect={() => {
                           setPages([...pages, 'interface-theme'])
@@ -159,7 +174,7 @@ export default function CommandMenu() {
                     </>
                   </CommandGroup>
                 )}
-                {page === 'editor-language' && (
+                {page === 'editor-language' && isCodeRoom && (
                   <CommandGroup>
                     <ChangeEditorLanguageCommands closeMenu={closeMenu} />
                   </CommandGroup>
