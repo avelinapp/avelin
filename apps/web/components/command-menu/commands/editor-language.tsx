@@ -1,7 +1,21 @@
 import { languages } from '@/lib/constants'
 import { useCodeRoom } from '@/providers/code-room-provider'
 import { ChevronRightIcon, CodeXmlIcon } from '@avelin/icons'
-import { CommandItem } from '@avelin/ui/command'
+import { CommandItem, CommandItemProps } from '@avelin/ui/command'
+
+export function ChangeEditorLanguageRootCommand({
+  ...props
+}: CommandItemProps) {
+  return (
+    <CommandItem
+      keywords={['editor', 'language', 'change']}
+      {...props}
+    >
+      <CodeXmlIcon />
+      Change editor language...
+    </CommandItem>
+  )
+}
 
 interface Props {
   closeMenu: () => void
