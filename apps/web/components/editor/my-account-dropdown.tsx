@@ -64,13 +64,13 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
           variant='ghost'
           className='h-fit w-fit p-0 relative rounded-full bg-none hover:bg-none group'
         >
-          <div
+          <Avatar
             className={cn(
-              'z-10 absolute inset-0 rounded-full bg-gray-12/15 opacity-0 transition-opacity group-hover:opacity-100',
-              open && 'opacity-100',
+              'size-7 shrink-0  transition-all',
+              'hover:brightness-90 group-data-[state=open]:brightness-90',
+              'dark:hover:brightness-110 dark:group-data-[state=open]:brightness-110',
             )}
-          />
-          <Avatar className='size-7 shrink-0'>
+          >
             <AvatarImage src={user?.picture ?? undefined} />
             <AvatarFallback className='leading-none bg-gray-3 text-sm'>
               {user.name

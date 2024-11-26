@@ -171,4 +171,10 @@
 
 :root {
   --font-sans: 'InnovatorGrotesk';
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+    font-feature-settings: normal;
+  }
 }

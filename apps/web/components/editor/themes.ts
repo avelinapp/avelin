@@ -7,7 +7,7 @@ export const themes: Record<'dark' | 'light', editor.IStandaloneThemeData> = {
     inherit: true,
     rules: [],
     colors: {
-      'editor.background': '#111111',
+      'editor.background': '#08090A',
     },
   },
   light: {
