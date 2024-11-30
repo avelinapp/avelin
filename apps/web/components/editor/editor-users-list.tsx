@@ -188,6 +188,9 @@ export function UsersList() {
             'flex items-center justify-between gap-2',
             'data-[state=open]:bg-secondary-bg data-[state=open]:text-secondary-text',
           )}
+          tooltip={{
+            content: 'View active users',
+          }}
         >
           <UsersListDisplay users={users} />
           <ChevronDownIcon className='text-secondary-text' />
