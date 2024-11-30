@@ -41,18 +41,20 @@ const buttonVariants = cva(
   },
 )
 
+export type ButtonTooltipProps = {
+  className?: string
+  content: React.ReactNode | string
+  delayDuration?: number
+  side?: 'top' | 'right' | 'bottom' | 'left'
+  align?: 'start' | 'center' | 'end'
+  collisionPadding?: number
+}
+
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
-  tooltip?: {
-    className?: string
-    content: React.ReactNode | string
-    delayDuration?: number
-    side?: 'top' | 'right' | 'bottom' | 'left'
-    align?: 'start' | 'center' | 'end'
-    collisionPadding?: number
-  }
+  tooltip?: ButtonTooltipProps
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
