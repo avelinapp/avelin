@@ -51,6 +51,7 @@ export interface ButtonProps
     delayDuration?: number
     side?: 'top' | 'right' | 'bottom' | 'left'
     align?: 'start' | 'center' | 'end'
+    collisionPadding?: number
   }
 }
 
@@ -76,6 +77,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             )}
             side={tooltip.side}
             align={tooltip.align}
+            collisionPadding={tooltip.collisionPadding}
           >
             {tooltip.content}
           </TooltipContent>
