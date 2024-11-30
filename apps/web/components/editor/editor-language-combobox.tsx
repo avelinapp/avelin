@@ -21,6 +21,10 @@ export function EditorLanguageCombobox() {
         onValueChange={(value) => {
           setEditorLanguage(value)
         }}
+        tooltip={{
+          content: 'Change editor language',
+          align: 'start',
+        }}
       />
     </div>
   )
