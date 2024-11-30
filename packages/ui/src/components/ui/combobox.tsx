@@ -3,7 +3,7 @@
 import { Check, ChevronsUpDown } from 'lucide-react'
 
 import { cn } from '@avelin/ui/cn'
-import { Button } from '@avelin/ui/button'
+import { Button, ButtonTooltipProps } from '@avelin/ui/button'
 import {
   Command,
   CommandEmpty,
@@ -22,6 +22,7 @@ type ComboboxProps = {
   onValueChange?: (value: string) => void
   disabled?: boolean
   options?: Array<{ value: string; label: string; keywords?: string[] }>
+  tooltip?: ButtonTooltipProps
 }
 
 export const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
@@ -33,6 +34,7 @@ export const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
       onValueChange,
       disabled,
       options = [],
+      tooltip,
     },
     ref,
   ) => {
@@ -52,6 +54,7 @@ export const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
             aria-expanded={open}
             className='w-[200px] justify-between'
             disabled={disabled}
+            tooltip={tooltip}
           >
             {value
               ? options.find((option) => option.value === value)?.label
