@@ -63,6 +63,10 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
         <Button
           variant='ghost'
           className='h-fit w-fit p-0 relative rounded-full bg-none hover:bg-none group'
+          tooltip={{
+            content: 'Account',
+            collisionPadding: 8,
+          }}
         >
           <Avatar
             className={cn(

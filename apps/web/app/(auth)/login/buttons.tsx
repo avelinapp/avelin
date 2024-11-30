@@ -20,6 +20,10 @@ export const LoginWithGoogle = () => {
     <Button
       className='w-full'
       variant='secondary'
+      tooltip={{
+        content: 'Login with Google',
+        side: 'bottom',
+      }}
       asChild
     >
       <Link href={linkUrl}>
