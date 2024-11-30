@@ -21,6 +21,10 @@ export default function Page() {
         <Button
           className='w-full'
           variant='secondary'
+          tooltip={{
+            content: 'Login with GitHub',
+            side: 'bottom',
+          }}
           disabled
         >
           <LogoGithub />
@@ -28,6 +32,10 @@ export default function Page() {
         <Button
           className='w-full'
           variant='secondary'
+          tooltip={{
+            content: 'Login with magic link',
+            side: 'bottom',
+          }}
           disabled
         >
           <MailIcon />
