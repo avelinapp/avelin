@@ -124,7 +124,7 @@ const UsersListDisplay = forwardRef<
                 ease: 'easeOut',
               }}
             >
-              <div className='h-6 w-6 leading-none tabular-nums border-[1.5px] border-white rounded-full z-10 font-medium -ml-2.5 text-[11px] bg-gray-3 flex items-center justify-center'>
+              <div className='h-6 w-6 leading-none tabular-nums border-[1.5px] border-white dark:border-color-background-2 rounded-full z-10 font-medium -ml-2.5 text-[11px] bg-gray-3 dark:bg-gray-11 flex items-center justify-center'>
                 <span>+{remainingUsersCount}</span>
               </div>
             </motion.div>
