@@ -39,6 +39,7 @@ export const rooms = pgTable('rooms', {
   id: text().primaryKey(),
   slug: text().unique(),
   ydoc: bytea(),
+  title: text(),
 })
 
 export const schema = {

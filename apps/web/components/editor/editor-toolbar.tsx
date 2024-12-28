@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { MyAccountDropdown } from './my-account-dropdown'
 import { Auth } from '@avelin/database'
+import { RoomTitle } from './room-title'
 
 export function EditorToolbar() {
   const pathname = usePathname()
@@ -22,7 +23,7 @@ export function EditorToolbar() {
 
   return (
     <div className='flex items-center m-2 drop-shadow-sm py-2 px-4 max-w-full bg-popover-bg rounded-lg border border-color-border-subtle'>
-      <div className='w-full grid grid-cols-2'>
+      <div className='w-full grid grid-cols-3'>
         <div className='flex items-center place-self-start'>
           <div className='flex items-center h-6'>
             <LogoAvelin className='size-6 shrink-0' />
@@ -35,6 +36,9 @@ export function EditorToolbar() {
           <div className='flex items-center gap-4'>
             <EditorLanguageCombobox />
           </div>
+        </div>
+        <div className='place-self-center flex items-center'>
+          <RoomTitle />
         </div>
         <div className='place-self-end flex items-center h-6 my-auto'>
           <div className='flex items-center gap-1'>

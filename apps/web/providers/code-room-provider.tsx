@@ -36,9 +36,12 @@ export type CodeRoomState = {
   activeUsers: Map<number, number>
   isInitialSyncConnect: boolean
   skipRoomAwarenessChangeEvent: boolean
+  roomTitle?: string
   editorLanguage?: Language['value']
   // eslint-disable-next-line
   editorObserver?: (event: Y.YMapEvent<any>) => void
+  // eslint-disable-next-line
+  roomTitleObserver?: (event: Y.YMapEvent<any>) => void
   usersObserver?: (data: AwarenessChange) => void
 }
 
@@ -58,6 +61,7 @@ export type CodeRoomActions = {
   setUserInactive: (userId: number) => void
   cleanIdleUsers: () => void
   setEditorLanguage: (language: Language['value']) => void
+  setRoomTitle: (title: string) => void
 }
 
 export type CodeRoomStore = CodeRoomState & CodeRoomActions
@@ -85,6 +89,33 @@ export const createCodeRoomStore = () =>
       const { ydoc, networkProvider, persistenceProvider } = get()
 
       set({ awareness: new Awareness(ydoc) })
+
+      function setupRoomTitleObserver() {
+        const metaMap = ydoc.getMap('meta')
+
+        if (!metaMap.has('title')) {
+          metaMap.set('title', '')
+        }
+
+        // Set the initial room title from Yjs
+        set({
+          roomTitle: metaMap.get('title') as string,
+        })
+
+        // Define the observer function
+        // eslint-disable-next-line
+        const observer = (event: Y.YMapEvent<any>) => {
+          if (event.keysChanged.has('title')) {
+            const newTitle = metaMap.get('title') as string
+            console.log('Received room title update:', newTitle)
+            set({ roomTitle: newTitle })
+          }
+        }
+
+        metaMap.observe(observer)
+
+        set({ roomTitleObserver: observer })
+      }
 
       function setupEditorLanguageObserver() {
         const editorMap = ydoc.getMap('editor')
@@ -233,6 +264,7 @@ export const createCodeRoomStore = () =>
 
           // We only want to set up observers once there is content restored from the local store
           setupEditorLanguageObserver()
+          setupRoomTitleObserver()
         })
 
         set({ persistenceProvider: idbProvider })
@@ -271,6 +303,7 @@ export const createCodeRoomStore = () =>
         awareness,
         networkProvider,
         persistenceProvider,
+        roomTitleObserver,
         editorObserver,
         usersObserver,
       } = get()
@@ -285,6 +318,11 @@ export const createCodeRoomStore = () =>
       if (editorObserver) {
         const editorMap = ydoc.getMap('editor')
         editorMap.unobserve(editorObserver)
+      }
+
+      if (roomTitleObserver) {
+        const metaMap = ydoc.getMap('meta')
+        metaMap.unobserve(roomTitleObserver)
       }
 
       if (usersObserver) {
@@ -335,6 +373,11 @@ export const createCodeRoomStore = () =>
       const { ydoc } = get()
 
       ydoc.getMap('editor').set('language', language)
+    },
+    setRoomTitle: (title) => {
+      const { ydoc } = get()
+
+      ydoc.getMap('meta').set('title', title)
     },
   }))
 

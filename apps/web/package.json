@@ -28,6 +28,7 @@
     "superjson": "^2.2.1",
     "unique-names-generator": "^4.7.1",
     "use-scramble": "^2.2.15",
+    "use-sync-external-store": "^1.4.0",
     "ws": "^8.18.0",
     "y-indexeddb": "^9.0.12",
     "y-monaco": "^0.1.4",
