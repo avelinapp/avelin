@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { db, Room, schema } from '@avelin/database'
 import { eq } from 'drizzle-orm'
 import { newId, newRoomSlug } from '@avelin/id'
+import { hocuspocusApp } from './hocuspocus'
 
 export const roomApp = new Hono()
   .post('/create', async (c) => {
@@ -31,6 +32,7 @@ export const roomApp = new Hono()
         slug: schema.rooms.slug,
       })
       .from(schema.rooms)
+      // @ts-ignore
       .where(eq(schema.rooms.slug, slug))
       .limit(1)
 
@@ -40,3 +42,4 @@ export const roomApp = new Hono()
 
     return c.json(room, 200)
   })
+  .route('/sync/webhook', hocuspocusApp)

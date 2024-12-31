@@ -1,11 +1,13 @@
 import { schema, eq, createDb } from '@avelin/database'
 import { Database } from '@hocuspocus/extension-database'
 import { Logger } from '@hocuspocus/extension-logger'
+import { Webhook, Events } from '@hocuspocus/extension-webhook'
 import { Hocuspocus } from '@hocuspocus/server'
 import dotenv from 'dotenv'
 import express from 'express'
 import expressWebsockets from 'express-ws'
 import ws from 'ws'
+import { Doc } from 'yjs'
 
 dotenv.config()
 
@@ -16,6 +18,26 @@ const db = createDb(ws)
 const server = new Hocuspocus({
   port: 4100,
   extensions: [
+    new Webhook({
+      url: process.env.API_URL! + '/rooms/sync/webhook',
+      secret: process.env.HOCUSPOCUS_WEBHOOK_SECRET!,
+      transformer: {
+        // TODO: Complete implementation
+        toYdoc(document: any, fieldName: string): Doc {
+          // convert the given document (from your api) to a ydoc using the provided fieldName
+          return new Doc()
+        },
+        fromYdoc(document: Doc): any {
+          // convert the ydoc to your representation
+          const meta = document.getMap('meta').toJSON()
+          const editor = document.getMap('editor').toJSON()
+          return {
+            meta,
+            editorLanguage: editor.language as string,
+          }
+        },
+      },
+    }),
     new Logger(),
     new Database({
       fetch: async ({ documentName }) => {

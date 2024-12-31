@@ -31,6 +31,7 @@
     "@avelin/eslint-config": "workspace:*",
     "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
+    "@types/bun": "^1.1.14",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
