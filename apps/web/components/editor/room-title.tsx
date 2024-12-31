@@ -4,11 +4,12 @@ import { useCodeRoom } from '@/providers/code-room-provider'
 import { cn } from '@avelin/ui/cn'
 import { Input } from '@avelin/ui/input'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@avelin/ui/tooltip'
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 
 export const RoomTitle = memo(function RoomTitle() {
   const { roomTitle, setRoomTitle } = useCodeRoom()
   const [value, setValue] = useState(roomTitle)
+  const ref = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
     setValue(roomTitle)
@@ -18,6 +19,9 @@ export const RoomTitle = memo(function RoomTitle() {
     <Tooltip delayDuration={500}>
       <TooltipTrigger asChild>
         <Input
+          ref={(node) => {
+            ref.current = node
+          }}
           className={cn(
             'font-medium text-base text-center transition-all border-transparent hover:border-color-border-subtle',
             'focus-visible:border-color-border-subtle overflow-ellipsis',
@@ -30,6 +34,11 @@ export const RoomTitle = memo(function RoomTitle() {
           size='xs'
           onBlur={(e) => {
             setRoomTitle(e.target.value)
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              ref.current?.blur()
+            }
           }}
         />
       </TooltipTrigger>
