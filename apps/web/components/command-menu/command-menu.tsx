@@ -24,7 +24,6 @@ import {
   ChangeEditorLanguageRootCommand,
 } from './commands/editor-language'
 import { CopyRoomUrlCommand } from './commands/copy-room-url'
-import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { useFocusRestore } from '@avelin/ui/hooks'
 import {
   ChangeInterfaceThemeCommands,
@@ -35,9 +34,6 @@ import { usePathname } from 'next/navigation'
 import { ROOM_PATH_REGEX } from '@/lib/constants'
 
 export default function CommandMenu() {
-  // Feature flag
-  const flagEnabled = useFeatureFlagEnabled('command-menu-v1')
-
   const { isOpen, open, close, toggle } = useCommandMenu()
 
   useFocusRestore(isOpen)
@@ -71,8 +67,6 @@ export default function CommandMenu() {
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
   }, [pathname, toggle])
-
-  if (!flagEnabled) return null
 
   return (
     <Dialog
