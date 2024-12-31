@@ -1,7 +1,7 @@
 import { schema, eq, createDb } from '@avelin/database'
 import { Database } from '@hocuspocus/extension-database'
 import { Logger } from '@hocuspocus/extension-logger'
-import { Webhook, Events } from '@hocuspocus/extension-webhook'
+import { Webhook } from '@hocuspocus/extension-webhook'
 import { Hocuspocus } from '@hocuspocus/server'
 import dotenv from 'dotenv'
 import express from 'express'
