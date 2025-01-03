@@ -72,7 +72,7 @@ jobs:
             NEXT_PUBLIC_API_URL=https://api.avelin.app
             NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
             NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
 
       - name: Build @avelin/api
         uses: docker/build-push-action@v6
@@ -84,7 +84,7 @@ jobs:
             ghcr.io/avelinapp/api:latest
             ghcr.io/avelinapp/api:${{ steps.next_version.outputs.new_version }}
             ghcr.io/avelinapp/api:v${{ steps.next_version.outputs.new_version }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
 
       - name: Build @avelin/sync
         uses: docker/build-push-action@v6
@@ -96,7 +96,7 @@ jobs:
             ghcr.io/avelinapp/sync:latest
             ghcr.io/avelinapp/sync:${{ steps.next_version.outputs.new_version }}
             ghcr.io/avelinapp/sync:v${{ steps.next_version.outputs.new_version }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
 
       - name: Build @avelin/migrate
         uses: docker/build-push-action@v6
@@ -108,7 +108,7 @@ jobs:
             ghcr.io/avelinapp/migrate:latest
             ghcr.io/avelinapp/migrate:${{ steps.next_version.outputs.new_version }}
             ghcr.io/avelinapp/migrate:v${{ steps.next_version.outputs.new_version }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
 
       - name: Checkout IaC repo
         uses: actions/checkout@v4
