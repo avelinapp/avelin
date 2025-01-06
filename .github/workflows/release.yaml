@@ -1,4 +1,9 @@
 name: Release
+
+concurrency:
+  group: 'release-${{ github.ref }}' # Groups runs by the branch reference
+  cancel-in-progress: false # Queues new runs instead of canceling
+
 on:
   push:
     branches:
