@@ -15,6 +15,13 @@
       "when": 1735424207910,
       "tag": "0001_dapper_mattie_franklin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1736201363470,
+      "tag": "0002_talented_lady_vermin",
+      "breakpoints": true
     }
   ]
 }
