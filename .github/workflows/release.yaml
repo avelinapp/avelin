@@ -123,9 +123,9 @@ jobs:
         run: |
           VERSION=v${{ steps.next_version.outputs.new_version }}
           apps=("web" "api" "sync")
-          manifests_dir="k8s"
+          manifests_dir="gitops/cluster-apps/avelin"
           for app in "${apps[@]}"; do
-            manifest="$manifests_dir/${app}-deploy.yaml"
+            manifest="$manifests_dir/$app/${app}-deploy.yaml"
             if [ -f "$manifest" ]; then
               echo "Updating image tag in $manifest to $VERSION"
               yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/$app:$VERSION\"" "$manifest"
@@ -136,7 +136,7 @@ jobs:
           done
 
           app="migrate"
-          manifest="$manifests_dir/db-migration-job.yaml"
+          manifest="$manifests_dir/shared/db-migration-job.yaml"
           if [ -f "$manifest" ]; then
             echo "Updating image tag in $manifest to $VERSION"
             yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/$app:$VERSION\"" "$manifest"
