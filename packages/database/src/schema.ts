@@ -1,11 +1,13 @@
 import { pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
 import { bytea } from './db'
+import { boolean } from 'drizzle-orm/pg-core'
 
 export const users = pgTable('users', {
   id: text().primaryKey(),
   email: text().notNull().unique(),
   name: text().notNull(),
   picture: text(),
+  isAnonymous: boolean().default(false),
 })
 
 export const oauthAccounts = pgTable(
