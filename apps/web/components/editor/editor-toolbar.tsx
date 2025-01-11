@@ -19,7 +19,7 @@ export function EditorToolbar() {
   const pathname = usePathname()
 
   const { room } = useCodeRoom()
-  const { isPending, isAuthenticated, user } = useAuth()
+  const { isPending, isAuthenticated, isAnonymous, user } = useAuth()
 
   return (
     <div className='flex items-center m-2 drop-shadow-sm py-2 px-4 max-w-full bg-popover-bg rounded-lg border border-color-border-subtle'>
@@ -49,7 +49,7 @@ export function EditorToolbar() {
             className='mx-3'
             orientation='vertical'
           />
-          {isPending ? null : !isAuthenticated ? (
+          {isPending ? null : !isAuthenticated || isAnonymous ? (
             <Button
               asChild
               size='xs'

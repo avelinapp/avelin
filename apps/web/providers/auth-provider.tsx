@@ -10,24 +10,28 @@ export type AuthContextType =
   | {
       isPending: true
       isAuthenticated?: false
+      isAnonymous?: undefined
       user?: undefined
       session?: undefined
     }
   | {
       isPending: false
       isAuthenticated: true
+      isAnonymous: boolean
       user: Auth['user']
       session: Auth['session']
     }
   | {
       isPending: false
       isAuthenticated: false
+      isAnonymous?: undefined
       user?: undefined
       session?: undefined
     }
 
 const AuthContext = createContext<AuthContextType>({
   isPending: true,
+  isAnonymous: undefined,
 })
 
 type AuthProviderProps = {
@@ -36,6 +40,7 @@ type AuthProviderProps = {
 
 export default function AuthProvider({ children }: AuthProviderProps) {
   const authDebug = useFeatureFlagEnabled('auth-debug')
+
   const { data, isPending } = useQuery({
     ...queries.auth.check(),
     retry: false,
@@ -45,6 +50,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   })
 
   const isAuthenticated = !data || isPending ? false : data.isAuthenticated
+  const isAnonymous = !data || isPending ? undefined : data.isAnonymous
   const user =
     !data || isPending ? undefined : isAuthenticated ? data.user! : undefined
   const session =
@@ -55,12 +61,13 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 
   if (isPending) {
     // When authentication is pending
-    value = { isPending: true }
+    value = { isPending: true, isAnonymous: undefined }
   } else if (isAuthenticated) {
     // When authenticated
     value = {
       isPending: false,
       isAuthenticated: true,
+      isAnonymous: isAnonymous as boolean,
       user: user!,
       session: session!,
     }
@@ -69,6 +76,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     value = {
       isPending: false,
       isAuthenticated: false,
+      isAnonymous: undefined,
     }
   }
 

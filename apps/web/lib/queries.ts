@@ -80,10 +80,19 @@ const authQueries = {
         )
 
         const text = await res.text()
-        const data = superjson.parse<AuthVerifyGETResponse>(text)
+        let data = superjson.parse<AuthVerifyGETResponse>(text)
+
+        // Create anonymous user & session if the user does not have a session.
+        if (!data.isAuthenticated) {
+          const res = await api.auth.anonymous.$post()
+          const text = await res.text()
+
+          data = superjson.parse<AuthVerifyGETResponse>(text)
+        }
 
         return {
           isAuthenticated: data.isAuthenticated,
+          isAnonymous: data.isAnonymous,
           user: data.user,
           session: data.session,
         }
