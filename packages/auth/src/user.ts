@@ -62,3 +62,23 @@ export async function createUserViaGoogle(data: CreateUserViaGoogle) {
 
   return newUser
 }
+
+export async function createAnonymousUser() {
+  const id = newId('user')
+
+  const [newUser] = await db
+    .insert(schema.users)
+    .values({
+      id,
+      name: 'Anonymous User',
+      email: `${id}@anon.avelin.app`,
+      isAnonymous: true,
+    })
+    .returning()
+
+  if (!newUser) {
+    throw new Error('Failed to create anonymous user')
+  }
+
+  return newUser
+}

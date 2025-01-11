@@ -6,7 +6,7 @@ import { useAuth } from '@/providers/auth-provider'
 import { AuthenticatedActions, UnauthenticatedActions } from './auth-actions'
 
 export function Actions() {
-  const { isAuthenticated, isPending, user } = useAuth()
+  const { isAuthenticated, isAnonymous, isPending, user } = useAuth()
 
   return (
     <LayoutGroup id='actions'>
@@ -17,7 +17,7 @@ export function Actions() {
         <motion.div layout='position'>
           <CreateRoomButton />
         </motion.div>
-        {isPending ? null : isAuthenticated ? (
+        {isPending ? null : isAuthenticated && !isAnonymous ? (
           <AuthenticatedActions user={user!} />
         ) : (
           <UnauthenticatedActions />
