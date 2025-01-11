@@ -1,6 +1,8 @@
 import { pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
 import { bytea } from './db'
 import { boolean } from 'drizzle-orm/pg-core'
+import { AnyPgColumn } from 'drizzle-orm/pg-core'
+import { timestamps } from './helpers/columns'
 
 export const users = pgTable('users', {
   id: text().primaryKey(),
@@ -8,6 +10,13 @@ export const users = pgTable('users', {
   name: text().notNull(),
   picture: text(),
   isAnonymous: boolean().default(false),
+  /* When an anonymous user was transitioned to a real user. */
+  retiredAt: timestamp({ withTimezone: true, mode: 'date' }),
+  /* User ID for the real user account initiated from this anonymous user. */
+  linkedUserId: text().references((): AnyPgColumn => users.id, {
+    onDelete: 'cascade',
+  }),
+  ...timestamps,
 })
 
 export const oauthAccounts = pgTable(
