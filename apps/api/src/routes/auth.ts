@@ -12,6 +12,7 @@ import {
 import { getCookie, setCookie } from 'hono/cookie'
 import { decodeIdToken, OAuth2Tokens } from 'arctic'
 import superjson from 'superjson'
+import { linkAnonymousToRealAccount } from '../lib/link-anonymous'
 
 export const authApp = new Hono()
   .get('/google', async (c) => {
@@ -81,10 +82,30 @@ export const authApp = new Hono()
       family_name: string
     }
 
+    // Get the anonymous session
+    const currentSessionId = getCookie(c, 'avelin_session_id')
+    const auth = currentSessionId
+      ? await validateSession(currentSessionId)
+      : null
+
+    console.log('current authed user is anon:', auth?.user.isAnonymous)
+
+    // Check if an existing user exists with this Google account
     const existingUser = await getUserByGoogleId(claims.sub)
 
     // If the user already exists, log them in
     if (existingUser) {
+      // Link anonymous to existing real account
+      if (auth && auth.user.isAnonymous) {
+        console.log(
+          `Linking anonymous user ${auth.user.id} to real existing user ${existingUser.id}`,
+        )
+        await linkAnonymousToRealAccount({
+          anonymousUserId: auth.user.id,
+          userId: existingUser.id,
+        })
+      }
+
       const session = await createSession(existingUser.id)
       setCookie(c, 'avelin_session_id', session.id, {
         secure: process.env.NODE_ENV === 'production',
@@ -107,6 +128,18 @@ export const authApp = new Hono()
       ...claims,
       googleId: claims.sub,
     })
+
+    // Link anonymous account to new account
+    if (auth && auth.user.isAnonymous) {
+      console.log(
+        `Linking anonymous user ${auth.user.id} to new real user ${newUser.id}`,
+      )
+
+      await linkAnonymousToRealAccount({
+        anonymousUserId: auth.user.id,
+        userId: newUser.id,
+      })
+    }
 
     const session = await createSession(newUser.id)
 
