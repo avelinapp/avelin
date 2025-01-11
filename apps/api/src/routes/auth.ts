@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import {
+  createAnonymousUser,
   createSession,
   createUserViaGoogle,
   generateGoogleAuthorizationUrl,
@@ -156,10 +157,31 @@ export const authApp = new Hono()
     return c.text(
       superjson.stringify({
         isAuthenticated: true,
+        isAnonymous: auth.user.isAnonymous,
         user: auth.user,
         session: auth.session,
       }),
       200,
+    )
+  })
+  .post('/anonymous', async (c) => {
+    const user = await createAnonymousUser()
+    const session = await createSession(user.id)
+
+    setCookie(c, 'avelin_session_id', session.id, {
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      httpOnly: true,
+      expires: session.expiresAt,
+    })
+
+    return c.text(
+      superjson.stringify({
+        isAuthenticated: true,
+        isAnonymous: true,
+        user,
+        session,
+      }),
     )
   })
   .post('/logout', async (c) => {
