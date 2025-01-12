@@ -262,8 +262,6 @@ export const createCodeRoomStore = () =>
             `Content restored for ${idbPersistence.name} from IndexedDB.`,
           )
 
-          // We only want to set up observers once there is content restored from the local store
-          setupEditorLanguageObserver()
           setupRoomTitleObserver()
         })
 
@@ -289,6 +287,15 @@ export const createCodeRoomStore = () =>
             setTimeout(() => {
               set({ skipRoomAwarenessChangeEvent: false })
             }, 50)
+          },
+          onSynced: () => {
+            // Only setup editor language after network provider sync.
+            //
+            // Previously, this was done after local provider sync, which caused an issue in production
+            // (or more realistic network scenarios with latency between local and network provider sync).
+            // The issue resulted in new users joining a room to reset the room's editor language back
+            // to the default since they had not yet synced with the network to receive the actual editor language.
+            setupEditorLanguageObserver()
           },
         })
 
