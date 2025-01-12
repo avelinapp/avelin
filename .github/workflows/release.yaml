@@ -8,10 +8,13 @@ on:
   push:
     branches:
       - main
+
 jobs:
-  release:
-    name: Release
+  prepare:
+    name: Prepare
     runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.determine_version.outputs.new_version }}
     permissions:
       contents: write
       packages: write
@@ -24,54 +27,72 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Login to git
+      - name: Configure Git
         run: |
-          git pull
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
-      - name: Install pnpm
+      - name: Setup Node.js and pnpm
         uses: pnpm/action-setup@v4
         with:
+          node-version: 20
           run_install: false
 
-      - name: Install Node.js 20
-        uses: actions/setup-node@v4
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v3
         with:
-          node-version-file: 'package.json'
-          architecture: 'x64'
-          cache: 'pnpm'
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Determine next version
-        id: next_version
+        id: determine_version
         run: |
           NEW_VERSION=$(pnpm release --ci --release-version | tail -n1)
-
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+  build_images:
+    name: Build Container Images
+    runs-on: ubuntu-latest
+    needs: prepare
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        app: [web, api, sync, migrate]
+
+    steps:
+      - name: Checkout monorepo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to ghcr.io
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build @avelin/web
+      - name: Build and Push ${{ matrix.app }}
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./apps/web/Dockerfile
+          file: ${{ matrix.app == 'migrate' && './packages/database/Dockerfile' || './apps/' + matrix.app + '/Dockerfile' }}
           push: true
           tags: |
-            ghcr.io/avelinapp/web:latest
-            ghcr.io/avelinapp/web:${{ steps.next_version.outputs.new_version }}
-            ghcr.io/avelinapp/web:v${{ steps.next_version.outputs.new_version }}
+            ghcr.io/avelinapp/${{ matrix.app }}:latest
+            ghcr.io/avelinapp/${{ matrix.app }}:${{ needs.prepare.outputs.new_version }}
+            ghcr.io/avelinapp/${{ matrix.app }}:v${{ needs.prepare.outputs.new_version }}
           build-args: |
             NEXT_PUBLIC_APP_URL=https://avelin.app
             NEXT_PUBLIC_API_URL=https://api.avelin.app
@@ -79,42 +100,14 @@ jobs:
             NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
           platforms: linux/amd64
 
-      - name: Build @avelin/api
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./apps/api/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/avelinapp/api:latest
-            ghcr.io/avelinapp/api:${{ steps.next_version.outputs.new_version }}
-            ghcr.io/avelinapp/api:v${{ steps.next_version.outputs.new_version }}
-          platforms: linux/amd64
+  update_iac:
+    name: Update IaC Manifests
+    runs-on: ubuntu-latest
+    needs: [prepare, build_images]
+    permissions:
+      contents: write
 
-      - name: Build @avelin/sync
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./apps/sync/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/avelinapp/sync:latest
-            ghcr.io/avelinapp/sync:${{ steps.next_version.outputs.new_version }}
-            ghcr.io/avelinapp/sync:v${{ steps.next_version.outputs.new_version }}
-          platforms: linux/amd64
-
-      - name: Build @avelin/migrate
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./packages/database/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/avelinapp/migrate:latest
-            ghcr.io/avelinapp/migrate:${{ steps.next_version.outputs.new_version }}
-            ghcr.io/avelinapp/migrate:v${{ steps.next_version.outputs.new_version }}
-          platforms: linux/amd64
-
+    steps:
       - name: Checkout IaC repo
         uses: actions/checkout@v4
         with:
@@ -123,10 +116,9 @@ jobs:
           fetch-depth: 0
           path: iac
 
-      - name: Update K8s manifests in IaC repo
-        working-directory: iac
+      - name: Update K8s manifests
         run: |
-          VERSION=v${{ steps.next_version.outputs.new_version }}
+          VERSION=v${{ needs.prepare.outputs.new_version }}
           apps=("web" "api" "sync")
           manifests_dir="gitops/cluster-apps/avelin"
           for app in "${apps[@]}"; do
@@ -140,29 +132,47 @@ jobs:
             fi
           done
 
-          app="migrate"
           manifest="$manifests_dir/shared/db-migration-job.yaml"
           if [ -f "$manifest" ]; then
             echo "Updating image tag in $manifest to $VERSION"
-            yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/$app:$VERSION\"" "$manifest"
+            yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/migrate:$VERSION\"" "$manifest"
           else
             echo "Manifest file $manifest not found!"
             exit 1
           fi
 
-      - name: Commit changes to IaC repo
-        working-directory: iac
+      - name: Commit and Push IaC changes
         run: |
-          git pull
+          cd iac
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
-
           git add .
-          git commit -m "chore: update manifests to v${{ steps.next_version.outputs.new_version }}"
+          git commit -m "chore: update manifests to v${{ needs.prepare.outputs.new_version }}"
           git push
 
+  create_release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [update_iac]
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout monorepo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js and pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          node-version: 20
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Create GitHub release
-        run: |
-          pnpm release --ci
+        run: pnpm release --ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
