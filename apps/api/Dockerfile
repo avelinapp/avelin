@@ -58,7 +58,7 @@ COPY --from=pruner /app/out/full/ .
 RUN pnpm compile --filter=${PACKAGE}
 
 ###### @avelin/api
-FROM oven/bun:${BUN_VERSION}-alpine AS runner 
+FROM oven/bun:${BUN_VERSION}-distroless AS runner 
 ARG PROJECT
 
 # Don't run production as root
@@ -73,4 +73,4 @@ ENV API_PORT=${API_PORT}
 
 EXPOSE ${API_PORT}
 
-CMD ["sh", "-c", "./api"] 
+CMD ["/app/api"]
