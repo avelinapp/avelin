@@ -4,12 +4,11 @@ ARG PROJECT=api
 ARG PACKAGE=@avelin/${PROJECT}
 
 # 1. Alpine image
-FROM imbios/bun-node:${BUN_VERSION}-${NODE_VERSION}-alpine AS alpine
+FROM imbios/bun-node:${BUN_VERSION}-${NODE_VERSION}-alpine AS alpine-base
 RUN apk update
-# RUN apk add --no-cache libc6-compat
 
 # Setup pnpm and turbo on the alpine base
-FROM alpine AS base
+FROM alpine-base AS base
 RUN corepack enable
 # Replace <your-major-version> with the major version installed in your repository. For example:
 # RUN npm install turbo@2.1.3 --global
@@ -58,7 +57,68 @@ COPY --from=pruner /app/out/full/ .
 RUN pnpm compile --filter=${PACKAGE}
 
 ###### @avelin/api
-FROM oven/bun:${BUN_VERSION}-distroless AS runner 
+FROM alpine:3.18 AS runner 
+
+# Custom `glibc` installation was taken from:
+# https://github.com/ImBIOS/bun-node/blob/main/src/base/20/alpine/dockerfile
+
+# TODO: Instead of downloading glibc from a third-party source, we should
+#      build it from source. This is a temporary solution.
+#      See: https://github.com/sgerrand/alpine-pkg-glibc
+
+# https://github.com/sgerrand/alpine-pkg-glibc/releases
+# https://github.com/sgerrand/alpine-pkg-glibc/issues/176
+ARG GLIBC_VERSION=2.34-r0
+
+# https://github.com/oven-sh/bun/issues/5545#issuecomment-1722461083
+ARG GLIBC_VERSION_AARCH64=2.26-r1
+
+RUN apk --no-cache add \
+  ca-certificates \
+  curl \
+  dirmngr \
+  gpg \
+  gpg-agent \
+  unzip \
+  && arch="$(apk --print-arch)" \
+  && case "${arch##*-}" in \
+  x86_64) build="x64-baseline";; \
+  aarch64) build="aarch64";; \
+  *) echo "error: unsupported architecture: $arch"; exit 1 ;; \
+  esac \
+  && cd /tmp \
+  && case "${arch##*-}" in \
+  x86_64) curl "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk" \
+  -fsSLO \
+  --compressed \
+  --retry 5 \
+  || (echo "error: failed to download: glibc v${GLIBC_VERSION}" && exit 1) \
+  && mv "glibc-${GLIBC_VERSION}.apk" glibc.apk \
+  && curl "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk" \
+  -fsSLO \
+  --compressed \
+  --retry 5 \
+  || (echo "error: failed to download: glibc-bin v${GLIBC_VERSION}" && exit 1) \
+  && mv "glibc-bin-${GLIBC_VERSION}.apk" glibc-bin.apk ;; \
+  aarch64) curl "https://raw.githubusercontent.com/squishyu/alpine-pkg-glibc-aarch64-bin/master/glibc-${GLIBC_VERSION_AARCH64}.apk" \
+  -fsSLO \
+  --compressed \
+  --retry 5 \
+  || (echo "error: failed to download: glibc v${GLIBC_VERSION_AARCH64}" && exit 1) \
+  && mv "glibc-${GLIBC_VERSION_AARCH64}.apk" glibc.apk \
+  && curl "https://raw.githubusercontent.com/squishyu/alpine-pkg-glibc-aarch64-bin/master/glibc-bin-${GLIBC_VERSION_AARCH64}.apk" \
+  -fsSLO \
+  --compressed \
+  --retry 5 \
+  || (echo "error: failed to download: glibc-bin v${GLIBC_VERSION_AARCH64}" && exit 1) \
+  && mv "glibc-bin-${GLIBC_VERSION_AARCH64}.apk" glibc-bin.apk ;; \
+  *) echo "error: unsupported architecture '$arch'"; exit 1 ;; \
+  esac
+
+RUN apk --no-cache --force-overwrite --allow-untrusted add \
+  /tmp/glibc.apk \
+  /tmp/glibc-bin.apk
+
 ARG PROJECT
 
 # Don't run production as root
@@ -73,4 +133,4 @@ ENV API_PORT=${API_PORT}
 
 EXPOSE ${API_PORT}
 
-CMD ["/app/api"]
+CMD ["./api"]
