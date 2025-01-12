@@ -1,5 +1,5 @@
 ARG NODE_VERSION=20
-ARG BUN_VERSION=1.1.33
+ARG BUN_VERSION=1.1.43
 ARG PROJECT=api
 ARG PACKAGE=@avelin/${PROJECT}
 
@@ -27,11 +27,11 @@ WORKDIR /app
 
 # It might be the path to <ROOT> turborepo
 COPY . .
- 
+
 # Generate a partial monorepo with a pruned lockfile for a target workspace.
 # Assuming "@acme/nextjs" is the name entered in the project's package.json: { name: "@acme/nextjs" }
 RUN turbo prune --scope=${PACKAGE} --docker
- 
+
 # 3. Build the project
 FROM base AS builder
 ARG PACKAGE
@@ -48,10 +48,10 @@ COPY --from=pruner /app/out/json/ .
 
 # First install the dependencies (as they change less often)
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-    pnpm config set store-dir /pnpm/store && \
-    pnpm set package-import-method copy && \
-    pnpm install --frozen-lockfile
- 
+  pnpm config set store-dir /pnpm/store && \
+  pnpm set package-import-method copy && \
+  pnpm install --frozen-lockfile
+
 # Copy source code of isolated subworkspace
 COPY --from=pruner /app/out/full/ .
 
