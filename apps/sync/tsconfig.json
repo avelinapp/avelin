@@ -2,7 +2,9 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "@avelin/typescript-config/base.json",
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "module": "ES2022",
+    "moduleResolution": "Bundler"
   },
   "include": ["src"],
   "exclude": ["node_modules"]

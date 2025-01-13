@@ -53,7 +53,10 @@ const roomQueries = {
         const data = await res.json()
 
         if (res.status >= 400) {
-          const { error } = data as { error: string }
+          // TODO: Ideally, we shouldn't be casting types like this with an RPC.
+          // Look into switching to Elysia, since Hono RPC limitations
+          // with middleware could be an issue going forward.
+          const { error } = data as unknown as { error: string }
           throw new Error(error)
         }
 

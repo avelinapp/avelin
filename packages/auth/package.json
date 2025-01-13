@@ -2,6 +2,7 @@
   "name": "@avelin/auth",
   "version": "0.8.1",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "tsc --watch",
     "lint": "tsc --noEmit && eslint . && prettier . --write",

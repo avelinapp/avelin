@@ -1,7 +1,6 @@
 {
   "name": "@avelin/sync",
   "version": "0.8.1",
-  "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
@@ -12,6 +11,7 @@
   "dependencies": {
     "@avelin/auth": "workspace:*",
     "@avelin/database": "workspace:*",
+    "@avelin/id": "workspace:*",
     "@hocuspocus/extension-database": "2.13.7",
     "@hocuspocus/extension-logger": "2.13.7",
     "@hocuspocus/extension-webhook": "2.13.7",
