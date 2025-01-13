@@ -29,6 +29,13 @@
       "when": 1736606646745,
       "tag": "0003_shiny_swordsman",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1736737662359,
+      "tag": "0004_orange_randall",
+      "breakpoints": true
     }
   ]
 }
