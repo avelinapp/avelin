@@ -7,6 +7,10 @@ import { createMiddleware } from 'hono/factory'
 
 const roomMiddleware = createMiddleware<{ Variables: { room: Room } }>(
   async (c, next) => {
+    if (c.req.path === '/rooms/create') {
+      return await next()
+    }
+
     const slug = c.req.param('slug')
 
     const [room] = await db
