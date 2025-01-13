@@ -4,7 +4,7 @@ import { config } from 'dotenv'
 config({ path: '.env' }) // or .env.local
 
 if (!process.env.R2_ENDPOINT) {
-  throw new Error('DATABASE_URL is not set')
+  throw new Error('R2_ENDPOINT is not set')
 } else if (!process.env.R2_ACCESS_KEY_ID) {
   throw new Error('R2_ACCESS_KEY_ID is not set')
 } else if (!process.env.R2_SECRET_ACCESS_KEY) {

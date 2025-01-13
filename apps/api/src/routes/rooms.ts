@@ -3,8 +3,32 @@ import { db, Room, schema } from '@avelin/database'
 import { eq } from 'drizzle-orm'
 import { newId, newRoomSlug } from '@avelin/id'
 import { hocuspocusApp } from './hocuspocus'
+import { createMiddleware } from 'hono/factory'
+
+const roomMiddleware = createMiddleware<{ Variables: { room: Room } }>(
+  async (c, next) => {
+    const slug = c.req.param('slug')
+
+    const [room] = await db
+      .select()
+      .from(schema.rooms)
+      // @ts-ignore
+      .where(eq(schema.rooms.slug, slug))
+      .limit(1)
+
+    if (!room) {
+      c.status(404)
+      return c.json({ error: 'Room not found.' }, 404)
+    }
+
+    c.set('room', room)
+
+    await next()
+  },
+)
 
 export const roomApp = new Hono()
+  .use('/:slug', roomMiddleware)
   .post('/create', async (c) => {
     const newRoom = await db.transaction(async (tx) => {
       const [room] = await tx
@@ -24,21 +48,7 @@ export const roomApp = new Hono()
     return c.json(newRoom as Required<Room>, 200)
   })
   .get('/:slug', async (c) => {
-    const slug = c.req.param('slug')
-
-    const [room] = await db
-      .select({
-        id: schema.rooms.id,
-        slug: schema.rooms.slug,
-      })
-      .from(schema.rooms)
-      // @ts-ignore
-      .where(eq(schema.rooms.slug, slug))
-      .limit(1)
-
-    if (!room) {
-      return c.json({ error: 'Room not found.' }, 404)
-    }
+    const room = c.get('room')
 
     return c.json(room, 200)
   })

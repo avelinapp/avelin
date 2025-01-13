@@ -175,6 +175,9 @@ importers:
       '@avelin/database':
         specifier: workspace:*
         version: link:../../packages/database
+      '@avelin/id':
+        specifier: workspace:*
+        version: link:../../packages/id
       '@hocuspocus/extension-database':
         specifier: 2.13.7
         version: 2.13.7(bufferutil@4.0.8)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)

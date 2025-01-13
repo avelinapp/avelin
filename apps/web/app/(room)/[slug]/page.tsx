@@ -21,8 +21,8 @@ export default function Page({ params }: { params: Params }) {
 
     initialize({
       room: room.data,
-      user: user?.isAnonymous ? undefined : user,
-      session: user?.isAnonymous ? undefined : session,
+      user: user,
+      session: session,
     })
 
     return () => destroy()
