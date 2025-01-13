@@ -9,14 +9,21 @@ export async function linkAnonymousToRealAccount({
   anonymousUserId: string
   userId: string
 }) {
-  // Modifications to make:
-  // Rooms - creatorId
-  // RoomParticipants - userId
-
   // Invalidate anonymous sessions
   await invalidateSessionsForUser(anonymousUserId)
 
   await db.transaction(async (tx) => {
+    // Room participation
+    await tx
+      .update(schema.roomParticipants)
+      .set({
+        userId: userId,
+      })
+      .where(eq(schema.roomParticipants.userId, anonymousUserId))
+
+    // TODO: Room ownership
+
+    // Retire anonymous user
     await tx
       .update(schema.users)
       .set({
