@@ -1,6 +1,5 @@
-import { type User, type Session, db, schema } from '@avelin/database'
+import { type User, type Session, db, schema, eq } from '@avelin/database'
 import { newId } from '@avelin/id'
-import { eq } from 'drizzle-orm'
 
 export async function createSession(userId: string): Promise<Session> {
   const sessionId = newId('session')

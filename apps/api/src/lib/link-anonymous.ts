@@ -1,6 +1,5 @@
 import { invalidateSessionsForUser } from '@avelin/auth'
-import { db, eq, schema } from '@avelin/database'
-import { sql } from 'drizzle-orm'
+import { db, eq, schema, sql } from '@avelin/database'
 
 export async function linkAnonymousToRealAccount({
   anonymousUserId,
