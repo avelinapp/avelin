@@ -16,5 +16,5 @@ dkb -t avelin-sync -f apps/sync/Dockerfile .
 dkr -it --rm --name avelin-sync --env-file apps/sync/.env avelin-sync
 
 dkb -t avelin-migrate -f packages/database/Dockerfile .
-dkr -it --rm --name avelin-migrate --env-file packages/database/.env avelin-migrate
+dkr -it --rm --name avelin-migrate -e DATABASE_URL=$(dotenv -e packages/database/.env -p DATABASE_URL) avelin-migrate
 ```
