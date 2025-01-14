@@ -9,7 +9,6 @@ import expressWebsockets from 'express-ws'
 import ws from 'ws'
 import { Doc } from 'yjs'
 import { validateSession } from '@avelin/auth'
-import { newId } from '@avelin/id'
 
 dotenv.config({ path: '.env' })
 
@@ -30,12 +29,6 @@ const server = new Hocuspocus({
     }
 
     const { user, session } = auth
-
-    // await db.insert(schema.roomParticipants).values({
-    //   id: newId('roomParticipant'),
-    //   userId: user.id,
-    //   roomId: data.documentName,
-    // })
 
     return { user, session }
   },

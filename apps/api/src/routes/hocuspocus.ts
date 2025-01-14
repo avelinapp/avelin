@@ -1,7 +1,6 @@
 import { validateSession } from '@avelin/auth'
-import { db, eq, schema, User } from '@avelin/database'
+import { db, eq, and, schema, User } from '@avelin/database'
 import { newId } from '@avelin/id'
-import { and } from 'drizzle-orm'
 import { Hono } from 'hono'
 import { createHmac, timingSafeEqual } from 'node:crypto'
 

@@ -1,7 +1,6 @@
-import { db, schema } from '@avelin/database'
+import { db, schema, eq } from '@avelin/database'
 import { newId } from '@avelin/id'
 import { storage } from '@avelin/storage'
-import { eq } from 'drizzle-orm'
 
 export async function getUserByGoogleId(googleId: string) {
   const [existingUser] = await db

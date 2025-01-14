@@ -1,6 +1,5 @@
 import { Hono } from 'hono'
-import { db, Room, schema } from '@avelin/database'
-import { eq } from 'drizzle-orm'
+import { db, Room, schema, eq } from '@avelin/database'
 import { newId, newRoomSlug } from '@avelin/id'
 import { hocuspocusApp } from './hocuspocus'
 import { createMiddleware } from 'hono/factory'
