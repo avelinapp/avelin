@@ -1,7 +1,6 @@
 import { validateSession } from '@avelin/auth'
-import { db, eq, schema, User } from '@avelin/database'
+import { db, eq, and, schema, User } from '@avelin/database'
 import { newId } from '@avelin/id'
-import { and } from 'drizzle-orm'
 import { Hono } from 'hono'
 import { createHmac, timingSafeEqual } from 'node:crypto'
 
@@ -56,6 +55,7 @@ export const hocuspocusApp = new Hono().post('/', async (c) => {
      * TODO: Sync editor language to the database as well.
      */
     case 'change': {
+      console.log('change event webhook')
       const title = (payload.document.meta.title as string | undefined) ?? null
 
       await db
@@ -73,6 +73,9 @@ export const hocuspocusApp = new Hono().post('/', async (c) => {
      * We use this to update the `room_participants` table.
      */
     case 'connect': {
+      console.log('connect event webhook')
+      console.log('Request params:', JSON.stringify(payload.requestParameters))
+      console.log(payload.requestHeaders)
       const cookies = (payload.requestHeaders.cookie as string)
         .split('; ')
         .map((c) => {
@@ -89,15 +92,19 @@ export const hocuspocusApp = new Hono().post('/', async (c) => {
         })
         .filter((c) => c !== undefined)
 
+      console.log(cookies)
+
       const sessionCookie = cookies.find((c) => c.key === 'avelin_session_id')
 
       if (!sessionCookie) {
+        console.log('Session cookie not found')
         return c.json({}, 401)
       }
 
       const auth = await validateSession(sessionCookie.value)
 
       if (!auth) {
+        console.log('Invalid session ID', sessionCookie.value)
         return c.json({}, 401)
       }
 

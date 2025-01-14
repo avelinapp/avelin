@@ -108,6 +108,7 @@ export const authApp = new Hono()
 
       const session = await createSession(existingUser.id)
       setCookie(c, 'avelin_session_id', session.id, {
+        domain: `.${process.env.BASE_DOMAIN}`,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         httpOnly: true,
@@ -144,6 +145,7 @@ export const authApp = new Hono()
     const session = await createSession(newUser.id)
 
     setCookie(c, 'avelin_session_id', session.id, {
+      domain: `.${process.env.BASE_DOMAIN}`,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       httpOnly: true,
@@ -202,6 +204,7 @@ export const authApp = new Hono()
     const session = await createSession(user.id)
 
     setCookie(c, 'avelin_session_id', session.id, {
+      domain: `.${process.env.BASE_DOMAIN}`,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       httpOnly: true,
@@ -232,6 +235,7 @@ export const authApp = new Hono()
 
     await invalidateSession(sessionId)
     setCookie(c, 'avelin_session_id', '', {
+      domain: `.${process.env.BASE_DOMAIN}`,
       path: '/',
       expires: new Date(0),
     })

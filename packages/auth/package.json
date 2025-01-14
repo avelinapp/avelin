@@ -20,8 +20,7 @@
     "@avelin/storage": "workspace:*",
     "@oslojs/crypto": "catalog:",
     "@oslojs/encoding": "catalog:",
-    "arctic": "catalog:",
-    "drizzle-orm": "catalog:"
+    "arctic": "catalog:"
   },
   "devDependencies": {
     "@avelin/eslint-config": "workspace:*",

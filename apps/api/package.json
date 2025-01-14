@@ -23,7 +23,6 @@
     "@avelin/database": "workspace:*",
     "@avelin/id": "workspace:*",
     "arctic": "catalog:",
-    "drizzle-orm": "catalog:",
     "hono": "catalog:",
     "superjson": "^2.2.1"
   },

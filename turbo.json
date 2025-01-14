@@ -28,7 +28,8 @@
         "NODE_ENV",
         "NEXT_PUBLIC_POSTHOG_KEY",
         "NEXT_PUBLIC_POSTHOG_HOST",
-        "HOCUSPOCUS_WEBHOOK_SECRET"
+        "HOCUSPOCUS_WEBHOOK_SECRET",
+        "BASE_DOMAIN"
       ]
     },
     "lint": {
