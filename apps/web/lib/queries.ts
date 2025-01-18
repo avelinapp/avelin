@@ -5,7 +5,7 @@ import {
   queryOptions,
 } from '@tanstack/react-query'
 import { api } from './api'
-import { Room } from '@avelin/database'
+import { Room, roomSchema } from '@avelin/database'
 import { AuthVerifyGETResponse } from '@avelin/api/types'
 import superjson from 'superjson'
 
@@ -60,7 +60,8 @@ const roomQueries = {
           throw new Error(error)
         }
 
-        return data as Room
+        const parsed = roomSchema.parse(data) satisfies Room
+        return parsed
       },
       retry: 2,
     }),

@@ -51,6 +51,10 @@ export const rooms = pgTable('rooms', {
   slug: text().unique(),
   ydoc: bytea(),
   title: text(),
+  /* System user should be creator only for migrations and legacy data. */
+  /* All rooms should be assigned a creator which is a real user. */
+  creatorId: text().references(() => users.id, { onDelete: 'cascade' }),
+  ...timestamps,
 })
 
 export const roomParticipants = pgTable(
