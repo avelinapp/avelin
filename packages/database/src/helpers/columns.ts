@@ -1,7 +1,12 @@
 import { timestamp } from 'drizzle-orm/pg-core'
 
 export const timestamps = {
-  updatedAt: timestamp().$onUpdate(() => new Date()),
-  createdAt: timestamp().defaultNow().notNull(),
-  deletedAt: timestamp(),
+  updatedAt: timestamp({ withTimezone: true, mode: 'date' })
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+  createdAt: timestamp({ withTimezone: true, mode: 'date' })
+    .notNull()
+    .defaultNow(),
+  deletedAt: timestamp({ withTimezone: true, mode: 'date' }),
 }
