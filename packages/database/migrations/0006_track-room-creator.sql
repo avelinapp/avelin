@@ -26,8 +26,9 @@ SET "creatorId" = 'user_system'
 WHERE "creatorId" IS NULL;
 
 --> Update `creatorId` column to be required
-ALTER TABLE "rooms"
-ALTER COLUMN "creatorId" SET NOT NULL;
+-- This should only be done, once APIs have been updated to set a creatorId upon room creation
+--> ALTER TABLE "rooms"
+--> ALTER COLUMN "creatorId" SET NOT NULL;
 
 --> Add foreign key constraint to `rooms` table
 ALTER TABLE "rooms" ADD CONSTRAINT "rooms_creatorId_users_id_fk" FOREIGN KEY ("creatorId") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
