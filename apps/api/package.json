@@ -12,6 +12,8 @@
     "@avelin/auth": "workspace:*",
     "@avelin/database": "workspace:*",
     "@avelin/id": "workspace:*",
+    "@elysiajs/cors": "^1.2.0",
+    "@elysiajs/swagger": "^1.2.0",
     "@mobily/ts-belt": "^3.13.1",
     "arctic": "catalog:",
     "elysia": "1.2.10",
