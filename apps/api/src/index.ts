@@ -1,11 +1,7 @@
-import { app } from './app'
-import { showRoutes } from 'hono/dev'
+import { Elysia } from 'elysia'
 
-showRoutes(app, {
-  verbose: true,
-})
+const app = new Elysia().get('/', () => 'Hello Elysia').listen(3000)
 
-export default {
-  port: process.env.API_PORT || 8080,
-  fetch: app.fetch,
-}
+console.log(
+  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
+)
