@@ -1,7 +1,16 @@
-import { type User, type Session, db, schema, eq } from '@avelin/database'
+import {
+  type User,
+  type Session,
+  schema,
+  eq,
+  NeonDatabase,
+} from '@avelin/database'
 import { newId } from '@avelin/id'
 
-export async function createSession(userId: string): Promise<Session> {
+export async function createSession(
+  userId: string,
+  { db }: { db: NeonDatabase },
+): Promise<Session> {
   const sessionId = newId('session')
   const session: Session = {
     id: sessionId,
@@ -21,7 +30,10 @@ export async function createSession(userId: string): Promise<Session> {
   return createdSession
 }
 
-export async function validateSession(sessionId: string) {
+export async function validateSession(
+  sessionId: string,
+  { db }: { db: NeonDatabase },
+) {
   const [result] = await db
     .select({ user: schema.users, session: schema.sessions })
     .from(schema.sessions)
@@ -51,11 +63,17 @@ export async function validateSession(sessionId: string) {
   return { session, user }
 }
 
-export async function invalidateSession(sessionId: string): Promise<void> {
+export async function invalidateSession(
+  sessionId: string,
+  { db }: { db: NeonDatabase },
+): Promise<void> {
   await db.delete(schema.sessions).where(eq(schema.sessions.id, sessionId))
 }
 
-export async function invalidateSessionsForUser(userId: string): Promise<void> {
+export async function invalidateSessionsForUser(
+  userId: string,
+  { db }: { db: NeonDatabase },
+): Promise<void> {
   await db.delete(schema.sessions).where(eq(schema.sessions.userId, userId))
 }
 

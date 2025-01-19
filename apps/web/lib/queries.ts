@@ -60,8 +60,13 @@ const roomQueries = {
           throw new Error(error)
         }
 
-        const parsed = roomSchema.parse(data) satisfies Room
-        return parsed
+        const parsed = roomSchema.omit({ ydoc: true }).safeParse(data)
+
+        if (!parsed.success) {
+          throw new Error('Error parsing room data:', parsed.error)
+        }
+
+        return parsed.data satisfies Omit<Room, 'ydoc'>
       },
       retry: 2,
     }),

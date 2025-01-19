@@ -13,12 +13,13 @@ import { getCookie, setCookie } from 'hono/cookie'
 import { decodeIdToken, OAuth2Tokens } from 'arctic'
 import superjson from 'superjson'
 import { linkAnonymousToRealAccount } from '../lib/link-anonymous'
+import { db } from '@avelin/database'
 
 export const authApp = new Hono()
   .get('/google', async (c) => {
     const redirect = c.req.query('redirect') ?? '/'
 
-    const { state, codeVerifier, url } = generateGoogleAuthorizationUrl()
+    const { state, codeVerifier, url } = generateGoogleAuthorizationUrl({ db })
 
     setCookie(c, 'google_oauth_state', state, {
       path: '/',
@@ -85,13 +86,13 @@ export const authApp = new Hono()
     // Get the anonymous session
     const currentSessionId = getCookie(c, 'avelin_session_id')
     const auth = currentSessionId
-      ? await validateSession(currentSessionId)
+      ? await validateSession(currentSessionId, { db })
       : null
 
     console.log('current authed user is anon:', auth?.user.isAnonymous)
 
     // Check if an existing user exists with this Google account
-    const existingUser = await getUserByGoogleId(claims.sub)
+    const existingUser = await getUserByGoogleId(claims.sub, { db })
 
     // If the user already exists, log them in
     if (existingUser) {
@@ -106,7 +107,7 @@ export const authApp = new Hono()
         })
       }
 
-      const session = await createSession(existingUser.id)
+      const session = await createSession(existingUser.id, { db })
       setCookie(c, 'avelin_session_id', session.id, {
         domain: `.${process.env.BASE_DOMAIN}`,
         secure: process.env.NODE_ENV === 'production',
@@ -125,10 +126,13 @@ export const authApp = new Hono()
     }
 
     // If the user doesn't exist, create their account
-    const newUser = await createUserViaGoogle({
-      ...claims,
-      googleId: claims.sub,
-    })
+    const newUser = await createUserViaGoogle(
+      {
+        ...claims,
+        googleId: claims.sub,
+      },
+      { db },
+    )
 
     // Link anonymous account to new account
     if (auth && auth.user.isAnonymous) {
@@ -142,7 +146,7 @@ export const authApp = new Hono()
       })
     }
 
-    const session = await createSession(newUser.id)
+    const session = await createSession(newUser.id, { db })
 
     setCookie(c, 'avelin_session_id', session.id, {
       domain: `.${process.env.BASE_DOMAIN}`,
@@ -175,7 +179,7 @@ export const authApp = new Hono()
       )
     }
 
-    const auth = await validateSession(sessionId)
+    const auth = await validateSession(sessionId, { db })
 
     if (!auth) {
       return c.text(
@@ -200,8 +204,8 @@ export const authApp = new Hono()
     )
   })
   .post('/anonymous', async (c) => {
-    const user = await createAnonymousUser()
-    const session = await createSession(user.id)
+    const user = await createAnonymousUser({ db })
+    const session = await createSession(user.id, { db })
 
     setCookie(c, 'avelin_session_id', session.id, {
       domain: `.${process.env.BASE_DOMAIN}`,
@@ -227,13 +231,13 @@ export const authApp = new Hono()
       return c.json({ error: 'Session not defined in request.' }, 400)
     }
 
-    const session = await validateSession(sessionId)
+    const session = await validateSession(sessionId, { db })
 
     if (!session) {
       return c.json({ error: 'Session not found.' }, 400)
     }
 
-    await invalidateSession(sessionId)
+    await invalidateSession(sessionId, { db })
     setCookie(c, 'avelin_session_id', '', {
       domain: `.${process.env.BASE_DOMAIN}`,
       path: '/',

@@ -19,11 +19,7 @@ const db = createDb(ws)
 const server = new Hocuspocus({
   port: 4100,
   async onAuthenticate(data) {
-    console.log('onAuthenticate')
-    console.log('Request headers:', data.requestHeaders)
-    console.log('Session token:', data.token)
-
-    const auth = await validateSession(data.token)
+    const auth = await validateSession(data.token, { db })
 
     if (!auth) {
       throw new Error(`Invalid session with ID ${data.token}`)
@@ -32,10 +28,6 @@ const server = new Hocuspocus({
     const { user, session } = auth
 
     return { user, session }
-  },
-  async onConnect(data) {
-    console.log('onConnect')
-    console.log('Request headers:', data.requestHeaders)
   },
   extensions: [
     new Webhook({
