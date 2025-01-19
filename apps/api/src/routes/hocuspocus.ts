@@ -101,7 +101,7 @@ export const hocuspocusApp = new Hono().post('/', async (c) => {
         return c.json({}, 401)
       }
 
-      const auth = await validateSession(sessionCookie.value)
+      const auth = await validateSession(sessionCookie.value, { db })
 
       if (!auth) {
         console.log('Invalid session ID', sessionCookie.value)

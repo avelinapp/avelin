@@ -3,6 +3,7 @@ import { db, Room, schema, eq } from '@avelin/database'
 import { newId, newRoomSlug } from '@avelin/id'
 import { hocuspocusApp } from './hocuspocus'
 import { createMiddleware } from 'hono/factory'
+import { D } from '@mobily/ts-belt'
 
 const roomMiddleware = createMiddleware<{ Variables: { room: Room } }>(
   async (c, next) => {
@@ -53,6 +54,6 @@ export const roomApp = new Hono()
   .get('/:slug', async (c) => {
     const room = c.get('room')
 
-    return c.json(room, 200)
+    return c.json(D.deleteKey(room, 'ydoc'), 200)
   })
   .route('/sync/webhook', hocuspocusApp)

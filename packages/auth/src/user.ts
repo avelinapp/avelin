@@ -1,8 +1,11 @@
-import { db, schema, eq } from '@avelin/database'
+import { schema, eq, NeonDatabase } from '@avelin/database'
 import { newId } from '@avelin/id'
 import { storage } from '@avelin/storage'
 
-export async function getUserByGoogleId(googleId: string) {
+export async function getUserByGoogleId(
+  googleId: string,
+  { db }: { db: NeonDatabase },
+) {
   const [existingUser] = await db
     .select({ id: schema.users.id })
     .from(schema.users)
@@ -23,8 +26,11 @@ interface CreateUserViaGoogle {
   picture: string
 }
 
-export async function createUserViaGoogle(data: CreateUserViaGoogle) {
-  const existingUser = await getUserByGoogleId(data.googleId)
+export async function createUserViaGoogle(
+  data: CreateUserViaGoogle,
+  { db }: { db: NeonDatabase },
+) {
+  const existingUser = await getUserByGoogleId(data.googleId, { db })
 
   if (existingUser) {
     throw new Error('User already exists')
@@ -62,7 +68,7 @@ export async function createUserViaGoogle(data: CreateUserViaGoogle) {
   return newUser
 }
 
-export async function createAnonymousUser() {
+export async function createAnonymousUser({ db }: { db: NeonDatabase }) {
   const id = newId('user')
 
   const [newUser] = await db

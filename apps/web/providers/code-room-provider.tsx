@@ -30,7 +30,7 @@ export type CodeRoomState = {
   networkProvider?: HocuspocusProvider
   networkProviderStatus?: WebSocketStatus
   persistenceProvider?: IndexeddbPersistence
-  room?: Room
+  room?: Omit<Room, 'ydoc'>
   clientId?: number
   users: Map<number, UserInfo>
   activeUsers: Map<number, number>
@@ -51,7 +51,7 @@ export type CodeRoomActions = {
     user,
     session,
   }: {
-    room: Room
+    room: Omit<Room, 'ydoc'>
     user?: User
     session?: Session
   }) => void

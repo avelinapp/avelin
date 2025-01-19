@@ -132,6 +132,9 @@ importers:
       '@avelin/id':
         specifier: workspace:*
         version: link:../../packages/id
+      '@mobily/ts-belt':
+        specifier: ^3.13.1
+        version: 3.13.1
       arctic:
         specifier: 'catalog:'
         version: 2.3.3
@@ -1428,6 +1431,10 @@ packages:
 
   '@lifeomic/attempt@3.1.0':
     resolution: {integrity: sha512-QZqem4QuAnAyzfz+Gj5/+SLxqwCAw2qmt7732ZXodr6VDWGeYLG6w1i/vYLa55JQM9wRuBKLmXmiZ2P0LtE5rw==}
+
+  '@mobily/ts-belt@3.13.1':
+    resolution: {integrity: sha512-K5KqIhPI/EoCTbA6CGbrenM9s41OouyK8A03fGJJcla/zKucsgLbz8HNbeseoLarRPgyWJsUyCYqFhI7t3Ra9Q==}
+    engines: {node: '>= 10.*'}
 
   '@monaco-editor/loader@1.4.0':
     resolution: {integrity: sha512-00ioBig0x642hytVspPl7DbQyaSWRaolYie/UFNjoTdvoKPzo6xrXLhTk9ixgIKcLH5b5vDOjVNiGyY+uDCUlg==}
@@ -6928,6 +6935,8 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   '@lifeomic/attempt@3.1.0': {}
+
+  '@mobily/ts-belt@3.13.1': {}
 
   '@monaco-editor/loader@1.4.0(monaco-editor@0.41.0)':
     dependencies:

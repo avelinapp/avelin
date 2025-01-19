@@ -9,7 +9,7 @@ export async function linkAnonymousToRealAccount({
   userId: string
 }) {
   // Invalidate anonymous sessions
-  await invalidateSessionsForUser(anonymousUserId)
+  await invalidateSessionsForUser(anonymousUserId, { db })
 
   await db.transaction(async (tx) => {
     // Room participation

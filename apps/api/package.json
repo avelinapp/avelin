@@ -22,6 +22,7 @@
     "@avelin/auth": "workspace:*",
     "@avelin/database": "workspace:*",
     "@avelin/id": "workspace:*",
+    "@mobily/ts-belt": "^3.13.1",
     "arctic": "catalog:",
     "hono": "catalog:",
     "superjson": "^2.2.1"
