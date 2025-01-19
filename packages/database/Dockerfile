@@ -1,18 +1,37 @@
 ARG NODE_VERSION=20
 ARG PROJECT=database
 ARG PACKAGE=@avelin/${PROJECT}
+ARG UBI9_VERSION=9.5
 
-# 1. Alpine image
-FROM node:${NODE_VERSION}-alpine AS alpine
-RUN apk update && \
-  apk add --no-cache libc6-compat
+#######
+
+# =========================
+# Stage 1: Builder
+# =========================
+FROM redhat/ubi9-minimal:${UBI9_VERSION} AS ubi
+
+ARG NODE_VERSION
+
+# -------------------------
+# Install Dependencies
+# -------------------------
+RUN microdnf install -y libgcc libstdc++ unzip && \
+  microdnf clean all
+
+# -------------------------
+# Install Node.js
+# -------------------------
+RUN curl -fsSL https://rpm.nodesource.com/setup_${NODE_VERSION}.x | bash - && \
+  microdnf install -y nodejs && \
+  microdnf clean all
+
+# Verify Node.js installation
+RUN node -v && npm -v
 
 # Setup pnpm and turbo on the alpine base
-FROM alpine AS base
-RUN corepack enable
-# Replace <your-major-version> with the major version installed in your repository. For example:
-# RUN npm install turbo@2.1.3 --global
-RUN npm install turbo --global
+FROM ubi AS base
+
+RUN npm install pnpm turbo --global
 
 # 2. Prune projects
 FROM base AS pruner
@@ -55,4 +74,3 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
 COPY --from=pruner /app/out/full/ .
 
 CMD cd packages/database && pnpm tsx ./src/migrate.ts
-
