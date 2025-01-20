@@ -10,7 +10,7 @@ import {
 } from '@avelin/auth'
 import { db } from '@avelin/database'
 import { decodeIdToken, OAuth2Tokens } from 'arctic'
-import Elysia from 'elysia'
+import Elysia, { t } from 'elysia'
 import type { Response } from 'undici-types'
 import { linkAnonymousToRealAccount } from '../utils/auth.utils'
 import { authMiddleware } from '../middleware/auth'
@@ -72,49 +72,62 @@ export const auth = new Elysia({ prefix: '/auth' })
       .get(
         '/google',
         async ({
-          query,
+          query: { redirect: redirectPath },
           cookie: {
             google_oauth_state,
             google_code_verifier,
             post_login_redirect,
           },
           redirect,
+          error,
         }) => {
-          const redirectPath = query.redirect ?? '/'
+          try {
+            console.log('redirectPath', redirectPath)
 
-          const { state, codeVerifier, url } = generateGoogleAuthorizationUrl({
-            db,
-          })
+            const { state, codeVerifier, url } =
+              generateGoogleAuthorizationUrl()
 
-          google_oauth_state?.set({
-            value: state,
-            path: '/',
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 60 * 10,
-            sameSite: 'lax',
-          })
+            console.log('state', state)
+            console.log('codeVerifier', codeVerifier)
+            console.log('url', url)
+            console.log('url.toString()', url.toString())
 
-          google_code_verifier?.set({
-            value: codeVerifier,
-            path: '/',
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 60 * 10,
-            sameSite: 'lax',
-          })
+            google_oauth_state?.set({
+              value: state,
+              path: '/',
+              httpOnly: true,
+              secure: process.env.NODE_ENV === 'production',
+              maxAge: 60 * 10,
+              sameSite: 'lax',
+            })
 
-          post_login_redirect?.set({
-            value: redirectPath,
-            path: '/',
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 60 * 10, // 10 minutes
-            sameSite: 'lax',
-          })
+            google_code_verifier?.set({
+              value: codeVerifier,
+              path: '/',
+              httpOnly: true,
+              secure: process.env.NODE_ENV === 'production',
+              maxAge: 60 * 10,
+              sameSite: 'lax',
+            })
 
-          return redirect(url.toString(), 302) as Response
+            post_login_redirect?.set({
+              value: redirectPath ?? '/',
+              path: '/',
+              httpOnly: true,
+              secure: process.env.NODE_ENV === 'production',
+              maxAge: 60 * 10, // 10 minutes
+              sameSite: 'lax',
+            })
+
+            return redirect(url.toString(), 302) as Response
+          } catch (err) {
+            console.log('err', err)
+            error(500, {
+              error: 'Failed to generate Google authorization URL.',
+            })
+          }
         },
+        { query: t.Optional(t.Object({ redirect: t.String() })) },
       )
       .get(
         '/google/callback',
