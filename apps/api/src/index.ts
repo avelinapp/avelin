@@ -18,10 +18,10 @@ export const app = new Elysia()
       credentials: true,
     }),
   )
+  .get('/', ({ redirect }) => redirect('/docs'))
   .get('/health', () => ({ message: 'Avelin API is running.' }))
   .use(auth)
   .use(rooms)
-  // .guard({}, (app) => app.use(auth).use(rooms))
   .listen(PORT, ({ hostname, port }) => {
     console.log(`🦊 Elysia is running at ${hostname}:${port}`)
   })
