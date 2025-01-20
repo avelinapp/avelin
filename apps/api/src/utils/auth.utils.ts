@@ -20,7 +20,13 @@ export async function linkAnonymousToRealAccount({
       })
       .where(eq(schema.roomParticipants.userId, anonymousUserId))
 
-    // TODO: Room ownership
+    // Room ownership
+    await tx
+      .update(schema.rooms)
+      .set({
+        creatorId: userId,
+      })
+      .where(eq(schema.rooms.creatorId, anonymousUserId))
 
     // Retire anonymous user
     await tx
