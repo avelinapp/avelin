@@ -5,9 +5,6 @@ import {
   queryOptions,
 } from '@tanstack/react-query'
 import { api } from './api'
-import { Room, roomSchema } from '@avelin/database'
-import { AuthVerifyGETResponse } from '@avelin/api/types'
-import superjson from 'superjson'
 
 function makeQueryClient() {
   return new QueryClient({
@@ -49,24 +46,13 @@ const roomQueries = {
     queryOptions({
       queryKey: [...roomQueries.all(), slug],
       queryFn: async () => {
-        const res = await api.rooms[':slug'].$get({ param: { slug } })
-        const data = await res.json()
+        const { data, error } = await api.rooms({ slug }).get()
 
-        if (res.status >= 400) {
-          // TODO: Ideally, we shouldn't be casting types like this with an RPC.
-          // Look into switching to Elysia, since Hono RPC limitations
-          // with middleware could be an issue going forward.
-          const { error } = data as unknown as { error: string }
-          throw new Error(error)
+        if (!data || error) {
+          throw new Error(error.value.message)
         }
 
-        const parsed = roomSchema.omit({ ydoc: true }).safeParse(data)
-
-        if (!parsed.success) {
-          throw new Error('Error parsing room data:', parsed.error)
-        }
-
-        return parsed.data satisfies Omit<Room, 'ydoc'>
+        return data
       },
       retry: 2,
     }),
@@ -74,29 +60,29 @@ const roomQueries = {
 
 const authQueries = {
   all: () => ['auth'],
+  // check: () =>
   // eslint-disable-next-line
   check: (headers: any = undefined) =>
     queryOptions({
       queryKey: [...authQueries.all(), 'check'],
       queryFn: async () => {
-        const res = await api.auth.verify.$get(
-          {},
-          {
-            headers: {
-              ...headers,
-            },
-          },
-        )
-
-        const text = await res.text()
-        let data = superjson.parse<AuthVerifyGETResponse>(text)
+        let { data } = await api.auth.verify.get({
+          headers: { ...headers },
+        })
 
         // Create anonymous user & session if the user does not have a session.
-        if (!data.isAuthenticated) {
-          const res = await api.auth.anonymous.$post()
-          const text = await res.text()
+        if (!data || !data.isAuthenticated) {
+          console.log('here')
+          const res = await api.auth.anonymous.post(
+            {},
+            {
+              headers: { ...headers },
+            },
+          )
 
-          data = superjson.parse<AuthVerifyGETResponse>(text)
+          // console.log(res.headers)
+
+          data = res.data!
         }
 
         return {

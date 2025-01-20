@@ -50,6 +50,7 @@
     "postcss": "^8",
     "prettier": "catalog:",
     "tailwindcss": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "undici-types": "^7.2.3"
   }
 }

@@ -34,8 +34,8 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 
     posthog.onFeatureFlags(() => {
       if (posthog.isFeatureEnabled('posthog-client-debug')) {
-        posthog.debug(true)
-        console.log('PostHog client debugging enabled.')
+        // posthog.debug(true)
+        // console.log('PostHog client debugging enabled.')
       }
     })
   }, [])

@@ -92,12 +92,7 @@ COPY --from=pruner /app/out/full/ .
 RUN pnpm compile --filter=${PACKAGE}
 
 ###### @avelin/api
-FROM redhat/ubi9-minimal:${UBI9_VERSION} AS runner 
-
-RUN PKGS="libgcc libstdc++" \
-  && microdnf --assumeyes install --nodocs $PKGS \
-  && rpm --verify --nogroup --nouser $PKGS \
-  && microdnf -y clean all
+FROM redhat/ubi9-micro:${UBI9_VERSION} AS runner 
 
 ARG PROJECT
 
