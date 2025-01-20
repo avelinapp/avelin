@@ -1,11 +1,27 @@
-import { app } from './app'
-import { showRoutes } from 'hono/dev'
+import { Elysia } from 'elysia'
+import { cors } from '@elysiajs/cors'
+import { swagger } from '@elysiajs/swagger'
+import { auth } from './routes/auth'
+import { rooms } from './routes/rooms'
 
-showRoutes(app, {
-  verbose: true,
-})
+const PORT = process.env.API_PORT || 4000
 
-export default {
-  port: process.env.API_PORT || 8080,
-  fetch: app.fetch,
-}
+export const app = new Elysia()
+  .use(
+    swagger({
+      path: '/docs',
+    }),
+  )
+  .use(
+    cors({
+      origin: [process.env.APP_URL!],
+      credentials: true,
+    }),
+  )
+  .get('/health', () => ({ message: 'Avelin API is running.' }))
+  .use(auth)
+  .use(rooms)
+  // .guard({}, (app) => app.use(auth).use(rooms))
+  .listen(PORT, ({ hostname, port }) => {
+    console.log(`🦊 Elysia is running at ${hostname}:${port}`)
+  })

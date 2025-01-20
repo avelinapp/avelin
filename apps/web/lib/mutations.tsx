@@ -7,8 +7,8 @@ import { KeyRoundIcon } from '@avelin/icons'
 export const useCreateRoom = () =>
   useMutation({
     mutationFn: async () => {
-      const res = await api.rooms.create.$post()
-      return await res.json()
+      const res = await api.rooms.create.post()
+      return res.data!
     },
   })
 
@@ -16,11 +16,10 @@ export const useLogout = () =>
   useMutation({
     mutationKey: ['auth', 'logout'],
     mutationFn: async () => {
-      const res = await api.auth.logout.$post()
+      const res = await api.auth.logout.post()
 
       if (res.status >= 400) {
-        const { error } = (await res.json()) as { error: string }
-        throw new Error(error)
+        throw new Error(res.data?.message)
       }
     },
     onMutate: () => {

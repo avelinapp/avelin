@@ -1,4 +1,3 @@
-import { Hono } from 'hono'
 import {
   createAnonymousUser,
   createSession,
@@ -9,240 +8,269 @@ import {
   invalidateSession,
   validateSession,
 } from '@avelin/auth'
-import { getCookie, setCookie } from 'hono/cookie'
-import { decodeIdToken, OAuth2Tokens } from 'arctic'
-import superjson from 'superjson'
-import { linkAnonymousToRealAccount } from '../lib/link-anonymous'
 import { db } from '@avelin/database'
+import { decodeIdToken, OAuth2Tokens } from 'arctic'
+import Elysia from 'elysia'
+import type { Response } from 'undici-types'
+import { linkAnonymousToRealAccount } from '../utils/auth.utils'
+import { authMiddleware } from '../middleware/auth'
 
-export const authApp = new Hono()
-  .get('/google', async (c) => {
-    const redirect = c.req.query('redirect') ?? '/'
+export const auth = new Elysia({ prefix: '/auth' })
+  .guard({}, (app) =>
+    app
+      .get('/verify', async ({ cookie: { avelin_session_id }, error }) => {
+        const sessionId = avelin_session_id?.value
 
-    const { state, codeVerifier, url } = generateGoogleAuthorizationUrl({ db })
+        if (!sessionId) {
+          return error(400, {
+            isAuthenticated: false,
+            error: 'Session not defined in request',
+            user: null,
+            session: null,
+          })
+        }
 
-    setCookie(c, 'google_oauth_state', state, {
-      path: '/',
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 10,
-      sameSite: 'lax',
-    })
+        const auth = await validateSession(sessionId, { db })
 
-    setCookie(c, 'google_code_verifier', codeVerifier, {
-      path: '/',
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 10,
-      sameSite: 'lax',
-    })
+        if (!auth) {
+          error(400, {
+            isAuthenticated: false,
+            error: 'Invalid session',
+            user: null,
+            session: null,
+          })
+        } else {
+          return {
+            isAuthenticated: true,
+            isAnonymous: auth.user.isAnonymous,
+            user: auth.user,
+            session: auth.session,
+          }
+        }
+      })
+      .post('/anonymous', async ({ cookie: { avelin_session_id } }) => {
+        const user = await createAnonymousUser({ db })
+        const session = await createSession(user.id, { db })
 
-    setCookie(c, 'post_login_redirect', redirect, {
-      path: '/',
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 10, // 10 minutes
-      sameSite: 'lax',
-    })
-
-    return c.redirect(url.toString())
-  })
-  .get('/google/callback', async (c) => {
-    const url = new URL(c.req.url)
-    const code = url.searchParams.get('code')
-    const state = url.searchParams.get('state')
-    const storedState = getCookie(c, 'google_oauth_state')
-    const codeVerifier = getCookie(c, 'google_code_verifier')
-    const redirectUrl = getCookie(c, 'post_login_redirect') ?? '/'
-
-    if (!code || !state || !storedState || !codeVerifier) {
-      return c.json({ error: 'Please restart the process.' }, 400)
-    }
-
-    if (state !== storedState) {
-      return c.json(
-        { error: 'Invalid state - please restart the process.' },
-        400,
-      )
-    }
-
-    let tokens: OAuth2Tokens
-
-    try {
-      tokens = await google.validateAuthorizationCode(code, codeVerifier)
-    } catch {
-      return c.json({ error: 'Invalid code.' }, 400)
-    }
-
-    const claims = decodeIdToken(tokens.idToken()) as {
-      sub: string // Google User ID
-      email: string
-      name: string
-      picture: string
-      given_name: string
-      family_name: string
-    }
-
-    // Get the anonymous session
-    const currentSessionId = getCookie(c, 'avelin_session_id')
-    const auth = currentSessionId
-      ? await validateSession(currentSessionId, { db })
-      : null
-
-    console.log('current authed user is anon:', auth?.user.isAnonymous)
-
-    // Check if an existing user exists with this Google account
-    const existingUser = await getUserByGoogleId(claims.sub, { db })
-
-    // If the user already exists, log them in
-    if (existingUser) {
-      // Link anonymous to existing real account
-      if (auth && auth.user.isAnonymous) {
-        console.log(
-          `Linking anonymous user ${auth.user.id} to real existing user ${existingUser.id}`,
-        )
-        await linkAnonymousToRealAccount({
-          anonymousUserId: auth.user.id,
-          userId: existingUser.id,
+        avelin_session_id?.set({
+          value: session.id,
+          path: '/',
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          expires: session.expiresAt,
+          domain: `.${process.env.BASE_DOMAIN}`,
         })
-      }
 
-      const session = await createSession(existingUser.id, { db })
-      setCookie(c, 'avelin_session_id', session.id, {
-        domain: `.${process.env.BASE_DOMAIN}`,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        httpOnly: true,
-        expires: session.expiresAt,
+        return {
+          isAuthenticated: true,
+          isAnonymous: true,
+          user,
+          session,
+        }
       })
+      .get(
+        '/google',
+        async ({
+          query,
+          cookie: {
+            google_oauth_state,
+            google_code_verifier,
+            post_login_redirect,
+          },
+          redirect,
+        }) => {
+          const redirectPath = query.redirect ?? '/'
 
-      // Clear the redirect cookie after use
-      setCookie(c, 'post_login_redirect', '', {
-        path: '/',
-        expires: new Date(0),
+          const { state, codeVerifier, url } = generateGoogleAuthorizationUrl({
+            db,
+          })
+
+          google_oauth_state?.set({
+            value: state,
+            path: '/',
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 60 * 10,
+            sameSite: 'lax',
+          })
+
+          google_code_verifier?.set({
+            value: codeVerifier,
+            path: '/',
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 60 * 10,
+            sameSite: 'lax',
+          })
+
+          post_login_redirect?.set({
+            value: redirectPath,
+            path: '/',
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 60 * 10, // 10 minutes
+            sameSite: 'lax',
+          })
+
+          return redirect(url.toString(), 302) as Response
+        },
+      )
+      .get(
+        '/google/callback',
+        async ({
+          request,
+          cookie: {
+            google_oauth_state,
+            google_code_verifier,
+            post_login_redirect,
+            avelin_session_id,
+          },
+          error,
+          redirect,
+        }) => {
+          const url = new URL(request.url)
+          const code = url.searchParams.get('code')
+          const state = url.searchParams.get('state')
+          const storedState = google_oauth_state?.value
+          const codeVerifier = google_code_verifier?.value
+          const redirectUrl = post_login_redirect?.value ?? '/'
+
+          if (!code || !state || !storedState || !codeVerifier) {
+            return error(400, {
+              error: 'Please restart the process.',
+            })
+          }
+
+          if (state !== storedState) {
+            return error(400, {
+              error: 'Invalid state - please restart the process.',
+            })
+          }
+
+          let tokens: OAuth2Tokens
+
+          try {
+            tokens = await google.validateAuthorizationCode(code, codeVerifier)
+          } catch {
+            return error(400, {
+              error: 'Invalid code.',
+            })
+          }
+
+          const claims = decodeIdToken(tokens.idToken()) as {
+            sub: string // Google User ID
+            email: string
+            name: string
+            picture: string
+            given_name: string
+            family_name: string
+          }
+
+          // Get the anonymous session
+          const currentSessionId = avelin_session_id?.value
+          const auth = currentSessionId
+            ? await validateSession(currentSessionId, { db })
+            : null
+
+          console.log('current authed user is anon:', auth?.user.isAnonymous)
+
+          // Check if an existing user exists with this Google account
+          const existingUser = await getUserByGoogleId(claims.sub, { db })
+
+          // If the user already exists, log them in
+          if (existingUser) {
+            // Link anonymous to existing real account
+            if (auth && auth.user.isAnonymous) {
+              console.log(
+                `Linking anonymous user ${auth.user.id} to real existing user ${existingUser.id}`,
+              )
+              await linkAnonymousToRealAccount({
+                anonymousUserId: auth.user.id,
+                userId: existingUser.id,
+              })
+            }
+
+            const session = await createSession(existingUser.id, { db })
+            avelin_session_id?.set({
+              value: session.id,
+              path: '/',
+              httpOnly: true,
+              secure: process.env.NODE_ENV === 'production',
+              sameSite: 'lax',
+              expires: session.expiresAt,
+            })
+
+            post_login_redirect?.set({
+              value: '',
+              path: '/',
+              expires: new Date(0),
+            })
+
+            return redirect(process.env.APP_URL + redirectUrl)
+          }
+
+          // If the user doesn't exist, create their account
+          const newUser = await createUserViaGoogle(
+            {
+              ...claims,
+              googleId: claims.sub,
+            },
+            { db },
+          )
+
+          // Link anonymous account to new account
+          if (auth && auth.user.isAnonymous) {
+            console.log(
+              `Linking anonymous user ${auth.user.id} to new real user ${newUser.id}`,
+            )
+
+            await linkAnonymousToRealAccount({
+              anonymousUserId: auth.user.id,
+              userId: newUser.id,
+            })
+          }
+
+          const session = await createSession(newUser.id, { db })
+
+          avelin_session_id?.set({
+            value: session.id,
+            path: '/',
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            expires: session.expiresAt,
+            domain: `.${process.env.BASE_DOMAIN}`,
+          })
+
+          post_login_redirect?.set({
+            value: '',
+            path: '/',
+            expires: new Date(0),
+          })
+
+          return redirect(process.env.APP_URL + redirectUrl)
+        },
+      ),
+  )
+  .guard({}, (app) =>
+    app
+      .use(authMiddleware)
+      .get('/check', async (ctx) => {
+        console.log('ctx.user', ctx.user)
+        console.log('ctx.session', ctx.session)
+        return { user: ctx.user, session: ctx.session }
       })
+      .post('/logout', async ({ session, cookie: { avelin_session_id } }) => {
+        await invalidateSession(session.id, { db })
 
-      return c.redirect(process.env.APP_URL + redirectUrl)
-    }
+        avelin_session_id?.set({
+          value: '',
+          path: '/',
+          expires: new Date(0),
+          domain: `.${process.env.BASE_DOMAIN}`,
+        })
 
-    // If the user doesn't exist, create their account
-    const newUser = await createUserViaGoogle(
-      {
-        ...claims,
-        googleId: claims.sub,
-      },
-      { db },
-    )
-
-    // Link anonymous account to new account
-    if (auth && auth.user.isAnonymous) {
-      console.log(
-        `Linking anonymous user ${auth.user.id} to new real user ${newUser.id}`,
-      )
-
-      await linkAnonymousToRealAccount({
-        anonymousUserId: auth.user.id,
-        userId: newUser.id,
-      })
-    }
-
-    const session = await createSession(newUser.id, { db })
-
-    setCookie(c, 'avelin_session_id', session.id, {
-      domain: `.${process.env.BASE_DOMAIN}`,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      httpOnly: true,
-      expires: session.expiresAt,
-    })
-
-    // Clear the redirect cookie after use
-    setCookie(c, 'post_login_redirect', '', {
-      path: '/',
-      expires: new Date(0),
-    })
-
-    return c.redirect(process.env.APP_URL + redirectUrl)
-  })
-  .get('/verify', async (c) => {
-    const sessionId = getCookie(c, 'avelin_session_id')
-
-    if (!sessionId) {
-      return c.text(
-        superjson.stringify({
-          isAuthenticated: false,
-          error: 'Session not defined in request',
-          user: null,
-          session: null,
-        }),
-        400,
-      )
-    }
-
-    const auth = await validateSession(sessionId, { db })
-
-    if (!auth) {
-      return c.text(
-        superjson.stringify({
-          isAuthenticated: false,
-          error: 'Invalid session',
-          user: null,
-          session: null,
-        }),
-        404,
-      )
-    }
-
-    return c.text(
-      superjson.stringify({
-        isAuthenticated: true,
-        isAnonymous: auth.user.isAnonymous,
-        user: auth.user,
-        session: auth.session,
+        return { message: 'Logged out successfully.' }
       }),
-      200,
-    )
-  })
-  .post('/anonymous', async (c) => {
-    const user = await createAnonymousUser({ db })
-    const session = await createSession(user.id, { db })
-
-    setCookie(c, 'avelin_session_id', session.id, {
-      domain: `.${process.env.BASE_DOMAIN}`,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      httpOnly: true,
-      expires: session.expiresAt,
-    })
-
-    return c.text(
-      superjson.stringify({
-        isAuthenticated: true,
-        isAnonymous: true,
-        user,
-        session,
-      }),
-    )
-  })
-  .post('/logout', async (c) => {
-    const sessionId = getCookie(c, 'avelin_session_id')
-
-    if (!sessionId) {
-      return c.json({ error: 'Session not defined in request.' }, 400)
-    }
-
-    const session = await validateSession(sessionId, { db })
-
-    if (!session) {
-      return c.json({ error: 'Session not found.' }, 400)
-    }
-
-    await invalidateSession(sessionId, { db })
-    setCookie(c, 'avelin_session_id', '', {
-      domain: `.${process.env.BASE_DOMAIN}`,
-      path: '/',
-      expires: new Date(0),
-    })
-
-    return c.json({ message: 'Logged out successfully.' }, 200)
-  })
+  )

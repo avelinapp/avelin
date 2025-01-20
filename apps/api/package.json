@@ -6,25 +6,25 @@
     "dev:tsc": "tsc --watch",
     "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc",
-    "compile": "bun build src/index.ts --compile --minify --sourcemap ./src/index.ts --outfile api"
+    "compile": "bun build src/index.ts --target bun --compile --minify --sourcemap ./src/index.ts --outfile api"
   },
   "exports": {
-    "./client": {
+    ".": {
       "types": "./src/client.ts",
       "default": "./dist/client.js"
-    },
-    "./types": {
-      "types": "./src/types.ts",
-      "default": "./dist/types.js"
     }
   },
   "dependencies": {
     "@avelin/auth": "workspace:*",
     "@avelin/database": "workspace:*",
     "@avelin/id": "workspace:*",
+    "@elysiajs/cors": "^1.2.0",
+    "@elysiajs/eden": "^1.2.0",
+    "@elysiajs/swagger": "^1.2.0",
     "@mobily/ts-belt": "^3.13.1",
     "arctic": "catalog:",
-    "hono": "catalog:",
+    "elysia": "1.2.10",
+    "remeda": "^2.19.2",
     "superjson": "^2.2.1"
   },
   "devDependencies": {
@@ -34,6 +34,7 @@
     "@types/bun": "^1.1.14",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "undici-types": "^7.2.3"
   }
 }
