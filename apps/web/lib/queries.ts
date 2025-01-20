@@ -72,7 +72,6 @@ const authQueries = {
 
         // Create anonymous user & session if the user does not have a session.
         if (!data || !data.isAuthenticated) {
-          console.log('here')
           const res = await api.auth.anonymous.post(
             {},
             {
