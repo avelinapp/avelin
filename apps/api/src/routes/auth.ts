@@ -212,6 +212,7 @@ export const auth = new Elysia({ prefix: '/auth' })
               secure: process.env.NODE_ENV === 'production',
               sameSite: 'lax',
               expires: session.expiresAt,
+              domain: `.${process.env.BASE_DOMAIN}`,
             })
 
             post_login_redirect?.set({
