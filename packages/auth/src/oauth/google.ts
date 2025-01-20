@@ -1,4 +1,3 @@
-import { NeonDatabase } from '@avelin/database'
 import { generateCodeVerifier, generateState, Google } from 'arctic'
 
 export const google = new Google(
@@ -7,7 +6,7 @@ export const google = new Google(
   `${process.env.API_URL}/auth/google/callback`,
 )
 
-export function generateGoogleAuthorizationUrl({ db }: { db: NeonDatabase }) {
+export function generateGoogleAuthorizationUrl() {
   const state = generateState()
   const codeVerifier = generateCodeVerifier()
   const url = google.createAuthorizationURL(state, codeVerifier, [
