@@ -8,6 +8,7 @@ import { createHmac, timingSafeEqual } from 'crypto'
 import { readableStreamToArrayBuffer } from 'bun'
 
 const secret = process.env.HOCUSPOCUS_WEBHOOK_SECRET as string
+
 export const rooms = new Elysia({ prefix: '/rooms' })
   .guard({}, (app) =>
     app
@@ -20,13 +21,14 @@ export const rooms = new Elysia({ prefix: '/rooms' })
         },
         (app) => app.use(getRoomMiddleware).get('/:slug', ({ room }) => room),
       )
-      .post('/create', async () => {
+      .post('/create', async ({ user }) => {
         const newRoom = await db.transaction(async (tx) => {
           const [room] = await tx
             .insert(schema.rooms)
             .values({
               id: newId('room'),
               slug: newRoomSlug(),
+              creatorId: user.id,
             })
             .returning({
               id: schema.rooms.id,
