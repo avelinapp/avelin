@@ -37,7 +37,7 @@ export function EditorToolbar() {
             <EditorLanguageCombobox />
           </div>
         </div>
-        <div className='place-self-center flex items-center'>
+        <div className='place-self-center flex items-center justify-center w-full'>
           <RoomTitle />
         </div>
         <div className='place-self-end flex items-center h-6 my-auto'>

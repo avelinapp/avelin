@@ -23,7 +23,7 @@ export const RoomTitle = memo(function RoomTitle() {
             ref.current = node
           }}
           className={cn(
-            'font-medium text-base text-center transition-all border-transparent hover:border-color-border-subtle',
+            'font-medium text-base text-center transition-all border-transparent hover:border-color-border-subtle max-w-[400px]',
             'focus-visible:border-color-border-subtle overflow-ellipsis',
           )}
           placeholder='Room title...'
