@@ -8,7 +8,7 @@ import expressWebsockets from 'express-ws'
 import ws from 'ws'
 import { Doc } from 'yjs'
 import { validateSession } from '@avelin/auth'
-import { env } from './env'
+import { env } from './env.js'
 
 const PORT = 4100
 
@@ -33,6 +33,7 @@ const server = new Hocuspocus({
       secret: env.HOCUSPOCUS_WEBHOOK_SECRET,
       transformer: {
         // TODO: Complete implementation
+        // eslint-disable-next-line
         toYdoc(document: any, fieldName: string): Doc {
           // convert the given document (from your api) to a ydoc using the provided fieldName
           return new Doc()
