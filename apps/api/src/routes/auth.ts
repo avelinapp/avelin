@@ -14,6 +14,7 @@ import Elysia, { t } from 'elysia'
 import type { Response } from 'undici-types'
 import { linkAnonymousToRealAccount } from '../utils/auth.utils'
 import { authMiddleware } from '../middleware/auth'
+import { env } from '../env'
 
 export const auth = new Elysia({ prefix: '/auth' })
   .guard({}, (app) =>
@@ -56,10 +57,10 @@ export const auth = new Elysia({ prefix: '/auth' })
           value: session.id,
           path: '/',
           httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
+          secure: env.NODE_ENV === 'production',
           sameSite: 'lax',
           expires: session.expiresAt,
-          domain: `.${process.env.BASE_DOMAIN}`,
+          domain: `.${env.BASE_DOMAIN}`,
         })
 
         return {
@@ -96,7 +97,7 @@ export const auth = new Elysia({ prefix: '/auth' })
               value: state,
               path: '/',
               httpOnly: true,
-              secure: process.env.NODE_ENV === 'production',
+              secure: env.NODE_ENV === 'production',
               maxAge: 60 * 10,
               sameSite: 'lax',
             })
@@ -105,7 +106,7 @@ export const auth = new Elysia({ prefix: '/auth' })
               value: codeVerifier,
               path: '/',
               httpOnly: true,
-              secure: process.env.NODE_ENV === 'production',
+              secure: env.NODE_ENV === 'production',
               maxAge: 60 * 10,
               sameSite: 'lax',
             })
@@ -114,7 +115,7 @@ export const auth = new Elysia({ prefix: '/auth' })
               value: redirectPath ?? '/',
               path: '/',
               httpOnly: true,
-              secure: process.env.NODE_ENV === 'production',
+              secure: env.NODE_ENV === 'production',
               maxAge: 60 * 10, // 10 minutes
               sameSite: 'lax',
             })
@@ -209,10 +210,10 @@ export const auth = new Elysia({ prefix: '/auth' })
               value: session.id,
               path: '/',
               httpOnly: true,
-              secure: process.env.NODE_ENV === 'production',
+              secure: env.NODE_ENV === 'production',
               sameSite: 'lax',
               expires: session.expiresAt,
-              domain: `.${process.env.BASE_DOMAIN}`,
+              domain: `.${env.BASE_DOMAIN}`,
             })
 
             post_login_redirect?.set({
@@ -221,7 +222,7 @@ export const auth = new Elysia({ prefix: '/auth' })
               expires: new Date(0),
             })
 
-            return redirect(process.env.APP_URL + redirectUrl)
+            return redirect(env.APP_URL + redirectUrl)
           }
 
           // If the user doesn't exist, create their account
@@ -251,10 +252,10 @@ export const auth = new Elysia({ prefix: '/auth' })
             value: session.id,
             path: '/',
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: env.NODE_ENV === 'production',
             sameSite: 'lax',
             expires: session.expiresAt,
-            domain: `.${process.env.BASE_DOMAIN}`,
+            domain: `.${env.BASE_DOMAIN}`,
           })
 
           post_login_redirect?.set({
@@ -263,7 +264,7 @@ export const auth = new Elysia({ prefix: '/auth' })
             expires: new Date(0),
           })
 
-          return redirect(process.env.APP_URL + redirectUrl)
+          return redirect(env.APP_URL + redirectUrl)
         },
       ),
   )
@@ -282,7 +283,7 @@ export const auth = new Elysia({ prefix: '/auth' })
           value: '',
           path: '/',
           expires: new Date(0),
-          domain: `.${process.env.BASE_DOMAIN}`,
+          domain: `.${env.BASE_DOMAIN}`,
         })
 
         return { message: 'Logged out successfully.' }
