@@ -117,8 +117,8 @@ jobs:
       - name: Checkout IaC repo
         uses: actions/checkout@v4
         with:
-          repository: avelinapp/iac
-          token: ${{ secrets.GH_IAC_SECRET }}
+          repository: bazzalabs/orion
+          token: ${{ secrets.GH_BAZZALABS_ORION_SECRET }}
           fetch-depth: 0
           path: iac
 
