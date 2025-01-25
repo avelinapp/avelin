@@ -57,6 +57,13 @@
       "when": 1737230919271,
       "tag": "0007_deep_kylun",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1737809371553,
+      "tag": "0008_track-editor-language",
+      "breakpoints": true
     }
   ]
 }
