@@ -3,21 +3,19 @@ import { Database } from '@hocuspocus/extension-database'
 import { Logger } from '@hocuspocus/extension-logger'
 import { Events, Webhook } from '@hocuspocus/extension-webhook'
 import { Hocuspocus } from '@hocuspocus/server'
-import dotenv from 'dotenv'
 import express from 'express'
 import expressWebsockets from 'express-ws'
 import ws from 'ws'
 import { Doc } from 'yjs'
 import { validateSession } from '@avelin/auth'
+import { env } from './env'
 
-dotenv.config({ path: '.env' })
-
-const port = process.env.API_PORT || 4100
+const PORT = 4100
 
 const db = createDb(ws)
 
 const server = new Hocuspocus({
-  port: 4100,
+  port: PORT,
   async onAuthenticate(data) {
     const auth = await validateSession(data.token, { db })
 
@@ -31,8 +29,8 @@ const server = new Hocuspocus({
   },
   extensions: [
     new Webhook({
-      url: process.env.API_URL! + '/rooms/sync/webhook',
-      secret: process.env.HOCUSPOCUS_WEBHOOK_SECRET!,
+      url: env.API_URL + '/rooms/sync/webhook',
+      secret: env.HOCUSPOCUS_WEBHOOK_SECRET,
       transformer: {
         // TODO: Complete implementation
         toYdoc(document: any, fieldName: string): Doc {
@@ -104,6 +102,6 @@ app.ws('/', (websocket, request) => {
   server.handleConnection(websocket, request)
 })
 
-app.listen(port, () => {
-  console.log(`Avelin Sync listening on port ${port}`)
+app.listen(PORT, () => {
+  console.log(`Avelin Sync listening on port ${PORT}`)
 })

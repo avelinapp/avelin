@@ -16,13 +16,15 @@
     "@hocuspocus/extension-logger": "2.13.7",
     "@hocuspocus/extension-webhook": "2.13.7",
     "@hocuspocus/server": "2.13.7",
+    "@t3-oss/env-core": "^0.11.1",
     "bufferutil": "^4.0.8",
     "dotenv": "^16.4.5",
     "express": "^5.0.1",
     "express-ws": "^5.0.2",
     "ws": "^8.18.0",
     "y-protocols": "^1.0.6",
-    "yjs": "^13.6.20"
+    "yjs": "^13.6.20",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@avelin/eslint-config": "workspace:*",
