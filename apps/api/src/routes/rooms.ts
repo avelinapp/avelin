@@ -6,8 +6,7 @@ import { getRoomMiddleware } from '../middleware/rooms'
 import { validateSession } from '@avelin/auth'
 import { createHmac, timingSafeEqual } from 'crypto'
 import { readableStreamToArrayBuffer } from 'bun'
-
-const secret = process.env.HOCUSPOCUS_WEBHOOK_SECRET as string
+import { env } from '../env'
 
 export const rooms = new Elysia({ prefix: '/rooms' })
   .guard({}, (app) =>
@@ -60,7 +59,7 @@ export const rooms = new Elysia({ prefix: '/rooms' })
           c.headers['x-hocuspocus-signature-256'] as string,
         )
 
-        const hmac = createHmac('sha256', secret)
+        const hmac = createHmac('sha256', env.HOCUSPOCUS_WEBHOOK_SECRET)
         const digest = Buffer.from(`sha256=${hmac.update(body).digest('hex')}`)
 
         const digestArray = new Uint8Array(

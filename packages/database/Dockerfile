@@ -54,5 +54,6 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
 # Copy source code of isolated subworkspace
 COPY --from=pruner /app/out/full/ .
 
-CMD cd packages/database && pnpm tsx ./src/migrate.ts
+WORKDIR /app/packages/database
 
+CMD ["pnpm", "tsx", "./src/migrate.ts"]

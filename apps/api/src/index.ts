@@ -3,8 +3,9 @@ import { cors } from '@elysiajs/cors'
 import { swagger } from '@elysiajs/swagger'
 import { auth } from './routes/auth'
 import { rooms } from './routes/rooms'
+import { env } from './env'
 
-const PORT = process.env.API_PORT || 4000
+const PORT = env.API_PORT || 4000
 
 export const app = new Elysia()
   .use(
@@ -14,7 +15,7 @@ export const app = new Elysia()
   )
   .use(
     cors({
-      origin: [process.env.APP_URL!],
+      origin: [env.APP_URL!],
       credentials: true,
     }),
   )

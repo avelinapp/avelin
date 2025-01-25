@@ -29,7 +29,8 @@
         "NEXT_PUBLIC_POSTHOG_KEY",
         "NEXT_PUBLIC_POSTHOG_HOST",
         "HOCUSPOCUS_WEBHOOK_SECRET",
-        "BASE_DOMAIN"
+        "BASE_DOMAIN",
+        "CI"
       ]
     },
     "lint": {
