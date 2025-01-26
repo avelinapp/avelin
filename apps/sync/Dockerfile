@@ -54,6 +54,11 @@ ARG PACKAGE
 # Environment to skip .env validation on build
 ENV CI=true
 
+# Fixes builds on linux/arm64
+RUN microdnf install -y \
+  libgcc libstdc++ unzip gcc-c++ make python3 \
+  && microdnf clean all
+
 WORKDIR /app
 
 # Copy lockfile and package.json's of isolated subworkspace

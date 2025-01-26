@@ -69,6 +69,10 @@ ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL} \
   NEXT_PUBLIC_SYNC_URL=${NEXT_PUBLIC_SYNC_URL} \
   NEXT_PUBLIC_POSTHOG_KEY=${NEXT_PUBLIC_POSTHOG_KEY}
 
+# Fixes builds on linux/arm64
+RUN microdnf install -y \
+  libgcc libstdc++ unzip gcc-c++ make python3 \
+  && microdnf clean all
 
 WORKDIR /app
 
