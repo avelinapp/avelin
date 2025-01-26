@@ -184,30 +184,30 @@ jobs:
         run: |
           VERSION=${{ needs.prepare.outputs.new_version }}
 
-          APPS=("migrate")
+          APPS=("web" "api" "sync" "migrate")
 
           for app in "${APPS[@]}"; do
-            AMD64_DIGEST=$(docker manifest inspect ghcr.io/avelinapp/migrate:${{ github.sha }}-amd64 | jq -r '.manifests[] | select(.platform.architecture == "amd64" and .platform.os == "linux") | .digest')
-            ARM64_DIGEST=$(docker manifest inspect ghcr.io/avelinapp/migrate:${{ github.sha }}-arm64 | jq -r '.manifests[] | select(.platform.architecture == "arm64" and .platform.os == "linux") | .digest')
+            DIGEST_AMD64=$(docker manifest inspect ghcr.io/avelinapp/$app:${{ github.sha }}-amd64 | jq -r '.manifests[] | select(.platform.architecture == "amd64" and .platform.os == "linux") | .digest')
+            DIGEST_ARM64=$(docker manifest inspect ghcr.io/avelinapp/$app:${{ github.sha }}-arm64 | jq -r '.manifests[] | select(.platform.architecture == "arm64" and .platform.os == "linux") | .digest')
 
             docker manifest create \
               ghcr.io/avelinapp/$app:${{ github.sha }} \
-              --amend ghcr.io/avelinapp/$app@$AMD64_DIGEST \
-              --amend ghcr.io/avelinapp/$app@$ARM64_DIGEST
+              --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
+              --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
 
             docker manifest push ghcr.io/avelinapp/$app:${{ github.sha }}
 
             docker manifest create \
               ghcr.io/avelinapp/$app:$VERSION \
-              --amend ghcr.io/avelinapp/$app@$AMD64_DIGEST \
-              --amend ghcr.io/avelinapp/$app@$ARM64_DIGEST
+              --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
+              --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
 
             docker manifest push ghcr.io/avelinapp/$app:$VERSION
 
             docker manifest create \
               ghcr.io/avelinapp/$app:v$VERSION \
-              --amend ghcr.io/avelinapp/$app@$AMD64_DIGEST \
-              --amend ghcr.io/avelinapp/$app@$ARM64_DIGEST
+              --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
+              --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
 
             docker manifest push ghcr.io/avelinapp/$app:v$VERSION
           done
