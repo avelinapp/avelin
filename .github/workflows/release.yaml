@@ -212,10 +212,10 @@ jobs:
             docker manifest push ghcr.io/avelinapp/$app:v$VERSION
           done
 
-  update_iac:
+  update-iac:
     name: Update IaC Manifests
     runs-on: ubuntu-24.04
-    needs: [create-manifests]
+    needs: [prepare, create-manifests]
     permissions:
       contents: write
 
@@ -263,10 +263,10 @@ jobs:
           git commit -m "chore: update manifests to v${{ needs.prepare.outputs.new_version }}"
           git push
 
-  create_release:
+  create-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: [update_iac]
+    needs: [update-iac]
     permissions:
       contents: write
 
