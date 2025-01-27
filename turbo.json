@@ -11,7 +11,7 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*", "!Dockerfile"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"],
       "env": [
         "DATABASE_URL",
