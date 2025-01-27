@@ -25,6 +25,7 @@
     "next": "catalog:react18",
     "next-themes": "^0.3.0",
     "posthog-js": "^1.188.0",
+    "posthog-node": "^4.4.1",
     "react": "catalog:react18",
     "react-dom": "catalog:react18",
     "superjson": "^2.2.1",
