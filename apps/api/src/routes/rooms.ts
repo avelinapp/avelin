@@ -93,18 +93,19 @@ export const rooms = new Elysia({ prefix: '/rooms' })
           /*
            * Handle changes to the document.
            * We use this for syncing the room title to the database.
-           *
-           * TODO: Sync editor language to the database as well.
            */
           case 'change': {
             console.log('change event webhook')
-            const title =
-              (payload.document.meta.title as string | undefined) ?? null
+            const title = payload.document.meta.title ?? ''
+            const language = payload.document.editorLanguage ?? 'plaintext'
+
+            console.log(payload)
 
             await db
               .update(schema.rooms)
               .set({
                 title,
+                editorLanguage: language,
               })
               .where(eq(schema.rooms.id, roomId))
 
