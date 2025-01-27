@@ -4,6 +4,7 @@ import {
   schema,
   eq,
   NeonDatabase,
+  CreateSession,
 } from '@avelin/database'
 import { newId } from '@avelin/id'
 
@@ -12,7 +13,7 @@ export async function createSession(
   { db }: { db: NeonDatabase },
 ): Promise<Session> {
   const sessionId = newId('session')
-  const session: Session = {
+  const session: CreateSession = {
     id: sessionId,
     userId,
     expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),

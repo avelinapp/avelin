@@ -27,6 +27,7 @@ export const oauthAccounts = pgTable(
     userId: text()
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
+    ...timestamps,
   },
   (table) => {
     return {
@@ -44,6 +45,7 @@ export const sessions = pgTable('sessions', {
     withTimezone: true,
     mode: 'date',
   }).notNull(),
+  ...timestamps,
 })
 
 export const rooms = pgTable('rooms', {
