@@ -64,6 +64,13 @@
       "when": 1737809371553,
       "tag": "0008_track-editor-language",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1738014971045,
+      "tag": "0009_add-timestamp-columns-for-remaining-tables",
+      "breakpoints": true
     }
   ]
 }
