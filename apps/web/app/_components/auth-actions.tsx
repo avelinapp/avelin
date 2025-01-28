@@ -7,6 +7,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
 import { Button } from '@avelin/ui/button'
 import { motion } from 'motion/react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useFeatureFlagEnabled } from 'posthog-js/react'
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div
@@ -42,8 +44,20 @@ export const UnauthenticatedActions = () => (
 )
 
 export const AuthenticatedActions = ({ user }: { user: Auth['user'] }) => {
+  const router = useRouter()
+
+  const FF_dashboard = useFeatureFlagEnabled('dashboard')
+
+  function handleDashboardClick() {
+    if (!FF_dashboard) {
+      dashboardComingSoonToast()
+    }
+
+    router.push('/dashboard')
+  }
+
   useShortcut(['a'], () => {
-    dashboardComingSoonToast()
+    handleDashboardClick()
   })
 
   return (
@@ -52,7 +66,7 @@ export const AuthenticatedActions = ({ user }: { user: Auth['user'] }) => {
         size='lg'
         variant='secondary'
         className='text-lg inline-flex items-center gap-2 group'
-        onClick={dashboardComingSoonToast}
+        onClick={handleDashboardClick}
       >
         <Avatar className='size-7 shrink-0'>
           <AvatarImage src={user.picture!} />

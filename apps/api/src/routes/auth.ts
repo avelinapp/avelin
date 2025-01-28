@@ -34,40 +34,54 @@ export const auth = new Elysia({ prefix: '/auth' })
         const auth = await validateSession(sessionId, { db })
 
         if (!auth) {
-          error(400, {
+          return error(400, {
             isAuthenticated: false,
             error: 'Invalid session',
             user: null,
             session: null,
           })
-        } else {
-          return {
-            isAuthenticated: true,
-            isAnonymous: auth.user.isAnonymous,
-            user: auth.user,
-            session: auth.session,
-          }
         }
-      })
-      .post('/anonymous', async ({ cookie: { avelin_session_id } }) => {
-        const user = await createAnonymousUser({ db })
-        const session = await createSession(user.id, { db })
-
-        avelin_session_id?.set({
-          value: session.id,
-          path: '/',
-          httpOnly: true,
-          secure: env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          expires: session.expiresAt,
-          domain: `.${env.BASE_DOMAIN}`,
-        })
 
         return {
           isAuthenticated: true,
-          isAnonymous: true,
-          user,
-          session,
+          isAnonymous: auth.user.isAnonymous,
+          user: auth.user,
+          session: auth.session,
+        }
+      })
+      .post('/anonymous', async ({ cookie: { avelin_session_id }, error }) => {
+        try {
+          const user = await createAnonymousUser({ db })
+          const session = await createSession(user.id, { db })
+
+          avelin_session_id?.set({
+            value: session.id,
+            path: '/',
+            httpOnly: true,
+            secure: env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            expires: session.expiresAt,
+            domain: `.${env.BASE_DOMAIN}`,
+          })
+
+          return {
+            isAuthenticated: true,
+            isAnonymous: true,
+            user,
+            session,
+          }
+        } catch (err) {
+          if (err instanceof Error) {
+            return error(500, {
+              error:
+                err.message ??
+                'Failed to create anonymous user - unknown error.',
+            })
+          }
+
+          return error(500, {
+            error: 'Failed to create anonymous user - unknown error.',
+          })
         }
       })
       .get(

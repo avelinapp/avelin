@@ -12,6 +12,10 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./dist/index.js"
+    },
+    "./cached": {
+      "types": "./src/cached/index.ts",
+      "default": "./dist/cached/index.js"
     }
   },
   "dependencies": {
@@ -20,13 +24,15 @@
     "@avelin/storage": "workspace:*",
     "@oslojs/crypto": "catalog:",
     "@oslojs/encoding": "catalog:",
-    "arctic": "catalog:"
+    "arctic": "catalog:",
+    "react": "^19"
   },
   "devDependencies": {
     "@avelin/eslint-config": "workspace:*",
     "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
     "@types/bun": "catalog:",
+    "@types/react": "^19",
     "eslint": "catalog:",
     "typescript": "catalog:",
     "prettier": "catalog:"
