@@ -66,30 +66,34 @@ const authQueries = {
     queryOptions({
       queryKey: [...authQueries.all(), 'check'],
       queryFn: async () => {
-        let { data } = await api.auth.verify.get({
+        const auth = await api.auth.verify.get({
           headers: { ...headers },
         })
 
+        // No errors means the user and session are valid
+        // We can return the user and session data
+        if (!auth.error) {
+          return auth.data
+        }
+
         // Create anonymous user & session if the user does not have a session.
-        if (!data || !data.isAuthenticated) {
-          const res = await api.auth.anonymous.post(
-            {},
-            {
-              headers: { ...headers },
-            },
-          )
+        const anonAuth = await api.auth.anonymous.post(
+          {},
+          {
+            headers: { ...headers },
+          },
+        )
 
-          // console.log(res.headers)
-
-          data = res.data!
+        if (anonAuth.error) {
+          switch (anonAuth.error.status) {
+            case 500:
+              throw new Error(anonAuth.error.value.error)
+            default:
+              throw new Error('Error in anonymous user creation.')
+          }
         }
 
-        return {
-          isAuthenticated: data.isAuthenticated,
-          isAnonymous: data.isAnonymous,
-          user: data.user,
-          session: data.session,
-        }
+        return anonAuth.data
       },
     }),
 } as const

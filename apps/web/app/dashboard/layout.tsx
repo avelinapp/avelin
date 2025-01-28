@@ -1,14 +1,17 @@
-import PostHogClient from '@/lib/posthog'
-import { validateSession } from '@avelin/auth'
+import { getFlags } from '@/lib/posthog'
+import { validateSession } from '@avelin/auth/cached'
 import { db } from '@avelin/database'
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'Dashboard | Avelin',
 }
 
-export default async function RootLayout({
+const dashboardRedirectUrl = `/login?redirect=${encodeURIComponent('/dashboard')}`
+
+export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode
@@ -16,19 +19,20 @@ export default async function RootLayout({
   const sessionId = cookies().get('avelin_session_id')?.value
 
   if (!sessionId) {
-    return <>Unauthenticated</>
+    return redirect(dashboardRedirectUrl)
   }
 
-  const auth = await validateSession(sessionId, { db: db })
+  const auth = await validateSession(sessionId, { db })
 
-  if (!auth) {
-    return <>Unauthenticated</>
+  if (!auth || auth.user.isAnonymous) {
+    return redirect(dashboardRedirectUrl)
   }
 
-  const posthog = PostHogClient()
-  const flags = await posthog.getAllFlags(sessionId)
+  const flags = await getFlags(auth.user.id)
 
-  console.log('PostHog flags:', flags)
+  if (!flags['dashboard']) {
+    return redirect('/')
+  }
 
-  return <>{children}</>
+  return children
 }

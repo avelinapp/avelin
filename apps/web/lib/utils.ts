@@ -15,3 +15,13 @@ export function getPrettyHostname(input?: string | URL) {
 
   return hostname
 }
+
+export function getHeaders(headers: Headers): Record<string, string> {
+  const headersObject: Record<string, string> = {}
+
+  headers.forEach((value, key) => {
+    headersObject[key] = value
+  })
+
+  return headersObject
+}
