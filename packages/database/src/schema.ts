@@ -63,8 +63,6 @@ export const rooms = pgTable('rooms', {
 export const roomParticipants = pgTable(
   'room_participants',
   {
-    id: text().primaryKey(),
-    /* TODO: Handle room deletions - let `roomId` be nullable */
     roomId: text()
       .notNull()
       .references(() => rooms.id, { onDelete: 'cascade' }),
@@ -76,11 +74,11 @@ export const roomParticipants = pgTable(
     /* createdAt holds to the initial join date. */
     ...timestamps,
   },
-  // (table) => {
-  //   return {
-  //     pk: primaryKey({ columns: [table.roomId, table.userId] }),
-  //   }
-  // },
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.roomId, table.userId] }),
+    }
+  },
 )
 
 export const schema = {

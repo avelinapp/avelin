@@ -6,7 +6,6 @@ const prefixes = {
   session: 'session',
   oauth: 'oauth',
   room: 'room',
-  roomParticipant: 'rp',
 }
 
 const alphabet = 'abcdefghijklmnopqrstuvwxyz0123456789'

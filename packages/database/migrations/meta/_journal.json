@@ -71,6 +71,13 @@
       "when": 1738014971045,
       "tag": "0009_add-timestamp-columns-for-remaining-tables",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1738114696758,
+      "tag": "0010_composite-pk-room-participants",
+      "breakpoints": true
     }
   ]
 }
