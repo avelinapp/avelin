@@ -152,37 +152,21 @@ export const rooms = new Elysia({ prefix: '/rooms' })
 
             const { user } = auth
 
-            await db.transaction(async (tx) => {
-              const [rp] = await tx
-                .select()
-                .from(schema.roomParticipants)
-                .where(
-                  and(
-                    eq(schema.roomParticipants.roomId, roomId),
-                    eq(schema.roomParticipants.userId, user.id),
-                  ),
-                )
-
-              if (!rp) {
-                await tx.insert(schema.roomParticipants).values({
-                  id: newId('roomParticipant'),
-                  roomId: roomId,
-                  userId: user.id,
-                })
-              } else {
-                await tx
-                  .update(schema.roomParticipants)
-                  .set({
-                    lastAccessedAt: new Date(),
-                  })
-                  .where(
-                    and(
-                      eq(schema.roomParticipants.roomId, roomId),
-                      eq(schema.roomParticipants.userId, user.id),
-                    ),
-                  )
-              }
-            })
+            await db
+              .insert(schema.roomParticipants)
+              .values({
+                roomId: roomId,
+                userId: user.id,
+              })
+              .onConflictDoUpdate({
+                target: [
+                  schema.roomParticipants.roomId,
+                  schema.roomParticipants.userId,
+                ],
+                set: {
+                  lastAccessedAt: new Date(),
+                },
+              })
 
             return {}
           }
@@ -205,6 +189,7 @@ export const rooms = new Elysia({ prefix: '/rooms' })
                   eq(schema.roomParticipants.userId, user.id),
                 ),
               )
+
             return {}
           }
 
