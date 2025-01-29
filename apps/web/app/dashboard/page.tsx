@@ -3,8 +3,10 @@
 import { Language, languages } from '@/lib/constants'
 import { queries } from '@/lib/queries'
 import { useQuery } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 
 export default function Page() {
+  const router = useRouter()
   const { data, error, isPending } = useQuery(queries.rooms.all())
 
   if (data) {
@@ -38,6 +40,7 @@ export default function Page() {
                 <div
                   key={room.id}
                   className='rounded-md border border-color-border-subtle px-4 py-2 flex items-center gap-2'
+                  onClick={() => router.push(`/${room.slug}`)}
                 >
                   {!!language?.logo && (
                     <LanguageIcon className='size-5 shrink-0' />
