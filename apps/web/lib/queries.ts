@@ -41,10 +41,22 @@ export function getQueryClient() {
 }
 
 const roomQueries = {
-  all: () => ['rooms'],
+  all: () =>
+    queryOptions({
+      queryKey: ['rooms'],
+      queryFn: async () => {
+        const { data, error } = await api.rooms.index.get()
+
+        if (!!error) {
+          throw new Error(error.value.error)
+        }
+
+        return data
+      },
+    }),
   detail: (slug: string) =>
     queryOptions({
-      queryKey: [...roomQueries.all(), slug],
+      queryKey: [...roomQueries.all().queryKey, slug],
       queryFn: async () => {
         const { data, error } = await api.rooms({ slug }).get()
 

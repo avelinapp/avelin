@@ -1,12 +1,22 @@
 import Elysia, { t } from 'elysia'
 import { authMiddleware } from '../middleware/auth'
-import { db, eq, and, type User, type Room, schema } from '@avelin/database'
+import {
+  db,
+  eq,
+  and,
+  desc,
+  type User,
+  type Room,
+  schema,
+  getTableColumns,
+} from '@avelin/database'
 import { newId, newRoomSlug } from '@avelin/id'
 import { getRoomMiddleware } from '../middleware/rooms'
 import { validateSession } from '@avelin/auth'
 import { createHmac, timingSafeEqual } from 'crypto'
 import { readableStreamToArrayBuffer } from 'bun'
 import { env } from '../env'
+import { countBy, omit } from 'remeda'
 
 export const rooms = new Elysia({ prefix: '/rooms' })
   .guard({}, (app) =>
@@ -38,6 +48,29 @@ export const rooms = new Elysia({ prefix: '/rooms' })
         })
 
         return newRoom as Required<Room>
+      })
+      .get('/', async ({ user, error }) => {
+        try {
+          const rooms = await db
+            .select({
+              ...omit(getTableColumns(schema.rooms), ['ydoc']),
+              lastAccessedAt: schema.roomParticipants.lastAccessedAt,
+            })
+            .from(schema.rooms)
+            .innerJoin(
+              schema.roomParticipants,
+              eq(schema.rooms.id, schema.roomParticipants.roomId),
+            )
+            .where(eq(schema.roomParticipants.userId, user.id))
+            .orderBy(desc(schema.roomParticipants.lastAccessedAt))
+
+          console.log(countBy(rooms, (r) => r.id))
+          console.log('total count:', rooms.length)
+
+          return rooms
+        } catch (err) {
+          return error(500, { error: (err as Error).message })
+        }
       }),
   )
   .guard({}, (app) =>

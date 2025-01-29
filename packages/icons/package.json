@@ -8,7 +8,11 @@
     "build": "tsc"
   },
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./languages": {
+      "types": "./src/icons/languages/index.tsx",
+      "default": "./dist/icons/languages/index.js"
+    }
   },
   "dependencies": {
     "lucide-react": "^0.453.0",
@@ -19,6 +23,7 @@
     "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
     "@types/react": "catalog:react18",
+    "@types/react-dom": "catalog:react18",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "tailwindcss": "catalog:",

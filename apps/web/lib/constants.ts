@@ -1,4 +1,11 @@
-export type Language = { value: string; name: string; keywords?: string[] }
+import { PlainTextLogo, PowerShellLogo } from '@avelin/icons/languages'
+
+export type Language = {
+  value: string
+  name: string
+  keywords?: string[]
+  logo?: React.ElementType
+}
 
 export const languages: Language[] = [
   { value: 'bat', name: 'Batch Script', keywords: ['cmd', 'batch', 'bat'] },
@@ -33,13 +40,14 @@ export const languages: Language[] = [
   { value: 'perl', name: 'Perl' },
   { value: 'pgsql', name: 'PostgreSQL' },
   { value: 'php', name: 'PHP' },
-  { value: 'plaintext', name: 'Plain Text' },
+  { value: 'plaintext', name: 'Plain Text', logo: PlainTextLogo },
   { value: 'postiats', name: 'ATS (Applied Type System)' },
   { value: 'powerquery', name: 'Power Query' },
   {
     value: 'powershell',
     name: 'PowerShell',
     keywords: ['powershell', 'ps', 'pwsh', 'ps1'],
+    logo: PowerShellLogo,
   },
   { value: 'pug', name: 'Pug (formerly Jade)' },
   { value: 'python', name: 'Python', keywords: ['python', 'py'] },
