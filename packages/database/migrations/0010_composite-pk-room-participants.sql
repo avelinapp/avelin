@@ -15,6 +15,6 @@ WHERE
     SELECT id FROM duplicates WHERE rn > 1
   );--> statement-breakpoint
 
-ALTER TABLE room_participants DROP CONSTRAINT IF EXISTS room_participants_pkey;
+ALTER TABLE room_participants DROP CONSTRAINT IF EXISTS room_participants_pkey;--> statement-breakpoint
 ALTER TABLE "room_participants" ADD CONSTRAINT "room_participants_roomId_userId_pk" PRIMARY KEY("roomId","userId");--> statement-breakpoint
 ALTER TABLE "room_participants" DROP COLUMN "id";
