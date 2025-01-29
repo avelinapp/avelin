@@ -54,7 +54,7 @@ jobs:
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
   build-push-amd64:
-    name: Build & push ${{ matrix.app }} - x64/AMD64
+    name: Build & push ${{ matrix.app }} - x64 (AMD64)
     runs-on: ubuntu-24.04
     needs: prepare
     permissions:
@@ -110,7 +110,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   build-push-arm64:
-    name: Build & push ${{ matrix.app }} - AMD64
+    name: Build & push ${{ matrix.app }} - ARM64
     runs-on: ubuntu-24.04-arm
     needs: prepare
     permissions:
