@@ -214,7 +214,9 @@ export const createCodeRoomStore = () =>
             removed.forEach((id) => {
               const removedUser = get().users.get(id)
 
-              if (!removedUser) return
+              // Don't show leave toast for the user themselves
+              // i.e. when user navigates from code room to dashboard
+              if (!removedUser || id === get().clientId) return
 
               // WORKAROUND: Currently, there is an awareness-related bug where a remote user's
               // awareness to be removed, then immediately added again. This happens on some interval.
