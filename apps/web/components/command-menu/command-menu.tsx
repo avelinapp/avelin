@@ -38,6 +38,7 @@ import {
 } from './commands/room-title'
 import { animate, AnimationSequence } from 'motion'
 import { motion } from 'motion/react'
+import { inArray } from '@/lib/utils'
 
 const menuPulse: AnimationSequence = [
   [
@@ -57,6 +58,10 @@ export default function CommandMenu() {
 
   const pathname = usePathname()
   const isCodeRoom = pathname.match(ROOM_PATH_REGEX)
+  const isUserInputCommand = useMemo(
+    () => inArray(page, ['room-title']),
+    [page],
+  )
 
   const goToPage = useCallback(
     (pages: Array<string>) => {
@@ -206,7 +211,7 @@ export default function CommandMenu() {
                       />
                     </CommandGroup>
                   )}
-                  {page !== 'interface-theme' && (
+                  {!page && (
                     <CommandGroup heading='User Preferences'>
                       <ChangeInterfaceThemeRootCommand
                         onSelect={() => {
@@ -216,11 +221,12 @@ export default function CommandMenu() {
                       />
                     </CommandGroup>
                   )}
-                  {(page === 'interface-theme' || !!search) && (
-                    <CommandGroup heading='Interface theme'>
-                      <ChangeInterfaceThemeCommands closeMenu={closeMenu} />
-                    </CommandGroup>
-                  )}
+                  {!isUserInputCommand &&
+                    (page === 'interface-theme' || !!search) && (
+                      <CommandGroup heading='Interface theme'>
+                        <ChangeInterfaceThemeCommands closeMenu={closeMenu} />
+                      </CommandGroup>
+                    )}
                 </CommandList>
               </Command>
             </AnimatedSizeContainer>

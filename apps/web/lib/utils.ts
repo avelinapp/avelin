@@ -25,3 +25,7 @@ export function getHeaders(headers: Headers): Record<string, string> {
 
   return headersObject
 }
+
+export function inArray<T>(value: T, array: T[]) {
+  return array.indexOf(value) !== -1
+}
