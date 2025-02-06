@@ -9,6 +9,7 @@ import {
   type Room,
   schema,
   getTableColumns,
+  sql,
 } from '@avelin/database'
 import { newId, newRoomSlug } from '@avelin/id'
 import { getRoomMiddleware } from '../middleware/rooms'
@@ -28,7 +29,25 @@ export const rooms = new Elysia({ prefix: '/rooms' })
             slug: t.String(),
           }),
         },
-        (app) => app.use(getRoomMiddleware).get('/:slug', ({ room }) => room),
+        (app) =>
+          app
+            .use(getRoomMiddleware)
+            .get('/:slug', ({ room }) => room)
+            .delete('/:slug', async ({ room, error, user }) => {
+              if (room.creatorId !== user.id) {
+                return error(403, {
+                  error: 'You are not authorized to delete this room.',
+                })
+              }
+
+              const [deletedRoom] = await db
+                .update(schema.rooms)
+                .set({ deletedAt: sql`now()` })
+                .where(eq(schema.rooms.id, room.id))
+                .returning()
+
+              return deletedRoom
+            }),
       )
       .post('/create', async ({ user }) => {
         const newRoom = await db.transaction(async (tx) => {
