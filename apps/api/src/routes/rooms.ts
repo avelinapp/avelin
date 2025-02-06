@@ -16,7 +16,7 @@ import { validateSession } from '@avelin/auth'
 import { createHmac, timingSafeEqual } from 'crypto'
 import { readableStreamToArrayBuffer } from 'bun'
 import { env } from '../env'
-import { countBy, omit } from 'remeda'
+import { omit } from 'remeda'
 
 export const rooms = new Elysia({ prefix: '/rooms' })
   .guard({}, (app) =>
@@ -63,9 +63,6 @@ export const rooms = new Elysia({ prefix: '/rooms' })
             )
             .where(eq(schema.roomParticipants.userId, user.id))
             .orderBy(desc(schema.roomParticipants.lastAccessedAt))
-
-          console.log(countBy(rooms, (r) => r.id))
-          console.log('total count:', rooms.length)
 
           return rooms
         } catch (err) {
