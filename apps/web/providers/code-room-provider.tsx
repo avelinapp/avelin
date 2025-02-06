@@ -93,13 +93,11 @@ export const createCodeRoomStore = () =>
       function setupRoomTitleObserver() {
         const metaMap = ydoc.getMap('meta')
 
-        if (!metaMap.has('title')) {
-          metaMap.set('title', '')
-        }
+        const roomTitle = metaMap.get('title') as string | undefined
 
         // Set the initial room title from Yjs
         set({
-          roomTitle: metaMap.get('title') as string,
+          roomTitle: roomTitle ?? '',
         })
 
         // Define the observer function
