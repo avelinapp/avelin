@@ -24,12 +24,22 @@ import {
   DropdownMenuTrigger,
 } from '@avelin/ui/dropdown-menu'
 import { toast } from '@avelin/ui/sonner'
-// import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { useState } from 'react'
 
 export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
   const router = useRouter()
+
+  const FF_dashboard = useFeatureFlagEnabled('dashboard')
+
+  function handleDashboardClick() {
+    if (!FF_dashboard) {
+      dashboardComingSoonToast()
+    }
+
+    router.push('/dashboard')
+  }
 
   const [open, setOpen] = useState(false)
 
@@ -109,16 +119,14 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className='group'
-          onSelect={dashboardComingSoonToast}
+          onSelect={handleDashboardClick}
           // asChild
         >
-          {/* <Link href={`/dashboard`}> */}
           <HouseIcon
             strokeWidth={2.25}
             className='size-4 shrink-0 group-hover:text-color-text-primary'
           />
           Dashboard
-          {/* </Link> */}
         </DropdownMenuItem>
         <DropdownMenuItem
           className='group'
