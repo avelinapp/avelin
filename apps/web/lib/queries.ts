@@ -58,7 +58,7 @@ const roomQueries = {
     queryOptions({
       queryKey: [...roomQueries.all().queryKey, slug],
       queryFn: async () => {
-        const { data, error } = await api.rooms({ slug }).get()
+        const { data, error } = await api.rooms({ idOrSlug: slug }).get()
 
         if (!data || error) {
           throw new Error(error.value.message)

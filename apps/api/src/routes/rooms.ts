@@ -10,6 +10,7 @@ import {
   schema,
   getTableColumns,
   sql,
+  isNull,
 } from '@avelin/database'
 import { newId, newRoomSlug } from '@avelin/id'
 import { getRoomMiddleware } from '../middleware/rooms'
@@ -26,15 +27,18 @@ export const rooms = new Elysia({ prefix: '/rooms' })
       .guard(
         {
           params: t.Object({
-            slug: t.String(),
+            idOrSlug: t.String(),
           }),
         },
         (app) =>
           app
             .use(getRoomMiddleware)
-            .get('/:slug', ({ room }) => room)
-            .delete('/:slug', async ({ room, error, user }) => {
-              if (room.creatorId !== user.id) {
+            .get('/:idOrSlug', ({ room }) => room)
+            .delete('/:idOrSlug', async ({ room, error, user }) => {
+              if (
+                room.creatorId !== 'user_system' &&
+                room.creatorId !== user.id
+              ) {
                 return error(403, {
                   error: 'You are not authorized to delete this room.',
                 })
@@ -45,6 +49,12 @@ export const rooms = new Elysia({ prefix: '/rooms' })
                 .set({ deletedAt: sql`now()` })
                 .where(eq(schema.rooms.id, room.id))
                 .returning()
+
+              if (!deletedRoom) {
+                return error(404, {
+                  error: 'Room not found.',
+                })
+              }
 
               return deletedRoom
             }),
@@ -80,7 +90,12 @@ export const rooms = new Elysia({ prefix: '/rooms' })
               schema.roomParticipants,
               eq(schema.rooms.id, schema.roomParticipants.roomId),
             )
-            .where(eq(schema.roomParticipants.userId, user.id))
+            .where(
+              and(
+                eq(schema.roomParticipants.userId, user.id),
+                isNull(schema.rooms.deletedAt),
+              ),
+            )
             .orderBy(desc(schema.roomParticipants.lastAccessedAt))
 
           return rooms

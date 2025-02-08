@@ -10,11 +10,11 @@ export default function Toolbar() {
 
   return (
     <div className='flex items-center drop-shadow-sm py-2 px-4 w-full bg-popover-bg rounded-lg border border-color-border-subtle'>
-      <div className='w-full grid grid-cols-2'>
-        <div className='flex items-center h-6'>
+      <div className='w-full grid grid-cols-2 items-center'>
+        <div className='flex items-center'>
           <LogoAvelin className='size-6 shrink-0' />
         </div>
-        <div className='place-self-end flex items-center h-6 my-auto'>
+        <div className='place-self-end flex items-center my-auto'>
           <MyAccountDropdown user={user as Auth['user']} />
         </div>
       </div>

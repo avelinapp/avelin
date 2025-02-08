@@ -1,21 +1,21 @@
-import { db, schema, eq, Room, getTableColumns } from '@avelin/database'
+import { db, schema, eq, Room, getTableColumns, or } from '@avelin/database'
 import Elysia from 'elysia'
 import { omit } from 'remeda'
 
 export const getRoomMiddleware = new Elysia().derive(
   { as: 'scoped' },
-  async ({ params: { slug }, error }) => {
+  async ({ params: { idOrSlug }, error }) => {
     const [room] = await db
       .select({
         ...omit(getTableColumns(schema.rooms), ['ydoc']),
       })
       .from(schema.rooms)
       // @ts-ignore
-      .where(eq(schema.rooms.slug, slug))
+      .where(or(eq(schema.rooms.id, idOrSlug), eq(schema.rooms.slug, idOrSlug)))
       .limit(1)
 
     if (!room) {
-      error(404, {
+      return error(404, {
         error: 'Room not found',
       })
     }

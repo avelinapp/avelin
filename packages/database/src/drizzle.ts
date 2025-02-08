@@ -3,6 +3,8 @@ export {
   ne,
   and,
   or,
+  isNull,
+  isNotNull,
   inArray,
   sql,
   getTableColumns,

@@ -36,7 +36,7 @@ export default async function Layout({
   }
 
   return (
-    <div className='h-screen max-w-screen-lg mx-auto p-2 flex flex-col gap-8'>
+    <div className='h-screen max-w-screen-lg mx-auto p-4 flex flex-col gap-8'>
       <Toolbar />
       {children}
     </div>
