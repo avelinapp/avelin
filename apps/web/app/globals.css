@@ -3,6 +3,35 @@
 @tailwind utilities;
 
 :root {
+  .font-sans {
+    text-rendering: geometricPrecision;
+    font-feature-settings: 'liga', 'calt';
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .font-display {
+    letter-spacing: -0.02em;
+    @supports (font-variation-settings: normal) {
+      font-variation-settings: 'opsz' 32;
+    }
+  }
+
+  p,
+  span,
+  .font-body {
+    letter-spacing: -0.01em;
+    @supports (font-variation-settings: normal) {
+      font-variation-settings: 'opsz' 16;
+    }
+  }
+}
+
+:root {
   * {
     cursor: default;
   }

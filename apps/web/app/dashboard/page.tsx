@@ -3,6 +3,7 @@
 import { Language, languages } from '@/lib/constants'
 import { useCreateRoom, useDeleteRoom } from '@/lib/mutations'
 import { getQueryClient, queries } from '@/lib/queries'
+import { useAuth } from '@/providers/auth-provider'
 import { Room } from '@avelin/database'
 import {
   LinkIcon,
@@ -14,10 +15,12 @@ import { Button } from '@avelin/ui/button'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { FadeInContainer } from '@avelin/ui/fade-in-container'
 
 export default function Page() {
   const router = useRouter()
   const { data, error, isPending } = useQuery(queries.rooms.all())
+  const { user, isPending: isAuthPending } = useAuth()
 
   const createRoom = useCreateRoom()
 
@@ -27,10 +30,17 @@ export default function Page() {
     router.push(`/${data.slug}`)
   }
 
+  if (isAuthPending) return null
+
   return (
     <div className='flex flex-col gap-4'>
       <div className='space-y-2'>
-        <h1 className='text-2xl font-semibold tracking-tight'>Code Rooms</h1>
+        <h1 className='text-3xl font-semibold'>
+          Welcome back,{' '}
+          <span className='text-color-text-quaternary'>
+            {user?.name.split(' ')[0]}
+          </span>
+        </h1>
         <p className='text-color-text-quaternary'>
           All your code rooms - past, present, and future.
         </p>
@@ -42,19 +52,17 @@ export default function Page() {
         </Button>
       </div>
       <div>
-        {isPending ? (
-          <div>Loading...</div>
-        ) : error ? (
+        {isPending ? null : error ? (
           <div>Error: {error.message}</div>
         ) : (
-          <div className='flex flex-col gap-1'>
+          <FadeInContainer className='flex flex-col gap-1'>
             {data.map((room) => (
               <CodeRoomListItem
                 key={room.id}
                 room={room}
               />
             ))}
-          </div>
+          </FadeInContainer>
         )}
       </div>
     </div>

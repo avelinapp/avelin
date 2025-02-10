@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { jetbrainsMono } from '@/lib/fonts'
 import './globals.css'
-import '@/lib/fonts/fonts.css'
+import '@/lib/fonts/innovator-grotesk.css'
 import '@avelin/ui/globals.css'
 import Providers from '@/providers'
 import { Toaster } from '@avelin/ui/sonner'
@@ -20,14 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      {/* <head> */}
-      {/*   <script */}
-      {/*     src='https://unpkg.com/react-scan/dist/auto.global.js' */}
-      {/*     async */}
-      {/*   /> */}
-      {/* </head> */}
       <body
-        className={`${jetbrainsMono.variable} font-sans bg-color-background h-screen w-screen`}
+        className={`${jetbrainsMono.variable} font-sans font-settings antialiased bg-color-background h-screen w-screen`}
       >
         <QueryClientProvider>
           <Providers>
