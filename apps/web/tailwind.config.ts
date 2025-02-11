@@ -13,7 +13,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['var(--font-innovator-grotesk)'],
-        mono: ['var(--font-jetbrains-mono)'],
+        mono: ['var(--font-berkeley-mono)'],
       },
     },
   },

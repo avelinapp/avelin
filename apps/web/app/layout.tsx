@@ -1,4 +1,4 @@
-import { jetbrainsMono } from '@/lib/fonts'
+import { berkeleyMono, jetbrainsMono } from '@/lib/fonts'
 import type { Metadata } from 'next'
 import './globals.css'
 import '@/lib/fonts/innovator-grotesk.css'
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${jetbrainsMono.variable} font-sans font-settings antialiased bg-color-background h-screen w-screen`}
+        className={`${berkeleyMono.variable} font-sans font-settings antialiased bg-color-background h-screen w-screen`}
       >
         <QueryClientProvider>
           <Providers>
