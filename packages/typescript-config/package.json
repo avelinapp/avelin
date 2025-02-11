@@ -3,9 +3,6 @@
   "version": "0.8.1",
   "private": true,
   "license": "MIT",
-  "scripts": {
-    "lint": "prettier . --write"
-  },
   "publishConfig": {
     "access": "public"
   }

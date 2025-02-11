@@ -17,12 +17,12 @@ export default async function Providers({
 }) {
   const queryClient = getQueryClient()
 
-  const sessionId = cookies().get('avelin_session_id')?.value
+  const sessionId = (await cookies()).get('avelin_session_id')?.value
 
   let posthogBootstrapData = undefined
 
   if (sessionId) {
-    const headers = getHeaders(nextHeaders())
+    const headers = getHeaders(await nextHeaders())
     const auth = await queryClient.fetchQuery(queries.auth.check(headers))
 
     if (auth) {

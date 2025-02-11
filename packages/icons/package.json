@@ -15,12 +15,12 @@
   },
   "dependencies": {
     "lucide-react": "^0.453.0",
-    "react": "catalog:react18"
+    "react": "catalog:"
   },
   "devDependencies": {
     "@avelin/typescript-config": "workspace:*",
-    "@types/react": "catalog:react18",
-    "@types/react-dom": "catalog:react18",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:"
   }
