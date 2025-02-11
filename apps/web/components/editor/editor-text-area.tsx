@@ -12,7 +12,6 @@ import './cursors.css'
 import { cn } from '@avelin/ui/cn'
 import { useAnimate } from 'motion/react-mini'
 import { useTheme } from 'next-themes'
-import { useFeatureFlagEnabled } from 'posthog-js/react'
 
 interface EditorProps
   extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className'> {
@@ -21,10 +20,6 @@ interface EditorProps
 }
 
 export function EditorTextArea({ className }: EditorProps) {
-  const FF_tighterTracking = useFeatureFlagEnabled(
-    'editor-tighter-character-spacing',
-  )
-
   const { theme, systemTheme } = useTheme()
 
   const { ydoc, networkProvider, editorLanguage } = useCodeRoom()
@@ -107,7 +102,6 @@ export function EditorTextArea({ className }: EditorProps) {
           padding: { top: 16, bottom: 16 },
           fontSize: 16,
           fontFamily: `${jetbrainsMono.style.fontFamily}`,
-          letterSpacing: FF_tighterTracking ? -0.25 : 0,
           fontLigatures: true,
           minimap: { enabled: false },
           renderLineHighlight: 'none',
