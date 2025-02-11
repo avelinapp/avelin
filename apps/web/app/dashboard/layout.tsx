@@ -17,7 +17,7 @@ export default async function Layout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const sessionId = cookies().get('avelin_session_id')?.value
+  const sessionId = (await cookies()).get('avelin_session_id')?.value
 
   if (!sessionId) {
     return redirect(dashboardRedirectUrl)

@@ -4,14 +4,14 @@ import { useRoom } from '@/hooks/use-room'
 import { useAuth } from '@/providers/auth-provider'
 import { useCodeRoom } from '@/providers/code-room-provider'
 import { AnimatePresence } from 'motion/react'
-import { useEffect } from 'react'
+import { use, useEffect } from 'react'
 import CodeRoom from './_components/code-room'
 import { LoadingRoom } from './_components/loading-room'
 
-type Params = { slug: string }
+type Params = Promise<{ slug: string }>
 
 export default function Page({ params }: { params: Params }) {
-  const { slug } = params
+  const { slug } = use(params)
   const { initialize, destroy } = useCodeRoom()
   const room = useRoom(slug)
   const { isPending: isAuthPending, user, session } = useAuth()

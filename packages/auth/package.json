@@ -29,7 +29,6 @@
   "devDependencies": {
     "@avelin/typescript-config": "workspace:*",
     "@types/bun": "catalog:",
-    "@types/react": "^19",
-    "prettier": "catalog:"
+    "@types/react": "^19"
   }
 }
