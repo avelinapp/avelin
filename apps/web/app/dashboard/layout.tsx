@@ -4,6 +4,7 @@ import { db } from '@avelin/database'
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import Toolbar from './_components/toolbar'
 
 export const metadata: Metadata = {
   title: 'Dashboard | Avelin',
@@ -34,5 +35,10 @@ export default async function Layout({
     return redirect('/')
   }
 
-  return children
+  return (
+    <div className='h-screen max-w-screen-lg mx-auto p-4 flex flex-col gap-8'>
+      <Toolbar />
+      {children}
+    </div>
+  )
 }

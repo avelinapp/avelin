@@ -1,14 +1,44 @@
-import { useMutation } from '@tanstack/react-query'
+import { QueryClient, useMutation } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { toast } from '@avelin/ui/sonner'
 import { LOGOUT_ACTION_TOAST_ID } from './constants'
 import { KeyRoundIcon } from '@avelin/icons'
+
+interface MutationOptions {
+  queryClient: QueryClient
+}
 
 export const useCreateRoom = () =>
   useMutation({
     mutationFn: async () => {
       const res = await api.rooms.create.post()
       return res.data!
+    },
+  })
+
+export const useDeleteRoom = (
+  { roomId }: { roomId: string },
+  options: MutationOptions,
+) =>
+  useMutation({
+    mutationFn: async () => {
+      const { data, error } = await api.rooms({ idOrSlug: roomId }).delete()
+
+      if (error) {
+        switch (error.status) {
+          case 403:
+          case 404:
+            toast.error(error.value.error)
+            throw new Error(error.value.error)
+          default:
+            throw new Error('Unknown error occurred.')
+        }
+      }
+
+      return data
+    },
+    onSettled: () => {
+      options.queryClient.invalidateQueries({ queryKey: ['rooms'] })
     },
   })
 

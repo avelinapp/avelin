@@ -558,6 +558,9 @@ importers:
       '@types/react':
         specifier: catalog:react18
         version: 18.3.18
+      '@types/react-dom':
+        specifier: catalog:react18
+        version: 18.3.5(@types/react@18.3.18)
       eslint:
         specifier: 'catalog:'
         version: 8.57.1

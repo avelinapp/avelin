@@ -1,12 +1,24 @@
 import Elysia, { t } from 'elysia'
 import { authMiddleware } from '../middleware/auth'
-import { db, eq, and, type User, type Room, schema } from '@avelin/database'
+import {
+  db,
+  eq,
+  and,
+  desc,
+  type User,
+  type Room,
+  schema,
+  getTableColumns,
+  sql,
+  isNull,
+} from '@avelin/database'
 import { newId, newRoomSlug } from '@avelin/id'
 import { getRoomMiddleware } from '../middleware/rooms'
 import { validateSession } from '@avelin/auth'
 import { createHmac, timingSafeEqual } from 'crypto'
 import { readableStreamToArrayBuffer } from 'bun'
 import { env } from '../env'
+import { omit } from 'remeda'
 
 export const rooms = new Elysia({ prefix: '/rooms' })
   .guard({}, (app) =>
@@ -15,10 +27,37 @@ export const rooms = new Elysia({ prefix: '/rooms' })
       .guard(
         {
           params: t.Object({
-            slug: t.String(),
+            idOrSlug: t.String(),
           }),
         },
-        (app) => app.use(getRoomMiddleware).get('/:slug', ({ room }) => room),
+        (app) =>
+          app
+            .use(getRoomMiddleware)
+            .get('/:idOrSlug', ({ room }) => room)
+            .delete('/:idOrSlug', async ({ room, error, user }) => {
+              if (
+                room.creatorId !== 'user_system' &&
+                room.creatorId !== user.id
+              ) {
+                return error(403, {
+                  error: 'You are not authorized to delete this room.',
+                })
+              }
+
+              const [deletedRoom] = await db
+                .update(schema.rooms)
+                .set({ deletedAt: sql`now()` })
+                .where(eq(schema.rooms.id, room.id))
+                .returning()
+
+              if (!deletedRoom) {
+                return error(404, {
+                  error: 'Room not found.',
+                })
+              }
+
+              return deletedRoom
+            }),
       )
       .post('/create', async ({ user }) => {
         const newRoom = await db.transaction(async (tx) => {
@@ -38,6 +77,31 @@ export const rooms = new Elysia({ prefix: '/rooms' })
         })
 
         return newRoom as Required<Room>
+      })
+      .get('/', async ({ user, error }) => {
+        try {
+          const rooms = await db
+            .select({
+              ...omit(getTableColumns(schema.rooms), ['ydoc']),
+              lastAccessedAt: schema.roomParticipants.lastAccessedAt,
+            })
+            .from(schema.rooms)
+            .innerJoin(
+              schema.roomParticipants,
+              eq(schema.rooms.id, schema.roomParticipants.roomId),
+            )
+            .where(
+              and(
+                eq(schema.roomParticipants.userId, user.id),
+                isNull(schema.rooms.deletedAt),
+              ),
+            )
+            .orderBy(desc(schema.roomParticipants.lastAccessedAt))
+
+          return rooms
+        } catch (err) {
+          return error(500, { error: (err as Error).message })
+        }
       }),
   )
   .guard({}, (app) =>

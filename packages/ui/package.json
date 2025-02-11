@@ -34,6 +34,7 @@
     "./cn": "./src/utils/cn.ts",
     "./hooks": "./src/hooks/index.ts",
     "./suspense": "./src/components/suspense/lazy-suspense.tsx",
+    "./fade-in-container": "./src/components/ui/fade-in-container.tsx",
     "./colors": "./src/colors/index.ts"
   },
   "devDependencies": {

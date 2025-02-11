@@ -1,1 +1,13 @@
-export { eq, ne, and, or, inArray, sql, getTableColumns } from 'drizzle-orm'
+export {
+  eq,
+  ne,
+  and,
+  or,
+  isNull,
+  isNotNull,
+  inArray,
+  sql,
+  getTableColumns,
+  desc,
+  asc,
+} from 'drizzle-orm'

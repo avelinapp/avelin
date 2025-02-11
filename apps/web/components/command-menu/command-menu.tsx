@@ -38,6 +38,7 @@ import {
 } from './commands/room-title'
 import { animate, AnimationSequence } from 'motion'
 import { motion } from 'motion/react'
+import { inArray } from '@/lib/utils'
 
 const menuPulse: AnimationSequence = [
   [
@@ -57,6 +58,10 @@ export default function CommandMenu() {
 
   const pathname = usePathname()
   const isCodeRoom = pathname.match(ROOM_PATH_REGEX)
+  const isUserInputCommand = useMemo(
+    () => inArray(page, ['room-title']),
+    [page],
+  )
 
   const goToPage = useCallback(
     (pages: Array<string>) => {
@@ -165,7 +170,7 @@ export default function CommandMenu() {
                   {page !== 'room-title' && (
                     <CommandEmpty>No results found.</CommandEmpty>
                   )}
-                  {!page && (
+                  {!page && isCodeRoom && (
                     <CommandGroup heading='Code Rooms'>
                       <>
                         {isCodeRoom && (
@@ -177,16 +182,7 @@ export default function CommandMenu() {
                           />
                         )}
                         {!!search && (
-                          <>
-                            {isCodeRoom && (
-                              <ChangeEditorLanguageCommands
-                                closeMenu={closeMenu}
-                              />
-                            )}
-                            <ChangeInterfaceThemeCommands
-                              closeMenu={closeMenu}
-                            />
-                          </>
+                          <ChangeEditorLanguageCommands closeMenu={closeMenu} />
                         )}
                         {isCodeRoom && (
                           <CopyRoomUrlCommand closeMenu={closeMenu} />
@@ -198,23 +194,12 @@ export default function CommandMenu() {
                             }}
                           />
                         )}
-                        <ChangeInterfaceThemeRootCommand
-                          onSelect={() => {
-                            goToPage([...pages, 'interface-theme'])
-                            setSearch('')
-                          }}
-                        />
                       </>
                     </CommandGroup>
                   )}
                   {page === 'editor-language' && isCodeRoom && (
                     <CommandGroup>
                       <ChangeEditorLanguageCommands closeMenu={closeMenu} />
-                    </CommandGroup>
-                  )}
-                  {page === 'interface-theme' && (
-                    <CommandGroup>
-                      <ChangeInterfaceThemeCommands closeMenu={closeMenu} />
                     </CommandGroup>
                   )}
                   {page === 'room-title' && isCodeRoom && (
@@ -226,6 +211,22 @@ export default function CommandMenu() {
                       />
                     </CommandGroup>
                   )}
+                  {!page && (
+                    <CommandGroup heading='User Preferences'>
+                      <ChangeInterfaceThemeRootCommand
+                        onSelect={() => {
+                          goToPage([...pages, 'interface-theme'])
+                          setSearch('')
+                        }}
+                      />
+                    </CommandGroup>
+                  )}
+                  {!isUserInputCommand &&
+                    (page === 'interface-theme' || !!search) && (
+                      <CommandGroup heading='Interface theme'>
+                        <ChangeInterfaceThemeCommands closeMenu={closeMenu} />
+                      </CommandGroup>
+                    )}
                 </CommandList>
               </Command>
             </AnimatedSizeContainer>

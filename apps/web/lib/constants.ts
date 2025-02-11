@@ -1,4 +1,22 @@
-export type Language = { value: string; name: string; keywords?: string[] }
+import {
+  BashLogo,
+  GraphQLLogo,
+  JavascriptLogo,
+  MySQLLogo,
+  PlainTextLogo,
+  PostgreSQLLogo,
+  PowerShellLogo,
+  PythonLogo,
+  TypescriptLogo,
+  YamlLogo,
+} from '@avelin/icons/languages'
+
+export type Language = {
+  value: string
+  name: string
+  keywords?: string[]
+  logo?: React.ElementType
+}
 
 export const languages: Language[] = [
   { value: 'bat', name: 'Batch Script', keywords: ['cmd', 'batch', 'bat'] },
@@ -11,12 +29,12 @@ export const languages: Language[] = [
   { value: 'dockerfile', name: 'Dockerfile' },
   { value: 'fsharp', name: 'F#' },
   { value: 'go', name: 'Go' },
-  { value: 'graphql', name: 'GraphQL' },
+  { value: 'graphql', name: 'GraphQL', logo: GraphQLLogo },
   { value: 'handlebars', name: 'Handlebars' },
   { value: 'html', name: 'HTML' },
   { value: 'ini', name: 'INI' },
   { value: 'java', name: 'Java' },
-  { value: 'javascript', name: 'JavaScript' },
+  { value: 'javascript', name: 'JavaScript', logo: JavascriptLogo },
   { value: 'json', name: 'JSON' },
   { value: 'kotlin', name: 'Kotlin' },
   { value: 'less', name: 'LESS' },
@@ -27,22 +45,28 @@ export const languages: Language[] = [
     name: 'DAX',
     keywords: ['msdax', 'dax', 'data analysis expressions'],
   },
-  { value: 'mysql', name: 'MySQL' },
+  { value: 'mysql', name: 'MySQL', logo: MySQLLogo },
   { value: 'objective-c', name: 'Objective-C' },
   { value: 'pascal', name: 'Pascal' },
   { value: 'perl', name: 'Perl' },
-  { value: 'pgsql', name: 'PostgreSQL' },
+  { value: 'pgsql', name: 'PostgreSQL', logo: PostgreSQLLogo },
   { value: 'php', name: 'PHP' },
-  { value: 'plaintext', name: 'Plain Text' },
+  { value: 'plaintext', name: 'Plain Text', logo: PlainTextLogo },
   { value: 'postiats', name: 'ATS (Applied Type System)' },
   { value: 'powerquery', name: 'Power Query' },
   {
     value: 'powershell',
     name: 'PowerShell',
     keywords: ['powershell', 'ps', 'pwsh', 'ps1'],
+    logo: PowerShellLogo,
   },
   { value: 'pug', name: 'Pug (formerly Jade)' },
-  { value: 'python', name: 'Python', keywords: ['python', 'py'] },
+  {
+    value: 'python',
+    name: 'Python',
+    keywords: ['python', 'py'],
+    logo: PythonLogo,
+  },
   { value: 'r', name: 'R' },
   { value: 'razor', name: 'Razor (CSHTML)' },
   { value: 'redis', name: 'Redis' },
@@ -53,15 +77,25 @@ export const languages: Language[] = [
   { value: 'sb', name: 'Small Basic' },
   { value: 'scheme', name: 'Scheme' },
   { value: 'scss', name: 'SCSS' },
-  { value: 'shell', name: 'Bash', keywords: ['shell', 'sh', 'bash'] },
+  {
+    value: 'shell',
+    name: 'Bash',
+    keywords: ['shell', 'sh', 'bash'],
+    logo: BashLogo,
+  },
   { value: 'sol', name: 'Solidity (Ethereum)' },
-  { value: 'sql', name: 'SQL' },
+  { value: 'sql', name: 'SQL', logo: PostgreSQLLogo },
   { value: 'st', name: 'Structured Text' },
   { value: 'swift', name: 'Swift' },
-  { value: 'typescript', name: 'TypeScript', keywords: ['typescript', 'ts'] },
+  {
+    value: 'typescript',
+    name: 'TypeScript',
+    keywords: ['typescript', 'ts'],
+    logo: TypescriptLogo,
+  },
   { value: 'vb', name: 'Visual Basic' },
   { value: 'xml', name: 'XML' },
-  { value: 'yaml', name: 'YAML' },
+  { value: 'yaml', name: 'YAML', logo: YamlLogo },
 ] as const
 
 export const LOGOUT_ACTION_TOAST_ID = 'logout-action'

@@ -93,13 +93,11 @@ export const createCodeRoomStore = () =>
       function setupRoomTitleObserver() {
         const metaMap = ydoc.getMap('meta')
 
-        if (!metaMap.has('title')) {
-          metaMap.set('title', '')
-        }
+        const roomTitle = metaMap.get('title') as string | undefined
 
         // Set the initial room title from Yjs
         set({
-          roomTitle: metaMap.get('title') as string,
+          roomTitle: roomTitle ?? '',
         })
 
         // Define the observer function
@@ -216,7 +214,9 @@ export const createCodeRoomStore = () =>
             removed.forEach((id) => {
               const removedUser = get().users.get(id)
 
-              if (!removedUser) return
+              // Don't show leave toast for the user themselves
+              // i.e. when user navigates from code room to dashboard
+              if (!removedUser || id === get().clientId) return
 
               // WORKAROUND: Currently, there is an awareness-related bug where a remote user's
               // awareness to be removed, then immediately added again. This happens on some interval.
