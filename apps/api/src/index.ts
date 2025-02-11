@@ -1,9 +1,9 @@
-import { Elysia } from 'elysia'
 import { cors } from '@elysiajs/cors'
 import { swagger } from '@elysiajs/swagger'
+import { Elysia } from 'elysia'
+import { env } from './env'
 import { auth } from './routes/auth'
 import { rooms } from './routes/rooms'
-import { env } from './env'
 
 const PORT = env.API_PORT || 4000
 

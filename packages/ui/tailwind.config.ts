@@ -1,6 +1,6 @@
-import { fontFamily } from 'tailwindcss/defaultTheme'
+import type { Config } from 'tailwindcss'
 import tailwindCssAnimate from 'tailwindcss-animate'
-import { Config } from 'tailwindcss'
+import { fontFamily } from 'tailwindcss/defaultTheme'
 
 function color(cssVar: string) {
   return `hsl(var(--${cssVar}) / <alpha-value>)`

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 export const useNetworkStatus = () => {
   // Determine if we're running on the client
@@ -11,16 +11,16 @@ export const useNetworkStatus = () => {
   )
 
   // Function to update network status
-  const updateNetworkStatus = () => {
+  const updateNetworkStatus = useCallback(() => {
     if (isClient) {
       setOnline(navigator.onLine)
     }
-  }
+  }, [isClient])
 
   // Update network status on initial mount
   useEffect(() => {
     updateNetworkStatus()
-  }, []) // Empty dependency array ensures this runs once on mount
+  }, [updateNetworkStatus]) // Empty dependency array ensures this runs once on mount
 
   // Add event listeners for network status changes
   useEffect(() => {
@@ -38,7 +38,7 @@ export const useNetworkStatus = () => {
       window.removeEventListener('online', updateNetworkStatus)
       window.removeEventListener('offline', updateNetworkStatus)
     }
-  }, [isClient]) // Depend on isClient to ensure correctness
+  }, [isClient, updateNetworkStatus]) // Depend on isClient to ensure correctness
 
   return { isOnline }
 }

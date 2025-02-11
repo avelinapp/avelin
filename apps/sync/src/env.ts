@@ -1,6 +1,6 @@
 import { createEnv } from '@t3-oss/env-core'
-import { z } from 'zod'
 import { config } from 'dotenv'
+import { z } from 'zod'
 
 config({ path: '.env' })
 

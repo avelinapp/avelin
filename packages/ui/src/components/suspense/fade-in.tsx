@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@avelin/ui/cn'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface FadeInProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
@@ -16,9 +16,7 @@ function FadeIn({ children, className, ...props }: FadeInProps) {
 
   return (
     <div
-      className={
-        (cn(mounted && 'animate-in fade-in-15 duration-300'), className)
-      }
+      className={cn(mounted && 'animate-in fade-in-15 duration-300', className)}
       {...props}
     >
       {children}

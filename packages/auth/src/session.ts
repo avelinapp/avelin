@@ -1,10 +1,10 @@
 import {
-  type User,
+  type CreateSession,
+  type NeonDatabase,
   type Session,
-  schema,
+  type User,
   eq,
-  NeonDatabase,
-  CreateSession,
+  schema,
 } from '@avelin/database'
 import { newId } from '@avelin/id'
 

@@ -10,16 +10,16 @@ export const LoginWithGoogle = () => {
 
   const redirect = searchParams.get('redirect')
 
-  let linkUrl = process.env.NEXT_PUBLIC_API_URL + '/auth/google'
+  let linkUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`
 
   if (redirect) {
-    linkUrl += '?redirect=' + encodeURIComponent(redirect)
+    linkUrl += `?redirect=${encodeURIComponent(redirect)}`
   }
 
   return (
     <Button
-      className='w-full'
-      variant='secondary'
+      className="w-full"
+      variant="secondary"
       tooltip={{
         content: 'Login with Google',
         side: 'bottom',

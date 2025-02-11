@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext } from 'react'
-import { createStore, StoreApi, useStore } from 'zustand'
+import { type StoreApi, createStore, useStore } from 'zustand'
 
 export type CommandMenuState = {
   isOpen: boolean

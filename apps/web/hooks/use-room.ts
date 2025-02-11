@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query'
 import { queries } from '@/lib/queries'
+import { useQuery } from '@tanstack/react-query'
 
 export function useRoom(slug: string) {
   return useQuery({

@@ -4,7 +4,6 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc",
     "start": "node dist/index.js"
   },
@@ -27,15 +26,11 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@avelin/eslint-config": "workspace:*",
-    "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
     "@types/express": "^5.0.0",
     "@types/express-ws": "^3.0.5",
     "@types/node": "^20",
     "@types/ws": "^8.5.13",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
     "tsx": "^4.19.2",
     "typescript": "catalog:"
   }

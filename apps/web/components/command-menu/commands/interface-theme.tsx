@@ -1,13 +1,13 @@
 import {
   ChevronRightIcon,
   ComputerIcon,
-  LucideIcon,
+  type LucideIcon,
   MoonIcon,
   SunIcon,
   SunMoonIcon,
 } from '@avelin/icons'
 import { cn } from '@avelin/ui/cn'
-import { CommandItem, CommandItemProps } from '@avelin/ui/command'
+import { CommandItem, type CommandItemProps } from '@avelin/ui/command'
 import { toast } from '@avelin/ui/sonner'
 import { useTheme } from 'next-themes'
 import { useCallback } from 'react'
@@ -49,10 +49,7 @@ export function ChangeInterfaceThemeRootCommand({
   ...props
 }: CommandItemProps) {
   return (
-    <CommandItem
-      {...props}
-      className={cn(className)}
-    >
+    <CommandItem {...props} className={cn(className)}>
       <SunMoonIcon />
       Change interface theme...
     </CommandItem>
@@ -67,7 +64,7 @@ export function ChangeInterfaceThemeCommands({ closeMenu }: Props) {
       const theme = themes.find((t) => t.value === themeValue)!
       setTheme(theme.value)
       toast(`Switched to ${theme.name} theme.`, {
-        icon: <theme.icon className='size-4 shrink-0' />,
+        icon: <theme.icon className="size-4 shrink-0" />,
         id: 'interface-theme-change',
       })
     },
@@ -87,10 +84,10 @@ export function ChangeInterfaceThemeCommands({ closeMenu }: Props) {
           }}
         >
           <theme.icon />
-          <span className='text-color-text-quaternary'>
+          <span className="text-color-text-quaternary">
             Change interface theme
           </span>
-          <ChevronRightIcon className='!h-3 !w-3' />
+          <ChevronRightIcon className="!h-3 !w-3" />
           {theme.name}
         </CommandItem>
       ))}

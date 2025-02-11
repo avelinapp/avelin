@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "tsc --watch",
-    "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc"
   },
   "exports": {
@@ -19,13 +18,9 @@
     "react": "catalog:react18"
   },
   "devDependencies": {
-    "@avelin/eslint-config": "workspace:*",
-    "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
     "@types/react": "catalog:react18",
     "@types/react-dom": "catalog:react18",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:"
   }

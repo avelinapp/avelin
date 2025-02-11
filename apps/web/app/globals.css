@@ -5,7 +5,7 @@
 :root {
   .font-sans {
     text-rendering: geometricPrecision;
-    font-feature-settings: 'liga', 'calt';
+    font-feature-settings: "liga", "calt";
   }
 
   h1,
@@ -17,7 +17,7 @@
   .font-display {
     letter-spacing: -0.02em;
     @supports (font-variation-settings: normal) {
-      font-variation-settings: 'opsz' 32;
+      font-variation-settings: "opsz" 32;
     }
   }
 
@@ -26,7 +26,7 @@
   .font-body {
     letter-spacing: -0.01em;
     @supports (font-variation-settings: normal) {
-      font-variation-settings: 'opsz' 16;
+      font-variation-settings: "opsz" 16;
     }
   }
 }
@@ -43,9 +43,9 @@
   }
 
   /* Opt text-based inputs out of "forced" default cursor */
-  input[type='text'],
-  input[type='password'],
-  input[type='email'],
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
   textarea,
   select {
     cursor: text;

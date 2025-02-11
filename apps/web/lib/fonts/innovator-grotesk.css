@@ -1,12 +1,12 @@
 :root {
-  --font-innovator-grotesk: 'Innovator Grotesk';
+  --font-innovator-grotesk: "Innovator Grotesk";
 }
 
 @font-face {
-  font-family: 'Innovator Grotesk';
+  font-family: "Innovator Grotesk";
   font-display: swap;
-  src: url('https://static.avelin.app/fonts/InnovatorGroteskVF-VF.woff2')
-    format('woff2');
+  src: url("https://static.avelin.app/fonts/InnovatorGroteskVF-VF.woff2")
+    format("woff2");
   font-weight: 100 900;
   font-style: normal;
 }

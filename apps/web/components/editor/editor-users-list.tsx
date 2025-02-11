@@ -1,8 +1,12 @@
 'use client'
 
-import { BaseColor, colors } from '@/lib/rooms'
-import { type UserInfo } from '@/lib/sync'
+import { type BaseColor, colors } from '@/lib/rooms'
+import type { UserInfo } from '@/lib/sync'
+import { useCodeRoom } from '@/providers/code-room-provider'
+import { ChevronDownIcon } from '@avelin/icons'
 import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
+import { Button } from '@avelin/ui/button'
+import { cn } from '@avelin/ui/cn'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,13 +15,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@avelin/ui/dropdown-menu'
-import { cn } from '@avelin/ui/cn'
-import { ComponentPropsWithoutRef, forwardRef, useMemo, useState } from 'react'
-import { useCodeRoom } from '@/providers/code-room-provider'
-import { AnimatePresence, LayoutGroup, motion } from 'motion/react'
-import { Button } from '@avelin/ui/button'
-import { ChevronDownIcon } from '@avelin/icons'
 import { useNetworkStatus } from '@avelin/ui/hooks'
+import { AnimatePresence, LayoutGroup, motion } from 'motion/react'
+import {
+  type ComponentPropsWithoutRef,
+  forwardRef,
+  useMemo,
+  useState,
+} from 'react'
 
 type UsersListDisplayProps = {
   users: UserInfo[]
@@ -41,7 +46,7 @@ const UserAvatar = ({
       )}
     >
       {user.picture && <AvatarImage src={user.picture} />}
-      <AvatarFallback className='leading-none'>
+      <AvatarFallback className="leading-none">
         {user.name
           .split('-')
           .map((s) => s[0]?.toUpperCase())
@@ -59,21 +64,14 @@ const UsersListDisplay = forwardRef<
   const remainingUsersCount = users.length - displayedUsers.length
 
   return (
-    <div
-      ref={ref}
-      className='flex items-center select-none h-8'
-      {...props}
-    >
+    <div ref={ref} className="flex items-center select-none h-8" {...props}>
       <LayoutGroup>
-        <AnimatePresence
-          initial={false}
-          mode='popLayout'
-        >
+        <AnimatePresence initial={false} mode="popLayout">
           {displayedUsers.map((user) => (
             <motion.div
               layout
               key={user.clientId}
-              className='first:-ml-0 -ml-2.5'
+              className="first:-ml-0 -ml-2.5"
               initial={{
                 opacity: 0,
                 filter: 'blur(2px)',
@@ -100,7 +98,7 @@ const UsersListDisplay = forwardRef<
           {remainingUsersCount > 0 && (
             <motion.div
               layout
-              key='remaining'
+              key="remaining"
               initial={{
                 opacity: 0,
                 filter: 'blur(2px)',
@@ -124,7 +122,7 @@ const UsersListDisplay = forwardRef<
                 ease: 'easeOut',
               }}
             >
-              <div className='h-6 w-6 leading-none tabular-nums border-[1.5px] border-white dark:border-color-background-2 rounded-full z-10 font-medium -ml-2.5 text-[11px] bg-gray-3 dark:bg-gray-11 flex items-center justify-center'>
+              <div className="h-6 w-6 leading-none tabular-nums border-[1.5px] border-white dark:border-color-background-2 rounded-full z-10 font-medium -ml-2.5 text-[11px] bg-gray-3 dark:bg-gray-11 flex items-center justify-center">
                 <span>+{remainingUsersCount}</span>
               </div>
             </motion.div>
@@ -148,15 +146,15 @@ function UsersListMenu({
     <>
       {users.map((user) => (
         <DropdownMenuItem
-          className='flex items-center justify-between gap-2'
+          className="flex items-center justify-between gap-2"
           key={user.clientId}
         >
-          <div className='flex items-center gap-2'>
+          <div className="flex items-center gap-2">
             <UserAvatar user={user} />
             <span>{user.name}</span>
           </div>
           {user.clientId === clientId && (
-            <span className='font-medium text-color-text-quaternary'>
+            <span className="font-medium text-color-text-quaternary">
               (You)
             </span>
           )}
@@ -176,14 +174,11 @@ export function UsersList() {
   if (!isOnline || !users || !users.length || !clientId) return null
 
   return (
-    <DropdownMenu
-      open={open}
-      onOpenChange={setOpen}
-    >
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button
-          size='xs'
-          variant='ghost'
+          size="xs"
+          variant="ghost"
           className={cn(
             'flex items-center justify-between gap-2',
             'data-[state=open]:bg-secondary-bg data-[state=open]:text-secondary-text',
@@ -193,19 +188,13 @@ export function UsersList() {
           }}
         >
           <UsersListDisplay users={users} />
-          <ChevronDownIcon className='text-secondary-text' />
+          <ChevronDownIcon className="text-secondary-text" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align='end'
-        className='min-w-[200px]'
-      >
-        <DropdownMenuGroup title='Active users'>
+      <DropdownMenuContent align="end" className="min-w-[200px]">
+        <DropdownMenuGroup title="Active users">
           <DropdownMenuLabel>Active Users</DropdownMenuLabel>
-          <UsersListMenu
-            users={users}
-            clientId={clientId}
-          />
+          <UsersListMenu users={users} clientId={clientId} />
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

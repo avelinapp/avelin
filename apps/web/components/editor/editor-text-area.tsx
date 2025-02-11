@@ -1,18 +1,18 @@
 'use client'
 
-import { useRef, useState, useCallback, useEffect } from 'react'
-import { Monaco, default as MonacoEditor } from '@monaco-editor/react'
-import { editor, KeyCode, KeyMod } from 'monaco-editor'
-import { useCodeRoom } from '@/providers/code-room-provider'
 import { useMonacoBinding } from '@/hooks/use-monaco-binding'
 import { jetbrainsMono } from '@/lib/fonts'
-import { themes } from './themes'
+import { useCodeRoom } from '@/providers/code-room-provider'
+import { type Monaco, default as MonacoEditor } from '@monaco-editor/react'
+import { KeyCode, KeyMod, type editor } from 'monaco-editor'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Cursors } from './cursors'
+import { themes } from './themes'
 import './cursors.css'
 import { cn } from '@avelin/ui/cn'
 import { useAnimate } from 'motion/react-mini'
-import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { useTheme } from 'next-themes'
+import { useFeatureFlagEnabled } from 'posthog-js/react'
 
 interface EditorProps
   extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className'> {
@@ -44,6 +44,7 @@ export function EditorTextArea({ className }: EditorProps) {
     }
   }, [editorMounted, theme, systemTheme])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: false
   const setupEditor = useCallback(
     (editorInstance: editor.IStandaloneCodeEditor, monacoInstance: Monaco) => {
       editorInstance.focus()
@@ -77,6 +78,7 @@ export function EditorTextArea({ className }: EditorProps) {
     networkProvider,
   )
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: false
   useEffect(() => {
     if (editorMounted) {
       animate(
@@ -85,7 +87,6 @@ export function EditorTextArea({ className }: EditorProps) {
         { ease: 'easeOut', duration: 0.2 },
       )
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editorMounted])
 
   return (
@@ -96,10 +97,10 @@ export function EditorTextArea({ className }: EditorProps) {
     >
       {networkProvider ? <Cursors provider={networkProvider} /> : null}
       <MonacoEditor
-        width='100vw'
-        theme='light'
+        width="100vw"
+        theme="light"
         loading={null}
-        defaultValue=''
+        defaultValue=""
         language={editorLanguage}
         onMount={setupEditor}
         options={{

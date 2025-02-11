@@ -2,8 +2,8 @@
 
 import { Check, ChevronsUpDown } from 'lucide-react'
 
+import { Button, type ButtonTooltipProps } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
-import { Button, ButtonTooltipProps } from '@avelin/ui/button'
 import {
   Command,
   CommandEmpty,
@@ -41,30 +41,28 @@ export const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
     const [open, setOpen] = useState(false)
 
     return (
-      <Popover
-        open={open}
-        onOpenChange={setOpen}
-      >
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             ref={ref}
-            variant='secondary'
-            size='xs'
-            role='combobox'
+            variant="secondary"
+            size="xs"
+            // biome-ignore lint/a11y/useSemanticElements: <explanation>
+            role="combobox"
             aria-expanded={open}
-            className='w-[200px] justify-between'
+            className="w-[200px] justify-between"
             disabled={disabled}
             tooltip={tooltip}
           >
             {value
               ? options.find((option) => option.value === value)?.label
               : `Select ${name}...`}
-            <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className='w-fit min-w-[100px] p-0 shadow-lg border-color-border-subtle'
-          align='start'
+          className="w-fit min-w-[100px] p-0 shadow-lg border-color-border-subtle"
+          align="start"
         >
           <Command>
             <CommandInput placeholder={`Search ${name}...`} />
@@ -73,7 +71,7 @@ export const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
               <CommandGroup>
                 {options.map((option) => (
                   <CommandItem
-                    className='whitespace-nowrap'
+                    className="whitespace-nowrap"
                     key={option.value}
                     value={option.value}
                     onSelect={(currentValue) => {

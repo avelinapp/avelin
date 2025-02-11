@@ -8,9 +8,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "devDependencies": {
-    "@avelin/prettier-config": "workspace:*",
-    "prettier": "catalog:"
   }
 }

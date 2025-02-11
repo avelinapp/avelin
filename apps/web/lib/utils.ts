@@ -10,7 +10,7 @@ export function getPrettyHostname(input?: string | URL) {
   let hostname = url.hostname
 
   if (url.port !== '') {
-    hostname += ':' + url.port
+    hostname += `:${url.port}`
   }
 
   return hostname

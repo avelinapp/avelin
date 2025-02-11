@@ -1,4 +1,5 @@
-import { schema, eq, createDb } from '@avelin/database'
+import { validateSession } from '@avelin/auth'
+import { createDb, eq, schema } from '@avelin/database'
 import { Database } from '@hocuspocus/extension-database'
 import { Logger } from '@hocuspocus/extension-logger'
 import { Events, Webhook } from '@hocuspocus/extension-webhook'
@@ -7,7 +8,6 @@ import express from 'express'
 import expressWebsockets from 'express-ws'
 import ws from 'ws'
 import { Doc } from 'yjs'
-import { validateSession } from '@avelin/auth'
 import { env } from './env.js'
 
 const PORT = 4100
@@ -29,15 +29,16 @@ const server = new Hocuspocus({
   },
   extensions: [
     new Webhook({
-      url: env.API_URL + '/rooms/sync/webhook',
+      url: `${env.API_URL}/rooms/sync/webhook`,
       secret: env.HOCUSPOCUS_WEBHOOK_SECRET,
       transformer: {
         // TODO: Complete implementation
-        // eslint-disable-next-line
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         toYdoc(document: any, fieldName: string): Doc {
           // convert the given document (from your api) to a ydoc using the provided fieldName
           return new Doc()
         },
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         fromYdoc(document: Doc): any {
           // convert the ydoc to your representation
           const meta = document.getMap('meta').toJSON()

@@ -1,10 +1,10 @@
 'use client'
 
-import { Language, languages } from '@/lib/constants'
+import { type Language, languages } from '@/lib/constants'
 import { useCreateRoom, useDeleteRoom } from '@/lib/mutations'
 import { getQueryClient, queries } from '@/lib/queries'
 import { useAuth } from '@/providers/auth-provider'
-import { Room } from '@avelin/database'
+import type { Room } from '@avelin/database'
 import {
   LinkIcon,
   PlusIcon,
@@ -12,10 +12,10 @@ import {
   TrashIcon,
 } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
+import { FadeInContainer } from '@avelin/ui/fade-in-container'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { FadeInContainer } from '@avelin/ui/fade-in-container'
 
 export default function Page() {
   const router = useRouter()
@@ -33,21 +33,21 @@ export default function Page() {
   if (isAuthPending) return null
 
   return (
-    <div className='flex flex-col gap-4'>
-      <div className='space-y-2'>
-        <h1 className='text-3xl font-semibold'>
+    <div className="flex flex-col gap-4">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-semibold">
           Welcome back,{' '}
-          <span className='text-color-text-quaternary'>
+          <span className="text-color-text-quaternary">
             {user?.name.split(' ')[0]}
           </span>
         </h1>
-        <p className='text-color-text-quaternary'>
+        <p className="text-color-text-quaternary">
           All your code rooms - past, present, and future.
         </p>
       </div>
       <div>
         <Button onClick={handleCreateRoom}>
-          <PlusIcon className='size-fit' />
+          <PlusIcon className="size-fit" />
           Create
         </Button>
       </div>
@@ -55,12 +55,9 @@ export default function Page() {
         {isPending ? null : error ? (
           <div>Error: {error.message}</div>
         ) : (
-          <FadeInContainer className='flex flex-col gap-1'>
+          <FadeInContainer className="flex flex-col gap-1">
             {data.map((room) => (
-              <CodeRoomListItem
-                key={room.id}
-                room={room}
-              />
+              <CodeRoomListItem key={room.id} room={room} />
             ))}
           </FadeInContainer>
         )}
@@ -84,38 +81,38 @@ const CodeRoomListItem = ({
   const LanguageIcon = language.logo!
 
   return (
-    <div className='group/item first:border-t hover:bg-color-background-2 border-b border-color-border-subtle px-4 h-12 flex items-center gap-2 justify-between'>
-      <div className='flex items-center gap-2'>
-        {!!language?.logo && <LanguageIcon className='size-5 shrink-0' />}
-        <span className='font-medium'>
+    <div className="group/item first:border-t hover:bg-color-background-2 border-b border-color-border-subtle px-4 h-12 flex items-center gap-2 justify-between">
+      <div className="flex items-center gap-2">
+        {!!language?.logo && <LanguageIcon className="size-5 shrink-0" />}
+        <span className="font-medium">
           {room.title && room.title.length >= 1 ? room.title : 'Untitled room'}
         </span>
         {/* <span>{room.editorLanguage}</span> */}
       </div>
-      <div className='hidden group-hover/item:flex items-center gap-1'>
+      <div className="hidden group-hover/item:flex items-center gap-1">
         <Button
-          size='sm'
+          size="sm"
           asChild
           tooltip={{
             content: 'Open code room',
           }}
         >
           <Link href={`/${room.slug}`}>
-            <SquareArrowUpRightIcon className='size-fit' />
+            <SquareArrowUpRightIcon className="size-fit" />
           </Link>
         </Button>
         <Button
-          size='sm'
-          variant='secondary'
+          size="sm"
+          variant="secondary"
           tooltip={{
             content: 'Copy URL',
           }}
         >
-          <LinkIcon className='size-fit' />
+          <LinkIcon className="size-fit" />
         </Button>
         <Button
-          size='sm'
-          variant='destructive'
+          size="sm"
+          variant="destructive"
           tooltip={{
             content: 'Delete code room',
           }}
@@ -123,7 +120,7 @@ const CodeRoomListItem = ({
             deleteRoom.mutate()
           }}
         >
-          <TrashIcon className='size-4 shrink-0' />
+          <TrashIcon className="size-4 shrink-0" />
         </Button>
       </div>
     </div>

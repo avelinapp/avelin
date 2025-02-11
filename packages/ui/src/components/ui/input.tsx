@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { cn } from '@avelin/ui/cn'
-import { cva, VariantProps } from 'class-variance-authority'
+import { type VariantProps, cva } from 'class-variance-authority'
 
 const inputVariants = cva(
   'flex w-full rounded-md border border-color-border-subtle bg-popover-bg text-sm placeholder:text-color-text-primary/50 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',

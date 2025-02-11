@@ -1,5 +1,5 @@
-import { Hocuspocus, IncomingMessage } from '@hocuspocus/server'
-import { IncomingHttpHeaders } from 'node:http'
+import type { IncomingHttpHeaders } from 'node:http'
+import type { Hocuspocus, IncomingMessage } from '@hocuspocus/server'
 
 export type OnConnectCallbackParams = {
   documentName: string

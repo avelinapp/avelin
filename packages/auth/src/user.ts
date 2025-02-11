@@ -1,4 +1,4 @@
-import { schema, eq, NeonDatabase } from '@avelin/database'
+import { type NeonDatabase, eq, schema } from '@avelin/database'
 import { newId } from '@avelin/id'
 import { storage } from '@avelin/storage'
 

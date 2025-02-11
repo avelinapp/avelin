@@ -33,12 +33,8 @@
           "name": "oauth_accounts_userId_users_id_fk",
           "tableFrom": "oauth_accounts",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -46,10 +42,7 @@
       "compositePrimaryKeys": {
         "oauth_accounts_providerId_providerUserId_pk": {
           "name": "oauth_accounts_providerId_providerUserId_pk",
-          "columns": [
-            "providerId",
-            "providerUserId"
-          ]
+          "columns": ["providerId", "providerUserId"]
         }
       },
       "uniqueConstraints": {},
@@ -112,12 +105,8 @@
           "name": "room_participants_roomId_rooms_id_fk",
           "tableFrom": "room_participants",
           "tableTo": "rooms",
-          "columnsFrom": [
-            "roomId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["roomId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -125,12 +114,8 @@
           "name": "room_participants_userId_users_id_fk",
           "tableFrom": "room_participants",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -177,9 +162,7 @@
         "rooms_slug_unique": {
           "name": "rooms_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -215,12 +198,8 @@
           "name": "sessions_userId_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -304,12 +283,8 @@
           "name": "users_linkedUserId_users_id_fk",
           "tableFrom": "users",
           "tableTo": "users",
-          "columnsFrom": [
-            "linkedUserId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["linkedUserId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -319,9 +294,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},

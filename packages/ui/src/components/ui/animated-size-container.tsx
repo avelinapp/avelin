@@ -6,6 +6,8 @@
  * https://github.com/midday-ai/midday/blob/main/LICENSE
  ******************************************************************************/
 
+import { cn } from '@avelin/ui/cn'
+import { useResizeObserver } from '@avelin/ui/hooks'
 import { motion } from 'motion/react'
 import {
   type ComponentPropsWithoutRef,
@@ -13,8 +15,6 @@ import {
   forwardRef,
   useRef,
 } from 'react'
-import { cn } from '@avelin/ui/cn'
-import { useResizeObserver } from '@avelin/ui/hooks'
 
 type AnimatedSizeContainerProps = PropsWithChildren<{
   width?: boolean

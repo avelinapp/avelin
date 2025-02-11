@@ -15,7 +15,7 @@ export function CopyRoomUrlCommand({ closeMenu }: Props) {
   const { room } = useCodeRoom()
   const [, copy] = useCopyToClipboard()
   const roomUrl = useMemo(
-    () => process.env.NEXT_PUBLIC_APP_URL + '/' + room?.slug,
+    () => `${process.env.NEXT_PUBLIC_APP_URL}/${room?.slug}`,
     [room?.slug],
   )
 
@@ -27,12 +27,12 @@ export function CopyRoomUrlCommand({ closeMenu }: Props) {
         description: roomUrl,
         action: (
           <Button
-            size='xs'
-            variant='ghost'
-            className='p-1.5 h-fit rounded-md ml-auto'
+            size="xs"
+            variant="ghost"
+            className="p-1.5 h-fit rounded-md ml-auto"
             onClick={() => handleCopy(false)}
           >
-            <CopyIcon className='size-4 shrink-0' />
+            <CopyIcon className="size-4 shrink-0" />
           </Button>
         ),
       })
@@ -48,8 +48,8 @@ export function CopyRoomUrlCommand({ closeMenu }: Props) {
       }}
     >
       <LinkIcon />
-      <span className='text-color-text-quaternary'>Copy room link...</span>
-      <span>{getPrettyHostname() + '/' + room?.slug}</span>
+      <span className="text-color-text-quaternary">Copy room link...</span>
+      <span>{`${getPrettyHostname()}/${room?.slug}`}</span>
     </CommandItem>
   )
 }

@@ -1,8 +1,9 @@
-import { Suspense, lazy } from 'react'
 import dynamic from 'next/dynamic'
+import { Suspense, lazy } from 'react'
 import DelayedFallback from './delayed-fallback'
 import FadeIn from './fade-in'
 
+// biome-ignore lint/complexity/noBannedTypes: false
 interface LazySuspenseProps<P = {}>
   extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className'> {
   component: () => Promise<{

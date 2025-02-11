@@ -4,7 +4,6 @@
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "dev:tsc": "tsc --watch",
-    "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc",
     "compile": "bun build src/index.ts --target bun --compile --minify --sourcemap ./src/index.ts --outfile api"
   },
@@ -30,12 +29,8 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@avelin/eslint-config": "workspace:*",
-    "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
     "@types/bun": "^1.1.14",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
     "typescript": "catalog:",
     "undici-types": "^7.2.3"
   }

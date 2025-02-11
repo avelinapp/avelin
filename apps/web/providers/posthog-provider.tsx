@@ -1,12 +1,12 @@
 'use client'
 
-import posthog from 'posthog-js'
+import { env } from '@/lib/env'
 import { usePathname, useSearchParams } from 'next/navigation'
+import posthog from 'posthog-js'
 import { usePostHog } from 'posthog-js/react'
 import { PostHogProvider as PostHogProviderPrimitive } from 'posthog-js/react'
-import { useAuth } from './auth-provider'
 import { useEffect } from 'react'
-import { env } from '@/lib/env'
+import { useAuth } from './auth-provider'
 
 type PosthogBootstrapData = {
   distinctID: string
@@ -67,7 +67,7 @@ export function PostHogPageView(): null {
     if (pathname && posthog) {
       let url = window.origin + pathname
       if (searchParams.toString()) {
-        url = url + `?${searchParams.toString()}`
+        url = `${url}?${searchParams.toString()}`
       }
       posthog.capture('$pageview', {
         $current_url: url,
