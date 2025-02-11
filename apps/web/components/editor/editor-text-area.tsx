@@ -101,6 +101,7 @@ export function EditorTextArea({ className }: EditorProps) {
           padding: { top: 16, bottom: 16 },
           fontSize: 16,
           fontFamily: `${berkeleyMono.style.fontFamily}`,
+          letterSpacing: -0.25,
           fontLigatures: true,
           minimap: { enabled: false },
           renderLineHighlight: 'none',
