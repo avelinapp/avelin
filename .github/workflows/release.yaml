@@ -53,63 +53,68 @@ jobs:
           NEW_VERSION=$(pnpm release --ci --release-version | tail -n1)
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
-  # build-push-amd64:
-  #   name: Build & push ${{ matrix.app }} - x64 (AMD64)
-  #   runs-on: ubuntu-24.04
-  #   needs: prepare
-  #   permissions:
-  #     contents: read
-  #     packages: write
-  #
-  #   strategy:
-  #     matrix:
-  #       include:
-  #         - app: web
-  #           dockerfile: ./apps/web/Dockerfile
-  #         - app: api
-  #           dockerfile: ./apps/api/Dockerfile
-  #         - app: sync
-  #           dockerfile: ./apps/sync/Dockerfile
-  #         - app: migrate
-  #           dockerfile: ./packages/database/Dockerfile
-  #
-  #   steps:
-  #     - name: Checkout monorepo
-  #       uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-  #         submodules: true
-  #         token: $${{ secrets.GITHUB_TOKEN }}
-  #
-  #     - name: Login to GitHub Container Registry
-  #       uses: docker/login-action@v3
-  #       with:
-  #         registry: ghcr.io
-  #         username: ${{ github.actor }}
-  #         password: ${{ secrets.GITHUB_TOKEN }}
-  #
-  #     - name: Setup Docker Buildx
-  #       uses: docker/setup-buildx-action@v3
-  #
-  #     - name: Build and Push ${{ matrix.app }}
-  #       uses: docker/build-push-action@v6
-  #       with:
-  #         context: .
-  #         file: ${{ matrix.dockerfile }}
-  #         push: true
-  #         platforms: linux/amd64
-  #         tags: |
-  #           ghcr.io/avelinapp/${{ matrix.app }}:latest-amd64
-  #           ghcr.io/avelinapp/${{ matrix.app }}:${{ github.sha }}-amd64
-  #           ghcr.io/avelinapp/${{ matrix.app }}:${{ needs.prepare.outputs.new_version }}-amd64
-  #           ghcr.io/avelinapp/${{ matrix.app }}:v${{ needs.prepare.outputs.new_version }}-amd64
-  #         build-args: |
-  #           NEXT_PUBLIC_APP_URL=https://avelin.app
-  #           NEXT_PUBLIC_API_URL=https://api.avelin.app
-  #           NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
-  #           NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
-  #         cache-from: type=gha
-  #         cache-to: type=gha,mode=max
+  build-push-amd64:
+    name: Build & push ${{ matrix.app }} - x64 (AMD64)
+    runs-on: ubuntu-24.04
+    needs: prepare
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        include:
+          - app: web
+            dockerfile: ./apps/web/Dockerfile
+          - app: api
+            dockerfile: ./apps/api/Dockerfile
+          - app: sync
+            dockerfile: ./apps/sync/Dockerfile
+          - app: migrate
+            dockerfile: ./packages/database/Dockerfile
+
+    steps:
+      - name: Checkout monorepo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout submodule for static assets
+        uses: actions/checkout@v4
+        with:
+          repository: avelinapp/assets
+          path: apps/web/static
+          token: ${{ secrets.GH_AVELINAPP_RO_ACCESS }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push ${{ matrix.app }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ghcr.io/avelinapp/${{ matrix.app }}:latest-amd64
+            ghcr.io/avelinapp/${{ matrix.app }}:${{ github.sha }}-amd64
+            ghcr.io/avelinapp/${{ matrix.app }}:${{ needs.prepare.outputs.new_version }}-amd64
+            ghcr.io/avelinapp/${{ matrix.app }}:v${{ needs.prepare.outputs.new_version }}-amd64
+          build-args: |
+            NEXT_PUBLIC_APP_URL=https://avelin.app
+            NEXT_PUBLIC_API_URL=https://api.avelin.app
+            NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+            NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   build-push-arm64:
     name: Build & push ${{ matrix.app }} - ARM64
@@ -124,19 +129,25 @@ jobs:
         include:
           - app: web
             dockerfile: ./apps/web/Dockerfile
-          # - app: api
-          #   dockerfile: ./apps/api/Dockerfile
-          # - app: sync
-          #   dockerfile: ./apps/sync/Dockerfile
-          # - app: migrate
-          #   dockerfile: ./packages/database/Dockerfile
+          - app: api
+            dockerfile: ./apps/api/Dockerfile
+          - app: sync
+            dockerfile: ./apps/sync/Dockerfile
+          - app: migrate
+            dockerfile: ./packages/database/Dockerfile
 
     steps:
       - name: Checkout monorepo
         uses: actions/checkout@v4
         with:
-          submodules: recursive
-          token: $${{ secrets.GH_AVELINAPP_RO_ACCESS }}
+          fetch-depth: 0
+
+      - name: Checkout submodule for static assets
+        uses: actions/checkout@v4
+        with:
+          repository: avelinapp/assets
+          path: apps/web/static
+          token: ${{ secrets.GH_AVELINAPP_RO_ACCESS }}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -169,8 +180,7 @@ jobs:
 
   create-manifests:
     name: Create image manifests
-    # needs: [prepare, build-push-amd64, build-push-arm64]
-    needs: [prepare, build-push-arm64]
+    needs: [prepare, build-push-amd64, build-push-arm64]
     runs-on: ubuntu-24.04
 
     steps:
@@ -227,7 +237,8 @@ jobs:
       - name: Checkout IaC repo
         uses: actions/checkout@v4
         with:
-          repository: avelinapp/iac
+          repository: bazzalabs/orion
+          token: ${{ secrets.GH_BAZZALABS_ORION_SECRET }}
           fetch-depth: 0
           path: iac
 
