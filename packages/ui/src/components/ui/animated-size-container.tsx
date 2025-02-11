@@ -41,6 +41,7 @@ const AnimatedSizeContainer = forwardRef<
     forwardedRef,
   ) => {
     const containerRef = useRef<HTMLDivElement>(null)
+    // @ts-ignore
     const resizeObserverEntry = useResizeObserver(containerRef)
 
     return (
