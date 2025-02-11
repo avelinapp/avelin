@@ -1,3 +1,3 @@
 [submodule "static"]
-	path = static
+	path = apps/web/static
 	url = https://github.com/bazzalabs/static
