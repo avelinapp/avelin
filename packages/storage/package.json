@@ -11,19 +11,14 @@
   },
   "scripts": {
     "dev": "tsc --watch",
-    "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0"
   },
   "devDependencies": {
-    "@avelin/eslint-config": "workspace:*",
-    "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
     "@types/node": "^20",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
     "typescript": "catalog:"
   }
 }

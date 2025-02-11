@@ -1,8 +1,8 @@
+import path from 'node:path'
 import { config } from 'dotenv'
 // import { sql } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/neon-http'
 import { migrate } from 'drizzle-orm/neon-http/migrator'
-import path from 'path'
 
 config({ path: '.env' }) // or .env.local
 

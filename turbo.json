@@ -33,8 +33,9 @@
         "CI"
       ]
     },
-    "lint": {
-      "dependsOn": ["^lint"]
+    "//#check": {},
+    "//#check:fix": {
+      "cache": false
     },
     "dev": {
       "cache": false,

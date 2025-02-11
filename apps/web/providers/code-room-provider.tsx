@@ -1,22 +1,22 @@
 'use client'
 
-import { createContext, useContext, useState } from 'react'
-import { createStore, StoreApi, useStore } from 'zustand'
-import * as Y from 'yjs'
-import { Awareness } from 'y-protocols/awareness'
-import { IndexeddbPersistence } from 'y-indexeddb'
-import { HocuspocusProvider, WebSocketStatus } from '@hocuspocus/provider'
-import type { Room, User, Session } from '@avelin/database'
-import {
-  AwarenessChange,
-  AwarenessList,
-  USER_IDLE_TIMEOUT,
-  UserAwareness,
-  UserInfo,
-} from '@/lib/sync'
-import { Language, languages } from '@/lib/constants'
-import { toast } from '@avelin/ui/sonner'
+import { type Language, languages } from '@/lib/constants'
 import { assignOption, baseColors, generateUniqueName } from '@/lib/rooms'
+import {
+  type AwarenessChange,
+  type AwarenessList,
+  USER_IDLE_TIMEOUT,
+  type UserAwareness,
+  type UserInfo,
+} from '@/lib/sync'
+import type { Room, Session, User } from '@avelin/database'
+import { toast } from '@avelin/ui/sonner'
+import { HocuspocusProvider, type WebSocketStatus } from '@hocuspocus/provider'
+import { createContext, useContext, useState } from 'react'
+import { IndexeddbPersistence } from 'y-indexeddb'
+import { Awareness } from 'y-protocols/awareness'
+import * as Y from 'yjs'
+import { type StoreApi, createStore, useStore } from 'zustand'
 
 const CodeRoomContext = createContext<StoreApi<CodeRoomStore> | null>(null)
 
@@ -38,9 +38,9 @@ export type CodeRoomState = {
   skipRoomAwarenessChangeEvent: boolean
   roomTitle?: string
   editorLanguage?: Language['value']
-  // eslint-disable-next-line
+  // biome-ignore lint/suspicious/noExplicitAny: false
   editorObserver?: (event: Y.YMapEvent<any>) => void
-  // eslint-disable-next-line
+  // biome-ignore lint/suspicious/noExplicitAny: false
   roomTitleObserver?: (event: Y.YMapEvent<any>) => void
   usersObserver?: (data: AwarenessChange) => void
 }
@@ -101,7 +101,7 @@ export const createCodeRoomStore = () =>
         })
 
         // Define the observer function
-        // eslint-disable-next-line
+        // biome-ignore lint/suspicious/noExplicitAny: false
         const observer = (event: Y.YMapEvent<any>) => {
           if (event.keysChanged.has('title')) {
             const newTitle = metaMap.get('title') as string
@@ -127,7 +127,7 @@ export const createCodeRoomStore = () =>
         })
 
         // Define the observer function
-        // eslint-disable-next-line
+        // biome-ignore lint/suspicious/noExplicitAny: false
         const observer = (event: Y.YMapEvent<any>) => {
           if (event.keysChanged.has('language')) {
             const newLanguage = editorMap.get('language') as Language['value']
@@ -151,7 +151,7 @@ export const createCodeRoomStore = () =>
       function initializeLocalUserInfo(awareness: Awareness) {
         const currentUserInfo = awareness.getLocalState() as UserAwareness
 
-        if (!!currentUserInfo.user) {
+        if (currentUserInfo.user) {
           // Local user info already initialized
           // Do not overwrite with new user info
           return
@@ -201,6 +201,7 @@ export const createCodeRoomStore = () =>
           const newAwareness = [...awareness.getStates()] as AwarenessList
 
           if (!skipRoomAwarenessChangeEvent) {
+            // biome-ignore lint/complexity/noForEach: <explanation>
             added.forEach((id) => {
               const userAwareness = newAwareness.find(
                 ([clientId]) => clientId === id,
@@ -211,6 +212,7 @@ export const createCodeRoomStore = () =>
               toast.info(`${client.user?.name} joined the room.`)
             })
 
+            // biome-ignore lint/complexity/noForEach:
             removed.forEach((id) => {
               const removedUser = get().users.get(id)
 

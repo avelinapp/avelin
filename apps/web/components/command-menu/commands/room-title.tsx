@@ -1,14 +1,11 @@
 import { useCodeRoom } from '@/providers/code-room-provider'
 import { PencilIcon } from '@avelin/icons'
-import { CommandItem, CommandItemProps } from '@avelin/ui/command'
+import { CommandItem, type CommandItemProps } from '@avelin/ui/command'
 import { useEffect } from 'react'
 
 export function RoomTitleRootCommand({ ...props }: CommandItemProps) {
   return (
-    <CommandItem
-      keywords={['title']}
-      {...props}
-    >
+    <CommandItem keywords={['title']} {...props}>
       <PencilIcon />
       Edit room title...
     </CommandItem>
@@ -23,10 +20,10 @@ type Props = {
 
 export function EditRoomTitleCommand({ closeMenu, search, setSearch }: Props) {
   const { roomTitle, setRoomTitle } = useCodeRoom()
-  //
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setSearch(roomTitle ?? '')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setSearch])
 
   function save() {
@@ -36,15 +33,11 @@ export function EditRoomTitleCommand({ closeMenu, search, setSearch }: Props) {
 
   return (
     <>
-      <CommandItem
-        onSelect={save}
-        value={search}
-        keywords={[search]}
-      >
+      <CommandItem onSelect={save} value={search} keywords={[search]}>
         <PencilIcon />
-        <p className='text-color-text-primary'>
+        <p className="text-color-text-primary">
           Change room title to{' '}
-          <span className='text-color-text-quaternary'>{`"${search}"`}</span>
+          <span className="text-color-text-quaternary">{`"${search}"`}</span>
         </p>
       </CommandItem>
     </>

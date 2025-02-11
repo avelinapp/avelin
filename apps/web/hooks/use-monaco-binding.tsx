@@ -1,8 +1,8 @@
+import type { HocuspocusProvider } from '@hocuspocus/provider'
+import type { editor } from 'monaco-editor'
 import { useEffect } from 'react'
-import { editor } from 'monaco-editor'
 import { MonacoBinding } from 'y-monaco'
-import * as Y from 'yjs'
-import { HocuspocusProvider } from '@hocuspocus/provider'
+import type * as Y from 'yjs'
 
 export function useMonacoBinding(
   editorInstance: editor.IStandaloneCodeEditor | null,

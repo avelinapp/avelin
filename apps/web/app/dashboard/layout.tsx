@@ -31,12 +31,12 @@ export default async function Layout({
 
   const flags = await getFlags(auth.user.id)
 
-  if (!flags['dashboard']) {
+  if (!flags.dashboard) {
     return redirect('/')
   }
 
   return (
-    <div className='h-screen max-w-screen-lg mx-auto p-4 flex flex-col gap-8'>
+    <div className="h-screen max-w-screen-lg mx-auto p-4 flex flex-col gap-8">
       <Toolbar />
       {children}
     </div>

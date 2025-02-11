@@ -1,8 +1,8 @@
 'use client'
 
-import * as React from 'react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
+import type * as React from 'react'
 
 export function ThemeProvider({
   children,
@@ -12,7 +12,7 @@ export function ThemeProvider({
 
   return (
     <NextThemesProvider
-      attribute='class'
+      attribute="class"
       defaultTheme={FF_darkMode ? 'system' : 'light'}
       enableSystem
       disableTransitionOnChange

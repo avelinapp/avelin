@@ -6,14 +6,9 @@
     "ui:init": "pnpm dlx shadcn@latest init",
     "ui:add": "pnpm dlx shadcn@latest add",
     "dev": "tsc --watch",
-    "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc"
   },
-  "files": [
-    "tailwind.config.ts",
-    "postcss.config.mjs",
-    "globals.css"
-  ],
+  "files": ["tailwind.config.ts", "postcss.config.mjs", "globals.css"],
   "exports": {
     "./animated-size-container": "./src/components/ui/animated-size-container.tsx",
     "./avatar": "./src/components/ui/avatar.tsx",
@@ -38,15 +33,11 @@
     "./colors": "./src/colors/index.ts"
   },
   "devDependencies": {
-    "@avelin/eslint-config": "workspace:*",
-    "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
     "@types/react": "catalog:react18",
     "autoprefixer": "^10",
-    "eslint": "catalog:",
     "postcss": "^8",
     "postcss-load-config": "^6",
-    "prettier": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:"
   },

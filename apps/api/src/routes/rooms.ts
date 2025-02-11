@@ -1,24 +1,24 @@
-import Elysia, { t } from 'elysia'
-import { authMiddleware } from '../middleware/auth'
+import { createHmac, timingSafeEqual } from 'node:crypto'
+import { validateSession } from '@avelin/auth'
 import {
-  db,
-  eq,
-  and,
-  desc,
-  type User,
   type Room,
-  schema,
+  type User,
+  and,
+  db,
+  desc,
+  eq,
   getTableColumns,
-  sql,
   isNull,
+  schema,
+  sql,
 } from '@avelin/database'
 import { newId, newRoomSlug } from '@avelin/id'
-import { getRoomMiddleware } from '../middleware/rooms'
-import { validateSession } from '@avelin/auth'
-import { createHmac, timingSafeEqual } from 'crypto'
 import { readableStreamToArrayBuffer } from 'bun'
-import { env } from '../env'
+import Elysia, { t } from 'elysia'
 import { omit } from 'remeda'
+import { env } from '../env'
+import { authMiddleware } from '../middleware/auth'
+import { getRoomMiddleware } from '../middleware/rooms'
 
 export const rooms = new Elysia({ prefix: '/rooms' })
   .guard({}, (app) =>
@@ -109,6 +109,7 @@ export const rooms = new Elysia({ prefix: '/rooms' })
       .onParse(async ({ request, headers }) => {
         if (headers['content-type'] === 'application/json; charset=utf-8') {
           const arrayBuffer = await readableStreamToArrayBuffer(
+            // biome-ignore lint/suspicious/noExplicitAny:
             request.body as any,
           )
           const rawBody = Buffer.from(arrayBuffer)
@@ -117,6 +118,7 @@ export const rooms = new Elysia({ prefix: '/rooms' })
       })
       .post('/sync/webhook', async (c) => {
         /* Verify the request signature */
+        // biome-ignore lint/suspicious/noExplicitAny:
         const body = new Uint8Array(c.body as any)
 
         const signature = Buffer.from(
@@ -148,6 +150,7 @@ export const rooms = new Elysia({ prefix: '/rooms' })
           })
         }
 
+        // biome-ignore lint/suspicious/noExplicitAny:
         const data = c.body as any
 
         const { event, payload } = data

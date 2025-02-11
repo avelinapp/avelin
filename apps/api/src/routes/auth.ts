@@ -9,12 +9,12 @@ import {
   validateSession,
 } from '@avelin/auth'
 import { db } from '@avelin/database'
-import { decodeIdToken, OAuth2Tokens } from 'arctic'
+import { type OAuth2Tokens, decodeIdToken } from 'arctic'
 import Elysia, { t } from 'elysia'
 import type { Response } from 'undici-types'
-import { linkAnonymousToRealAccount } from '../utils/auth.utils'
-import { authMiddleware } from '../middleware/auth'
 import { env } from '../env'
+import { authMiddleware } from '../middleware/auth'
+import { linkAnonymousToRealAccount } from '../utils/auth.utils'
 
 export const auth = new Elysia({ prefix: '/auth' })
   .guard({}, (app) =>
@@ -209,7 +209,7 @@ export const auth = new Elysia({ prefix: '/auth' })
           // If the user already exists, log them in
           if (existingUser) {
             // Link anonymous to existing real account
-            if (auth && auth.user.isAnonymous) {
+            if (auth?.user.isAnonymous) {
               console.log(
                 `Linking anonymous user ${auth.user.id} to real existing user ${existingUser.id}`,
               )
@@ -249,7 +249,7 @@ export const auth = new Elysia({ prefix: '/auth' })
           )
 
           // Link anonymous account to new account
-          if (auth && auth.user.isAnonymous) {
+          if (auth?.user.isAnonymous) {
             console.log(
               `Linking anonymous user ${auth.user.id} to new real user ${newUser.id}`,
             )

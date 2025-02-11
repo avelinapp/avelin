@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useCodeRoom } from '@/providers/code-room-provider'
 import { useRoom } from '@/hooks/use-room'
 import { useAuth } from '@/providers/auth-provider'
-import { LoadingRoom } from './_components/loading-room'
-import CodeRoom from './_components/code-room'
+import { useCodeRoom } from '@/providers/code-room-provider'
 import { AnimatePresence } from 'motion/react'
+import { useEffect } from 'react'
+import CodeRoom from './_components/code-room'
+import { LoadingRoom } from './_components/loading-room'
 
 type Params = { slug: string }
 
@@ -29,15 +29,15 @@ export default function Page({ params }: { params: Params }) {
   }, [initialize, destroy, room.data, isAuthPending, user, session])
 
   return (
-    <AnimatePresence mode='wait'>
+    <AnimatePresence mode="wait">
       {room.isPending || room.isError ? (
         <LoadingRoom
-          key='room-loading'
+          key="room-loading"
           isPending={room.isPending}
           error={room.error}
         />
       ) : (
-        <CodeRoom key='room-loaded' />
+        <CodeRoom key="room-loaded" />
       )}
     </AnimatePresence>
   )

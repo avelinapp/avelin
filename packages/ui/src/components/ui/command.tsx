@@ -1,9 +1,9 @@
 'use client'
 
-import * as React from 'react'
-import { type DialogProps } from '@radix-ui/react-dialog'
+import type { DialogProps } from '@radix-ui/react-dialog'
 import { Command as CommandPrimitive } from 'cmdk'
 import { SearchIcon } from 'lucide-react'
+import * as React from 'react'
 
 import { cn } from '@avelin/ui/cn'
 import { Dialog, DialogContent } from '@avelin/ui/dialog'
@@ -28,8 +28,8 @@ interface CommandDialogProps extends DialogProps {}
 const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   return (
     <Dialog {...props}>
-      <DialogContent className='overflow-hidden p-0 shadow-lg'>
-        <Command className='[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5'>
+      <DialogContent className="overflow-hidden p-0 shadow-lg">
+        <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
           {children}
         </Command>
       </DialogContent>
@@ -44,8 +44,8 @@ const CommandInput = React.forwardRef<
   }
 >(({ className, showSearchIcon = true, ...props }, ref) => (
   <div
-    className='flex items-center border-b border-color-border-subtle px-3'
-    cmdk-input-wrapper=''
+    className="flex items-center border-b border-color-border-subtle px-3"
+    cmdk-input-wrapper=""
   >
     <SearchIcon
       strokeWidth={2.25}
@@ -86,7 +86,7 @@ const CommandEmpty = React.forwardRef<
 >((props, ref) => (
   <CommandPrimitive.Empty
     ref={ref}
-    className='py-6 text-center text-sm'
+    className="py-6 text-center text-sm"
     {...props}
   />
 ))

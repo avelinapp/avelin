@@ -1,5 +1,8 @@
 'use client'
 
+import { ROOM_PATH_REGEX } from '@/lib/constants'
+import { inArray } from '@/lib/utils'
+import { useCommandMenu } from '@/providers/command-menu-provider'
 import { AnimatedSizeContainer } from '@avelin/ui/animated-size-container'
 import { cn } from '@avelin/ui/cn'
 import {
@@ -17,28 +20,25 @@ import {
   DialogPrimitiveContent,
   DialogTitle,
 } from '@avelin/ui/dialog'
+import { useFocusRestore } from '@avelin/ui/hooks'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
+import { type AnimationSequence, animate } from 'motion'
+import { motion } from 'motion/react'
+import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { CopyRoomUrlCommand } from './commands/copy-room-url'
 import {
   ChangeEditorLanguageCommands,
   ChangeEditorLanguageRootCommand,
 } from './commands/editor-language'
-import { CopyRoomUrlCommand } from './commands/copy-room-url'
-import { useFocusRestore } from '@avelin/ui/hooks'
 import {
   ChangeInterfaceThemeCommands,
   ChangeInterfaceThemeRootCommand,
 } from './commands/interface-theme'
-import { useCommandMenu } from '@/providers/command-menu-provider'
-import { usePathname } from 'next/navigation'
-import { ROOM_PATH_REGEX } from '@/lib/constants'
 import {
   EditRoomTitleCommand,
   RoomTitleRootCommand,
 } from './commands/room-title'
-import { animate, AnimationSequence } from 'motion'
-import { motion } from 'motion/react'
-import { inArray } from '@/lib/utils'
 
 const menuPulse: AnimationSequence = [
   [
@@ -63,13 +63,10 @@ export default function CommandMenu() {
     [page],
   )
 
-  const goToPage = useCallback(
-    (pages: Array<string>) => {
-      setPages(pages)
-      animate(menuPulse)
-    },
-    [setPages],
-  )
+  const goToPage = useCallback((pages: Array<string>) => {
+    setPages(pages)
+    animate(menuPulse)
+  }, [])
 
   const closeMenu = useCallback(() => {
     close()
@@ -107,7 +104,7 @@ export default function CommandMenu() {
       }}
     >
       <DialogPortal>
-        <DialogOverlay className='bg-gray-12/20 dark:bg-gray-1/20 backdrop-blur-[1px]' />
+        <DialogOverlay className="bg-gray-12/20 dark:bg-gray-1/20 backdrop-blur-[1px]" />
         <DialogPrimitiveContent
           forceMount
           onEscapeKeyDown={(e) => {
@@ -154,7 +151,7 @@ export default function CommandMenu() {
                 <CommandInput
                   value={search}
                   onValueChange={setSearch}
-                  className='dark:border-gray-12 text-lg px-2 py-8'
+                  className="dark:border-gray-12 text-lg px-2 py-8"
                   showSearchIcon={false}
                   placeholder={
                     !page
@@ -171,7 +168,7 @@ export default function CommandMenu() {
                     <CommandEmpty>No results found.</CommandEmpty>
                   )}
                   {!page && isCodeRoom && (
-                    <CommandGroup heading='Code Rooms'>
+                    <CommandGroup heading="Code Rooms">
                       <>
                         {isCodeRoom && (
                           <ChangeEditorLanguageRootCommand
@@ -212,7 +209,7 @@ export default function CommandMenu() {
                     </CommandGroup>
                   )}
                   {!page && (
-                    <CommandGroup heading='User Preferences'>
+                    <CommandGroup heading="User Preferences">
                       <ChangeInterfaceThemeRootCommand
                         onSelect={() => {
                           goToPage([...pages, 'interface-theme'])
@@ -223,7 +220,7 @@ export default function CommandMenu() {
                   )}
                   {!isUserInputCommand &&
                     (page === 'interface-theme' || !!search) && (
-                      <CommandGroup heading='Interface theme'>
+                      <CommandGroup heading="Interface theme">
                         <ChangeInterfaceThemeCommands closeMenu={closeMenu} />
                       </CommandGroup>
                     )}

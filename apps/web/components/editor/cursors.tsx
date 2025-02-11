@@ -1,6 +1,10 @@
-import { BaseColor, colors } from '@/lib/rooms'
-import { AwarenessList, USER_IDLE_TIMEOUT, UserAwareness } from '@/lib/sync'
-import { HocuspocusProvider } from '@hocuspocus/provider'
+import { type BaseColor, colors } from '@/lib/rooms'
+import {
+  type AwarenessList,
+  USER_IDLE_TIMEOUT,
+  type UserAwareness,
+} from '@/lib/sync'
+import type { HocuspocusProvider } from '@hocuspocus/provider'
 import { useEffect, useMemo, useState } from 'react'
 
 type CursorsProps = {
@@ -36,9 +40,8 @@ export function Cursors({ provider }: CursorsProps) {
               user: { ...client.user, lastActive: Date.now() },
             },
           ] satisfies [number, UserAwareness]
-        } else {
-          return [clientId, client] satisfies [number, UserAwareness]
         }
+        return [clientId, client] satisfies [number, UserAwareness]
       })
 
       setAwarenessUsers(newAwarenessUsers)
@@ -59,6 +62,7 @@ export function Cursors({ provider }: CursorsProps) {
   }, [])
 
   // Insert awareness info into cursors with styles
+  // biome-ignore lint/correctness/useExhaustiveDependencies:
   const styleSheet = useMemo(() => {
     let cursorStyles = ''
 
@@ -90,5 +94,6 @@ export function Cursors({ provider }: CursorsProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [awarenessUsers, tick])
 
+  // biome-ignore lint/security/noDangerouslySetInnerHtml:
   return <style dangerouslySetInnerHTML={styleSheet} />
 }

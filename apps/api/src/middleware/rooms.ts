@@ -1,4 +1,11 @@
-import { db, schema, eq, Room, getTableColumns, or } from '@avelin/database'
+import {
+  type Room,
+  db,
+  eq,
+  getTableColumns,
+  or,
+  schema,
+} from '@avelin/database'
 import Elysia from 'elysia'
 import { omit } from 'remeda'
 

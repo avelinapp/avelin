@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "tsc --watch",
-    "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "tsc"
   },
   "exports": {
@@ -28,13 +27,9 @@
     "react": "^19"
   },
   "devDependencies": {
-    "@avelin/eslint-config": "workspace:*",
-    "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
     "@types/bun": "catalog:",
     "@types/react": "^19",
-    "eslint": "catalog:",
-    "typescript": "catalog:",
     "prettier": "catalog:"
   }
 }

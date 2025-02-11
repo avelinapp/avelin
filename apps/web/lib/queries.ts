@@ -1,7 +1,7 @@
 import {
+  QueryClient,
   defaultShouldDehydrateQuery,
   isServer,
-  QueryClient,
   queryOptions,
 } from '@tanstack/react-query'
 import { api } from './api'
@@ -30,14 +30,14 @@ export function getQueryClient() {
   if (isServer) {
     // Server: always make a new query client
     return makeQueryClient()
-  } else {
-    // Browser: make a new query client if we don't already have one
-    // This is very important, so we don't re-make a new client if React
-    // suspends during the initial render. This may not be needed if we
-    // have a suspense boundary BELOW the creation of the query client
-    if (!browserQueryClient) browserQueryClient = makeQueryClient()
-    return browserQueryClient
   }
+
+  // Browser: make a new query client if we don't already have one
+  // This is very important, so we don't re-make a new client if React
+  // suspends during the initial render. This may not be needed if we
+  // have a suspense boundary BELOW the creation of the query client
+  if (!browserQueryClient) browserQueryClient = makeQueryClient()
+  return browserQueryClient
 }
 
 const roomQueries = {
@@ -47,7 +47,7 @@ const roomQueries = {
       queryFn: async () => {
         const { data, error } = await api.rooms.index.get()
 
-        if (!!error) {
+        if (error) {
           throw new Error(error.value.error)
         }
 
@@ -73,7 +73,7 @@ const roomQueries = {
 const authQueries = {
   all: () => ['auth'],
   // check: () =>
-  // eslint-disable-next-line
+  // biome-ignore lint/suspicious/noExplicitAny:
   check: (headers: any = undefined) =>
     queryOptions({
       queryKey: [...authQueries.all(), 'check'],

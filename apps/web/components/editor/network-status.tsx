@@ -1,15 +1,14 @@
 'use client'
 
 import { useCodeRoom } from '@/providers/code-room-provider'
-import { useNetworkStatus } from '@avelin/ui/hooks'
-import { Badge } from '@avelin/ui/badge'
 import { ZapIcon } from '@avelin/icons'
+import { Badge } from '@avelin/ui/badge'
 import { cn } from '@avelin/ui/cn'
+import { useNetworkStatus } from '@avelin/ui/hooks'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@avelin/ui/tooltip'
-import { useCallback, useEffect, useState } from 'react'
 import { WebSocketStatus } from '@hocuspocus/provider'
+import { useCallback, useEffect, useState } from 'react'
 
-// eslint-disable-next-line
 interface NetworkStatusBadgeProps
   extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -44,9 +43,8 @@ export function NetworkStatusBadge({ className }: NetworkStatusBadgeProps) {
       }, 3000)
 
       return () => clearTimeout(timer)
-    } else {
-      setShow(true)
     }
+    setShow(true)
   }, [provider, syncStatus, isInitialSyncConnect, isOnline])
 
   const shouldRender =
@@ -56,45 +54,42 @@ export function NetworkStatusBadge({ className }: NetworkStatusBadgeProps) {
 
   return (
     <Tooltip delayDuration={0}>
-      <TooltipTrigger
-        asChild
-        className='font-mono tracking-tight'
-      >
+      <TooltipTrigger asChild className="font-mono tracking-tight">
         {!shouldRender ? null : !isOnline ? (
           <Badge
-            variant='secondary'
+            variant="secondary"
             className={cn(
               'inline-flex items-center gap-1',
               'animate-in fade-in-5 zoom-in-95 ease-out',
               className,
             )}
           >
-            <ZapIcon className='size-3 shrink-0' />
+            <ZapIcon className="size-3 shrink-0" />
             Offline
           </Badge>
         ) : provider.status !== 'connected' ? (
           <Badge
-            variant='secondary'
+            variant="secondary"
             className={cn(
               'inline-flex items-center gap-1 bg-orange-500/10 hover:bg-orange-500/15 border border-orange-500/25',
               'animate-in fade-in-5 zoom-in-95 ease-out',
               className,
             )}
           >
-            <ZapIcon className='size-3 shrink-0 text-orange-500' />
+            <ZapIcon className="size-3 shrink-0 text-orange-500" />
             Offline
           </Badge>
         ) : null}
       </TooltipTrigger>
       <TooltipContent
-        align='end'
+        align="end"
         collisionPadding={8}
-        className='text-xs space-y-1 max-w-[250px] py-4'
+        className="text-xs space-y-1 max-w-[250px] py-4"
       >
         {!isOnline ? (
-          <p className='font-semibold'>You are offline.</p>
+          <p className="font-semibold">You are offline.</p>
         ) : (
-          <p className='font-semibold'>You are not connected to Avelin Sync.</p>
+          <p className="font-semibold">You are not connected to Avelin Sync.</p>
         )}
         {isOnline && (
           <p>
@@ -110,7 +105,7 @@ export function NetworkStatusBadge({ className }: NetworkStatusBadgeProps) {
         </p>
         {isOnline && (
           <p
-            className='mt-1 font-semibold hover:underline'
+            className="mt-1 font-semibold hover:underline"
             onClick={handleReconnect}
           >
             Click here to reconnect.

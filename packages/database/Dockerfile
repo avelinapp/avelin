@@ -9,7 +9,8 @@ RUN apk update && \
 
 # Setup pnpm and turbo on the alpine base
 FROM alpine AS base
-RUN corepack enable
+# https://vercel.com/guides/corepack-errors-github-actions#quick-debug-steps
+RUN npm install -g corepack@latest && corepack enable
 # Replace <your-major-version> with the major version installed in your repository. For example:
 # RUN npm install turbo@2.1.3 --global
 RUN npm install turbo --global

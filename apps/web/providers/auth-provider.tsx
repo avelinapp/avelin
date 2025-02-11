@@ -1,7 +1,7 @@
 'use client'
 
 import { queries } from '@/lib/queries'
-import { Auth } from '@avelin/database'
+import type { Auth } from '@avelin/database'
 import { useQuery } from '@tanstack/react-query'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { createContext, useContext } from 'react'

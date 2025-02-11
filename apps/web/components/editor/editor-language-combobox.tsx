@@ -12,10 +12,10 @@ export function EditorLanguageCombobox() {
   const { editorLanguage, setEditorLanguage } = useCodeRoom()
 
   return (
-    <div className='flex items-center gap-2'>
+    <div className="flex items-center gap-2">
       <Combobox
-        name='language'
-        namePlural='languages'
+        name="language"
+        namePlural="languages"
         options={languageOptions}
         value={editorLanguage}
         onValueChange={(value) => {

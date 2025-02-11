@@ -26,12 +26,12 @@ export const RoomTitle = memo(function RoomTitle() {
             'font-medium text-base text-center transition-all border-transparent hover:border-color-border-subtle max-w-[400px]',
             'focus-visible:border-color-border-subtle overflow-ellipsis',
           )}
-          placeholder='Room title...'
+          placeholder="Room title..."
           value={value}
           onChange={(e) => {
             setValue(e.target.value)
           }}
-          size='xs'
+          size="xs"
           onBlur={(e) => {
             setRoomTitle(e.target.value)
           }}
@@ -48,7 +48,7 @@ export const RoomTitle = memo(function RoomTitle() {
           'ease-out data-[side=bottom]:slide-out-to-top-1 data-[side=left]:slide-out-to-right-1 data-[side=right]:slide-out-to-left-1 data-[side=top]:slide-out-to-bottom-1',
         )}
       >
-        Room title <span className='font-medium'>(click to edit)</span>
+        Room title <span className="font-medium">(click to edit)</span>
       </TooltipContent>
     </Tooltip>
   )

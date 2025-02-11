@@ -3,11 +3,11 @@
   "version": "0.8.1",
   "private": true,
   "scripts": {
+    "dev": "turbo run dev dev:tsc --concurrency=15",
+    "check": "biome check .",
+    "check:fix": "biome check . --write",
     "build": "turbo run build",
     "compile": "turbo run compile",
-    "dev": "turbo run dev dev:tsc --concurrency=15",
-    "lint": "turbo run lint --concurrency=100%",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "db:check": "turbo run db:check",
     "db:generate": "turbo run db:generate",
     "db:migrate": "turbo run db:migrate",
@@ -20,11 +20,11 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@release-it/conventional-changelog": "^9.0.2",
     "auto-changelog": "^2.5.0",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
-    "prettier": "catalog:",
     "release-it": "^17.10.0",
     "turbo": "catalog:",
     "typescript": "catalog:"

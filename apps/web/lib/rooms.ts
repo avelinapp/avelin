@@ -1,8 +1,8 @@
 import {
-  uniqueNamesGenerator,
+  type Config,
   adjectives,
   animals,
-  Config,
+  uniqueNamesGenerator,
 } from 'unique-names-generator'
 
 const config: Config = {
@@ -105,7 +105,7 @@ export function assignOption<T>(
   }
 
   // Find the minimum assignment count
-  let minCount = Infinity
+  let minCount = Number.POSITIVE_INFINITY
   for (const count of optionCounts.values()) {
     if (count < minCount) {
       minCount = count

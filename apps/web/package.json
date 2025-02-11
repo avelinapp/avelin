@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "lint": "tsc --noEmit && eslint . && prettier . --write",
     "build": "next build",
     "start": "next start"
   },
@@ -43,16 +42,11 @@
   },
   "devDependencies": {
     "@avelin/database": "workspace:*",
-    "@avelin/eslint-config": "workspace:*",
-    "@avelin/prettier-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
     "@types/node": "^20",
     "@types/react": "catalog:react18",
     "@types/react-dom": "catalog:react18",
-    "eslint": "catalog:",
-    "eslint-config-next": "catalog:react18",
     "postcss": "^8",
-    "prettier": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "undici-types": "^7.2.3"

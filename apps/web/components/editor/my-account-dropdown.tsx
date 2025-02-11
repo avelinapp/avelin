@@ -6,14 +6,14 @@ import {
   dashboardComingSoonToast,
   preferencesComingSoonToast,
 } from '@/lib/toasts'
-import { Auth } from '@avelin/database'
+import type { Auth } from '@avelin/database'
 import {
   HouseIcon,
   KeyRoundIcon,
   LogOutIcon,
   SettingsIcon,
 } from '@avelin/icons'
-import { Avatar, AvatarImage, AvatarFallback } from '@avelin/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
 import {
@@ -50,14 +50,14 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
       onSuccess: () => {
         toast('Logged out.', {
           id: LOGOUT_ACTION_TOAST_ID,
-          icon: <KeyRoundIcon className='size-4 shrink-0' />,
+          icon: <KeyRoundIcon className="size-4 shrink-0" />,
         })
         router.push('/login')
       },
       onError: (err) => {
         toast.error('Failed to log out.', {
           id: LOGOUT_ACTION_TOAST_ID,
-          icon: <KeyRoundIcon className='size-4 shrink-0' />,
+          icon: <KeyRoundIcon className="size-4 shrink-0" />,
           description: err.message,
         })
       },
@@ -65,14 +65,11 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
   }
 
   return (
-    <DropdownMenu
-      open={open}
-      onOpenChange={setOpen}
-    >
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button
-          variant='ghost'
-          className='h-fit w-fit p-0 relative rounded-full bg-none hover:bg-none group'
+          variant="ghost"
+          className="h-fit w-fit p-0 relative rounded-full bg-none hover:bg-none group"
           tooltip={{
             content: 'Account',
             collisionPadding: 8,
@@ -86,7 +83,7 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
             )}
           >
             <AvatarImage src={user?.picture ?? undefined} />
-            <AvatarFallback className='leading-none bg-gray-3 text-sm'>
+            <AvatarFallback className="leading-none bg-gray-3 text-sm">
               {user.name
                 .split(' ')
                 .map((s) => s[0]?.toUpperCase())
@@ -95,60 +92,51 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align='end'
-        className='min-w-[200px]'
-      >
-        <DropdownMenuItem className='justify-between gap-4 focus:bg-transparent'>
-          <Avatar className='size-7 shrink-0'>
+      <DropdownMenuContent align="end" className="min-w-[200px]">
+        <DropdownMenuItem className="justify-between gap-4 focus:bg-transparent">
+          <Avatar className="size-7 shrink-0">
             <AvatarImage src={user?.picture ?? undefined} />
-            <AvatarFallback className='leading-none bg-gray-3 text-sm'>
+            <AvatarFallback className="leading-none bg-gray-3 text-sm">
               {user.name
                 .split(' ')
                 .map((s) => s[0]?.toUpperCase())
                 .join('')}
             </AvatarFallback>
           </Avatar>
-          <div className='flex flex-col gap-1'>
-            <span className='font-medium text-color-text-primary'>
+          <div className="flex flex-col gap-1">
+            <span className="font-medium text-color-text-primary">
               {user.name}
             </span>
-            <span className='text-color-text-quaternary'>{user.email}</span>
+            <span className="text-color-text-quaternary">{user.email}</span>
           </div>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          className='group'
+          className="group"
           onSelect={handleDashboardClick}
           // asChild
         >
           <HouseIcon
             strokeWidth={2.25}
-            className='size-4 shrink-0 group-hover:text-color-text-primary'
+            className="size-4 shrink-0 group-hover:text-color-text-primary"
           />
           Dashboard
         </DropdownMenuItem>
         <DropdownMenuItem
-          className='group'
+          className="group"
           onSelect={preferencesComingSoonToast}
           // asChild
         >
           {/* <Link href={`/settings`}> */}
           <SettingsIcon
             strokeWidth={2.25}
-            className='size-4 shrink-0 group-hover:text-color-text-primary'
+            className="size-4 shrink-0 group-hover:text-color-text-primary"
           />
           Preferences
           {/* </Link> */}
         </DropdownMenuItem>
-        <DropdownMenuItem
-          className='group'
-          onClick={handleLogout}
-        >
-          <LogOutIcon
-            strokeWidth={2.25}
-            className='size-4 shrink-0'
-          />
+        <DropdownMenuItem className="group" onClick={handleLogout}>
+          <LogOutIcon strokeWidth={2.25} className="size-4 shrink-0" />
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

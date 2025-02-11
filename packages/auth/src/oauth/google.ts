@@ -1,4 +1,4 @@
-import { generateCodeVerifier, generateState, Google } from 'arctic'
+import { Google, generateCodeVerifier, generateState } from 'arctic'
 
 export const google = new Google(
   process.env.GOOGLE_CLIENT_ID!,

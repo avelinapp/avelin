@@ -1,16 +1,16 @@
 'use client'
 
-import { Button } from '@avelin/ui/button'
 import { CopyIcon, LinkIcon } from '@avelin/icons'
-import { useMemo } from 'react'
-import { toast } from '@avelin/ui/sonner'
+import { Button } from '@avelin/ui/button'
 import { useCopyToClipboard } from '@avelin/ui/hooks'
+import { toast } from '@avelin/ui/sonner'
+import { useMemo } from 'react'
 
 export function CopyRoomURL({ roomSlug }: { roomSlug: string }) {
   const [, copy] = useCopyToClipboard()
 
   const roomUrl = useMemo(
-    () => process.env.NEXT_PUBLIC_APP_URL + '/' + roomSlug,
+    () => `${process.env.NEXT_PUBLIC_APP_URL}/${roomSlug}`,
     [roomSlug],
   )
 
@@ -22,12 +22,12 @@ export function CopyRoomURL({ roomSlug }: { roomSlug: string }) {
         description: roomUrl,
         action: (
           <Button
-            size='xs'
-            variant='ghost'
-            className='p-1.5 h-fit rounded-md ml-auto'
+            size="xs"
+            variant="ghost"
+            className="p-1.5 h-fit rounded-md ml-auto"
             onClick={() => handleCopy(false)}
           >
-            <CopyIcon className='size-4 shrink-0' />
+            <CopyIcon className="size-4 shrink-0" />
           </Button>
         ),
       })
@@ -36,17 +36,14 @@ export function CopyRoomURL({ roomSlug }: { roomSlug: string }) {
 
   return (
     <Button
-      variant='default'
-      size='xs'
+      variant="default"
+      size="xs"
       onClick={() => handleCopy(true)}
       tooltip={{
         content: 'Copy room link',
       }}
     >
-      <LinkIcon
-        className='size-4 shrink-0'
-        strokeWidth={2.25}
-      />
+      <LinkIcon className="size-4 shrink-0" strokeWidth={2.25} />
       Share
     </Button>
   )
