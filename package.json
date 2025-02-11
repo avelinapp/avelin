@@ -17,7 +17,8 @@
     "release:patch": "release-it patch",
     "release:minor": "release-it minor",
     "release:major": "release-it major",
-    "prepare": "husky"
+    "prepare": "husky",
+    "install:vercel": "./scripts/vercel-submodule-workaround.sh && pnpm install"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

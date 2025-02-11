@@ -1,7 +1,7 @@
 'use client'
 
 import { useMonacoBinding } from '@/hooks/use-monaco-binding'
-import { jetbrainsMono } from '@/lib/fonts'
+import { berkeleyMono, jetbrainsMono } from '@/lib/fonts'
 import { useCodeRoom } from '@/providers/code-room-provider'
 import { type Monaco, default as MonacoEditor } from '@monaco-editor/react'
 import { KeyCode, KeyMod, type editor } from 'monaco-editor'
@@ -63,7 +63,6 @@ export function EditorTextArea({ className }: EditorProps) {
 
       setEditorMounted(true)
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
 
@@ -101,7 +100,8 @@ export function EditorTextArea({ className }: EditorProps) {
         options={{
           padding: { top: 16, bottom: 16 },
           fontSize: 16,
-          fontFamily: `${jetbrainsMono.style.fontFamily}`,
+          fontFamily: `${berkeleyMono.style.fontFamily}`,
+          letterSpacing: -0.25,
           fontLigatures: true,
           minimap: { enabled: false },
           renderLineHighlight: 'none',
