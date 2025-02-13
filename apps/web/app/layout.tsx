@@ -1,7 +1,6 @@
-import { berkeleyMono, jetbrainsMono } from '@/lib/fonts'
+import { berkeleyMono, innovatorGrotesk } from '@/lib/fonts'
 import type { Metadata } from 'next'
 import './globals.css'
-import '@/lib/fonts/innovator-grotesk.css'
 import '@avelin/ui/globals.css'
 import CommandMenu from '@/components/command-menu/command-menu'
 import Providers from '@/providers'
@@ -21,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${berkeleyMono.variable} font-sans font-settings antialiased bg-color-background h-screen w-screen`}
+        className={`${innovatorGrotesk.variable} ${berkeleyMono.variable} font-sans font-settings antialiased bg-color-background h-screen w-screen`}
       >
         <QueryClientProvider>
           <Providers>
