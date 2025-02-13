@@ -64,10 +64,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - app: web
-            dockerfile: ./apps/web/Dockerfile
-          - app: api
-            dockerfile: ./apps/api/Dockerfile
           - app: sync
             dockerfile: ./apps/sync/Dockerfile
           - app: migrate
@@ -108,11 +104,11 @@ jobs:
             ghcr.io/avelinapp/${{ matrix.app }}:${{ github.sha }}-amd64
             ghcr.io/avelinapp/${{ matrix.app }}:${{ needs.prepare.outputs.new_version }}-amd64
             ghcr.io/avelinapp/${{ matrix.app }}:v${{ needs.prepare.outputs.new_version }}-amd64
-          build-args: |
-            NEXT_PUBLIC_APP_URL=https://avelin.app
-            NEXT_PUBLIC_API_URL=https://api.avelin.app
-            NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
-            NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
+          # build-args: |
+          #   NEXT_PUBLIC_APP_URL=https://avelin.app
+          #   NEXT_PUBLIC_API_URL=https://api.avelin.app
+          #   NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+          #   NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -127,10 +123,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - app: web
-            dockerfile: ./apps/web/Dockerfile
-          - app: api
-            dockerfile: ./apps/api/Dockerfile
           - app: sync
             dockerfile: ./apps/sync/Dockerfile
           - app: migrate
@@ -170,11 +162,6 @@ jobs:
             ghcr.io/avelinapp/${{ matrix.app }}:${{ github.sha }}-arm64
             ghcr.io/avelinapp/${{ matrix.app }}:${{ needs.prepare.outputs.new_version }}-arm64
             ghcr.io/avelinapp/${{ matrix.app }}:v${{ needs.prepare.outputs.new_version }}-arm64
-          build-args: |
-            NEXT_PUBLIC_APP_URL=https://avelin.app
-            NEXT_PUBLIC_API_URL=https://api.avelin.app
-            NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
-            NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -198,7 +185,7 @@ jobs:
         run: |
           VERSION=${{ needs.prepare.outputs.new_version }}
 
-          APPS=("web" "api" "sync" "migrate")
+          APPS=("sync" "migrate")
 
           for app in "${APPS[@]}"; do
             DIGEST_AMD64=$(docker manifest inspect ghcr.io/avelinapp/$app:${{ github.sha }}-amd64 | jq -r '.manifests[] | select(.platform.architecture == "amd64" and .platform.os == "linux") | .digest')
@@ -237,8 +224,8 @@ jobs:
       - name: Checkout IaC repo
         uses: actions/checkout@v4
         with:
-          repository: bazzalabs/orion
-          token: ${{ secrets.GH_BAZZALABS_ORION_SECRET }}
+          repository: avelinapp/iac
+          token: ${{ secrets.GH_IAC_SECRET }}
           fetch-depth: 0
           path: iac
 
@@ -246,7 +233,7 @@ jobs:
         working-directory: iac
         run: |
           VERSION=v${{ needs.prepare.outputs.new_version }}
-          apps=("web" "api" "sync")
+          apps=("sync")
           manifests_dir="gitops/cluster-apps/avelin"
           for app in "${apps[@]}"; do
             manifest="$manifests_dir/$app/${app}-deploy.yaml"
