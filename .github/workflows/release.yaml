@@ -5,6 +5,7 @@ concurrency:
   cancel-in-progress: false # Queues new runs instead of canceling
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -64,6 +65,8 @@ jobs:
     strategy:
       matrix:
         include:
+          - app: web
+            dockerfile: ./apps/web/Dockerfile
           - app: api
             dockerfile: ./apps/api/Dockerfile
           - app: sync
@@ -76,6 +79,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Checkout submodule for static assets
+        uses: actions/checkout@v4
+        with:
+          repository: avelinapp/assets
+          path: apps/web/static
+          token: ${{ secrets.GH_AVELINAPP_RO_ACCESS }}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -99,6 +109,11 @@ jobs:
             ghcr.io/avelinapp/${{ matrix.app }}:${{ github.sha }}-amd64
             ghcr.io/avelinapp/${{ matrix.app }}:${{ needs.prepare.outputs.new_version }}-amd64
             ghcr.io/avelinapp/${{ matrix.app }}:v${{ needs.prepare.outputs.new_version }}-amd64
+          build-args: |
+            NEXT_PUBLIC_APP_URL=https://avelin.app
+            NEXT_PUBLIC_API_URL=https://api.avelin.app
+            NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+            NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -113,6 +128,8 @@ jobs:
     strategy:
       matrix:
         include:
+          - app: web
+            dockerfile: ./apps/web/Dockerfile
           - app: api
             dockerfile: ./apps/api/Dockerfile
           - app: sync
@@ -125,6 +142,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Checkout submodule for static assets
+        uses: actions/checkout@v4
+        with:
+          repository: avelinapp/assets
+          path: apps/web/static
+          token: ${{ secrets.GH_AVELINAPP_RO_ACCESS }}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -147,6 +171,11 @@ jobs:
             ghcr.io/avelinapp/${{ matrix.app }}:${{ github.sha }}-arm64
             ghcr.io/avelinapp/${{ matrix.app }}:${{ needs.prepare.outputs.new_version }}-arm64
             ghcr.io/avelinapp/${{ matrix.app }}:v${{ needs.prepare.outputs.new_version }}-arm64
+          build-args: |
+            NEXT_PUBLIC_APP_URL=https://avelin.app
+            NEXT_PUBLIC_API_URL=https://api.avelin.app
+            NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+            NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -170,7 +199,7 @@ jobs:
         run: |
           VERSION=${{ needs.prepare.outputs.new_version }}
 
-          APPS=("api" "sync" "migrate")
+          APPS=("web" "api" "sync" "migrate")
 
           for app in "${APPS[@]}"; do
             DIGEST_AMD64=$(docker manifest inspect ghcr.io/avelinapp/$app:${{ github.sha }}-amd64 | jq -r '.manifests[] | select(.platform.architecture == "amd64" and .platform.os == "linux") | .digest')
@@ -218,7 +247,7 @@ jobs:
         working-directory: bazzalabs-orion
         run: |
           VERSION=v${{ needs.prepare.outputs.new_version }}
-          apps=("api" "sync")
+          apps=("web" "api" "sync")
           manifests_dir="gitops/cluster-apps/avelin"
           for app in "${apps[@]}"; do
             manifest="$manifests_dir/$app/${app}-deploy.yaml"
@@ -269,7 +298,7 @@ jobs:
         working-directory: avelinapp-iac
         run: |
           VERSION=v${{ needs.prepare.outputs.new_version }}
-          apps=("api" "sync")
+          apps=("web" "api" "sync")
           manifests_dir="gitops/cluster-apps/avelin"
           for app in "${apps[@]}"; do
             manifest="$manifests_dir/$app/${app}-deploy.yaml"
