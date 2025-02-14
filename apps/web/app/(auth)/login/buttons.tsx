@@ -1,5 +1,6 @@
 'use client'
 
+import { env } from '@/lib/env'
 import { LogoGoogle } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import Link from 'next/link'
@@ -10,7 +11,7 @@ export const LoginWithGoogle = () => {
 
   const redirect = searchParams.get('redirect')
 
-  let linkUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`
+  let linkUrl = `${env.NEXT_PUBLIC_API_URL}/auth/google`
 
   if (redirect) {
     linkUrl += `?redirect=${encodeURIComponent(redirect)}`

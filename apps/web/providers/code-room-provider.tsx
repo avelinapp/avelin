@@ -1,6 +1,7 @@
 'use client'
 
 import { type Language, languages } from '@/lib/constants'
+import { env } from '@/lib/env'
 import { assignOption, baseColors, generateUniqueName } from '@/lib/rooms'
 import {
   type AwarenessChange,
@@ -277,7 +278,7 @@ export const createCodeRoomStore = () =>
 
       if (!networkProvider) {
         const ws = new HocuspocusProvider({
-          url: process.env.NEXT_PUBLIC_SYNC_URL as string,
+          url: env.NEXT_PUBLIC_SYNC_URL as string,
           name: room.id,
           document: ydoc,
           awareness: get().awareness,

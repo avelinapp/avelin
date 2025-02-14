@@ -1,9 +1,11 @@
+import { env } from './env'
+
 export const delay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms))
 
 export function getPrettyHostname(input?: string | URL) {
   const url = !input
-    ? new URL(process.env.NEXT_PUBLIC_APP_URL as string)
+    ? new URL(env.NEXT_PUBLIC_APP_URL)
     : input instanceof URL
       ? input
       : new URL(input)

@@ -1,5 +1,6 @@
 'use client'
 
+import { env } from '@/lib/env'
 import { CopyIcon, LinkIcon } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { useCopyToClipboard } from '@avelin/ui/hooks'
@@ -10,7 +11,7 @@ export function CopyRoomURL({ roomSlug }: { roomSlug: string }) {
   const [, copy] = useCopyToClipboard()
 
   const roomUrl = useMemo(
-    () => `${process.env.NEXT_PUBLIC_APP_URL}/${roomSlug}`,
+    () => `${env.NEXT_PUBLIC_APP_URL}/${roomSlug}`,
     [roomSlug],
   )
 
