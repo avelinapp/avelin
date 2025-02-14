@@ -19,7 +19,7 @@ export const env = createEnv({
     /* Avelin microservice URLs */
     API_URL: z.string().url(),
     APP_URL: z.string().url(),
-    API_PORT: z.coerce.number(),
+    API_PORT: z.coerce.number().default(4000),
 
     /* Avelin Sync */
     HOCUSPOCUS_WEBHOOK_SECRET: z.string().min(1),
