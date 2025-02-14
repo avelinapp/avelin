@@ -64,6 +64,8 @@ jobs:
     strategy:
       matrix:
         include:
+          - app: api
+            dockerfile: ./apps/api/Dockerfile
           - app: sync
             dockerfile: ./apps/sync/Dockerfile
           - app: migrate
@@ -104,11 +106,6 @@ jobs:
             ghcr.io/avelinapp/${{ matrix.app }}:${{ github.sha }}-amd64
             ghcr.io/avelinapp/${{ matrix.app }}:${{ needs.prepare.outputs.new_version }}-amd64
             ghcr.io/avelinapp/${{ matrix.app }}:v${{ needs.prepare.outputs.new_version }}-amd64
-          # build-args: |
-          #   NEXT_PUBLIC_APP_URL=https://avelin.app
-          #   NEXT_PUBLIC_API_URL=https://api.avelin.app
-          #   NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
-          #   NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -123,6 +120,8 @@ jobs:
     strategy:
       matrix:
         include:
+          - app: api
+            dockerfile: ./apps/api/Dockerfile
           - app: sync
             dockerfile: ./apps/sync/Dockerfile
           - app: migrate
@@ -185,7 +184,7 @@ jobs:
         run: |
           VERSION=${{ needs.prepare.outputs.new_version }}
 
-          APPS=("sync" "migrate")
+          APPS=("api" "sync" "migrate")
 
           for app in "${APPS[@]}"; do
             DIGEST_AMD64=$(docker manifest inspect ghcr.io/avelinapp/$app:${{ github.sha }}-amd64 | jq -r '.manifests[] | select(.platform.architecture == "amd64" and .platform.os == "linux") | .digest')
@@ -213,8 +212,8 @@ jobs:
             docker manifest push ghcr.io/avelinapp/$app:v$VERSION
           done
 
-  update-iac:
-    name: Update IaC Manifests
+  update-manifests-bazzalabs-orion:
+    name: Update manifests in bazzalabs/orion
     runs-on: ubuntu-24.04
     needs: [prepare, create-manifests]
     permissions:
@@ -224,16 +223,16 @@ jobs:
       - name: Checkout IaC repo
         uses: actions/checkout@v4
         with:
-          repository: avelinapp/iac
-          token: ${{ secrets.GH_IAC_SECRET }}
+          repository: bazzalabs/orion
+          token: ${{ secrets.GH_BAZZALABS_ORION_SECRET }}
           fetch-depth: 0
-          path: iac
+          path: bazzalabs-orion
 
       - name: Update K8s manifests
-        working-directory: iac
+        working-directory: bazzalabs-orion
         run: |
           VERSION=v${{ needs.prepare.outputs.new_version }}
-          apps=("sync")
+          apps=("api" "sync")
           manifests_dir="gitops/cluster-apps/avelin"
           for app in "${apps[@]}"; do
             manifest="$manifests_dir/$app/${app}-deploy.yaml"
@@ -256,7 +255,58 @@ jobs:
           fi
 
       - name: Commit and Push IaC changes
-        working-directory: iac
+        working-directory: avelinapp-iac
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git add .
+          git commit -m "chore: update manifests to v${{ needs.prepare.outputs.new_version }}"
+          git push
+
+  update-manifests-avelinapp-iac:
+    name: Update manifests in avelinapp/iac
+    runs-on: ubuntu-24.04
+    needs: [prepare, create-manifests]
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout IaC repo
+        uses: actions/checkout@v4
+        with:
+          repository: avelinapp/iac
+          token: ${{ secrets.GH_IAC_SECRET }}
+          fetch-depth: 0
+          path: avelinapp-iac
+
+      - name: Update K8s manifests
+        working-directory: avelinapp-iac
+        run: |
+          VERSION=v${{ needs.prepare.outputs.new_version }}
+          apps=("api" "sync")
+          manifests_dir="gitops/cluster-apps/avelin"
+          for app in "${apps[@]}"; do
+            manifest="$manifests_dir/$app/${app}-deploy.yaml"
+            if [ -f "$manifest" ]; then
+              echo "Updating image tag in $manifest to $VERSION"
+              yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/$app:$VERSION\"" "$manifest"
+            else
+              echo "Manifest file $manifest not found!"
+              exit 1
+            fi
+          done
+
+          manifest="$manifests_dir/shared/db-migration-job.yaml"
+          if [ -f "$manifest" ]; then
+            echo "Updating image tag in $manifest to $VERSION"
+            yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/migrate:$VERSION\"" "$manifest"
+          else
+            echo "Manifest file $manifest not found!"
+            exit 1
+          fi
+
+      - name: Commit and Push IaC changes
+        working-directory: avelinapp-iac
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
@@ -267,7 +317,7 @@ jobs:
   create-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: [update-iac]
+    needs: [update-manifests-bazzalabs-orion, update-manifests-avelinapp-iac]
     permissions:
       contents: write
 
