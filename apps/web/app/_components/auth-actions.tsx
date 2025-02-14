@@ -40,7 +40,7 @@ export const AuthenticatedActions = ({ user }: { user: Auth['user'] }) => {
 
   function handleDashboardClick() {
     if (!FF_dashboard) {
-      dashboardComingSoonToast()
+      return dashboardComingSoonToast()
     }
 
     router.push('/dashboard')
