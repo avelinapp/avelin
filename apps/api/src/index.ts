@@ -5,8 +5,6 @@ import { env } from './env'
 import { auth } from './routes/auth'
 import { rooms } from './routes/rooms'
 
-const PORT = env.API_PORT || 4000
-
 export const app = new Elysia()
   .use(
     swagger({
@@ -23,6 +21,6 @@ export const app = new Elysia()
   .get('/health', () => ({ message: 'Avelin API is running.' }))
   .use(auth)
   .use(rooms)
-  .listen(PORT, ({ hostname, port }) => {
+  .listen(env.API_PORT, ({ hostname, port }) => {
     console.log(`🦊 Elysia is running at ${hostname}:${port}`)
   })
