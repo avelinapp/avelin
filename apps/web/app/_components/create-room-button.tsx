@@ -14,7 +14,7 @@ export default function CreateRoomButton() {
   const createRoom = () =>
     mutate(undefined, {
       onSuccess: (data) => {
-        router.push(`/${data.slug}`)
+        router.push(`/rooms/${data.slug}`)
       },
     })
 
