@@ -12,28 +12,32 @@ import {
   TrashIcon,
 } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
+import { cn } from '@avelin/ui/cn'
 import { FadeInContainer } from '@avelin/ui/fade-in-container'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { EmptyDashboardIcon } from './_components/empty-state-icon'
 
 export default function Page() {
   const router = useRouter()
   const { data, error, isPending } = useQuery(queries.rooms.all())
   const { user, isPending: isAuthPending } = useAuth()
 
+  const dashboardIsEmpty = !isPending && !error && !data.length
+
   const createRoom = useCreateRoom()
 
   async function handleCreateRoom() {
     const data = await createRoom.mutateAsync()
 
-    router.push(`/${data.slug}`)
+    router.push(`/rooms/${data.slug}`)
   }
 
   if (isAuthPending) return null
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 h-full">
       <div className="space-y-2">
         <h1 className="text-3xl font-semibold">
           Welcome back,{' '}
@@ -46,19 +50,42 @@ export default function Page() {
         </p>
       </div>
       <div>
-        <Button onClick={handleCreateRoom}>
+        <Button
+          className={cn((isPending || dashboardIsEmpty) && 'hidden')}
+          onClick={handleCreateRoom}
+        >
           <PlusIcon className="size-fit" />
           Create
         </Button>
       </div>
-      <div>
+      <div className="flex-1">
         {isPending ? null : error ? (
           <div>Error: {error.message}</div>
         ) : (
-          <FadeInContainer className="flex flex-col gap-1">
-            {data.map((room) => (
-              <CodeRoomListItem key={room.id} room={room} />
-            ))}
+          <FadeInContainer className="h-full flex flex-col gap-1">
+            {dashboardIsEmpty ? (
+              <div className="flex items-center gap-8 m-auto">
+                <EmptyDashboardIcon className="size-32 stroke-gray-8 stroke-1" />
+                <div className="space-y-4">
+                  <p className="font-medium">Create or join a code room</p>
+                  <div>
+                    <p>
+                      Your code rooms will be available to you from this
+                      dashboard.
+                    </p>
+                    <p>You can get started by creating a code room.</p>
+                  </div>
+                  <Button
+                    onClick={handleCreateRoom}
+                    disabled={createRoom.isPending}
+                  >
+                    Create room
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              data.map((room) => <CodeRoomListItem key={room.id} room={room} />)
+            )}
           </FadeInContainer>
         )}
       </div>
@@ -97,7 +124,7 @@ const CodeRoomListItem = ({
             content: 'Open code room',
           }}
         >
-          <Link href={`/${room.slug}`}>
+          <Link href={`/rooms/${room.slug}`}>
             <SquareArrowUpRightIcon className="size-fit" />
           </Link>
         </Button>
