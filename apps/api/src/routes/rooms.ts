@@ -9,6 +9,7 @@ import {
   eq,
   getTableColumns,
   isNull,
+  or,
   schema,
   sql,
 } from '@avelin/database'
@@ -81,18 +82,21 @@ export const rooms = new Elysia({ prefix: '/rooms' })
       .get('/', async ({ user, error }) => {
         try {
           const rooms = await db
-            .select({
+            .selectDistinct({
               ...omit(getTableColumns(schema.rooms), ['ydoc']),
               lastAccessedAt: schema.roomParticipants.lastAccessedAt,
             })
             .from(schema.rooms)
-            .innerJoin(
+            .leftJoin(
               schema.roomParticipants,
               eq(schema.rooms.id, schema.roomParticipants.roomId),
             )
             .where(
               and(
-                eq(schema.roomParticipants.userId, user.id),
+                or(
+                  eq(schema.roomParticipants.userId, user.id),
+                  eq(schema.rooms.creatorId, user.id),
+                ),
                 isNull(schema.rooms.deletedAt),
               ),
             )
