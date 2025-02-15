@@ -72,7 +72,19 @@ const roomQueries = {
 
 const authQueries = {
   all: () => ['auth'],
-  // check: () =>
+  token: () =>
+    queryOptions({
+      queryKey: [...authQueries.all(), 'token'],
+      queryFn: async () => {
+        const { data, error } = await api.auth.token.refresh.get()
+
+        if (!error) {
+          return data.token
+        }
+
+        throw new Error('Error refreshing token.')
+      },
+    }),
   // biome-ignore lint/suspicious/noExplicitAny:
   check: (headers: any = undefined) =>
     queryOptions({

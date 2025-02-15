@@ -14,6 +14,8 @@ import {
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
 import { FadeInContainer } from '@avelin/ui/fade-in-container'
+import type { ZeroSchema } from '@avelin/zero'
+import { useZero, useQuery as useZeroQuery } from '@rocicorp/zero/react'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -35,7 +37,19 @@ export default function Page() {
     router.push(`/rooms/${data.slug}`)
   }
 
-  if (isAuthPending) return null
+  const z = useZero<ZeroSchema>()
+
+  /*
+   * HEY! This next line is where we can test that TypeScript does not pick up our schema.
+   */
+  // const q = z.query.users
+  // q.hash()
+
+  // const [rooms] = useZeroQuery(q)
+
+  // console.log('rooms', rooms)
+
+  // if (isAuthPending) return null
 
   return (
     <div className="flex flex-col gap-4 h-full">
@@ -60,37 +74,38 @@ export default function Page() {
           Create
         </Button>
       </div>
-      <div className="flex-1">
-        {isPending ? null : error ? (
-          <div>Error: {error.message}</div>
-        ) : (
-          <FadeInContainer className="h-full flex flex-col gap-1">
-            {dashboardIsEmpty ? (
-              <div className="flex items-center gap-8 m-auto">
-                <EmptyDashboardIcon className="size-32 stroke-gray-8 stroke-1" />
-                <div className="space-y-4">
-                  <p className="font-medium">Create or join a code room</p>
-                  <div>
-                    <p>
-                      Your code rooms will be available to you from this
-                      dashboard.
-                    </p>
-                    <p>You can get started by creating a code room.</p>
-                  </div>
-                  <Button
-                    onClick={handleCreateRoom}
-                    disabled={createRoom.isPending}
-                  >
-                    Create room
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              data.map((room) => <CodeRoomListItem key={room.id} room={room} />)
-            )}
-          </FadeInContainer>
-        )}
-      </div>
+      {/* <pre>{JSON.stringify(rooms, null, '\t')}</pre> */}
+      {/* <div className="flex-1"> */}
+      {/*   {isPending ? null : error ? ( */}
+      {/*     <div>Error: {error.message}</div> */}
+      {/*   ) : ( */}
+      {/*     <FadeInContainer className="h-full flex flex-col gap-1"> */}
+      {/*       {dashboardIsEmpty ? ( */}
+      {/*         <div className="flex items-center gap-8 m-auto"> */}
+      {/*           <EmptyDashboardIcon className="size-32 stroke-gray-8 stroke-1" /> */}
+      {/*           <div className="space-y-4"> */}
+      {/*             <p className="font-medium">Create or join a code room</p> */}
+      {/*             <div> */}
+      {/*               <p> */}
+      {/*                 Your code rooms will be available to you from this */}
+      {/*                 dashboard. */}
+      {/*               </p> */}
+      {/*               <p>You can get started by creating a code room.</p> */}
+      {/*             </div> */}
+      {/*             <Button */}
+      {/*               onClick={handleCreateRoom} */}
+      {/*               disabled={createRoom.isPending} */}
+      {/*             > */}
+      {/*               Create room */}
+      {/*             </Button> */}
+      {/*           </div> */}
+      {/*         </div> */}
+      {/*       ) : ( */}
+      {/*         data.map((room) => <CodeRoomListItem key={room.id} room={room} />) */}
+      {/*       )} */}
+      {/*     </FadeInContainer> */}
+      {/*   )} */}
+      {/* </div> */}
     </div>
   )
 }

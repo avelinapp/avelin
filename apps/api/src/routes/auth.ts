@@ -15,6 +15,7 @@ import type { Response } from 'undici-types'
 import { env } from '../env'
 import { authMiddleware } from '../middleware/auth'
 import { linkAnonymousToRealAccount } from '../utils/auth.utils'
+import { createAuthJwt } from '../utils/jwt.utils'
 
 export const auth = new Elysia({ prefix: '/auth' })
   .guard({}, (app) =>
@@ -49,41 +50,53 @@ export const auth = new Elysia({ prefix: '/auth' })
           session: auth.session,
         }
       })
-      .post('/anonymous', async ({ cookie: { avelin_session_id }, error }) => {
-        try {
-          const user = await createAnonymousUser({ db })
-          const session = await createSession(user.id, { db })
+      .post(
+        '/anonymous',
+        async ({ cookie: { avelin_session_id, avelin_jwt }, error }) => {
+          try {
+            const user = await createAnonymousUser({ db })
+            const session = await createSession(user.id, { db })
 
-          avelin_session_id?.set({
-            value: session.id,
-            path: '/',
-            httpOnly: true,
-            secure: env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            expires: session.expiresAt,
-            domain: `.${env.BASE_DOMAIN}`,
-          })
+            avelin_session_id?.set({
+              value: session.id,
+              path: '/',
+              httpOnly: true,
+              secure: env.NODE_ENV === 'production',
+              sameSite: 'lax',
+              expires: session.expiresAt,
+              domain: `.${env.BASE_DOMAIN}`,
+            })
 
-          return {
-            isAuthenticated: true,
-            isAnonymous: true,
-            user,
-            session,
-          }
-        } catch (err) {
-          if (err instanceof Error) {
+            avelin_jwt?.set({
+              value: await createAuthJwt({ user }),
+              path: '/',
+              httpOnly: false,
+              sameSite: 'lax',
+              expires: session.expiresAt,
+              domain: `.${env.BASE_DOMAIN}`,
+            })
+
+            return {
+              isAuthenticated: true,
+              isAnonymous: true,
+              user,
+              session,
+            }
+          } catch (err) {
+            if (err instanceof Error) {
+              return error(500, {
+                error:
+                  err.message ??
+                  'Failed to create anonymous user - unknown error.',
+              })
+            }
+
             return error(500, {
-              error:
-                err.message ??
-                'Failed to create anonymous user - unknown error.',
+              error: 'Failed to create anonymous user - unknown error.',
             })
           }
-
-          return error(500, {
-            error: 'Failed to create anonymous user - unknown error.',
-          })
-        }
-      })
+        },
+      )
       .get(
         '/google',
         async ({
@@ -153,6 +166,7 @@ export const auth = new Elysia({ prefix: '/auth' })
             google_code_verifier,
             post_login_redirect,
             avelin_session_id,
+            avelin_jwt,
           },
           error,
           redirect,
@@ -230,6 +244,14 @@ export const auth = new Elysia({ prefix: '/auth' })
               domain: `.${env.BASE_DOMAIN}`,
             })
 
+            avelin_jwt?.set({
+              value: await createAuthJwt({ user: existingUser }),
+              path: '/',
+              httpOnly: false,
+              sameSite: 'lax',
+              domain: `.${env.BASE_DOMAIN}`,
+            })
+
             post_login_redirect?.set({
               value: '',
               path: '/',
@@ -272,6 +294,14 @@ export const auth = new Elysia({ prefix: '/auth' })
             domain: `.${env.BASE_DOMAIN}`,
           })
 
+          avelin_jwt?.set({
+            value: await createAuthJwt({ user: newUser }),
+            path: '/',
+            httpOnly: false,
+            sameSite: 'lax',
+            domain: `.${env.BASE_DOMAIN}`,
+          })
+
           post_login_redirect?.set({
             value: '',
             path: '/',
@@ -290,16 +320,39 @@ export const auth = new Elysia({ prefix: '/auth' })
         console.log('ctx.session', ctx.session)
         return { user: ctx.user, session: ctx.session }
       })
-      .post('/logout', async ({ session, cookie: { avelin_session_id } }) => {
-        await invalidateSession(session.id, { db })
+      .get('/token/refresh', async ({ user, cookie: { avelin_jwt } }) => {
+        const jwt = await createAuthJwt({ user })
 
-        avelin_session_id?.set({
-          value: '',
+        avelin_jwt?.set({
+          value: jwt,
           path: '/',
-          expires: new Date(0),
+          httpOnly: false,
+          sameSite: 'lax',
           domain: `.${env.BASE_DOMAIN}`,
         })
 
-        return { message: 'Logged out successfully.' }
-      }),
+        return { token: jwt }
+      })
+      .post(
+        '/logout',
+        async ({ session, cookie: { avelin_session_id, avelin_jwt } }) => {
+          await invalidateSession(session.id, { db })
+
+          avelin_session_id?.set({
+            value: '',
+            path: '/',
+            expires: new Date(0),
+            domain: `.${env.BASE_DOMAIN}`,
+          })
+
+          avelin_jwt?.set({
+            value: '',
+            path: '/',
+            expires: new Date(0),
+            domain: `.${env.BASE_DOMAIN}`,
+          })
+
+          return { message: 'Logged out successfully.' }
+        },
+      ),
   )

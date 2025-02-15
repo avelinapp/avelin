@@ -1,5 +1,5 @@
 import { schema as drizzleSchema } from '@avelin/database'
-import { ANYONE_CAN, definePermissions } from '@rocicorp/zero'
+import { definePermissions } from '@rocicorp/zero'
 import { createZeroSchema } from 'drizzle-zero'
 
 export const schema = createZeroSchema(drizzleSchema, {
@@ -21,14 +21,14 @@ export const schema = createZeroSchema(drizzleSchema, {
     oauthAccounts: false,
     rooms: {
       id: true,
-      slug: true,
+      slug: false,
       ydoc: false,
-      title: true,
-      editorLanguage: true,
-      creatorId: true,
+      title: false,
+      editorLanguage: false,
+      creatorId: false,
       createdAt: false,
       updatedAt: false,
-      deletedAt: true,
+      deletedAt: false,
     },
     roomParticipants: {
       roomId: true,
@@ -46,22 +46,34 @@ export const schema = createZeroSchema(drizzleSchema, {
   },
 })
 
-type AuthJWT = {
+// const rooms = table('rooms')
+//   .columns({
+//     id: string(),
+//     slug: string(),
+//     title: string().optional(),
+//     editorLanguage: string(),
+//   })
+//   .primaryKey('id')
+//
+// const roomsRelationships = relationships(rooms, ({ one, many }) => ({}))
+//
+// export const schema = createSchema(1, {
+//   tables: [rooms],
+//   relationships: [roomsRelationships],
+// })
+
+export type AuthJWT = {
   sub: string
+  iat: number
+  name: string
+  picture: string | null
+  email: string
+  isAnonymous: boolean | null
 }
 
-type ZeroSchema = typeof schema
+export type Schema = typeof schema
+export type ZeroSchema = Schema
 
-export const permissions = definePermissions<AuthJWT, ZeroSchema>(
-  schema,
-  () => {
-    return {
-      users: {
-        select: ANYONE_CAN,
-        create: ANYONE_CAN,
-        update: ANYONE_CAN,
-        delete: ANYONE_CAN,
-      },
-    }
-  },
-)
+export const permissions = definePermissions<AuthJWT, Schema>(schema, () => {
+  return {}
+})

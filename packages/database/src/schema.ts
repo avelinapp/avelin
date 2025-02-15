@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm'
 import { pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
 import { boolean } from 'drizzle-orm/pg-core'
 import type { AnyPgColumn } from 'drizzle-orm/pg-core'
@@ -19,6 +20,17 @@ export const users = pgTable('users', {
   ...timestamps,
 })
 
+export const usersRelations = relations(users, ({ one, many }) => ({
+  oauthAccounts: many(oauthAccounts),
+  linkedUser: one(users, {
+    fields: [users.linkedUserId],
+    references: [users.id],
+  }),
+  sessions: many(sessions),
+  createdRooms: many(rooms),
+  joinedRooms: many(roomParticipants),
+}))
+
 export const oauthAccounts = pgTable(
   'oauth_accounts',
   {
@@ -36,6 +48,13 @@ export const oauthAccounts = pgTable(
   },
 )
 
+export const oauthAccountsRelations = relations(oauthAccounts, ({ one }) => ({
+  user: one(users, {
+    fields: [oauthAccounts.userId],
+    references: [users.id],
+  }),
+}))
+
 export const sessions = pgTable('sessions', {
   id: text().primaryKey(),
   userId: text()
@@ -48,6 +67,13 @@ export const sessions = pgTable('sessions', {
   ...timestamps,
 })
 
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, {
+    fields: [sessions.userId],
+    references: [users.id],
+  }),
+}))
+
 export const rooms = pgTable('rooms', {
   id: text().primaryKey(),
   slug: text().unique(),
@@ -59,6 +85,14 @@ export const rooms = pgTable('rooms', {
   creatorId: text().references(() => users.id, { onDelete: 'cascade' }),
   ...timestamps,
 })
+
+export const roomsRelations = relations(rooms, ({ one, many }) => ({
+  creator: one(users, {
+    fields: [rooms.creatorId],
+    references: [users.id],
+  }),
+  roomParticipants: many(roomParticipants),
+}))
 
 export const roomParticipants = pgTable(
   'room_participants',
@@ -81,10 +115,29 @@ export const roomParticipants = pgTable(
   },
 )
 
+export const roomParticipantsRelations = relations(
+  roomParticipants,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [roomParticipants.userId],
+      references: [users.id],
+    }),
+    room: one(rooms, {
+      fields: [roomParticipants.roomId],
+      references: [rooms.id],
+    }),
+  }),
+)
+
 export const schema = {
   users,
   sessions,
   oauthAccounts,
   rooms,
   roomParticipants,
+  usersRelations,
+  sessionsRelations,
+  oauthAccountsRelations,
+  roomsRelations,
+  roomParticipantsRelations,
 }

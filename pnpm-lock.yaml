@@ -107,6 +107,9 @@ importers:
       '@avelin/id':
         specifier: workspace:*
         version: link:../../packages/id
+      '@avelin/zero':
+        specifier: workspace:*
+        version: link:../../packages/zero
       '@elysiajs/cors':
         specifier: ^1.2.0
         version: 1.2.0(elysia@1.2.10(@sinclair/typebox@0.34.16)(openapi-types@12.1.3)(typescript@5.7.3))
@@ -128,6 +131,9 @@ importers:
       elysia:
         specifier: 1.2.10
         version: 1.2.10(@sinclair/typebox@0.34.16)(openapi-types@12.1.3)(typescript@5.7.3)
+      jose:
+        specifier: ^5.9.6
+        version: 5.9.6
       remeda:
         specifier: ^2.19.2
         version: 2.20.1
@@ -265,6 +271,12 @@ importers:
       jiti:
         specifier: ^2.4.2
         version: 2.4.2
+      jose:
+        specifier: ^5.9.6
+        version: 5.9.6
+      js-cookie:
+        specifier: ^3.0.5
+        version: 3.0.5
       monaco-editor:
         specifier: 0.50.0
         version: 0.50.0
@@ -332,6 +344,9 @@ importers:
       '@avelin/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      '@types/js-cookie':
+        specifier: ^3.0.6
+        version: 3.0.6
       '@types/node':
         specifier: ^20
         version: 20.17.17
@@ -2664,6 +2679,9 @@ packages:
   '@types/http-errors@2.0.4':
     resolution: {integrity: sha512-D0CFMMtydbJAegzOyHjtiKPLlvnm3iTZyZRSZoLq2mRhDdmLfIWOCYPfQJ4cu2erKghU++QvjcUjp/5h7hESpA==}
 
+  '@types/js-cookie@3.0.6':
+    resolution: {integrity: sha512-wkw9yd1kEXOPnvEeEV1Go1MmxtBJL0RR79aOTAApecWFVu7w0NNXNqhcWgvw2YgZDYadliXkl14pa3WXw5jlCQ==}
+
   '@types/linkify-it@5.0.0':
     resolution: {integrity: sha512-sVDA58zAw4eWAffKOaQH5/5j3XeayukzDk+ewSsnv3p4yJEZHCCzMDiZM8e0OUrRvmpGZ85jf4yDHkHsgBNr9Q==}
 
@@ -4098,6 +4116,10 @@ packages:
 
   jose@5.9.6:
     resolution: {integrity: sha512-AMlnetc9+CV9asI19zHmrgS/WYsWUwCn2R7RzlbJWD7F9eWYUTGyBmU9o6PxngtLGOiDGPRu+Uc4fhKzbpteZQ==}
+
+  js-cookie@3.0.5:
+    resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}
+    engines: {node: '>=14'}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -8176,6 +8198,8 @@ snapshots:
 
   '@types/http-errors@2.0.4': {}
 
+  '@types/js-cookie@3.0.6': {}
+
   '@types/linkify-it@5.0.0': {}
 
   '@types/markdown-it@14.1.2':
@@ -9621,6 +9645,8 @@ snapshots:
   jiti@2.4.2: {}
 
   jose@5.9.6: {}
+
+  js-cookie@3.0.5: {}
 
   js-tokens@4.0.0: {}
 
