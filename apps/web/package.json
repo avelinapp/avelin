@@ -3,7 +3,7 @@
   "version": "0.8.1",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "install:vercel": "./vercel-submodule-workaround.sh && pnpm install"
@@ -14,9 +14,11 @@
     "@avelin/icons": "workspace:*",
     "@avelin/sync": "workspace:*",
     "@avelin/ui": "workspace:*",
+    "@avelin/zero": "workspace:*",
     "@hocuspocus/provider": "^2.13.7",
     "@monaco-editor/react": "^4.7.0-rc.0",
     "@radix-ui/react-visually-hidden": "^1.1.0",
+    "@rocicorp/zero": "catalog:",
     "@t3-oss/env-nextjs": "^0.11.1",
     "@tanstack/react-query": "^5.59.16",
     "jiti": "^2.4.2",

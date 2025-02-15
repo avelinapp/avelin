@@ -41,6 +41,10 @@
       "cache": false,
       "persistent": true
     },
+    "dev:zero": {
+      "cache": false,
+      "persistent": true
+    },
     "dev:tsc": {
       "cache": false,
       "persistent": true
