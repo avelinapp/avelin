@@ -2,7 +2,9 @@ import { getFlags } from '@/lib/posthog'
 import { getQueryClient, queries } from '@/lib/queries'
 import { getHeaders } from '@/lib/utils'
 import { TooltipProvider } from '@avelin/ui/tooltip'
+import type { AuthJWT } from '@avelin/zero'
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query'
+import { decodeJwt } from 'jose'
 import { cookies, headers as nextHeaders } from 'next/headers'
 import AuthProvider from './auth-provider'
 import { CodeRoomProvider } from './code-room-provider'
@@ -22,6 +24,7 @@ export default async function Providers({
 
   const sessionId = cookieStore.get('avelin_session_id')?.value
   const jwt = cookieStore.get('avelin_jwt')?.value
+  const payload = jwt ? (decodeJwt(jwt) as AuthJWT) : undefined
 
   let posthogBootstrapData = undefined
 
@@ -41,7 +44,7 @@ export default async function Providers({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <ThemeProvider>
-        <ZeroRootProvider jwt={jwt}>
+        <ZeroRootProvider payload={payload} jwt={jwt}>
           <AuthProvider>
             <PostHogProvider bootstrap={posthogBootstrapData}>
               <PostHogPageView />

@@ -6,14 +6,15 @@ import { env } from './env'
 
 let client: Zero<ZeroSchema> | undefined
 
-export function getZeroClient({ jwt }: { jwt?: string }) {
+export function getZeroClient({
+  jwt,
+  payload,
+}: { jwt?: string; payload?: AuthJWT }) {
   if (!client) {
     console.log(
       typeof window !== 'undefined' ? '[CLIENT]' : '[SERVER]',
       'creating zero client',
     )
-
-    const payload = jwt ? (decodeJwt(jwt) as AuthJWT) : undefined
 
     client = new Zero({
       // kvStore: 'mem',
