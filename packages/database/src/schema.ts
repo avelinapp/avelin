@@ -41,11 +41,9 @@ export const oauthAccounts = pgTable(
       .references(() => users.id, { onDelete: 'cascade' }),
     ...timestamps,
   },
-  (table) => {
-    return {
-      pk: primaryKey({ columns: [table.providerId, table.providerUserId] }),
-    }
-  },
+  (table) => [
+    primaryKey({ columns: [table.providerId, table.providerUserId] }),
+  ],
 )
 
 export const oauthAccountsRelations = relations(oauthAccounts, ({ one }) => ({
@@ -108,11 +106,7 @@ export const roomParticipants = pgTable(
     /* createdAt holds to the initial join date. */
     ...timestamps,
   },
-  (table) => {
-    return {
-      pk: primaryKey({ columns: [table.roomId, table.userId] }),
-    }
-  },
+  (table) => [primaryKey({ columns: [table.roomId, table.userId] })],
 )
 
 export const roomParticipantsRelations = relations(
