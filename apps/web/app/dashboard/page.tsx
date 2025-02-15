@@ -21,12 +21,13 @@ import { EmptyDashboardIcon } from './_components/empty-state-icon'
 
 export default function Page() {
   const router = useRouter()
+  const queryClient = getQueryClient()
   const { data, error, isPending } = useQuery(queries.rooms.all())
   const { user, isPending: isAuthPending } = useAuth()
 
   const dashboardIsEmpty = !isPending && !error && !data.length
 
-  const createRoom = useCreateRoom()
+  const createRoom = useCreateRoom({ queryClient })
 
   async function handleCreateRoom() {
     const data = await createRoom.mutateAsync()
@@ -53,6 +54,7 @@ export default function Page() {
         <Button
           className={cn((isPending || dashboardIsEmpty) && 'hidden')}
           onClick={handleCreateRoom}
+          disabled={createRoom.isPending}
         >
           <PlusIcon className="size-fit" />
           Create
@@ -96,10 +98,10 @@ export default function Page() {
 const CodeRoomListItem = ({
   room,
 }: {
-  room: Omit<Room, 'ydoc'> & { lastAccessedAt: Date }
+  room: Omit<Room, 'ydoc'> & { lastAccessedAt: Date | null }
 }) => {
   const queryClient = getQueryClient()
-  const deleteRoom = useDeleteRoom({ roomId: room.id }, { queryClient })
+  const deleteRoom = useDeleteRoom({ queryClient })
 
   const language = languages.find(
     (l) => l.value === (room.editorLanguage as Language['value']),
@@ -144,7 +146,7 @@ const CodeRoomListItem = ({
             content: 'Delete code room',
           }}
           onClick={() => {
-            deleteRoom.mutate()
+            deleteRoom.mutate({ roomId: room.id })
           }}
         >
           <TrashIcon className="size-4 shrink-0" />

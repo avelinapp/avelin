@@ -3,25 +3,29 @@ import { KeyRoundIcon } from '@avelin/icons'
 import { toast } from '@avelin/ui/sonner'
 import { type QueryClient, useMutation } from '@tanstack/react-query'
 import { LOGOUT_ACTION_TOAST_ID } from './constants'
+import { toasts } from './toasts'
 
 interface MutationOptions {
   queryClient: QueryClient
 }
 
-export const useCreateRoom = () =>
+export const useCreateRoom = (options: MutationOptions) =>
   useMutation({
     mutationFn: async () => {
       const res = await api.rooms.create.post()
       return res.data!
     },
+    onSuccess: (data) => {
+      toasts.rooms.create.success(data.slug ?? data.id)
+    },
+    onSettled: () => {
+      options.queryClient.invalidateQueries({ queryKey: ['rooms'] })
+    },
   })
 
-export const useDeleteRoom = (
-  { roomId }: { roomId: string },
-  options: MutationOptions,
-) =>
+export const useDeleteRoom = (options: MutationOptions) =>
   useMutation({
-    mutationFn: async () => {
+    mutationFn: async ({ roomId }: { roomId: string }) => {
       const { data, error } = await api.rooms({ idOrSlug: roomId }).delete()
 
       if (error) {
@@ -36,6 +40,12 @@ export const useDeleteRoom = (
       }
 
       return data
+    },
+    onSuccess: (data) => {
+      toasts.rooms.delete.success(data.id)
+    },
+    onError: (error, { roomId }) => {
+      toasts.rooms.delete.error(roomId, error)
     },
     onSettled: () => {
       options.queryClient.invalidateQueries({ queryKey: ['rooms'] })

@@ -2,6 +2,7 @@
 
 import { useShortcut } from '@/hooks/use-shortcut'
 import { useCreateRoom } from '@/lib/mutations'
+import { getQueryClient } from '@/lib/queries'
 import { PlusIcon } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { useRouter } from 'next/navigation'
@@ -9,7 +10,8 @@ import { useScramble } from 'use-scramble'
 
 export default function CreateRoomButton() {
   const router = useRouter()
-  const { mutate, isPending } = useCreateRoom()
+  const queryClient = getQueryClient()
+  const { mutate, isPending } = useCreateRoom({ queryClient })
 
   const createRoom = () =>
     mutate(undefined, {
