@@ -113,6 +113,7 @@ jobs:
             NEXT_PUBLIC_APP_URL=https://avelin.app
             NEXT_PUBLIC_API_URL=https://api.avelin.app
             NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+            NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
             NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -175,6 +176,7 @@ jobs:
             NEXT_PUBLIC_APP_URL=https://avelin.app
             NEXT_PUBLIC_API_URL=https://api.avelin.app
             NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+            NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
             NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -366,3 +368,34 @@ jobs:
         run: pnpm release --ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  run-migrations:
+    name: Run migrations
+    runs-on: ubuntu-24.04
+    needs: [create-release]
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+    steps:
+      - name: Checkout monorepo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+          architecture: "x64"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Migrate database
+        run: pnpm run db:migrate
