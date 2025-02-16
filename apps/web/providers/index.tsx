@@ -21,10 +21,7 @@ export default async function Providers({
   const queryClient = getQueryClient()
 
   const cookieStore = await cookies()
-
   const sessionId = cookieStore.get('avelin_session_id')?.value
-  const jwt = cookieStore.get('avelin_jwt')?.value
-  const payload = jwt ? (decodeJwt(jwt) as AuthJWT) : undefined
 
   let posthogBootstrapData = undefined
 
@@ -44,18 +41,18 @@ export default async function Providers({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <ThemeProvider>
-        <ZeroRootProvider payload={payload} jwt={jwt}>
-          <AuthProvider>
-            <PostHogProvider bootstrap={posthogBootstrapData}>
+        <AuthProvider>
+          <PostHogProvider bootstrap={posthogBootstrapData}>
+            <ZeroRootProvider>
               <PostHogPageView />
               <CommandMenuProvider>
                 <CodeRoomProvider>
                   <TooltipProvider>{children}</TooltipProvider>
                 </CodeRoomProvider>
               </CommandMenuProvider>
-            </PostHogProvider>
-          </AuthProvider>
-        </ZeroRootProvider>
+            </ZeroRootProvider>
+          </PostHogProvider>
+        </AuthProvider>
       </ThemeProvider>
     </HydrationBoundary>
   )

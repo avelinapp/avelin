@@ -19,6 +19,7 @@ import { useZero, useQuery as useZeroQuery } from '@rocicorp/zero/react'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { EmptyDashboardIcon } from './_components/empty-state-icon'
 
 export default function Page() {
@@ -26,8 +27,11 @@ export default function Page() {
   const queryClient = getQueryClient()
   const { data, error, isPending } = useQuery(queries.rooms.all())
   const { user, isPending: isAuthPending } = useAuth()
+  const [dataSource, setDataSource] = useState<'api' | 'zero'>('api')
 
-  const dashboardIsEmpty = !isPending && !error && !data.length
+  function toggleDataSource() {
+    setDataSource((prev) => (prev === 'api' ? 'zero' : 'api'))
+  }
 
   const createRoom = useCreateRoom({ queryClient })
 
@@ -39,17 +43,29 @@ export default function Page() {
 
   const z = useZero<ZeroSchema>()
 
-  /*
-   * HEY! This next line is where we can test that TypeScript does not pick up our schema.
-   */
-  // const q = z.query.users
-  // q.hash()
+  const q = z.query.rooms
+    .where('deletedAt', 'IS', null)
+    .related('roomParticipants', (q) =>
+      q.where('userId', '=', z.userID).orderBy('lastAccessedAt', 'desc'),
+    )
 
-  // const [rooms] = useZeroQuery(q)
+  let [rooms] = useZeroQuery(q)
 
-  // console.log('rooms', rooms)
+  rooms = rooms
+    .filter(
+      (room) =>
+        (room.creatorId === z.userID &&
+          !room.roomParticipants.find((rp) => rp.userId === z.userID)) ||
+        !!room.roomParticipants.find((rp) => rp.userId === z.userID),
+    )
+    .map((room) => ({
+      ...room,
+      lastAccessedAt: room.roomParticipants[0]?.lastAccessedAt!,
+    }))
+    .sort((a, b) => b.lastAccessedAt - a.lastAccessedAt)
 
-  // if (isAuthPending) return null
+  const dashboardIsEmpty =
+    dataSource === 'api' ? !isPending && !error && !data.length : !rooms.length
 
   return (
     <div className="flex flex-col gap-4 h-full">
@@ -63,6 +79,9 @@ export default function Page() {
         <p className="text-color-text-quaternary">
           All your code rooms - past, present, and future.
         </p>
+        <Button onClick={toggleDataSource}>
+          Switch to {dataSource === 'api' ? 'Zero' : 'API'}
+        </Button>
       </div>
       <div>
         <Button
@@ -74,38 +93,73 @@ export default function Page() {
           Create
         </Button>
       </div>
-      {/* <pre>{JSON.stringify(rooms, null, '\t')}</pre> */}
-      {/* <div className="flex-1"> */}
-      {/*   {isPending ? null : error ? ( */}
-      {/*     <div>Error: {error.message}</div> */}
-      {/*   ) : ( */}
-      {/*     <FadeInContainer className="h-full flex flex-col gap-1"> */}
-      {/*       {dashboardIsEmpty ? ( */}
-      {/*         <div className="flex items-center gap-8 m-auto"> */}
-      {/*           <EmptyDashboardIcon className="size-32 stroke-gray-8 stroke-1" /> */}
-      {/*           <div className="space-y-4"> */}
-      {/*             <p className="font-medium">Create or join a code room</p> */}
-      {/*             <div> */}
-      {/*               <p> */}
-      {/*                 Your code rooms will be available to you from this */}
-      {/*                 dashboard. */}
-      {/*               </p> */}
-      {/*               <p>You can get started by creating a code room.</p> */}
-      {/*             </div> */}
-      {/*             <Button */}
-      {/*               onClick={handleCreateRoom} */}
-      {/*               disabled={createRoom.isPending} */}
-      {/*             > */}
-      {/*               Create room */}
-      {/*             </Button> */}
-      {/*           </div> */}
-      {/*         </div> */}
-      {/*       ) : ( */}
-      {/*         data.map((room) => <CodeRoomListItem key={room.id} room={room} />) */}
-      {/*       )} */}
-      {/*     </FadeInContainer> */}
-      {/*   )} */}
-      {/* </div> */}
+      {dataSource === 'api' && (
+        <div className="flex-1">
+          {isPending ? null : error ? (
+            <div>Error: {error.message}</div>
+          ) : (
+            <FadeInContainer className="h-full flex flex-col gap-1">
+              {dashboardIsEmpty ? (
+                <div className="flex items-center gap-8 m-auto">
+                  <EmptyDashboardIcon className="size-32 stroke-gray-8 stroke-1" />
+                  <div className="space-y-4">
+                    <p className="font-medium">Create or join a code room</p>
+                    <div>
+                      <p>
+                        Your code rooms will be available to you from this
+                        dashboard.
+                      </p>
+                      <p>You can get started by creating a code room.</p>
+                    </div>
+                    <Button
+                      onClick={handleCreateRoom}
+                      disabled={createRoom.isPending}
+                    >
+                      Create room
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                data.map((room) => (
+                  <CodeRoomListItem key={room.id} room={room} />
+                ))
+              )}
+            </FadeInContainer>
+          )}
+        </div>
+      )}
+      {dataSource === 'zero' && (
+        <div className="flex-1">
+          <FadeInContainer className="h-full flex flex-col gap-1">
+            {dashboardIsEmpty ? (
+              <div className="flex items-center gap-8 m-auto">
+                <EmptyDashboardIcon className="size-32 stroke-gray-8 stroke-1" />
+                <div className="space-y-4">
+                  <p className="font-medium">Create or join a code room</p>
+                  <div>
+                    <p>
+                      Your code rooms will be available to you from this
+                      dashboard.
+                    </p>
+                    <p>You can get started by creating a code room.</p>
+                  </div>
+                  <Button
+                    onClick={handleCreateRoom}
+                    disabled={createRoom.isPending}
+                  >
+                    Create room
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              rooms.map((room) => (
+                // @ts-ignore
+                <CodeRoomListItem key={room.id} room={room} />
+              ))
+            )}
+          </FadeInContainer>
+        </div>
+      )}
     </div>
   )
 }

@@ -118,5 +118,15 @@ export const permissions = definePermissions<AuthJWT, Schema>(schema, () => {
         select: ANYONE_CAN,
       },
     },
+    roomParticipants: {
+      row: {
+        insert: ANYONE_CAN,
+        update: {
+          preMutation: NOBODY_CAN,
+        },
+        delete: NOBODY_CAN,
+        select: ANYONE_CAN,
+      },
+    },
   }
 })

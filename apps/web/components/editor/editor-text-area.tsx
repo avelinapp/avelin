@@ -1,7 +1,7 @@
 'use client'
 
 import { useMonacoBinding } from '@/hooks/use-monaco-binding'
-import { berkeleyMono, jetbrainsMono } from '@/lib/fonts'
+import { berkeleyMono } from '@/lib/fonts'
 import { useCodeRoom } from '@/providers/code-room-provider'
 import { type Monaco, default as MonacoEditor } from '@monaco-editor/react'
 import { KeyCode, KeyMod, type editor } from 'monaco-editor'
