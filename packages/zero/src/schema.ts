@@ -9,7 +9,7 @@ import {
 import { createZeroSchema } from 'drizzle-zero'
 
 export const schema = createZeroSchema(drizzleSchema, {
-  version: 1,
+  version: 2,
   tables: {
     users: {
       id: true,
@@ -98,19 +98,9 @@ export const permissions = definePermissions<AuthJWT, Schema>(schema, () => {
   ) => cmpLit(authData.sub, 'IS NOT', null)
 
   return {
-    // users: {
-    //   row: {
-    //     insert: NOBODY_CAN,
-    //     update: {
-    //       preMutation: NOBODY_CAN,
-    //     },
-    //     delete: NOBODY_CAN,
-    //     select: ANYONE_CAN,
-    //   },
-    // },
     rooms: {
       row: {
-        insert: ANYONE_CAN,
+        insert: NOBODY_CAN,
         update: {
           preMutation: NOBODY_CAN,
         },
@@ -120,7 +110,7 @@ export const permissions = definePermissions<AuthJWT, Schema>(schema, () => {
     },
     roomParticipants: {
       row: {
-        insert: ANYONE_CAN,
+        insert: NOBODY_CAN,
         update: {
           preMutation: NOBODY_CAN,
         },
