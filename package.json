@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "turbo run dev dev:tsc --concurrency=15",
+    "dev:zero": "turbo run dev:zero",
     "check": "biome check .",
     "check:fix": "biome check . --write",
     "build": "turbo run build",
@@ -13,12 +14,14 @@
     "db:migrate": "turbo run db:migrate",
     "db:push": "turbo run db:push",
     "ui:add": "turbo run ui:add",
+    "zero:migrate": "turbo run zero:migrate",
+    "zero:deploy-permissions": "turbo run zero:deploy-permissions",
     "release": "release-it",
     "release:patch": "release-it patch",
     "release:minor": "release-it minor",
     "release:major": "release-it major",
     "prepare": "husky",
-    "install:vercel": "./scripts/vercel-submodule-workaround.sh && pnpm install"
+    "clean": "rm -rf **/node_modules **/.turbo **/.next **/dist"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

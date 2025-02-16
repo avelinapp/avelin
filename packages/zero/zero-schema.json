@@ -1,0 +1,175 @@
+{
+  "permissions": {},
+  "schema": {
+    "version": 1,
+    "tables": {
+      "users": {
+        "name": "users",
+        "columns": {
+          "id": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "email": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "name": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "picture": {
+            "type": "string",
+            "optional": true,
+            "customType": null
+          },
+          "isAnonymous": {
+            "type": "boolean",
+            "optional": true,
+            "customType": null
+          },
+          "retiredAt": {
+            "type": "number",
+            "optional": true,
+            "customType": null
+          },
+          "linkedUserId": {
+            "type": "string",
+            "optional": true,
+            "customType": null
+          },
+          "updatedAt": {
+            "type": "number",
+            "optional": true,
+            "customType": null
+          },
+          "createdAt": {
+            "type": "number",
+            "optional": true,
+            "customType": null
+          },
+          "deletedAt": {
+            "type": "number",
+            "optional": true,
+            "customType": null
+          }
+        },
+        "primaryKey": ["id"]
+      },
+      "rooms": {
+        "name": "rooms",
+        "columns": {
+          "id": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          }
+        },
+        "primaryKey": ["id"]
+      },
+      "roomParticipants": {
+        "name": "roomParticipants",
+        "columns": {
+          "roomId": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "userId": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "lastAccessedAt": {
+            "type": "number",
+            "optional": true,
+            "customType": null
+          }
+        },
+        "primaryKey": ["roomId", "userId"],
+        "serverName": "room_participants"
+      }
+    },
+    "relationships": {
+      "rooms": {
+        "participants": [
+          {
+            "sourceField": ["id"],
+            "destField": ["roomId"],
+            "destSchema": "roomParticipants",
+            "cardinality": "many"
+          },
+          {
+            "sourceField": ["userId"],
+            "destField": ["id"],
+            "destSchema": "users",
+            "cardinality": "many"
+          }
+        ],
+        "creator": [
+          {
+            "sourceField": ["creatorId"],
+            "destField": ["id"],
+            "destSchema": "users",
+            "cardinality": "one"
+          }
+        ],
+        "roomParticipants": [
+          {
+            "sourceField": ["id"],
+            "destField": ["roomId"],
+            "destSchema": "roomParticipants",
+            "cardinality": "many"
+          }
+        ]
+      },
+      "users": {
+        "linkedUser": [
+          {
+            "sourceField": ["linkedUserId"],
+            "destField": ["id"],
+            "destSchema": "users",
+            "cardinality": "one"
+          }
+        ],
+        "createdRooms": [
+          {
+            "sourceField": ["id"],
+            "destField": ["creatorId"],
+            "destSchema": "rooms",
+            "cardinality": "many"
+          }
+        ],
+        "joinedRooms": [
+          {
+            "sourceField": ["id"],
+            "destField": ["userId"],
+            "destSchema": "roomParticipants",
+            "cardinality": "many"
+          }
+        ]
+      },
+      "roomParticipants": {
+        "user": [
+          {
+            "sourceField": ["userId"],
+            "destField": ["id"],
+            "destSchema": "users",
+            "cardinality": "one"
+          }
+        ],
+        "room": [
+          {
+            "sourceField": ["roomId"],
+            "destField": ["id"],
+            "destSchema": "rooms",
+            "cardinality": "one"
+          }
+        ]
+      }
+    }
+  }
+}

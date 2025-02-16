@@ -1,4 +1,9 @@
-import { type NeonDatabase, eq, schema } from '@avelin/database'
+import {
+  type NeonDatabase,
+  eq,
+  getTableColumns,
+  schema,
+} from '@avelin/database'
 import { newId } from '@avelin/id'
 import { storage } from '@avelin/storage'
 
@@ -7,7 +12,7 @@ export async function getUserByGoogleId(
   { db }: { db: NeonDatabase },
 ) {
   const [existingUser] = await db
-    .select({ id: schema.users.id })
+    .select(getTableColumns(schema.users))
     .from(schema.users)
     .innerJoin(
       schema.oauthAccounts,

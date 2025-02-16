@@ -3,10 +3,9 @@
   "version": "0.8.1",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "install:vercel": "./vercel-submodule-workaround.sh && pnpm install"
+    "start": "next start"
   },
   "dependencies": {
     "@avelin/api": "workspace:*",
@@ -14,12 +13,16 @@
     "@avelin/icons": "workspace:*",
     "@avelin/sync": "workspace:*",
     "@avelin/ui": "workspace:*",
+    "@avelin/zero": "workspace:*",
     "@hocuspocus/provider": "^2.13.7",
     "@monaco-editor/react": "^4.7.0-rc.0",
     "@radix-ui/react-visually-hidden": "^1.1.0",
+    "@rocicorp/zero": "catalog:",
     "@t3-oss/env-nextjs": "^0.11.1",
     "@tanstack/react-query": "^5.59.16",
     "jiti": "^2.4.2",
+    "jose": "^5.9.6",
+    "js-cookie": "^3.0.5",
     "monaco-editor": "0.50.0",
     "motion": "catalog:",
     "next": "catalog:",
@@ -44,6 +47,7 @@
   "devDependencies": {
     "@avelin/database": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

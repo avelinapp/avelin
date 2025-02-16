@@ -9,6 +9,7 @@ import {
   eq,
   getTableColumns,
   isNull,
+  ne,
   or,
   schema,
   sql,
@@ -82,12 +83,13 @@ export const rooms = new Elysia({ prefix: '/rooms' })
       .get('/', async ({ user, error }) => {
         try {
           const rooms = await db
-            .selectDistinct({
+            .select({
               ...omit(getTableColumns(schema.rooms), ['ydoc']),
               lastAccessedAt: schema.roomParticipants.lastAccessedAt,
+              participantId: schema.roomParticipants.userId,
             })
             .from(schema.rooms)
-            .leftJoin(
+            .innerJoin(
               schema.roomParticipants,
               eq(schema.rooms.id, schema.roomParticipants.roomId),
             )
@@ -95,8 +97,14 @@ export const rooms = new Elysia({ prefix: '/rooms' })
               and(
                 or(
                   eq(schema.roomParticipants.userId, user.id),
-                  eq(schema.rooms.creatorId, user.id),
+                  // If the user is the creator, but has not joined the room, show it
+                  // In the case where the user is the creator and has joined the room, the room will be included b/c of the previous condition.
+                  and(
+                    eq(schema.rooms.creatorId, user.id),
+                    isNull(schema.roomParticipants.userId),
+                  ),
                 ),
+
                 isNull(schema.rooms.deletedAt),
               ),
             )

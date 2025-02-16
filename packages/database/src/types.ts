@@ -1,5 +1,5 @@
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm/table'
-import type { oauthAccounts, rooms, sessions, users } from './schema'
+import type { oauthAccounts, rooms, sessions, users } from './schema.js'
 
 export type User = InferSelectModel<typeof users>
 export type Session = InferSelectModel<typeof sessions>

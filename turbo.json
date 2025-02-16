@@ -30,7 +30,8 @@
         "NEXT_PUBLIC_POSTHOG_HOST",
         "HOCUSPOCUS_WEBHOOK_SECRET",
         "BASE_DOMAIN",
-        "CI"
+        "CI",
+        "ZERO_SCHEMA_VERSION"
       ]
     },
     "//#check": {},
@@ -38,6 +39,10 @@
       "cache": false
     },
     "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "dev:zero": {
       "cache": false,
       "persistent": true
     },
@@ -68,6 +73,12 @@
     "ui:add": {
       "cache": false,
       "persistent": true
+    },
+    "zero:migrate": {
+      "cache": false
+    },
+    "zero:deploy-permissions": {
+      "cache": false
     }
   }
 }

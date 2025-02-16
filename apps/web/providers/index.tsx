@@ -1,14 +1,18 @@
+import AvelinDevToolsToolbar from '@/components/devtools/toolbar'
 import { getFlags } from '@/lib/posthog'
 import { getQueryClient, queries } from '@/lib/queries'
 import { getHeaders } from '@/lib/utils'
 import { TooltipProvider } from '@avelin/ui/tooltip'
+import type { AuthJWT } from '@avelin/zero'
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query'
+import { decodeJwt } from 'jose'
 import { cookies, headers as nextHeaders } from 'next/headers'
 import AuthProvider from './auth-provider'
 import { CodeRoomProvider } from './code-room-provider'
 import { CommandMenuProvider } from './command-menu-provider'
 import { PostHogPageView, PostHogProvider } from './posthog-provider'
 import { ThemeProvider } from './theme-provider'
+import ZeroRootProvider from './zero-root-provider'
 
 export default async function Providers({
   children,
@@ -17,7 +21,8 @@ export default async function Providers({
 }) {
   const queryClient = getQueryClient()
 
-  const sessionId = (await cookies()).get('avelin_session_id')?.value
+  const cookieStore = await cookies()
+  const sessionId = cookieStore.get('avelin_session_id')?.value
 
   let posthogBootstrapData = undefined
 
@@ -39,12 +44,14 @@ export default async function Providers({
       <ThemeProvider>
         <AuthProvider>
           <PostHogProvider bootstrap={posthogBootstrapData}>
-            <PostHogPageView />
-            <CommandMenuProvider>
-              <CodeRoomProvider>
-                <TooltipProvider>{children}</TooltipProvider>
-              </CodeRoomProvider>
-            </CommandMenuProvider>
+            <ZeroRootProvider>
+              <PostHogPageView />
+              <CommandMenuProvider>
+                <CodeRoomProvider>
+                  <TooltipProvider>{children}</TooltipProvider>
+                </CodeRoomProvider>
+              </CommandMenuProvider>
+            </ZeroRootProvider>
           </PostHogProvider>
         </AuthProvider>
       </ThemeProvider>

@@ -21,6 +21,23 @@ interface Props {
 export function PostHogProvider({ bootstrap, children }: Props) {
   const { isPending, isAuthenticated, user, session } = useAuth()
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      console.log('Initializing PostHog...')
+      console.log('PostHog key:', env.NEXT_PUBLIC_POSTHOG_KEY)
+
+      console.log('PostHog bootstrap:', bootstrap)
+
+      posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
+        api_host: '/ingest',
+        person_profiles: 'identified_only',
+        capture_pageview: false, // Disable automatic pageview capture, as we capture manually
+        autocapture: false, // Disable automatic event capture, as we capture manually
+        bootstrap,
+      })
+    }
+  }, [bootstrap])
+
   if (!isPending && isAuthenticated) {
     posthog.identify(user.id, {
       session_id: session.id,
@@ -29,27 +46,12 @@ export function PostHogProvider({ bootstrap, children }: Props) {
     })
   }
 
-  if (typeof window !== 'undefined') {
-    console.log('Initializing PostHog...')
-    console.log('PostHog key:', env.NEXT_PUBLIC_POSTHOG_KEY)
-
-    console.log('PostHog bootstrap:', bootstrap)
-
-    posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
-      api_host: '/ingest',
-      person_profiles: 'identified_only',
-      capture_pageview: false, // Disable automatic pageview capture, as we capture manually
-      autocapture: false, // Disable automatic event capture, as we capture manually
-      bootstrap,
-    })
-
-    posthog.onFeatureFlags(() => {
-      if (posthog.isFeatureEnabled('posthog-client-debug')) {
-        posthog.debug(true)
-        console.log('PostHog client debugging enabled.')
-      }
-    })
-  }
+  posthog.onFeatureFlags(() => {
+    if (posthog.isFeatureEnabled('posthog-client-debug')) {
+      posthog.debug(true)
+      console.log('PostHog client debugging enabled.')
+    }
+  })
 
   return (
     <PostHogProviderPrimitive client={posthog}>
