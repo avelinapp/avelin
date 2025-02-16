@@ -53,6 +53,7 @@ jobs:
         id: determine_version
         run: |
           NEW_VERSION=$(pnpm release --ci --release-version | tail -n1)
+          echo "Next version: $NEW_VERSION"
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Determine Zero server version
