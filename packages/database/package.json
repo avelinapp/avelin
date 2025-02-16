@@ -15,7 +15,6 @@
   },
   "scripts": {
     "dev": "tsc --watch",
-    "dev:studio": "pnpm run db:studio",
     "build": "tsc",
     "db:check": "drizzle-kit check",
     "db:push": "drizzle-kit push",

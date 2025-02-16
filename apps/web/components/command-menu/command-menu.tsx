@@ -1,6 +1,5 @@
 'use client'
 
-import { ROOM_PATH_REGEX } from '@/lib/constants'
 import { inArray } from '@/lib/utils'
 import { useCommandMenu } from '@/providers/command-menu-provider'
 import { AnimatedSizeContainer } from '@avelin/ui/animated-size-container'
@@ -57,7 +56,7 @@ export default function CommandMenu() {
   const page = useMemo(() => pages[pages.length - 1], [pages])
 
   const pathname = usePathname()
-  const isCodeRoom = pathname.match(ROOM_PATH_REGEX)
+  const isCodeRoom = pathname.startsWith('/rooms/')
   const isUserInputCommand = useMemo(
     () => inArray(page, ['room-title']),
     [page],

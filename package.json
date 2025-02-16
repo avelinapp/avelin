@@ -9,6 +9,7 @@
     "check:fix": "biome check . --write",
     "build": "turbo run build",
     "compile": "turbo run compile",
+    "db:studio": "turbo run db:studio",
     "db:check": "turbo run db:check",
     "db:generate": "turbo run db:generate",
     "db:migrate": "turbo run db:migrate",
