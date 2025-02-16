@@ -3,8 +3,8 @@
   "extends": "@avelin/typescript-config/base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "module": "ES2022",
-    "moduleResolution": "Bundler"
+    "module": "ESNext",
+    "moduleResolution": "bundler"
   },
   "include": ["src"],
   "exclude": ["node_modules"]
