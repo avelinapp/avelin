@@ -71,8 +71,8 @@ jobs:
             dockerfile: ./apps/api/Dockerfile
           - app: sync
             dockerfile: ./apps/sync/Dockerfile
-          - app: migrate
-            dockerfile: ./packages/database/Dockerfile
+          # - app: migrate
+          #   dockerfile: ./packages/database/Dockerfile
 
     steps:
       - name: Checkout monorepo
@@ -113,6 +113,7 @@ jobs:
             NEXT_PUBLIC_APP_URL=https://avelin.app
             NEXT_PUBLIC_API_URL=https://api.avelin.app
             NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+            NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
             NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -134,8 +135,8 @@ jobs:
             dockerfile: ./apps/api/Dockerfile
           - app: sync
             dockerfile: ./apps/sync/Dockerfile
-          - app: migrate
-            dockerfile: ./packages/database/Dockerfile
+          # - app: migrate
+          #   dockerfile: ./packages/database/Dockerfile
 
     steps:
       - name: Checkout monorepo
@@ -175,6 +176,7 @@ jobs:
             NEXT_PUBLIC_APP_URL=https://avelin.app
             NEXT_PUBLIC_API_URL=https://api.avelin.app
             NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+            NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
             NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -199,7 +201,7 @@ jobs:
         run: |
           VERSION=${{ needs.prepare.outputs.new_version }}
 
-          APPS=("web" "api" "sync" "migrate")
+          APPS=("web" "api" "sync")
 
           for app in "${APPS[@]}"; do
             DIGEST_AMD64=$(docker manifest inspect ghcr.io/avelinapp/$app:${{ github.sha }}-amd64 | jq -r '.manifests[] | select(.platform.architecture == "amd64" and .platform.os == "linux") | .digest')
@@ -260,14 +262,14 @@ jobs:
             fi
           done
 
-          manifest="$manifests_dir/shared/db-migration-job.yaml"
-          if [ -f "$manifest" ]; then
-            echo "Updating image tag in $manifest to $VERSION"
-            yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/migrate:$VERSION\"" "$manifest"
-          else
-            echo "Manifest file $manifest not found!"
-            exit 1
-          fi
+          # manifest="$manifests_dir/shared/db-migration-job.yaml"
+          # if [ -f "$manifest" ]; then
+          #   echo "Updating image tag in $manifest to $VERSION"
+          #   yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/migrate:$VERSION\"" "$manifest"
+          # else
+          #   echo "Manifest file $manifest not found!"
+          #   exit 1
+          # fi
 
       - name: Commit and Push IaC changes
         working-directory: bazzalabs-orion
@@ -311,14 +313,14 @@ jobs:
             fi
           done
 
-          manifest="$manifests_dir/shared/db-migration-job.yaml"
-          if [ -f "$manifest" ]; then
-            echo "Updating image tag in $manifest to $VERSION"
-            yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/migrate:$VERSION\"" "$manifest"
-          else
-            echo "Manifest file $manifest not found!"
-            exit 1
-          fi
+          # manifest="$manifests_dir/shared/db-migration-job.yaml"
+          # if [ -f "$manifest" ]; then
+          #   echo "Updating image tag in $manifest to $VERSION"
+          #   yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/migrate:$VERSION\"" "$manifest"
+          # else
+          #   echo "Manifest file $manifest not found!"
+          #   exit 1
+          # fi
 
       - name: Commit and Push IaC changes
         working-directory: avelinapp-iac
@@ -366,3 +368,34 @@ jobs:
         run: pnpm release --ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  run-migrations:
+    name: Run migrations
+    runs-on: ubuntu-24.04
+    needs: [create-release]
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+    steps:
+      - name: Checkout monorepo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+          architecture: "x64"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Migrate database
+        run: pnpm run db:migrate
