@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "install:vercel": "./vercel-submodule-workaround.sh && pnpm install"
+    "start": "next start"
   },
   "dependencies": {
     "@avelin/api": "workspace:*",

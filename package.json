@@ -21,7 +21,7 @@
     "release:minor": "release-it minor",
     "release:major": "release-it major",
     "prepare": "husky",
-    "install:vercel": "./scripts/vercel-submodule-workaround.sh && pnpm install"
+    "clean": "rm -rf **/node_modules **/.turbo **/.next **/dist"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

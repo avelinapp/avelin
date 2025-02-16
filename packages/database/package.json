@@ -5,11 +5,11 @@
   "private": true,
   "exports": {
     ".": {
-      "types": "./dist/index.ts",
+      "types": "./src/index.ts",
       "default": "./dist/index.js"
     },
     "./schema": {
-      "types": "./dist/schema.ts",
+      "types": "./src/schema.ts",
       "default": "./dist/schema.js"
     }
   },
