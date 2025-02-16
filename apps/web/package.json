@@ -3,7 +3,7 @@
   "version": "0.8.1",
   "private": true,
   "scripts": {
-    "devx": "next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "install:vercel": "./vercel-submodule-workaround.sh && pnpm install"
