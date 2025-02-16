@@ -1,6 +1,7 @@
 import type { User } from '@avelin/database'
 import type { AuthJWT } from '@avelin/zero'
 import { SignJWT } from 'jose/jwt/sign'
+import { jwtVerify } from 'jose/jwt/verify'
 import { env } from '../env'
 
 export const createAuthJwt = async ({ user }: { user: User }) => {
@@ -19,4 +20,14 @@ export const createAuthJwt = async ({ user }: { user: User }) => {
     .sign(new TextEncoder().encode(env.AUTH_JWT_SECRET))
 
   return jwt
+}
+
+export const verifyAuthJwt = async (token: string) => {
+  try {
+    await jwtVerify(token, new TextEncoder().encode(env.AUTH_JWT_SECRET))
+  } catch (err) {
+    return false
+  }
+
+  return true
 }

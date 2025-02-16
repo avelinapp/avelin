@@ -1,5 +1,11 @@
-import { schema as drizzleSchema } from '@avelin/database'
-import { definePermissions } from '@rocicorp/zero'
+import * as drizzleSchema from '@avelin/database/schema'
+import {
+  ANYONE_CAN,
+  type Condition,
+  type ExpressionBuilder,
+  NOBODY_CAN,
+  definePermissions,
+} from '@rocicorp/zero'
 import { createZeroSchema } from 'drizzle-zero'
 
 export const schema = createZeroSchema(drizzleSchema, {
@@ -7,36 +13,50 @@ export const schema = createZeroSchema(drizzleSchema, {
   tables: {
     users: {
       id: true,
-      name: true,
       email: true,
-      isAnonymous: true,
+      name: true,
       picture: true,
+      isAnonymous: true,
       retiredAt: true,
       linkedUserId: true,
       createdAt: true,
       updatedAt: true,
       deletedAt: true,
     },
-    sessions: false,
-    oauthAccounts: false,
+    oauthAccounts: {
+      providerId: true,
+      providerUserId: true,
+      userId: true,
+      createdAt: true,
+      updatedAt: true,
+      deletedAt: true,
+    },
+    sessions: {
+      id: true,
+      userId: true,
+      expiresAt: true,
+      createdAt: true,
+      updatedAt: true,
+      deletedAt: true,
+    },
     rooms: {
       id: true,
-      slug: false,
+      slug: true,
       ydoc: false,
-      title: false,
-      editorLanguage: false,
-      creatorId: false,
-      createdAt: false,
-      updatedAt: false,
-      deletedAt: false,
+      title: true,
+      editorLanguage: true,
+      creatorId: true,
+      createdAt: true,
+      updatedAt: true,
+      deletedAt: true,
     },
     roomParticipants: {
       roomId: true,
       userId: true,
       lastAccessedAt: true,
-      createdAt: false,
-      updatedAt: false,
-      deletedAt: false,
+      createdAt: true,
+      updatedAt: true,
+      deletedAt: true,
     },
   },
   manyToMany: {
@@ -45,22 +65,6 @@ export const schema = createZeroSchema(drizzleSchema, {
     },
   },
 })
-
-// const rooms = table('rooms')
-//   .columns({
-//     id: string(),
-//     slug: string(),
-//     title: string().optional(),
-//     editorLanguage: string(),
-//   })
-//   .primaryKey('id')
-//
-// const roomsRelationships = relationships(rooms, ({ one, many }) => ({}))
-//
-// export const schema = createSchema(1, {
-//   tables: [rooms],
-//   relationships: [roomsRelationships],
-// })
 
 export type AuthJWT = {
   sub: string
@@ -74,6 +78,45 @@ export type AuthJWT = {
 export type Schema = typeof schema
 export type ZeroSchema = Schema
 
+type TableName = keyof Schema['tables']
+
+type PermissionRule<TTable extends TableName> = (
+  authData: AuthJWT,
+  eb: ExpressionBuilder<Schema, TTable>,
+) => Condition
+
+function and<TTable extends TableName>(
+  ...rules: PermissionRule<TTable>[]
+): PermissionRule<TTable> {
+  return (authData, eb) => eb.and(...rules.map((rule) => rule(authData, eb)))
+}
+
 export const permissions = definePermissions<AuthJWT, Schema>(schema, () => {
-  return {}
+  const userIsLoggedIn = (
+    authData: AuthJWT,
+    { cmpLit }: ExpressionBuilder<Schema, TableName>,
+  ) => cmpLit(authData.sub, 'IS NOT', null)
+
+  return {
+    // users: {
+    //   row: {
+    //     insert: NOBODY_CAN,
+    //     update: {
+    //       preMutation: NOBODY_CAN,
+    //     },
+    //     delete: NOBODY_CAN,
+    //     select: ANYONE_CAN,
+    //   },
+    // },
+    rooms: {
+      row: {
+        insert: ANYONE_CAN,
+        update: {
+          preMutation: NOBODY_CAN,
+        },
+        delete: NOBODY_CAN,
+        select: ANYONE_CAN,
+      },
+    },
+  }
 })

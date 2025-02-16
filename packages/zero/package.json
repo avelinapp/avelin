@@ -14,10 +14,6 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./src/index.ts"
-    },
-    "./schema": {
-      "import": "./dist/schema.js",
-      "types": "./src/schema.ts"
     }
   },
   "devDependencies": {
@@ -26,6 +22,7 @@
   "dependencies": {
     "@avelin/database": "workspace:*",
     "@rocicorp/zero": "catalog:",
-    "drizzle-zero": "^0.5.0"
+    "drizzle-zero": "^0.5.0",
+    "drizzle-orm": "catalog:"
   }
 }

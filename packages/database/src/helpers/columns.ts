@@ -9,4 +9,4 @@ export const timestamps = {
     .notNull()
     .defaultNow(),
   deletedAt: timestamp({ withTimezone: true, mode: 'date' }),
-}
+} as const

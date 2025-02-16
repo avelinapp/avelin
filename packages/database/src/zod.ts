@@ -1,6 +1,6 @@
 import { createSelectSchema } from 'drizzle-zod'
 import z from 'zod'
-import { schema } from './schema'
+import * as schema from './schema.js'
 
 export const userSchema = createSelectSchema(schema.users, {
   createdAt: z.coerce.date(),

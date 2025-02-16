@@ -15,41 +15,61 @@ import type { Response } from 'undici-types'
 import { env } from '../env'
 import { authMiddleware } from '../middleware/auth'
 import { linkAnonymousToRealAccount } from '../utils/auth.utils'
-import { createAuthJwt } from '../utils/jwt.utils'
+import { createAuthJwt, verifyAuthJwt } from '../utils/jwt.utils'
 
 export const auth = new Elysia({ prefix: '/auth' })
   .guard({}, (app) =>
     app
-      .get('/verify', async ({ cookie: { avelin_session_id }, error }) => {
-        const sessionId = avelin_session_id?.value
+      .get(
+        '/verify',
+        async ({ cookie: { avelin_session_id, avelin_jwt }, error }) => {
+          const sessionId = avelin_session_id?.value
 
-        if (!sessionId) {
-          return error(400, {
-            isAuthenticated: false,
-            error: 'Session not defined in request',
-            user: null,
-            session: null,
-          })
-        }
+          if (!sessionId) {
+            return error(400, {
+              isAuthenticated: false,
+              error: 'Session not defined in request',
+              user: null,
+              session: null,
+            })
+          }
 
-        const auth = await validateSession(sessionId, { db })
+          const auth = await validateSession(sessionId, { db })
 
-        if (!auth) {
-          return error(400, {
-            isAuthenticated: false,
-            error: 'Invalid session',
-            user: null,
-            session: null,
-          })
-        }
+          if (!auth) {
+            return error(400, {
+              isAuthenticated: false,
+              error: 'Invalid session',
+              user: null,
+              session: null,
+            })
+          }
 
-        return {
-          isAuthenticated: true,
-          isAnonymous: auth.user.isAnonymous,
-          user: auth.user,
-          session: auth.session,
-        }
-      })
+          const isValid =
+            !!avelin_jwt?.value && (await verifyAuthJwt(avelin_jwt?.value))
+
+          console.log('isValid', isValid)
+
+          if (!isValid) {
+            avelin_jwt?.set({
+              value: await createAuthJwt({ user: auth.user }),
+              path: '/',
+              httpOnly: false,
+              sameSite: 'lax',
+              expires: auth.session.expiresAt,
+              domain: `.${env.BASE_DOMAIN}`,
+            })
+            console.log('avelin_jwt', avelin_jwt?.value)
+          }
+
+          return {
+            isAuthenticated: true,
+            isAnonymous: auth.user.isAnonymous,
+            user: auth.user,
+            session: auth.session,
+          }
+        },
+      )
       .post(
         '/anonymous',
         async ({ cookie: { avelin_session_id, avelin_jwt }, error }) => {

@@ -2,8 +2,8 @@ import { relations } from 'drizzle-orm'
 import { pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
 import { boolean } from 'drizzle-orm/pg-core'
 import type { AnyPgColumn } from 'drizzle-orm/pg-core'
-import { bytea } from './db'
-import { timestamps } from './helpers/columns'
+import { bytea } from './db.js'
+import { timestamps } from './helpers/columns.js'
 
 export const users = pgTable('users', {
   id: text().primaryKey(),
@@ -122,16 +122,3 @@ export const roomParticipantsRelations = relations(
     }),
   }),
 )
-
-export const schema = {
-  users,
-  sessions,
-  oauthAccounts,
-  rooms,
-  roomParticipants,
-  usersRelations,
-  sessionsRelations,
-  oauthAccountsRelations,
-  roomsRelations,
-  roomParticipantsRelations,
-}
