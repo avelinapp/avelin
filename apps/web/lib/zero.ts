@@ -16,8 +16,6 @@ export function getZeroClient({
       'creating zero client',
     )
 
-    console.log('jwt', jwt)
-
     client = new Zero({
       userID: payload?.sub ?? 'anon',
       schema: schema,

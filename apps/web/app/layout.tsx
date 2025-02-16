@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import '@avelin/ui/globals.css'
 import CommandMenu from '@/components/command-menu/command-menu'
+import AvelinDevToolsToolbar from '@/components/devtools/toolbar'
 import Providers from '@/providers'
 import QueryClientProvider from '@/providers/query-client-provider'
 import { Toaster } from '@avelin/ui/sonner'
@@ -24,7 +25,10 @@ export default function RootLayout({
       >
         <QueryClientProvider>
           <Providers>
-            {children}
+            <div className="flex flex-col h-full w-full">
+              <div className="flex-1 flex flex-col w-full">{children}</div>
+              <AvelinDevToolsToolbar />
+            </div>
             <Toaster richColors />
             <CommandMenu />
           </Providers>

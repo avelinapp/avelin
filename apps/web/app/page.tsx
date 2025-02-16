@@ -12,7 +12,7 @@ import Title from './_components/title'
 
 export default function Home() {
   return (
-    <div className="h-screen flex w-full flex-1 flex-col items-center justify-center gap-12 p-4">
+    <div className="flex w-full flex-1 flex-col items-center justify-center gap-12 p-4">
       <div className="flex flex-col items-center gap-12">
         <LogoAvelin className="size-24 text-primary-bg sm:size-64 drop-shadow-xl" />
         <Title />

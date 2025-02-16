@@ -1,3 +1,3 @@
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <div className="light h-screen w-screen">{children}</div>
+  return <div className="light flex flex-col w-full flex-1">{children}</div>
 }

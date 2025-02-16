@@ -1,3 +1,4 @@
+import AvelinDevToolsToolbar from '@/components/devtools/toolbar'
 import { getFlags } from '@/lib/posthog'
 import { getQueryClient, queries } from '@/lib/queries'
 import { getHeaders } from '@/lib/utils'
