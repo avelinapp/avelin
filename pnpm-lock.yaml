@@ -595,6 +595,9 @@ importers:
       '@rocicorp/zero':
         specifier: 'catalog:'
         version: 0.15.2025021402(bufferutil@4.0.9)
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.4.7
       drizzle-orm:
         specifier: 'catalog:'
         version: 0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)
@@ -608,6 +611,9 @@ importers:
       '@types/bun':
         specifier: 'catalog:'
         version: 1.2.2
+      tsx:
+        specifier: ^4.19.2
+        version: 4.19.2
 
 packages:
 

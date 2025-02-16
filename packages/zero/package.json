@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "tsc --watch",
     "dev:zero": "zero-cache-dev -p src/schema.ts",
+    "zero:migrate": "tsx src/scripts/migrate.ts",
+    "zero:deploy-permissions": "zero-deploy-permissions --schema-path src/schema.ts",
     "build": "tsc",
     "check": "biome check .",
     "check:fix": "biome check . --write"
@@ -18,12 +20,14 @@
   },
   "devDependencies": {
     "@avelin/typescript-config": "workspace:*",
-    "@types/bun": "catalog:"
+    "@types/bun": "catalog:",
+    "tsx": "^4.19.2"
   },
   "dependencies": {
     "@avelin/database": "workspace:*",
     "@rocicorp/zero": "catalog:",
-    "drizzle-zero": "^0.5.0",
-    "drizzle-orm": "catalog:"
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "catalog:",
+    "drizzle-zero": "^0.5.0"
   }
 }

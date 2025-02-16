@@ -73,6 +73,12 @@
     "ui:add": {
       "cache": false,
       "persistent": true
+    },
+    "zero:migrate": {
+      "cache": false
+    },
+    "zero:deploy-permissions": {
+      "cache": false
     }
   }
 }
