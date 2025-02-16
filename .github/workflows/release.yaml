@@ -54,6 +54,12 @@ jobs:
           NEW_VERSION=$(pnpm release --ci --release-version | tail -n1)
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
+      - name: Determine Zero server version
+        id: determine_zero_version
+        run: |
+          ZERO_VERSION=$(yq e '.packages | keys | .[] | select(test("@rocicorp/zero@"))' pnpm-lock.yaml | grep @rocicorp/zero | cut -f 3 -d @)
+          echo "zero_version=$ZERO_VERSION" >> $GITHUB_OUTPUT
+
   build-push-amd64:
     name: Build & push ${{ matrix.app }} - x64 (AMD64)
     runs-on: ubuntu-24.04
@@ -229,58 +235,7 @@ jobs:
             docker manifest push ghcr.io/avelinapp/$app:v$VERSION
           done
 
-  update-manifests-bazzalabs-orion:
-    name: Update manifests in bazzalabs/orion
-    runs-on: ubuntu-24.04
-    needs: [prepare, create-manifests]
-    permissions:
-      contents: write
-
-    steps:
-      - name: Checkout IaC repo
-        uses: actions/checkout@v4
-        with:
-          repository: bazzalabs/orion
-          token: ${{ secrets.GH_BAZZALABS_ORION_SECRET }}
-          fetch-depth: 0
-          path: bazzalabs-orion
-
-      - name: Update K8s manifests
-        working-directory: bazzalabs-orion
-        run: |
-          VERSION=v${{ needs.prepare.outputs.new_version }}
-          apps=("web" "api" "sync")
-          manifests_dir="gitops/cluster-apps/avelin"
-          for app in "${apps[@]}"; do
-            manifest="$manifests_dir/$app/${app}-deploy.yaml"
-            if [ -f "$manifest" ]; then
-              echo "Updating image tag in $manifest to $VERSION"
-              yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/$app:$VERSION\"" "$manifest"
-            else
-              echo "Manifest file $manifest not found!"
-              exit 1
-            fi
-          done
-
-          # manifest="$manifests_dir/shared/db-migration-job.yaml"
-          # if [ -f "$manifest" ]; then
-          #   echo "Updating image tag in $manifest to $VERSION"
-          #   yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/migrate:$VERSION\"" "$manifest"
-          # else
-          #   echo "Manifest file $manifest not found!"
-          #   exit 1
-          # fi
-
-      - name: Commit and Push IaC changes
-        working-directory: bazzalabs-orion
-        run: |
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
-          git add .
-          git commit -m "chore: update manifests to v${{ needs.prepare.outputs.new_version }}"
-          git push
-
-  update-manifests-avelinapp-iac:
+  update-manifests:
     name: Update manifests in avelinapp/iac
     runs-on: ubuntu-24.04
     needs: [prepare, create-manifests]
@@ -313,14 +268,19 @@ jobs:
             fi
           done
 
-          # manifest="$manifests_dir/shared/db-migration-job.yaml"
-          # if [ -f "$manifest" ]; then
-          #   echo "Updating image tag in $manifest to $VERSION"
-          #   yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/migrate:$VERSION\"" "$manifest"
-          # else
-          #   echo "Manifest file $manifest not found!"
-          #   exit 1
-          # fi
+      - name: Update Zero server manifest
+        working-directory: avelinapp-iac
+        run: |
+          ZERO_VERSION=${{ needs.prepare.outputs.zero_version }}
+          manifests_dir="gitops/cluster-apps/avelin"
+          manifest="$manifests_dir/zero/zero-deploy.yaml"
+          if [ -f "$manifest" ]; then
+            echo "Updating Zero server container image tag in $manifest to $ZERO_VERSION"
+            yq e -i ".spec.template.spec.containers[].image = \"rocicorp/zero:$ZERO_VERSION\"" "$manifest"
+          else
+            echo "Manifest file $manifest not found!"
+            exit 1
+          fi
 
       - name: Commit and Push IaC changes
         working-directory: avelinapp-iac
@@ -334,7 +294,7 @@ jobs:
   create-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: [update-manifests-bazzalabs-orion, update-manifests-avelinapp-iac]
+    needs: [update-manifests]
     permissions:
       contents: write
 
@@ -371,6 +331,7 @@ jobs:
 
   run-migrations:
     name: Run migrations
+    needs: [create-release]
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout monorepo
@@ -402,19 +363,19 @@ jobs:
           echo "CI=$CI" >> packages/database/.env
           pnpm run db:migrate
           rm packages/database/.env
+
       - name: Bump Zero schema version
         env:
           ZERO_UPSTREAM_DB: ${{ secrets.DATABASE_URL }}
-          CI: true
         run: |
           echo "ZERO_UPSTREAM_DB=$ZERO_UPSTREAM_DB" >> packages/zero/.env
           echo "CI=$CI" >> packages/zero/.env
 
           pnpm run zero:migrate
+
       - name: Deploy latest Zero permissions
         env:
           ZERO_UPSTREAM_DB: ${{ secrets.DATABASE_URL }}
-          CI: true
         run: |
           pnpm run zero:deploy-permissions
           rm packages/zero/.env
