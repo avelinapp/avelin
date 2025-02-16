@@ -605,6 +605,9 @@ importers:
       '@avelin/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/bun':
+        specifier: 'catalog:'
+        version: 1.2.2
 
 packages:
 

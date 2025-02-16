@@ -1,6 +1,5 @@
 import { type AuthJWT, type ZeroSchema, schema } from '@avelin/zero'
 import { Zero } from '@rocicorp/zero'
-import { decodeJwt } from 'jose'
 import { api } from './api'
 import { env } from './env'
 

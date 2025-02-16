@@ -17,7 +17,8 @@
     }
   },
   "devDependencies": {
-    "@avelin/typescript-config": "workspace:*"
+    "@avelin/typescript-config": "workspace:*",
+    "@types/bun": "catalog:"
   },
   "dependencies": {
     "@avelin/database": "workspace:*",

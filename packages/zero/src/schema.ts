@@ -8,8 +8,10 @@ import {
 } from '@rocicorp/zero'
 import { createZeroSchema } from 'drizzle-zero'
 
+import zeroConfig from '../zero-config.json' assert { type: 'json' }
+
 export const schema = createZeroSchema(drizzleSchema, {
-  version: 2,
+  version: zeroConfig.zero.schemaVersion,
   tables: {
     users: {
       id: true,
