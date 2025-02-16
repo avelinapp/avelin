@@ -267,7 +267,7 @@ jobs:
               exit 1
             fi
           done
-
+          
       - name: Update Zero server manifest
         working-directory: avelinapp-iac
         run: |
