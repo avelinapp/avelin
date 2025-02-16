@@ -1,4 +1,4 @@
-import zeroConfig from '../../zero-config.json' assert { type: 'json' }
+const { default: zeroConfig } = await import('../../zero-config.json')
 
 import { config } from 'dotenv'
 import { sql } from 'drizzle-orm'
