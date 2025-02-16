@@ -99,6 +99,3 @@ export const languages: Language[] = [
 ] as const
 
 export const LOGOUT_ACTION_TOAST_ID = 'logout-action'
-
-export const ROOM_PATH_REGEX =
-  /^\/(?!$|login$|signup$|dashboard$)[A-Za-z0-9_-]+$/
