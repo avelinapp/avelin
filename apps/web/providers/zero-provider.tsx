@@ -7,6 +7,7 @@ import { decodeJwt } from 'jose/jwt/decode'
 import Cookies from 'js-cookie'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { useAuth } from './auth-provider'
+import ViewProvider from './view-provider'
 
 export default function ZeroProvider({
   children,
@@ -30,5 +31,14 @@ export default function ZeroProvider({
 
   const z = getZeroClient({ jwt, payload })
 
-  return <ZeroProviderPrimitive zero={z}>{children}</ZeroProviderPrimitive>
+  z.query.rooms
+    .where('deletedAt', 'IS', null)
+    .related('roomParticipants')
+    .preload()
+
+  return (
+    <ViewProvider>
+      <ZeroProviderPrimitive zero={z}>{children}</ZeroProviderPrimitive>
+    </ViewProvider>
+  )
 }

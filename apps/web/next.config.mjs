@@ -10,6 +10,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // reactStrictMode: false,
   output: 'standalone',
   transpilePackages: ['@avelin/ui'],
   images: {
@@ -42,4 +43,8 @@ const nextConfig = {
   skipTrailingSlashRedirect: true,
 }
 
-export default nextConfig
+import withBundleAnalyzer from '@next/bundle-analyzer'
+
+export default withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})(nextConfig)
