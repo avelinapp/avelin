@@ -3,7 +3,7 @@
   "version": "0.8.1",
   "private": true,
   "scripts": {
-    "devx": "next dev",
+    "dev": "next dev --turbo",
     "dev:turbo": "next dev --turbo",
     "build": "next build",
     "start": "next start"
