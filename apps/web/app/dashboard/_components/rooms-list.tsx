@@ -1,10 +1,10 @@
 'use client'
 
-import { readyAtom } from '@/lib/atoms'
 import { type Language, languages } from '@/lib/constants'
 import { useCreateRoom, useDeleteRoom } from '@/lib/mutations'
 import { getQueryClient, queries } from '@/lib/queries'
 import { useZero } from '@/lib/zero'
+import { useView } from '@/providers/view-provider'
 import type { Room } from '@avelin/database'
 import {
   LinkIcon,
@@ -17,7 +17,6 @@ import { cn } from '@avelin/ui/cn'
 import { FadeInContainer } from '@avelin/ui/fade-in-container'
 import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
 import { useQuery as useReactQuery } from '@tanstack/react-query'
-import { useAtom } from 'jotai'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { PostHogFeature } from 'posthog-js/react'
@@ -107,7 +106,7 @@ function RoomsList({ handleCreateRoom }: { handleCreateRoom: () => void }) {
 }
 
 function RoomsListZero({ handleCreateRoom }: { handleCreateRoom: () => void }) {
-  const [ready, setReady] = useAtom(readyAtom)
+  const { ready, setReady } = useView()
   const queryClient = getQueryClient()
 
   const createRoom = useCreateRoom({ queryClient })

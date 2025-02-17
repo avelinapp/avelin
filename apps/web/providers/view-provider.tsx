@@ -1,18 +1,34 @@
 'use client'
 
-import { readyAtom } from '@/lib/atoms'
-import { useAtom } from 'jotai'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
+import { create, useStore } from 'zustand'
+
+type ViewState = {
+  ready: boolean
+}
+
+type ViewActions = {
+  setReady: (value: boolean) => void
+}
+
+type ViewStore = ViewState & ViewActions
+
+export const viewStore = create<ViewStore>((set) => ({
+  ready: false,
+  setReady: (value) => set({ ready: value }),
+}))
+
+export const useView = () => useStore(viewStore, (state) => state)
 
 export default function ViewProvider({
   children,
 }: { children: React.ReactNode }) {
-  const [ready, setReady] = useAtom(readyAtom, {})
+  const { ready, setReady } = useView()
   const pathname = usePathname()
 
   useEffect(() => {
-    if (pathname === '/') {
+    if (pathname.startsWith('/rooms/') || pathname === '/') {
       setReady(true)
     }
   }, [pathname, setReady])
