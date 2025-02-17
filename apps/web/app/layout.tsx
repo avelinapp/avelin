@@ -7,6 +7,7 @@ import AvelinDevToolsToolbar from '@/components/devtools/toolbar'
 import Providers from '@/providers'
 import QueryClientProvider from '@/providers/query-client-provider'
 import { Toaster } from '@avelin/ui/sonner'
+import { Provider as JotaiProvider } from 'jotai'
 
 export const metadata: Metadata = {
   title: 'Avelin',
@@ -23,16 +24,20 @@ export default function RootLayout({
       <body
         className={`${innovatorGrotesk.variable} ${berkeleyMono.variable} font-sans font-settings antialiased bg-color-background h-screen w-screen`}
       >
-        <QueryClientProvider>
-          <Providers>
-            <div className="flex flex-col h-full w-full">
-              <div className="flex-1 flex flex-col w-full">{children}</div>
-              <AvelinDevToolsToolbar />
-            </div>
-            <Toaster richColors />
-            <CommandMenu />
-          </Providers>
-        </QueryClientProvider>
+        <JotaiProvider>
+          <QueryClientProvider>
+            <Providers>
+              <div className="flex flex-col h-full w-full">
+                <div className="flex-1 flex flex-col w-full max-h-full overflow-y-scroll">
+                  {children}
+                </div>
+                <AvelinDevToolsToolbar />
+              </div>
+              <Toaster richColors />
+              <CommandMenu />
+            </Providers>
+          </QueryClientProvider>
+        </JotaiProvider>
       </body>
     </html>
   )

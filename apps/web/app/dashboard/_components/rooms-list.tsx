@@ -1,8 +1,10 @@
 'use client'
 
+import { readyAtom } from '@/lib/atoms'
 import { type Language, languages } from '@/lib/constants'
 import { useCreateRoom, useDeleteRoom } from '@/lib/mutations'
 import { getQueryClient, queries } from '@/lib/queries'
+import { useZero } from '@/lib/zero'
 import type { Room } from '@avelin/database'
 import {
   LinkIcon,
@@ -13,12 +15,13 @@ import {
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
 import { FadeInContainer } from '@avelin/ui/fade-in-container'
-import type { ZeroSchema } from '@avelin/zero'
-import { useZero, useQuery as useZeroQuery } from '@rocicorp/zero/react'
+import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
 import { useQuery as useReactQuery } from '@tanstack/react-query'
+import { useAtom } from 'jotai'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { PostHogFeature } from 'posthog-js/react'
+import { useEffect } from 'react'
 import { EmptyDashboardIcon } from './empty-state-icon'
 
 export function RoomsListWrapper() {
@@ -104,11 +107,12 @@ function RoomsList({ handleCreateRoom }: { handleCreateRoom: () => void }) {
 }
 
 function RoomsListZero({ handleCreateRoom }: { handleCreateRoom: () => void }) {
+  const [ready, setReady] = useAtom(readyAtom)
   const queryClient = getQueryClient()
 
   const createRoom = useCreateRoom({ queryClient })
 
-  const z = useZero<ZeroSchema>()
+  const z = useZero()
 
   const q = z.query.rooms
     .where('deletedAt', 'IS', null)
@@ -116,7 +120,7 @@ function RoomsListZero({ handleCreateRoom }: { handleCreateRoom: () => void }) {
       q.where('userId', '=', z.userID).orderBy('lastAccessedAt', 'desc'),
     )
 
-  let [rooms, roomsDetail] = useZeroQuery(q)
+  let [rooms, { type: status }] = useZeroQuery(q)
 
   rooms = rooms
     .filter(
@@ -131,10 +135,18 @@ function RoomsListZero({ handleCreateRoom }: { handleCreateRoom: () => void }) {
     }))
     .sort((a, b) => b.lastAccessedAt - a.lastAccessedAt)
 
+  const pageReady = rooms.length > 0 || status === 'complete'
+
+  useEffect(() => {
+    if (pageReady && !ready) {
+      setReady(true)
+    }
+  }, [pageReady, setReady, ready])
+
   const dashboardIsEmpty = !rooms.length
 
   return (
-    <div className="flex-1 flex flex-col gap-4">
+    <div className={cn('flex-1 flex flex-col gap-4')}>
       <div>
         <Button
           className={cn(dashboardIsEmpty && 'hidden')}
