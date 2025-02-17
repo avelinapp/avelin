@@ -1,0 +1,187 @@
+name: Build UBI images
+
+concurrency:
+  group: "release-${{ github.ref }}" # Groups runs by the branch reference
+  cancel-in-progress: false # Queues new runs instead of canceling
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+
+jobs:
+  build-push:
+    strategy:
+      matrix:
+        os:
+          - name: ubuntu-24.04
+            arch: amd64
+            platform: linux/amd64
+          - name: ubuntu-24.04-arm
+            arch: arm64
+            platform: linux/arm64
+        ###### ATTENTION! ######
+        # Please use FULL version numbers here, e.g. 1.1.43 instead of 1.1
+        ###### ATTENTION! ######
+        bun:
+          - 1.1.43
+          - 1.2.2
+        ###### ATTENTION! ######
+        # Please use FULL version numbers here, e.g. 1.1.43 instead of 1.1
+        ###### ATTENTION! ######
+        node:
+          - 20.18.3
+          - 22.14.0
+        target:
+          - image: bun
+            path: ./packages/ubi/bun
+          - image: node
+            path: ./packages/ubi/node
+          - image: bun-node
+            path: ./packages/ubi/bun-node
+
+    name: "${{ matrix.target.image == 'bun' && format( 'Build/Push - {0} {1}', matrix.target.image, matrix.bun ) || matrix.target.image == 'node' && format( 'Build/Push - {0} {1}', matrix.target.image, matrix.node ) || matrix.target.image == 'bun-node' && format( 'Build/Push - {0} {1}-{2}', matrix.target.image, matrix.bun, matrix.node ) || 'Build/Push Job' }} - ${{ matrix.os.arch }}"
+    runs-on: ${{ matrix.os.name }}
+    permissions:
+      contents: read
+
+    steps:
+      - id: check_duplicate
+        run: |
+          skip="false"
+          if [[ "${{ matrix.target.image }}" == "bun" && "${{ matrix.node }}" != "20.18.3" ]]; then
+            echo "Skipping duplicate bun build because node version is not primary."
+            skip="true"
+          elif [[ "${{ matrix.target.image }}" == "node" && "${{ matrix.bun }}" != "1.1.43" ]]; then
+            echo "Skipping duplicate node build because bun version is not primary."
+            skip="true"
+          fi
+          echo "skip=${skip}" >> $GITHUB_OUTPUT
+
+      - name: Checkout monorepo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+        if: steps.check_duplicate.outputs.skip == 'false'
+
+      - name: Login to GitHub Container Registry
+        if: steps.check_duplicate.outputs.skip == 'false'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_BAZZALABS_UBI_RW_TOKEN }}
+
+      - name: Test
+        if: steps.check_duplicate.outputs.skip == 'false'
+        run: |
+          echo "OS name: ${{ matrix.os.name }}"
+          echo "OS arch: ${{ matrix.os.arch }}"
+          echo "OS platform: ${{ matrix.os.platform }}"
+          echo "Bun version: ${{ matrix.bun }}"
+          echo "Node version: ${{ matrix.node }}"
+          echo "Image: ${{ matrix.target.image }}"
+          echo "Path: ${{ matrix.path }}"
+          echo "ghcr.io/bazzalabs/ubi:${{ matrix.target.image == 'bun' && format( 'bun-{0}', matrix.bun ) || matrix.target.image == 'node' && format( 'node-{0}', matrix.node ) || matrix.target.image == 'bun-node' && format( 'bun-{0}-node-{1}', matrix.bun, matrix.node ) || 'unknown' }}"
+
+      - name: Setup Docker Buildx
+        if: steps.check_duplicate.outputs.skip == 'false'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        if: steps.check_duplicate.outputs.skip == 'false'
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.target.path }}
+          push: true
+          platforms: ${{ matrix.os.platform }}
+          tags: |
+            ghcr.io/bazzalabs/ubi:${{ matrix.target.image == 'bun' && format( 'bun-{0}', matrix.bun ) || matrix.target.image == 'node' && format( 'node-{0}', matrix.node ) || matrix.target.image == 'bun-node' && format( 'bun-{0}-node-{1}', matrix.bun, matrix.node ) || 'unknown' }}-${{ matrix.os.arch }}
+          build-args: |
+            NODE_VERSION=${{ matrix.node }}
+            BUN_VERSION=${{ matrix.bun }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  push-manifests:
+    strategy:
+      matrix:
+        ###### ATTENTION! ######
+        # Please use FULL version numbers here, e.g. 1.1.43 instead of 1.1
+        ###### ATTENTION! ######
+        bun:
+          - 1.1.43
+          - 1.2.2
+        ###### ATTENTION! ######
+        # Please use FULL version numbers here, e.g. 1.1.43 instead of 1.1
+        ###### ATTENTION! ######
+        node:
+          - 20.18.3
+          - 22.14.0
+        target:
+          - image: bun
+            path: ./packages/ubi/bun
+          - image: node
+            path: ./packages/ubi/node
+          - image: bun-node
+            path: ./packages/ubi/bun-node
+
+    name: "${{ matrix.target.image == 'bun' && format( 'Push Manifests - {0} {1}', matrix.target.image, matrix.bun ) || matrix.target.image == 'node' && format( 'Push Manifests - {0} {1}', matrix.target.image, matrix.node ) || matrix.target.image == 'bun-node' && format( 'Push Manifests - {0} {1}-{2}', matrix.target.image, matrix.bun, matrix.node ) || 'Push Manifests Job' }}"
+    runs-on: ubuntu-24.04
+    needs: [build-push]
+    permissions:
+      contents: read
+
+    steps:
+      - id: check_duplicate
+        run: |
+          skip="false"
+          if [[ "${{ matrix.target.image }}" == "bun" && "${{ matrix.node }}" != "20.18.3" ]]; then
+            echo "Skipping duplicate bun build because node version is not primary."
+            skip="true"
+          elif [[ "${{ matrix.target.image }}" == "node" && "${{ matrix.bun }}" != "1.1.43" ]]; then
+            echo "Skipping duplicate node build because bun version is not primary."
+            skip="true"
+          fi
+          echo "skip=${skip}" >> $GITHUB_OUTPUT
+
+      - name: Setup Docker Buildx
+        if: steps.check_duplicate.outputs.skip == 'false'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        if: steps.check_duplicate.outputs.skip == 'false'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_BAZZALABS_UBI_RW_TOKEN }}
+
+      - name: Create and push final manifests
+        if: steps.check_duplicate.outputs.skip == 'false'
+        run: |
+          # Assign GitHub matrix context values to bash variables.
+          TARGET_IMAGE="${{ matrix.target.image }}"
+          BUN="${{ matrix.bun }}"
+          NODE="${{ matrix.node }}"
+
+          if [ "$TARGET_IMAGE" = "bun" ]; then
+            TAG=$(printf "bun-%s" "$BUN")
+          elif [ "$TARGET_IMAGE" = "node" ]; then
+            TAG=$(printf "node-%s" "$NODE")
+          elif [ "$TARGET_IMAGE" = "bun-node" ]; then
+            TAG=$(printf "bun-%s-node-%s" "$BUN" "$NODE")
+          else
+            TAG="unknown"
+          fi
+
+          DIGEST_AMD64=$(docker manifest inspect ghcr.io/bazzalabs/ubi:$TAG-amd64 | jq -r '.manifests[] | select(.platform.architecture == "amd64" and .platform.os == "linux") | .digest')
+          DIGEST_ARM64=$(docker manifest inspect ghcr.io/bazzalabs/ubi:$TAG-arm64 | jq -r '.manifests[] | select(.platform.architecture == "arm64" and .platform.os == "linux") | .digest')
+
+          docker manifest create \
+            ghcr.io/bazzalabs/ubi:$TAG \
+            --amend ghcr.io/bazzalabs/ubi@$DIGEST_AMD64 \
+            --amend ghcr.io/bazzalabs/ubi@$DIGEST_ARM64
+
+          docker manifest push ghcr.io/bazzalabs/ubi:$TAG
