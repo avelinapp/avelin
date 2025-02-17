@@ -1,0 +1,195 @@
+name: Build UBI images
+
+concurrency:
+  group: "release-${{ github.ref }}" # Groups runs by the branch reference
+  cancel-in-progress: false # Queues new runs instead of canceling
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+
+jobs:
+  build-push:
+    name: "${{ matrix.image == 'bun' ? 'Build and Push ' + matrix.image + ' ' + matrix.bun : matrix.image == 'node' ? 'Build and Push ' + matrix.image + ' ' + matrix.node : matrix.image == 'bun-node' ? 'Build and Push ' + matrix.image + ' ' + matrix.bun + '/' + matrix.node : 'Build and Push Job' }}"
+    runs-on: ${{ matrix.os.name }}
+    needs: prepare
+    permissions:
+      contents: read
+
+    strategy:
+      matrix:
+        os:
+          - name: ubuntu-24.04
+            arch: amd64
+            platform: linux/amd64
+          - name: ubuntu-24.04-arm
+            arch: arm64
+            platform: linux/arm64
+        bun:
+          - 1.1.43
+          - 1.2.2
+        node:
+          - 20.18.3
+          - 22.14.0
+        include:
+          - image: bun
+            path: ./packages/ubi/bun
+          - image: node
+            path: ./packages/ubi/node
+          - image: bun-node
+            path: ./packages/ubi/bun-node
+
+    steps:
+      - name: Checkout monorepo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_BAZZALABS_UBI_RW_TOKEN }}
+      - name: Test
+        run: |
+          echo "OS name: ${{ matrix.os.name }}"
+          echo "OS arch: ${{ matrix.os.arch }}"
+          echo "OS platform: ${{ matrix.os.platform }}"
+          echo "Bun version: ${{ matrix.bun }}"
+          echo "Node version: ${{ matrix.node }}"
+          echo "Image: ${{ matrix.image }}"
+          echo "Path: ${{ matrix.path }}"
+          echo "\n\n
+          echo "ghcr.io/bazzalabs/ubi-${{ matrix.image }}:${{ matrix.image == 'bun' && 'bun-' + matrix.bun || matrix.image == 'node' && 'node-' + matrix.node || matrix.image == 'bun-node' && 'bun-' + matrix.bun + '-' + 'node-' + matrix.node || 'unknown' }}"
+
+      # - name: Setup Docker Buildx
+      #   uses: docker/setup-buildx-action@v3
+      #
+      # - name: Build and push
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     context: ${{ matrix.path }}
+      #     push: true
+      #     platforms: ${{ matrix.os.platform }}
+      #     tags: |
+      #       ghcr.io/bazzalabs/ubi-${{ matrix.image }}:${{ matrix.image == 'bun' ? matrix.bun : matrix.image == 'node' ? matrix.node : matrix.bun + '-' + matrix.node }}
+      #     build-args: |
+      #       NEXT_PUBLIC_APP_URL=https://avelin.app
+      #       NEXT_PUBLIC_API_URL=https://api.avelin.app
+      #       NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+      #       NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
+      #       NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+
+  # build-push-arm64:
+  #   name: Build & push ${{ matrix.app }} - ARM64
+  #   runs-on: ubuntu-24.04-arm
+  #   needs: prepare
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #
+  #   strategy:
+  #     matrix:
+  #       include:
+  #         - app: web
+  #           dockerfile: ./apps/web/Dockerfile
+  #         - app: api
+  #           dockerfile: ./apps/api/Dockerfile
+  #         - app: sync
+  #           dockerfile: ./apps/sync/Dockerfile
+  #
+  #   steps:
+  #     - name: Checkout monorepo
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+  #
+  #     - name: Checkout submodule for static assets
+  #       uses: actions/checkout@v4
+  #       with:
+  #         repository: avelinapp/assets
+  #         path: apps/web/static
+  #         token: ${{ secrets.GH_AVELINAPP_RO_ACCESS }}
+  #
+  #     - name: Login to GitHub Container Registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ghcr.io
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
+  #
+  #     - name: Setup Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
+  #
+  #     - name: Build and Push ${{ matrix.app }}
+  #       uses: docker/build-push-action@v6
+  #       with:
+  #         context: .
+  #         file: ${{ matrix.dockerfile }}
+  #         push: true
+  #         tags: |
+  #           ghcr.io/avelinapp/${{ matrix.app }}:latest-arm64
+  #           ghcr.io/avelinapp/${{ matrix.app }}:${{ github.sha }}-arm64
+  #           ghcr.io/avelinapp/${{ matrix.app }}:${{ needs.prepare.outputs.new_version }}-arm64
+  #           ghcr.io/avelinapp/${{ matrix.app }}:v${{ needs.prepare.outputs.new_version }}-arm64
+  #         build-args: |
+  #           NEXT_PUBLIC_APP_URL=https://avelin.app
+  #           NEXT_PUBLIC_API_URL=https://api.avelin.app
+  #           NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+  #           NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
+  #           NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
+  #         cache-from: type=gha
+  #         cache-to: type=gha,mode=max
+  #
+  # create-manifests:
+  #   name: Create image manifests
+  #   needs: [prepare, build-push-amd64, build-push-arm64]
+  #   runs-on: ubuntu-24.04
+  #
+  #   steps:
+  #     - name: Install Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
+  #
+  #     - name: Login to GitHub Container Registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ghcr.io
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
+  #
+  #     - name: Create and push final manifests (SHA, version)
+  #       run: |
+  #         VERSION=${{ needs.prepare.outputs.new_version }}
+  #
+  #         APPS=("web" "api" "sync")
+  #
+  #         for app in "${APPS[@]}"; do
+  #           DIGEST_AMD64=$(docker manifest inspect ghcr.io/avelinapp/$app:${{ github.sha }}-amd64 | jq -r '.manifests[] | select(.platform.architecture == "amd64" and .platform.os == "linux") | .digest')
+  #           DIGEST_ARM64=$(docker manifest inspect ghcr.io/avelinapp/$app:${{ github.sha }}-arm64 | jq -r '.manifests[] | select(.platform.architecture == "arm64" and .platform.os == "linux") | .digest')
+  #
+  #           docker manifest create \
+  #             ghcr.io/avelinapp/$app:${{ github.sha }} \
+  #             --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
+  #             --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
+  #
+  #           docker manifest push ghcr.io/avelinapp/$app:${{ github.sha }}
+  #
+  #           docker manifest create \
+  #             ghcr.io/avelinapp/$app:$VERSION \
+  #             --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
+  #             --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
+  #
+  #           docker manifest push ghcr.io/avelinapp/$app:$VERSION
+  #
+  #           docker manifest create \
+  #             ghcr.io/avelinapp/$app:v$VERSION \
+  #             --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
+  #             --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
+  #
+  #           docker manifest push ghcr.io/avelinapp/$app:v$VERSION
+  #         done
