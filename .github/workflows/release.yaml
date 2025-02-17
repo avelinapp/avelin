@@ -6,9 +6,9 @@ concurrency:
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   prepare:
@@ -382,7 +382,7 @@ jobs:
           ZERO_UPSTREAM_DB: ${{ secrets.DATABASE_URL }}
         run: |
           # build database before deploying; otherwise drizzle schema won't load
-          turbo @avelin/database#build
+          pnpm turbo @avelin/database#build
 
           pnpm run zero:deploy-permissions
           rm packages/zero/.env

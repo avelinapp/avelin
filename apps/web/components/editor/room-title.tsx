@@ -8,11 +8,11 @@ import { memo, useEffect, useRef, useState } from 'react'
 
 export const RoomTitle = memo(function RoomTitle() {
   const { roomTitle, setRoomTitle } = useCodeRoom()
-  const [value, setValue] = useState(roomTitle)
+  const [value, setValue] = useState<string>('')
   const ref = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
-    setValue(roomTitle)
+    setValue(roomTitle ?? '')
   }, [roomTitle])
 
   return (
