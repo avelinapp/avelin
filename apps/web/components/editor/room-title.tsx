@@ -13,6 +13,7 @@ export const RoomTitle = memo(function RoomTitle() {
 
   useEffect(() => {
     setValue(roomTitle ?? '')
+    document.title = roomTitle ? `${roomTitle} - Avelin` : 'Avelin'
   }, [roomTitle])
 
   return (
