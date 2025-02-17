@@ -1,5 +1,6 @@
 'use client'
 
+import { inArray } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import { create, useStore } from 'zustand'
@@ -28,7 +29,10 @@ export default function ViewProvider({
   const pathname = usePathname()
 
   useEffect(() => {
-    if (pathname.startsWith('/rooms/') || pathname === '/') {
+    if (
+      pathname.startsWith('/rooms/') ||
+      inArray(pathname, ['/', '/login', '/signup'])
+    ) {
       setReady(true)
     }
   }, [pathname, setReady])
