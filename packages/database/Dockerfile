@@ -1,19 +1,12 @@
-ARG NODE_VERSION=20
+ARG NODE_VERSION=20.18.3
 ARG PROJECT=database
 ARG PACKAGE=@avelin/${PROJECT}
 
-# 1. Alpine image
-FROM node:${NODE_VERSION}-alpine AS alpine
-RUN apk update && \
-  apk add --no-cache libc6-compat
+FROM ghcr.io/bazzalabs/ubi:node-${NODE_VERSION} AS ubi
 
 # Setup pnpm and turbo on the alpine base
-FROM alpine AS base
-# https://vercel.com/guides/corepack-errors-github-actions#quick-debug-steps
-RUN npm install -g corepack@latest && corepack enable
-# Replace <your-major-version> with the major version installed in your repository. For example:
-# RUN npm install turbo@2.1.3 --global
-RUN npm install turbo --global
+FROM ubi AS base
+RUN npm install pnpm turbo --global
 
 # 2. Prune projects
 FROM base AS pruner
