@@ -241,6 +241,9 @@ importers:
       '@avelin/icons':
         specifier: workspace:*
         version: link:../../packages/icons
+      '@avelin/id':
+        specifier: workspace:*
+        version: link:../../packages/id
       '@avelin/sync':
         specifier: workspace:*
         version: link:../sync
@@ -504,6 +507,8 @@ importers:
         version: 5.7.3
 
   packages/typescript-config: {}
+
+  packages/ubi: {}
 
   packages/ui:
     dependencies:

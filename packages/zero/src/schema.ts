@@ -101,7 +101,7 @@ export const permissions = definePermissions<AuthJWT, Schema>(schema, () => {
   return {
     rooms: {
       row: {
-        insert: NOBODY_CAN,
+        insert: ANYONE_CAN,
         update: {
           preMutation: NOBODY_CAN,
         },
@@ -117,6 +117,36 @@ export const permissions = definePermissions<AuthJWT, Schema>(schema, () => {
         },
         delete: NOBODY_CAN,
         select: ANYONE_CAN,
+      },
+    },
+    users: {
+      row: {
+        insert: NOBODY_CAN,
+        update: {
+          preMutation: NOBODY_CAN,
+        },
+        delete: NOBODY_CAN,
+        select: ANYONE_CAN,
+      },
+    },
+    oauthAccounts: {
+      row: {
+        insert: NOBODY_CAN,
+        update: {
+          preMutation: NOBODY_CAN,
+        },
+        delete: NOBODY_CAN,
+        select: NOBODY_CAN,
+      },
+    },
+    sessions: {
+      row: {
+        insert: NOBODY_CAN,
+        update: {
+          preMutation: NOBODY_CAN,
+        },
+        delete: NOBODY_CAN,
+        select: NOBODY_CAN,
       },
     },
   }
