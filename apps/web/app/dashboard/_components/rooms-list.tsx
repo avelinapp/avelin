@@ -23,7 +23,7 @@ import { PostHogFeature } from 'posthog-js/react'
 import { useEffect } from 'react'
 import { EmptyDashboardIcon } from './empty-state-icon'
 
-export function RoomsListWrapper() {
+export default function RoomsList() {
   const router = useRouter()
   const queryClient = getQueryClient()
   const createRoom = useCreateRoom({ queryClient })
@@ -41,16 +41,18 @@ export function RoomsListWrapper() {
         flag="zero"
         match={false}
       >
-        <RoomsList handleCreateRoom={handleCreateRoom} />
+        <RoomsList.Network handleCreateRoom={handleCreateRoom} />
       </PostHogFeature>
       <PostHogFeature className="flex-1 flex flex-col" flag="zero" match={true}>
-        <RoomsListZero handleCreateRoom={handleCreateRoom} />
+        <RoomsList.Zero handleCreateRoom={handleCreateRoom} />
       </PostHogFeature>
     </div>
   )
 }
 
-function RoomsList({ handleCreateRoom }: { handleCreateRoom: () => void }) {
+RoomsList.Network = ({
+  handleCreateRoom,
+}: { handleCreateRoom: () => void }) => {
   const queryClient = getQueryClient()
 
   const { data, error, isPending } = useReactQuery(queries.rooms.all())
@@ -105,7 +107,7 @@ function RoomsList({ handleCreateRoom }: { handleCreateRoom: () => void }) {
   )
 }
 
-function RoomsListZero({ handleCreateRoom }: { handleCreateRoom: () => void }) {
+RoomsList.Zero = ({ handleCreateRoom }: { handleCreateRoom: () => void }) => {
   const { ready, setReady } = useView()
   const queryClient = getQueryClient()
 

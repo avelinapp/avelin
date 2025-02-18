@@ -1,7 +1,7 @@
 'use client'
 
 import { useAuth } from '@/providers/auth-provider'
-import { RoomsListWrapper } from './_components/rooms-list'
+import RoomsList from './_components/rooms-list'
 
 export default function Page() {
   const { user } = useAuth()
@@ -19,7 +19,7 @@ export default function Page() {
           All your code rooms - past, present, and future.
         </p>
       </div>
-      <RoomsListWrapper />
+      <RoomsList />
     </div>
   )
 }
