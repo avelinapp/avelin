@@ -12,6 +12,7 @@
     "@avelin/api": "workspace:*",
     "@avelin/auth": "workspace:*",
     "@avelin/icons": "workspace:*",
+    "@avelin/id": "workspace:*",
     "@avelin/sync": "workspace:*",
     "@avelin/ui": "workspace:*",
     "@avelin/zero": "workspace:*",

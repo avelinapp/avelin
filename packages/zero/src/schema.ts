@@ -1,7 +1,6 @@
 import * as drizzleSchema from '@avelin/database/schema'
 import {
   ANYONE_CAN,
-  type Condition,
   type ExpressionBuilder,
   NOBODY_CAN,
   definePermissions,
@@ -81,43 +80,72 @@ export type ZeroSchema = Schema
 
 type TableName = keyof Schema['tables']
 
-type PermissionRule<TTable extends TableName> = (
-  authData: AuthJWT,
-  eb: ExpressionBuilder<Schema, TTable>,
-) => Condition
+export const permissions: ReturnType<typeof definePermissions> =
+  definePermissions<AuthJWT, Schema>(schema, () => {
+    const userIsLoggedIn = (
+      authData: AuthJWT,
+      { cmpLit }: ExpressionBuilder<Schema, TableName>,
+    ) => cmpLit(authData.sub, 'IS NOT', null)
 
-function and<TTable extends TableName>(
-  ...rules: PermissionRule<TTable>[]
-): PermissionRule<TTable> {
-  return (authData, eb) => eb.and(...rules.map((rule) => rule(authData, eb)))
-}
+    const loggedInUserIsCreator = (
+      authData: AuthJWT,
+      eb: ExpressionBuilder<Schema, 'rooms'>,
+    ) =>
+      eb.and(
+        userIsLoggedIn(authData, eb),
+        eb.cmp('creatorId', '=', authData.sub),
+      )
 
-export const permissions = definePermissions<AuthJWT, Schema>(schema, () => {
-  const userIsLoggedIn = (
-    authData: AuthJWT,
-    { cmpLit }: ExpressionBuilder<Schema, TableName>,
-  ) => cmpLit(authData.sub, 'IS NOT', null)
-
-  return {
-    rooms: {
-      row: {
-        insert: NOBODY_CAN,
-        update: {
-          preMutation: NOBODY_CAN,
+    return {
+      rooms: {
+        row: {
+          insert: [loggedInUserIsCreator],
+          update: {
+            preMutation: NOBODY_CAN,
+          },
+          delete: NOBODY_CAN,
+          select: ANYONE_CAN,
         },
-        delete: NOBODY_CAN,
-        select: ANYONE_CAN,
       },
-    },
-    roomParticipants: {
-      row: {
-        insert: NOBODY_CAN,
-        update: {
-          preMutation: NOBODY_CAN,
+      roomParticipants: {
+        row: {
+          insert: NOBODY_CAN,
+          update: {
+            preMutation: NOBODY_CAN,
+          },
+          delete: NOBODY_CAN,
+          select: ANYONE_CAN,
         },
-        delete: NOBODY_CAN,
-        select: ANYONE_CAN,
       },
-    },
-  }
-})
+      users: {
+        row: {
+          insert: NOBODY_CAN,
+          update: {
+            preMutation: NOBODY_CAN,
+          },
+          delete: NOBODY_CAN,
+          select: ANYONE_CAN,
+        },
+      },
+      oauthAccounts: {
+        row: {
+          insert: NOBODY_CAN,
+          update: {
+            preMutation: NOBODY_CAN,
+          },
+          delete: NOBODY_CAN,
+          select: NOBODY_CAN,
+        },
+      },
+      sessions: {
+        row: {
+          insert: NOBODY_CAN,
+          update: {
+            preMutation: NOBODY_CAN,
+          },
+          delete: NOBODY_CAN,
+          select: NOBODY_CAN,
+        },
+      },
+    }
+  })
