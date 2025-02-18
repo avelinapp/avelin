@@ -6,6 +6,7 @@ import CommandMenu from '@/components/command-menu/command-menu'
 import AvelinDevToolsToolbar from '@/components/devtools/toolbar'
 import Providers from '@/providers'
 import QueryClientProvider from '@/providers/query-client-provider'
+import { ScrollArea } from '@avelin/ui/scroll-area'
 import { Toaster } from '@avelin/ui/sonner'
 
 export const metadata: Metadata = {
@@ -25,11 +26,8 @@ export default function RootLayout({
       >
         <QueryClientProvider>
           <Providers>
-            <div className="flex flex-col h-full w-full">
-              <div
-                className="flex-1 flex flex-col w-full max-h-full"
-                style={{ overflowY: 'scroll' }}
-              >
+            <div className="flex flex-col h-screen w-screen">
+              <div className="flex-1 w-full h-full overflow-y-scroll overflow-x-hidden">
                 {children}
               </div>
               <AvelinDevToolsToolbar />

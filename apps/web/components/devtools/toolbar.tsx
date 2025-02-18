@@ -27,7 +27,7 @@ export default function AvelinDevToolsToolbar() {
   console.log('Loading Avelin developer tools...')
 
   return (
-    <div className="z-10 dark:bg-black bg-white h-9 flex items-center px-4 border border-color-border-subtle text-sm">
+    <div className="z-10 dark:bg-black bg-white h-9 flex items-center px-4 border-t border-color-border-subtle text-sm">
       <div className="flex items-center h-full gap-4">
         <LogoAvelin className="size-5" />
         <Button
