@@ -54,7 +54,7 @@ RoomsList.Network = () => {
   async function handleCreateRoom() {
     const data = await createRoom.mutateAsync()
 
-    // router.push(`/rooms/${data.slug}`)
+    router.push(`/rooms/${data.slug}`)
   }
 
   const { data, error, isPending } = useReactQuery(queries.rooms.all())
@@ -155,7 +155,7 @@ RoomsList.Zero = () => {
 
     if (!room) return
 
-    // router.push(`/rooms/${room.slug}`)
+    router.push(`/rooms/${room.slug}`)
   }
 
   return (
