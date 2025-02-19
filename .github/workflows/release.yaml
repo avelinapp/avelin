@@ -254,7 +254,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create and push final manifests (SHA, version)
-        if: ${{ matrix.app != 'web-bun' }}
         run: |
           VERSION=${{ needs.prepare.outputs.new_version }}
 
@@ -287,7 +286,6 @@ jobs:
           done
 
       - name: Create and push final manifests (SHA, version)
-        if: ${{ matrix.app == 'web-bun' }}
         run: |
           VERSION=${{ needs.prepare.outputs.new_version }}
 
@@ -336,7 +334,6 @@ jobs:
           path: avelinapp-iac
 
       - name: Update K8s manifests
-        if: ${{ matrix.app != 'web-bun' }}
         working-directory: avelinapp-iac
         run: |
           VERSION=v${{ needs.prepare.outputs.new_version }}
@@ -354,7 +351,6 @@ jobs:
           done
 
       - name: Update K8s manifests (web-bun)
-        if: ${{ matrix.app == 'web-bun' }}
         working-directory: avelinapp-iac
         run: |
           VERSION=v${{ needs.prepare.outputs.new_version }}-bun
