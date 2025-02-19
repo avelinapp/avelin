@@ -76,6 +76,8 @@ jobs:
         include:
           - app: web
             dockerfile: ./apps/web/Dockerfile
+          - app: web-bun
+            dockerfile: ./apps/web/Dockerfile.bun
           - app: api
             dockerfile: ./apps/api/Dockerfile
           - app: sync
@@ -105,6 +107,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build and Push ${{ matrix.app }}
+        if: ${{ matrix.app != 'web-bun' }}
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -116,6 +119,28 @@ jobs:
             ghcr.io/avelinapp/${{ matrix.app }}:${{ github.sha }}-amd64
             ghcr.io/avelinapp/${{ matrix.app }}:${{ needs.prepare.outputs.new_version }}-amd64
             ghcr.io/avelinapp/${{ matrix.app }}:v${{ needs.prepare.outputs.new_version }}-amd64
+          build-args: |
+            NEXT_PUBLIC_APP_URL=https://avelin.app
+            NEXT_PUBLIC_API_URL=https://api.avelin.app
+            NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+            NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
+            NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and Push ${{ matrix.app }}
+        if: ${{ matrix.app == 'web-bun' }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ghcr.io/avelinapp/web:latest-bun-amd64
+            ghcr.io/avelinapp/web:${{ github.sha }}-bun-amd64
+            ghcr.io/avelinapp/web:${{ needs.prepare.outputs.new_version }}-bun-amd64
+            ghcr.io/avelinapp/web:v${{ needs.prepare.outputs.new_version }}-bun-amd64
           build-args: |
             NEXT_PUBLIC_APP_URL=https://avelin.app
             NEXT_PUBLIC_API_URL=https://api.avelin.app
@@ -138,6 +163,8 @@ jobs:
         include:
           - app: web
             dockerfile: ./apps/web/Dockerfile
+          - app: web-bun
+            dockerfile: ./apps/web/Dockerfile.bun
           - app: api
             dockerfile: ./apps/api/Dockerfile
           - app: sync
@@ -167,16 +194,40 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build and Push ${{ matrix.app }}
+        if: ${{ matrix.app != 'web-bun' }}
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ${{ matrix.dockerfile }}
           push: true
+          platforms: linux/arm64
           tags: |
             ghcr.io/avelinapp/${{ matrix.app }}:latest-arm64
             ghcr.io/avelinapp/${{ matrix.app }}:${{ github.sha }}-arm64
             ghcr.io/avelinapp/${{ matrix.app }}:${{ needs.prepare.outputs.new_version }}-arm64
             ghcr.io/avelinapp/${{ matrix.app }}:v${{ needs.prepare.outputs.new_version }}-arm64
+          build-args: |
+            NEXT_PUBLIC_APP_URL=https://avelin.app
+            NEXT_PUBLIC_API_URL=https://api.avelin.app
+            NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+            NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
+            NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and Push ${{ matrix.app }}
+        if: ${{ matrix.app == 'web-bun' }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: true
+          platforms: linux/arm64
+          tags: |
+            ghcr.io/avelinapp/web:latest-bun-arm64
+            ghcr.io/avelinapp/web:${{ github.sha }}-bun-arm64
+            ghcr.io/avelinapp/web:${{ needs.prepare.outputs.new_version }}-bun-arm64
+            ghcr.io/avelinapp/web:v${{ needs.prepare.outputs.new_version }}-bun-arm64
           build-args: |
             NEXT_PUBLIC_APP_URL=https://avelin.app
             NEXT_PUBLIC_API_URL=https://api.avelin.app
@@ -203,6 +254,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create and push final manifests (SHA, version)
+        if: ${{ matrix.app != 'web-bun' }}
         run: |
           VERSION=${{ needs.prepare.outputs.new_version }}
 
@@ -234,6 +286,39 @@ jobs:
             docker manifest push ghcr.io/avelinapp/$app:v$VERSION
           done
 
+      - name: Create and push final manifests (SHA, version)
+        if: ${{ matrix.app == 'web-bun' }}
+        run: |
+          VERSION=${{ needs.prepare.outputs.new_version }}
+
+          APPS=("web")
+
+          for app in "${APPS[@]}"; do
+            DIGEST_AMD64=$(docker manifest inspect ghcr.io/avelinapp/$app:${{ github.sha }}-bun-amd64 | jq -r '.manifests[] | select(.platform.architecture == "amd64" and .platform.os == "linux") | .digest')
+            DIGEST_ARM64=$(docker manifest inspect ghcr.io/avelinapp/$app:${{ github.sha }}-bun-arm64 | jq -r '.manifests[] | select(.platform.architecture == "arm64" and .platform.os == "linux") | .digest')
+
+            docker manifest create \
+              ghcr.io/avelinapp/$app:${{ github.sha }}-bun \
+              --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
+              --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
+
+            docker manifest push ghcr.io/avelinapp/$app:${{ github.sha }}-bun
+
+            docker manifest create \
+              ghcr.io/avelinapp/$app:$VERSION-bun \
+              --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
+              --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
+
+            docker manifest push ghcr.io/avelinapp/$app:$VERSION-bun
+
+            docker manifest create \
+              ghcr.io/avelinapp/$app:v$VERSION-bun \
+              --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
+              --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
+
+            docker manifest push ghcr.io/avelinapp/$app:v$VERSION-bun
+          done
+
   update-manifests:
     name: Update manifests in avelinapp/iac
     runs-on: ubuntu-24.04
@@ -251,6 +336,7 @@ jobs:
           path: avelinapp-iac
 
       - name: Update K8s manifests
+        if: ${{ matrix.app != 'web-bun' }}
         working-directory: avelinapp-iac
         run: |
           VERSION=v${{ needs.prepare.outputs.new_version }}
@@ -266,6 +352,21 @@ jobs:
               exit 1
             fi
           done
+
+      - name: Update K8s manifests (web-bun)
+        if: ${{ matrix.app == 'web-bun' }}
+        working-directory: avelinapp-iac
+        run: |
+          VERSION=v${{ needs.prepare.outputs.new_version }}-bun
+          manifests_dir="gitops/cluster-apps/avelin"
+          manifest="$manifests_dir/web/web-bun-deploy.yaml"
+          if [ -f "$manifest" ]; then
+            echo "Updating image tag in $manifest to $VERSION"
+            yq e -i ".spec.template.spec.containers[].image = \"ghcr.io/avelinapp/web:$VERSION\"" "$manifest"
+          else
+            echo "Manifest file $manifest not found!"
+            exit 1
+          fi
 
       - name: Update Zero server manifest
         working-directory: avelinapp-iac
