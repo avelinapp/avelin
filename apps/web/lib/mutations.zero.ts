@@ -1,12 +1,12 @@
 import { newId, newRoomSlug } from '@avelin/id'
-import type { ZeroSchema } from '@avelin/zero'
-import type { Zero } from '@rocicorp/zero'
-import { now } from './zero'
+import { now, client as zeroClient } from './zero'
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class Room {
   // Static factory method
-  static async create(z: Zero<ZeroSchema>) {
+  static async create() {
+    const z = zeroClient!
+
     const id = newId('room')
     const slug = newRoomSlug()
 
@@ -24,7 +24,9 @@ export class Room {
     return room
   }
 
-  static async delete(z: Zero<ZeroSchema>, { id }: { id: string }) {
+  static async delete({ id }: { id: string }) {
+    const z = zeroClient!
+
     const roomParticipants = z.query.roomParticipants
       .where('roomId', '=', id)
       .run()

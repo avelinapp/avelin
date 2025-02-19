@@ -7,7 +7,7 @@ import { env } from './env'
 
 export const useZero = createUseZero<ZeroSchema>()
 
-let client: Zero<ZeroSchema> | undefined
+export let client: Zero<ZeroSchema> | undefined
 
 export const metadata: Metadata = {
   title: 'Zero | Avelin',

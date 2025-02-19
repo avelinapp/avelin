@@ -151,7 +151,7 @@ RoomsList.Zero = () => {
   const dashboardIsEmpty = !rooms.length
 
   async function handleCreateRoom() {
-    const room = await Room.create(z)
+    const room = await Room.create()
 
     if (!room) return
 
@@ -294,10 +294,8 @@ const CodeRoomListItemZero = ({
 
   const LanguageIcon = language.logo!
 
-  const z = useZero()
-
   async function handleDeleteRoom() {
-    await Room.delete(z, { id: room.id })
+    await Room.delete({ id: room.id })
   }
 
   const [, copy] = useCopyToClipboard()
