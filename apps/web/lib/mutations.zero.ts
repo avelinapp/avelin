@@ -33,7 +33,6 @@ export class Room {
       await tx.rooms.delete({ id })
 
       for (const rp of roomParticipants) {
-        if (rp.userId === z.userID) continue
         await tx.roomParticipants.delete({
           roomId: id,
           userId: rp.userId,
