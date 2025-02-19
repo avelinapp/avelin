@@ -10,6 +10,8 @@ import { useView } from '@/providers/view-provider'
 import type { Room as TRoom } from '@avelin/database'
 import {
   CopyIcon,
+  LayoutGridIcon,
+  LayoutListIcon,
   LinkIcon,
   PlusIcon,
   SquareArrowUpRightIcon,
@@ -20,12 +22,14 @@ import { cn } from '@avelin/ui/cn'
 import { FadeInContainer } from '@avelin/ui/fade-in-container'
 import { useCopyToClipboard } from '@avelin/ui/hooks'
 import { toast } from '@avelin/ui/sonner'
+import { ToggleGroup, ToggleGroupItem } from '@avelin/ui/toggle-group'
+import type { Zero } from '@avelin/zero'
 import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
 import { useQuery as useReactQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { PostHogFeature } from 'posthog-js/react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useMemo } from 'react'
 import { EmptyDashboardIcon } from './empty-state-icon'
 
@@ -111,6 +115,7 @@ RoomsList.Network = () => {
 RoomsList.Zero = () => {
   const router = useRouter()
   const { ready, setReady } = useView()
+  const [roomsView, setRoomsView] = useState<'list' | 'grid'>('list')
 
   const z = useZero()
 
@@ -160,14 +165,34 @@ RoomsList.Zero = () => {
 
   return (
     <div className={cn('flex-1 flex flex-col gap-4 h-full')}>
-      <div>
-        <Button
-          className={cn(dashboardIsEmpty && 'hidden')}
-          onClick={handleCreateRoom}
-        >
-          <PlusIcon className="size-fit" />
-          Create
-        </Button>
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold">Code Rooms</h2>
+        <div className="flex items-center gap-2">
+          <ToggleGroup
+            defaultValue="list"
+            value={roomsView}
+            onValueChange={setRoomsView}
+            size="sm"
+            type="single"
+            variant="secondary"
+            spacing="none"
+          >
+            <ToggleGroupItem value="list">
+              <LayoutListIcon />
+            </ToggleGroupItem>
+            <ToggleGroupItem value="grid">
+              <LayoutGridIcon />
+            </ToggleGroupItem>
+          </ToggleGroup>
+          <Button
+            size="sm"
+            className={cn(dashboardIsEmpty && 'hidden')}
+            onClick={handleCreateRoom}
+          >
+            <PlusIcon className="size-fit" />
+            Create
+          </Button>
+        </div>
       </div>
       <div className="flex-1 h-full flex flex-col gap-1  ">
         {dashboardIsEmpty ? (
@@ -184,13 +209,21 @@ RoomsList.Zero = () => {
               <Button onClick={handleCreateRoom}>Create room</Button>
             </div>
           </div>
-        ) : (
-          rooms.map((room) => (
-            // @ts-ignore
-            <CodeRoomListItemZero key={room.id} room={room} />
-          ))
-        )}
+        ) : roomsView === 'list' ? (
+          <CodeRoomListView rooms={rooms} />
+        ) : null}
       </div>
+    </div>
+  )
+}
+
+const CodeRoomListView = ({ rooms }: { rooms: Array<Zero.Schema.Room> }) => {
+  return (
+    <div className="flex flex-col gap-1">
+      {rooms.map((room) => (
+        // @ts-ignore
+        <CodeRoomListItemZero key={room.id} room={room} />
+      ))}
     </div>
   )
 }

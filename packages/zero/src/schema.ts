@@ -3,6 +3,7 @@ import {
   ANYONE_CAN,
   type ExpressionBuilder,
   NOBODY_CAN,
+  type Row,
   definePermissions,
 } from '@rocicorp/zero'
 import { createZeroSchema } from 'drizzle-zero'
@@ -77,6 +78,12 @@ export type AuthJWT = {
 
 export type Schema = typeof schema
 export type ZeroSchema = Schema
+
+export namespace Zero {
+  export namespace Schema {
+    export type Room = Row<typeof schema.tables.rooms>
+  }
+}
 
 type TableName = keyof Schema['tables']
 
