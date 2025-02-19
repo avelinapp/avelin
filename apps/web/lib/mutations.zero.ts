@@ -1,6 +1,7 @@
 import { newId, newRoomSlug } from '@avelin/id'
 import type { ZeroSchema } from '@avelin/zero'
 import type { Zero } from '@rocicorp/zero'
+import { now } from './zero'
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class Room {
@@ -13,6 +14,9 @@ export class Room {
       id,
       slug,
       creatorId: z.userID,
+      editorLanguage: 'plaintext',
+      createdAt: now(),
+      updatedAt: now(),
     })
 
     const [room] = z.query.rooms.where('id', id).run()

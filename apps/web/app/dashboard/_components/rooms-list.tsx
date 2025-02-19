@@ -2,10 +2,11 @@
 
 import { type Language, languages } from '@/lib/constants'
 import { useCreateRoom, useDeleteRoom } from '@/lib/mutations'
+import { Room } from '@/lib/mutations.zero'
 import { getQueryClient, queries } from '@/lib/queries'
 import { useZero } from '@/lib/zero'
 import { useView } from '@/providers/view-provider'
-import type { Room } from '@avelin/database'
+import type { Room as TRoom } from '@avelin/database'
 import {
   LinkIcon,
   PlusIcon,
@@ -24,6 +25,23 @@ import { useEffect } from 'react'
 import { EmptyDashboardIcon } from './empty-state-icon'
 
 export default function RoomsList() {
+  return (
+    <div className="flex-1 flex flex-col gap-4 h-full">
+      <PostHogFeature
+        className="flex-1 flex flex-col"
+        flag="zero"
+        match={false}
+      >
+        <RoomsList.Network />
+      </PostHogFeature>
+      <PostHogFeature className="flex-1 flex flex-col" flag="zero" match={true}>
+        <RoomsList.Zero />
+      </PostHogFeature>
+    </div>
+  )
+}
+
+RoomsList.Network = () => {
   const router = useRouter()
   const queryClient = getQueryClient()
   const createRoom = useCreateRoom({ queryClient })
@@ -34,29 +52,7 @@ export default function RoomsList() {
     router.push(`/rooms/${data.slug}`)
   }
 
-  return (
-    <div className="flex-1 flex flex-col gap-4 h-full">
-      <PostHogFeature
-        className="flex-1 flex flex-col"
-        flag="zero"
-        match={false}
-      >
-        <RoomsList.Network handleCreateRoom={handleCreateRoom} />
-      </PostHogFeature>
-      <PostHogFeature className="flex-1 flex flex-col" flag="zero" match={true}>
-        <RoomsList.Zero handleCreateRoom={handleCreateRoom} />
-      </PostHogFeature>
-    </div>
-  )
-}
-
-RoomsList.Network = ({
-  handleCreateRoom,
-}: { handleCreateRoom: () => void }) => {
-  const queryClient = getQueryClient()
-
   const { data, error, isPending } = useReactQuery(queries.rooms.all())
-  const createRoom = useCreateRoom({ queryClient })
 
   const dashboardIsEmpty = !isPending && !error && !data.length
 
@@ -107,11 +103,9 @@ RoomsList.Network = ({
   )
 }
 
-RoomsList.Zero = ({ handleCreateRoom }: { handleCreateRoom: () => void }) => {
+RoomsList.Zero = () => {
+  const router = useRouter()
   const { ready, setReady } = useView()
-  const queryClient = getQueryClient()
-
-  const createRoom = useCreateRoom({ queryClient })
 
   const z = useZero()
 
@@ -132,9 +126,14 @@ RoomsList.Zero = ({ handleCreateRoom }: { handleCreateRoom: () => void }) => {
     )
     .map((room) => ({
       ...room,
-      lastAccessedAt: room.roomParticipants[0]?.lastAccessedAt!,
+      lastAccessedAt: room.roomParticipants[0]?.lastAccessedAt ?? null,
     }))
-    .sort((a, b) => b.lastAccessedAt - a.lastAccessedAt)
+    .sort((a, b) => {
+      const x = a.lastAccessedAt ?? a.createdAt!
+      const y = b.lastAccessedAt ?? b.createdAt!
+
+      return y - x
+    })
 
   const pageReady = rooms.length > 0 || status === 'complete'
 
@@ -146,13 +145,20 @@ RoomsList.Zero = ({ handleCreateRoom }: { handleCreateRoom: () => void }) => {
 
   const dashboardIsEmpty = !rooms.length
 
+  async function handleCreateRoom() {
+    const room = await Room.create(z)
+
+    if (!room) return
+
+    router.push(`/rooms/${room.slug}`)
+  }
+
   return (
     <div className={cn('flex-1 flex flex-col gap-4')}>
       <div>
         <Button
           className={cn(dashboardIsEmpty && 'hidden')}
           onClick={handleCreateRoom}
-          disabled={createRoom.isPending}
         >
           <PlusIcon className="size-fit" />
           Create
@@ -170,12 +176,7 @@ RoomsList.Zero = ({ handleCreateRoom }: { handleCreateRoom: () => void }) => {
                 </p>
                 <p>You can get started by creating a code room.</p>
               </div>
-              <Button
-                onClick={handleCreateRoom}
-                disabled={createRoom.isPending}
-              >
-                Create room
-              </Button>
+              <Button onClick={handleCreateRoom}>Create room</Button>
             </div>
           </div>
         ) : (
@@ -192,7 +193,7 @@ RoomsList.Zero = ({ handleCreateRoom }: { handleCreateRoom: () => void }) => {
 const CodeRoomListItem = ({
   room,
 }: {
-  room: Omit<Room, 'ydoc'> & { lastAccessedAt: Date | null }
+  room: Omit<TRoom, 'ydoc'> & { lastAccessedAt: Date | null }
 }) => {
   const queryClient = getQueryClient()
   const deleteRoom = useDeleteRoom({ queryClient })
