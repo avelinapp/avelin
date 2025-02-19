@@ -6,7 +6,6 @@ import CommandMenu from '@/components/command-menu/command-menu'
 import AvelinDevToolsToolbar from '@/components/devtools/toolbar'
 import Providers from '@/providers'
 import QueryClientProvider from '@/providers/query-client-provider'
-import { ScrollArea } from '@avelin/ui/scroll-area'
 import { Toaster } from '@avelin/ui/sonner'
 
 export const metadata: Metadata = {

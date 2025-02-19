@@ -6,6 +6,7 @@ import { cn } from '@avelin/ui/cn'
 import { useRouter } from 'next/navigation'
 import posthog from 'posthog-js'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
+import { FPSMeter } from './fps'
 
 export default function AvelinDevToolsToolbar() {
   const router = useRouter()
@@ -30,6 +31,7 @@ export default function AvelinDevToolsToolbar() {
     <div className="z-10 dark:bg-black bg-white h-9 flex items-center px-4 border-t border-color-border-subtle text-sm">
       <div className="flex items-center h-full gap-4">
         <LogoAvelin className="size-5" />
+        <FPSMeter />
         <Button
           className={cn(
             'h-full w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
