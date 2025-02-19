@@ -5,10 +5,10 @@ import type { VariantProps } from 'class-variance-authority'
 import * as React from 'react'
 
 import { cn } from '@avelin/ui/cn'
-import { toggleVariants } from '@avelin/ui/components/ui/toggle'
+import { toggleVariants } from '@avelin/ui/toggle'
 
 type ToggleGroupVariantProps = VariantProps<typeof toggleVariants> & {
-  spacing: 'default' | 'none'
+  spacing?: 'default' | 'none'
 }
 
 const ToggleGroupContext = React.createContext<ToggleGroupVariantProps>({
@@ -21,22 +21,27 @@ const ToggleGroup = React.forwardRef<
   React.ElementRef<typeof ToggleGroupPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> &
     ToggleGroupVariantProps
->(({ className, variant, size, spacing, children, ...props }, ref) => (
-  <ToggleGroupPrimitive.Root
-    ref={ref}
-    className={cn(
-      'flex items-center justify-center gap-1',
-      spacing === 'none' &&
-        'gap-0 [&>*:first-child]:rounded-l-md [&>*:first-child]:rounded-r-none [&>*:last-child]:rounded-l-none [&>*:last-child]:rounded-r-md',
-      className,
-    )}
-    {...props}
-  >
-    <ToggleGroupContext.Provider value={{ variant, size, spacing }}>
-      {children}
-    </ToggleGroupContext.Provider>
-  </ToggleGroupPrimitive.Root>
-))
+>(
+  (
+    { className, variant, size, spacing = 'default', children, ...props },
+    ref,
+  ) => (
+    <ToggleGroupPrimitive.Root
+      ref={ref}
+      className={cn(
+        'flex items-center justify-center gap-1',
+        spacing === 'none' &&
+          'gap-0 [&>*:first-child]:rounded-l-md [&>*:first-child]:rounded-r-none [&>*:last-child]:rounded-l-none [&>*:last-child]:rounded-r-md',
+        className,
+      )}
+      {...props}
+    >
+      <ToggleGroupContext.Provider value={{ variant, size, spacing }}>
+        {children}
+      </ToggleGroupContext.Provider>
+    </ToggleGroupPrimitive.Root>
+  ),
+)
 
 ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName
 
