@@ -26,9 +26,15 @@ export function EditorToolbar() {
       <div className="w-full grid grid-cols-3">
         <div className="flex items-center place-self-start">
           <div className="flex items-center h-6">
-            <Link href="/">
-              <LogoAvelin className="size-6 shrink-0" />
-            </Link>
+            {isAuthenticated && !isAnonymous ? (
+              <Link href="/dashboard">
+                <LogoAvelin className="size-6 shrink-0" />
+              </Link>
+            ) : (
+              <Link href="/">
+                <LogoAvelin className="size-6 shrink-0" />
+              </Link>
+            )}
             <NetworkStatusBadge className="ml-2" />
             <Separator className="mx-3" orientation="vertical" />
           </div>

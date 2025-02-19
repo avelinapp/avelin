@@ -4,7 +4,6 @@ import { useShortcut } from '@/hooks/use-shortcut'
 import { useCreateRoom } from '@/lib/mutations'
 import { Room } from '@/lib/mutations.zero'
 import { getQueryClient } from '@/lib/queries'
-import { useZero } from '@/lib/zero'
 import { PlusIcon } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { useRouter } from 'next/navigation'
@@ -57,10 +56,9 @@ CreateRoomButton.Network = () => {
 
 CreateRoomButton.Zero = () => {
   const router = useRouter()
-  const z = useZero()
 
   const createRoom = async () => {
-    const room = await Room.create(z)
+    const room = await Room.create()
     if (room) {
       router.push(`/rooms/${room.slug}`)
     }

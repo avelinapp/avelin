@@ -231,7 +231,7 @@ export const rooms = new Elysia({ prefix: '/rooms' })
 
             const { user } = auth
 
-            await db
+            const updatedRp = await db
               .insert(schema.roomParticipants)
               .values({
                 roomId: roomId,
@@ -246,6 +246,9 @@ export const rooms = new Elysia({ prefix: '/rooms' })
                   lastAccessedAt: new Date(),
                 },
               })
+              .returning()
+
+            console.log('Updated room participant:', updatedRp)
 
             return {}
           }

@@ -13,7 +13,7 @@ export default function Toolbar() {
     <div className="sticky top-4 flex items-center drop-shadow-sm py-2 px-4 w-full bg-popover-bg rounded-lg border border-color-border-subtle">
       <div className="w-full grid grid-cols-2 items-center">
         <div className="flex items-center">
-          <Link href="/">
+          <Link href="/dashboard">
             <LogoAvelin className="size-6 shrink-0" />
           </Link>
         </div>
