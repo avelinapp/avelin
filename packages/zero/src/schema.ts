@@ -82,6 +82,7 @@ export type ZeroSchema = Schema
 export namespace Zero {
   export namespace Schema {
     export type Room = Row<typeof schema.tables.rooms>
+    export type RoomParticipant = Row<typeof schema.tables.roomParticipants>
   }
 }
 
@@ -126,7 +127,8 @@ export const permissions: ReturnType<typeof definePermissions> =
         row: {
           insert: [loggedInUserIsCreator],
           update: {
-            preMutation: NOBODY_CAN,
+            preMutation: [loggedInUserIsCreator],
+            postMutation: [loggedInUserIsCreator],
           },
           delete: [loggedInUserIsCreator],
           select: ANYONE_CAN,
@@ -136,7 +138,7 @@ export const permissions: ReturnType<typeof definePermissions> =
         row: {
           insert: NOBODY_CAN,
           update: {
-            preMutation: NOBODY_CAN,
+            preMutation: [loggedInUserIsRoomParticipant],
           },
           /*
            * Allow the user to delete room participants under the following conditions:

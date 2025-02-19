@@ -1,18 +1,19 @@
 'use client'
 
+import { useRerender } from '@/hooks/use-rerender'
 import { type Language, languages } from '@/lib/constants'
 import { env } from '@/lib/env'
 import { Room } from '@/lib/mutations.zero'
 import { useZero } from '@/lib/zero'
 import { useView } from '@/providers/view-provider'
-import type { Room as TRoom } from '@avelin/database'
 import {
+  CircleDotIcon,
   CopyIcon,
+  LayersIcon,
   LayoutGridIcon,
   LayoutListIcon,
   LinkIcon,
   PlusIcon,
-  SquareArrowUpRightIcon,
   TrashIcon,
 } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
@@ -20,9 +21,10 @@ import { cn } from '@avelin/ui/cn'
 import { useCopyToClipboard } from '@avelin/ui/hooks'
 import { toast } from '@avelin/ui/sonner'
 import { ToggleGroup, ToggleGroupItem } from '@avelin/ui/toggle-group'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@avelin/ui/tooltip'
 import type { Zero } from '@avelin/zero'
 import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
-import Link from 'next/link'
+import { differenceInSeconds, formatDistanceToNow } from 'date-fns'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useMemo } from 'react'
@@ -30,16 +32,18 @@ import { EmptyDashboardIcon } from './empty-state-icon'
 
 export default function RoomsListZero() {
   const router = useRouter()
+  useRerender({ frequency: 1000 * 60 })
   const { ready, setReady } = useView()
-  const [roomsView, setRoomsView] = useState<'list' | 'grid'>('list')
+  const [roomsDisplayType, setRoomsDisplayType] = useState<'list' | 'grid'>(
+    'list',
+  )
+  const [roomsView, setRoomsView] = useState<'all' | 'active'>('all')
 
   const z = useZero()
 
   const q = z.query.rooms
     .where('deletedAt', 'IS', null)
-    .related('roomParticipants', (q) =>
-      q.where('userId', '=', z.userID).orderBy('lastAccessedAt', 'desc'),
-    )
+    .related('roomParticipants', (q) => q.where('userId', '=', z.userID))
 
   let [rooms, { type: status }] = useZeroQuery(q)
 
@@ -61,6 +65,11 @@ export default function RoomsListZero() {
       return y - x
     })
 
+  console.log(
+    'rooms',
+    rooms.map((r) => ({ ...r, IS_OWNER: r.creatorId === z.userID })),
+  )
+
   const pageReady = rooms.length > 0 || status === 'complete'
 
   useEffect(() => {
@@ -80,14 +89,42 @@ export default function RoomsListZero() {
   }
 
   return (
-    <div className={cn('flex-1 flex flex-col gap-4 h-full')}>
+    <div className={cn('flex-1 flex flex-col gap-4 h-full select-none')}>
       <div className="flex items-end justify-between">
-        <h2 className="text-xl font-semibold">Code Rooms</h2>
+        <div className="flex items-center gap-6">
+          <h2 className="text-xl font-semibold">Code Rooms</h2>
+          <ToggleGroup
+            className="*:h-8"
+            size="sm"
+            type="single"
+            variant="secondary"
+            value={roomsView}
+            onValueChange={(v: 'all' | 'active') => {
+              if (!v) return
+              setRoomsView(v)
+            }}
+          >
+            <ToggleGroupItem value="all" className="group">
+              <LayersIcon className="group-hover:text-color-text-primary" />
+              All
+            </ToggleGroupItem>
+            <ToggleGroupItem
+              className="group disabled:blur-[1px]"
+              value="active"
+              disabled
+            >
+              <CircleDotIcon className="group-hover:text-color-text-primary" />
+              Active
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
         <div className="flex items-center gap-2">
           <ToggleGroup
-            defaultValue="list"
-            value={roomsView}
-            onValueChange={setRoomsView}
+            value={roomsDisplayType}
+            onValueChange={(v: 'list' | 'grid') => {
+              if (!v) return
+              setRoomsDisplayType(v)
+            }}
             size="sm"
             type="single"
             variant="secondary"
@@ -96,7 +133,11 @@ export default function RoomsListZero() {
             <ToggleGroupItem value="list">
               <LayoutListIcon />
             </ToggleGroupItem>
-            <ToggleGroupItem value="grid">
+            <ToggleGroupItem
+              className="disabled:blur-[1px]"
+              value="grid"
+              disabled
+            >
               <LayoutGridIcon />
             </ToggleGroupItem>
           </ToggleGroup>
@@ -125,7 +166,7 @@ export default function RoomsListZero() {
               <Button onClick={handleCreateRoom}>Create room</Button>
             </div>
           </div>
-        ) : roomsView === 'list' ? (
+        ) : roomsDisplayType === 'list' ? (
           <CodeRoomListView rooms={rooms} />
         ) : null}
       </div>
@@ -135,7 +176,7 @@ export default function RoomsListZero() {
 
 const CodeRoomListView = ({ rooms }: { rooms: Array<Zero.Schema.Room> }) => {
   return (
-    <div className="grid grid-cols-[max-content_max-content_minmax(0,_1fr)] gap-y-1">
+    <div className="grid grid-cols-[max-content_max-content_max-content_minmax(0,_1fr)] gap-y-1">
       {rooms.map((room) => (
         // @ts-ignore
         <CodeRoomListItem key={room.id} room={room} />
@@ -147,11 +188,15 @@ const CodeRoomListView = ({ rooms }: { rooms: Array<Zero.Schema.Room> }) => {
 const CodeRoomListItem = ({
   room,
 }: {
-  room: Omit<TRoom, 'ydoc'> & { lastAccessedAt: Date | null }
+  room: Zero.Schema.Room & Pick<Zero.Schema.RoomParticipant, 'lastAccessedAt'>
 }) => {
+  const router = useRouter()
+
   const language = languages.find(
     (l) => l.value === (room.editorLanguage as Language['value']),
   )!
+
+  const LanguageIcon = language.logo!
 
   async function handleDeleteRoom() {
     await Room.delete({ id: room.id })
@@ -184,33 +229,49 @@ const CodeRoomListItem = ({
     }
   }
 
+  const diffInSeconds = differenceInSeconds(
+    new Date(),
+    new Date(room.lastAccessedAt!),
+  )
+
+  const relativeLastAccessedAt =
+    diffInSeconds < 60
+      ? 'just now'
+      : `${formatDistanceToNow(new Date(room.lastAccessedAt!))} ago`
+
   return (
-    <div className="group/item rounded-md hover:bg-gray-3 px-4 h-12 grid grid-cols-subgrid col-span-3 items-center gap-x-4 w-full">
-      <span className="rounded-sm text-xs font-medium !tracking-normal bg-gray-4 px-2 py-0.5 w-fit justify-self-end">
-        {language.name}
-      </span>
+    <div
+      className="group/item rounded-md hover:bg-gray-3 px-4 h-12 grid grid-cols-subgrid col-span-4 items-center gap-x-4 w-full"
+      onClick={() => router.push(`/rooms/${room.slug}`)}
+    >
+      <div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <LanguageIcon className="size-5 shrink-0" />
+          </TooltipTrigger>
+          <TooltipContent
+            className="text-xs border-color-border-subtle"
+            side="top"
+          >
+            {language.name}
+          </TooltipContent>
+        </Tooltip>
+      </div>
       <span className="font-medium">
         {room.title && room.title.length >= 1 ? room.title : 'Untitled room'}
       </span>
-      <div className="justify-self-end hidden group-hover/item:flex items-center gap-1">
+      <span>{relativeLastAccessedAt}</span>
+      <div className="justify-self-end hidden group-hover/item:flex items-center gap-1 z-10">
         <Button
           size="xs"
-          asChild
-          tooltip={{
-            content: 'Open code room',
-          }}
-        >
-          <Link href={`/rooms/${room.slug}`}>
-            <SquareArrowUpRightIcon className="size-fit" />
-          </Link>
-        </Button>
-        <Button
-          size="xs"
-          variant="secondary"
+          variant="outline"
           tooltip={{
             content: 'Copy URL',
           }}
-          onClick={() => handleCopy(true)}
+          onClick={(e) => {
+            e.stopPropagation()
+            handleCopy(true)
+          }}
         >
           <LinkIcon className="size-fit" />
         </Button>
@@ -220,9 +281,12 @@ const CodeRoomListItem = ({
           tooltip={{
             content: 'Delete code room',
           }}
-          onClick={handleDeleteRoom}
+          onClick={(e) => {
+            e.stopPropagation()
+            handleDeleteRoom()
+          }}
         >
-          <TrashIcon className="size-4 shrink-0" />
+          <TrashIcon className="size-4 shrink-0 dark:text-gray-12 text-primary-text" />
         </Button>
       </div>
     </div>

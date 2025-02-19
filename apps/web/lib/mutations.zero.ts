@@ -32,7 +32,7 @@ export class Room {
       .run()
 
     await z.mutateBatch(async (tx) => {
-      await tx.rooms.delete({ id })
+      await tx.rooms.update({ id, deletedAt: now() })
 
       for (const rp of roomParticipants) {
         await tx.roomParticipants.delete({

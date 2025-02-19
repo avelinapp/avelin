@@ -3,15 +3,10 @@
 import { type Language, languages } from '@/lib/constants'
 import { env } from '@/lib/env'
 import { useCreateRoom, useDeleteRoom } from '@/lib/mutations'
-import { Room } from '@/lib/mutations.zero'
 import { getQueryClient, queries } from '@/lib/queries'
-import { useZero } from '@/lib/zero'
-import { useView } from '@/providers/view-provider'
 import type { Room as TRoom } from '@avelin/database'
 import {
   CopyIcon,
-  LayoutGridIcon,
-  LayoutListIcon,
   LinkIcon,
   PlusIcon,
   SquareArrowUpRightIcon,
@@ -22,14 +17,9 @@ import { cn } from '@avelin/ui/cn'
 import { FadeInContainer } from '@avelin/ui/fade-in-container'
 import { useCopyToClipboard } from '@avelin/ui/hooks'
 import { toast } from '@avelin/ui/sonner'
-import { ToggleGroup, ToggleGroupItem } from '@avelin/ui/toggle-group'
-import type { Zero } from '@avelin/zero'
-import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
 import { useQuery as useReactQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { PostHogFeature } from 'posthog-js/react'
-import { useEffect, useState } from 'react'
 import { useMemo } from 'react'
 import { EmptyDashboardIcon } from './empty-state-icon'
 
