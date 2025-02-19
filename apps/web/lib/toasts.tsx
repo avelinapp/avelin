@@ -34,12 +34,7 @@ const rooms = {
       }),
     error: (roomId: string, error: Error) =>
       toast.error('Failed to delete room.', {
-        description: (
-          <div>
-            <p>Room ID: {roomId}</p>
-            <p>Error: {error.message}</p>
-          </div>
-        ),
+        description: error.message,
       }),
   },
 } as const

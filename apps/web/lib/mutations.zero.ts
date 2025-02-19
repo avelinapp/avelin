@@ -23,4 +23,22 @@ export class Room {
 
     return room
   }
+
+  static async delete(z: Zero<ZeroSchema>, { id }: { id: string }) {
+    const roomParticipants = z.query.roomParticipants
+      .where('roomId', '=', id)
+      .run()
+
+    await z.mutateBatch(async (tx) => {
+      await tx.rooms.delete({ id })
+
+      for (const rp of roomParticipants) {
+        if (rp.userId === z.userID) continue
+        await tx.roomParticipants.delete({
+          roomId: id,
+          userId: rp.userId,
+        })
+      }
+    })
+  }
 }

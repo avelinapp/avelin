@@ -32,7 +32,6 @@ export const useDeleteRoom = (options: MutationOptions) =>
         switch (error.status) {
           case 403:
           case 404:
-            toast.error(error.value.error)
             throw new Error(error.value.error)
           default:
             throw new Error('Unknown error occurred.')
