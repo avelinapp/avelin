@@ -89,7 +89,7 @@ export const rooms = new Elysia({ prefix: '/rooms' })
               participantId: schema.roomParticipants.userId,
             })
             .from(schema.rooms)
-            .innerJoin(
+            .leftJoin(
               schema.roomParticipants,
               eq(schema.rooms.id, schema.roomParticipants.roomId),
             )

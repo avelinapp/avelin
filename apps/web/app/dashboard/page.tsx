@@ -1,13 +1,13 @@
 'use client'
 
 import { useAuth } from '@/providers/auth-provider'
-import { RoomsListWrapper } from './_components/rooms-list'
+import RoomsList from './_components/rooms-list'
 
 export default function Page() {
   const { user } = useAuth()
 
   return (
-    <div className="flex flex-col gap-4 h-full">
+    <div className="flex-1 flex flex-col gap-4 h-full">
       <div className="space-y-2">
         <h1 className="text-3xl font-semibold">
           Welcome back,{' '}
@@ -19,7 +19,7 @@ export default function Page() {
           All your code rooms - past, present, and future.
         </p>
       </div>
-      <RoomsListWrapper />
+      <RoomsList />
     </div>
   )
 }

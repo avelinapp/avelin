@@ -53,3 +53,5 @@ export function getZeroClient({
 
   return client
 }
+
+export const now = () => Date.now()

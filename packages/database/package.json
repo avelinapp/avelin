@@ -16,11 +16,11 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
-    "db:check": "drizzle-kit check",
-    "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:check": "NODE_OPTIONS='--import tsx' drizzle-kit check",
+    "db:push": "NODE_OPTIONS='--import tsx' drizzle-kit push",
+    "db:studio": "NODE_OPTIONS='--import tsx' drizzle-kit studio",
+    "db:generate": "NODE_OPTIONS='--import tsx' drizzle-kit generate",
+    "db:migrate": "NODE_OPTIONS='--import tsx' drizzle-kit migrate"
   },
   "dependencies": {
     "@neondatabase/serverless": "catalog:",
