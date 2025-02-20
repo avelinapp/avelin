@@ -17,7 +17,7 @@ export const env = createEnv({
       .refine((v) => {
         if (process.env.NODE_ENV !== 'production') return true
 
-        const RUNTIME = process.env.RUNTIME as 'node' | 'bun'
+        const RUNTIME = process.env.NEXT_PUBLIC_RUNTIME as 'node' | 'bun'
         if (RUNTIME === 'node') return true
         return v && v.length > 0
       }, "You must provide a Bun version if you're running on Bun."),
@@ -27,7 +27,7 @@ export const env = createEnv({
       .refine((v) => {
         if (process.env.NODE_ENV !== 'production') return true
 
-        const RUNTIME = process.env.RUNTIME as 'node' | 'bun'
+        const RUNTIME = process.env.NEXT_PUBLIC_RUNTIME as 'node' | 'bun'
         if (RUNTIME === 'bun') return true
         return v && v.length > 0
       }, "You must provide a Node version if you're running on Node."),
