@@ -26,6 +26,7 @@ import { EmptyDashboardIcon } from './empty-state-icon'
 export default function RoomsListNetwork() {
   const router = useRouter()
   const queryClient = getQueryClient()
+
   const createRoom = useCreateRoom({ queryClient })
 
   async function handleCreateRoom() {
@@ -39,8 +40,8 @@ export default function RoomsListNetwork() {
   const dashboardIsEmpty = !isPending && !error && !data.length
 
   return (
-    <>
-      <div className="flex-1 gap-4 flex flex-col">
+    <div className="flex-1 flex flex-col gap-4 h-full">
+      <div className="flex-1 gap-4 flex flex-col h-full">
         <div>
           <Button
             className={cn((isPending || dashboardIsEmpty) && 'hidden')}
@@ -81,7 +82,7 @@ export default function RoomsListNetwork() {
           </FadeInContainer>
         )}
       </div>
-    </>
+    </div>
   )
 }
 

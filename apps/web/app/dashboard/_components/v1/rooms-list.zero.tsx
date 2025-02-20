@@ -4,6 +4,7 @@ import { useRerender } from '@/hooks/use-rerender'
 import { type Language, languages } from '@/lib/constants'
 import { env } from '@/lib/env'
 import { Room } from '@/lib/mutations.zero'
+import { relativeTime } from '@/lib/utils'
 import { useZero } from '@/lib/zero'
 import { useView } from '@/providers/view-provider'
 import {
@@ -24,7 +25,6 @@ import { ToggleGroup, ToggleGroupItem } from '@avelin/ui/toggle-group'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@avelin/ui/tooltip'
 import type { Zero } from '@avelin/zero'
 import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
-import { differenceInSeconds, formatDistanceToNow } from 'date-fns'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useMemo } from 'react'
@@ -64,11 +64,6 @@ export default function RoomsListZero() {
 
       return y - x
     })
-
-  console.log(
-    'rooms',
-    rooms.map((r) => ({ ...r, IS_OWNER: r.creatorId === z.userID })),
-  )
 
   const pageReady = rooms.length > 0 || status === 'complete'
 
@@ -229,16 +224,6 @@ const CodeRoomListItem = ({
     }
   }
 
-  const diffInSeconds = differenceInSeconds(
-    new Date(),
-    new Date(room.lastAccessedAt!),
-  )
-
-  const relativeLastAccessedAt =
-    diffInSeconds < 60
-      ? 'just now'
-      : `${formatDistanceToNow(new Date(room.lastAccessedAt!))} ago`
-
   return (
     <div
       className="group/item rounded-md hover:bg-gray-3 px-4 h-12 grid grid-cols-subgrid col-span-4 items-center gap-x-4 w-full"
@@ -260,7 +245,9 @@ const CodeRoomListItem = ({
       <span className="font-medium">
         {room.title && room.title.length >= 1 ? room.title : 'Untitled room'}
       </span>
-      <span>{relativeLastAccessedAt}</span>
+      <span className="text-color-text-quaternary ml-4">
+        {relativeTime(room.lastAccessedAt ?? room.createdAt!)}
+      </span>
       <div className="justify-self-end hidden group-hover/item:flex items-center gap-1 z-10">
         <Button
           size="xs"

@@ -9,7 +9,6 @@ import {
   eq,
   getTableColumns,
   isNull,
-  ne,
   or,
   schema,
   sql,
@@ -231,11 +230,13 @@ export const rooms = new Elysia({ prefix: '/rooms' })
 
             const { user } = auth
 
-            const updatedRp = await db
+            await db
               .insert(schema.roomParticipants)
               .values({
                 roomId: roomId,
                 userId: user.id,
+                isConnected: true,
+                connectedAt: new Date(),
               })
               .onConflictDoUpdate({
                 target: [
@@ -244,11 +245,10 @@ export const rooms = new Elysia({ prefix: '/rooms' })
                 ],
                 set: {
                   lastAccessedAt: new Date(),
+                  isConnected: true,
+                  connectedAt: new Date(),
                 },
               })
-              .returning()
-
-            console.log('Updated room participant:', updatedRp)
 
             return {}
           }
@@ -264,6 +264,8 @@ export const rooms = new Elysia({ prefix: '/rooms' })
               .update(schema.roomParticipants)
               .set({
                 lastAccessedAt: new Date(),
+                isConnected: false,
+                disconnectedAt: new Date(),
               })
               .where(
                 and(

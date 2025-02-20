@@ -78,6 +78,13 @@
       "when": 1738114696758,
       "tag": "0010_composite-pk-room-participants",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1740008893930,
+      "tag": "0011_track_user_connection_status_to_code_room",
+      "breakpoints": true
     }
   ]
 }
