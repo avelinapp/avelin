@@ -14,6 +14,7 @@ export default function AvelinDevToolsToolbar() {
   const FF_devtools = useFeatureFlagEnabled('avelin-devtools')
   const FF_zero = useFeatureFlagEnabled('zero')
   const FF_dashboard = useFeatureFlagEnabled('dashboard')
+  const FF_dashboard_ui_refresh = useFeatureFlagEnabled('dashboard-ui-refresh')
 
   function toggleZeroFeatureFlag() {
     posthog.featureFlags.overrideFeatureFlags({
@@ -35,6 +36,16 @@ export default function AvelinDevToolsToolbar() {
     router.refresh()
   }
 
+  function toggleDashboardUiRefreshFeatureFlag() {
+    posthog.featureFlags.overrideFeatureFlags({
+      flags: {
+        ...posthog.featureFlags.getFlagVariants(),
+        'dashboard-ui-refresh': !FF_dashboard_ui_refresh,
+      },
+    })
+    router.refresh()
+  }
+
   if (!FF_devtools) return null
 
   console.log('Loading Avelin developer tools...')
@@ -44,10 +55,10 @@ export default function AvelinDevToolsToolbar() {
       <div className="flex items-center h-full gap-4">
         <LogoAvelin className="size-5" />
         <FPSMeter />
-        <div className="flex items-center gap-0">
+        <div className="flex items-center gap-0 *:px-3">
           <Button
             className={cn(
-              'h-full w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary px-2',
+              'h-full w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
               FF_zero
                 ? 'text-color-text-primary'
                 : 'text-color-text-quaternary',
@@ -64,7 +75,7 @@ export default function AvelinDevToolsToolbar() {
           </Button>
           <Button
             className={cn(
-              'h-full w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary px-2',
+              'h-full w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
               FF_dashboard
                 ? 'text-color-text-primary'
                 : 'text-color-text-quaternary',
@@ -77,7 +88,24 @@ export default function AvelinDevToolsToolbar() {
                 FF_dashboard ? 'bg-green-10' : 'bg-red-10',
               )}
             />
-            <span>Dashboard (v0)</span>
+            <span>Dashboard</span>
+          </Button>
+          <Button
+            className={cn(
+              'h-full w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
+              FF_dashboard_ui_refresh
+                ? 'text-color-text-primary'
+                : 'text-color-text-quaternary',
+            )}
+            onClick={toggleDashboardUiRefreshFeatureFlag}
+          >
+            <div
+              className={cn(
+                'rounded-full size-1.5',
+                FF_dashboard_ui_refresh ? 'bg-green-10' : 'bg-red-10',
+              )}
+            />
+            <span>Dashboard - UI refresh</span>
           </Button>
         </div>
       </div>
