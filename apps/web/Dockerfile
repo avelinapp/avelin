@@ -2,7 +2,7 @@ ARG NODE_VERSION=20.18.3
 ARG PROJECT=web
 ARG PACKAGE=@avelin/${PROJECT}
 ARG UBI9_VERSION=9.5
-ARG runtime=node
+ARG RUNTIME=node
 
 FROM ghcr.io/bazzalabs/ubi:node-${NODE_VERSION} AS ubi
 
