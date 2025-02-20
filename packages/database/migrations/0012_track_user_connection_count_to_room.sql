@@ -1,0 +1,1 @@
+ALTER TABLE "room_participants" ADD COLUMN "connectionCount" integer DEFAULT 0 NOT NULL;

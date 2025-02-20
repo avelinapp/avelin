@@ -58,6 +58,7 @@ export const schema = createZeroSchema(drizzleSchema, {
       isConnected: true,
       connectedAt: true,
       disconnectedAt: true,
+      connectionCount: true,
       createdAt: true,
       updatedAt: true,
       deletedAt: true,

@@ -85,6 +85,13 @@
       "when": 1740008893930,
       "tag": "0011_track_user_connection_status_to_code_room",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1740029709646,
+      "tag": "0012_track_user_connection_count_to_room",
+      "breakpoints": true
     }
   ]
 }
