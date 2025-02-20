@@ -246,7 +246,7 @@ const CodeRoomListItem = ({
         {room.title && room.title.length >= 1 ? room.title : 'Untitled room'}
       </span>
       <span className="text-color-text-quaternary ml-4">
-        {relativeTime(room.lastAccessedAt!)}
+        {relativeTime(room.lastAccessedAt ?? room.createdAt!)}
       </span>
       <div className="justify-self-end hidden group-hover/item:flex items-center gap-1 z-10">
         <Button
