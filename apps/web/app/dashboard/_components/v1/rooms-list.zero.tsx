@@ -26,6 +26,7 @@ import { ToggleGroup, ToggleGroupItem } from '@avelin/ui/toggle-group'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@avelin/ui/tooltip'
 import type { Zero } from '@avelin/zero'
 import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
+import { AnimatePresence, motion } from 'motion/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useMemo } from 'react'
@@ -296,12 +297,20 @@ const CodeRoomListItem = ({
           users={users}
           maxUsers={4}
         />
-        {view === 'all' && isRoomActive && (
-          <div className="flex items-center gap-1.5 text-xs font-medium rounded-md bg-green-5 px-2 py-0.5">
-            <ActivityIcon className="size-3" />
-            Active
-          </div>
-        )}
+        <AnimatePresence initial={false}>
+          {view === 'all' && isRoomActive && (
+            <motion.div
+              className="flex items-center gap-1.5 text-xs font-medium rounded-md bg-green-5 px-2 py-0.5"
+              initial={{ opacity: 0, filter: 'blur(2px)' }}
+              animate={{ opacity: 1, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, filter: 'blur(2px)' }}
+              transition={{ ease: 'easeOut' }}
+            >
+              <ActivityIcon className="size-3" />
+              Active
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       <div className="justify-self-end hidden group-hover/item:flex items-center gap-1 z-10">
         <Button
