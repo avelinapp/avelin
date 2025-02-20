@@ -140,11 +140,7 @@ export default function RoomsListZero() {
             <ToggleGroupItem value="list">
               <LayoutListIcon />
             </ToggleGroupItem>
-            <ToggleGroupItem
-              className="disabled:blur-[1px]"
-              value="grid"
-              disabled
-            >
+            <ToggleGroupItem value="grid" disabled>
               <LayoutGridIcon />
             </ToggleGroupItem>
           </ToggleGroup>
