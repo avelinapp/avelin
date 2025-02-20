@@ -29,6 +29,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useMemo } from 'react'
 import { EmptyDashboardIcon } from './empty-state-icon'
+import { UsersListDisplay } from './user-avatar-list'
 
 export default function RoomsListZero() {
   const router = useRouter()
@@ -43,7 +44,7 @@ export default function RoomsListZero() {
 
   const q = z.query.rooms
     .where('deletedAt', 'IS', null)
-    .related('roomParticipants', (q) => q.where('userId', '=', z.userID))
+    .related('roomParticipants', (q) => q.related('user'))
 
   let [rooms, { type: status }] = useZeroQuery(q)
 
@@ -56,7 +57,9 @@ export default function RoomsListZero() {
     )
     .map((room) => ({
       ...room,
-      lastAccessedAt: room.roomParticipants[0]?.lastAccessedAt ?? null,
+      lastAccessedAt:
+        room.roomParticipants.find((rp) => rp.userId === z.userID)
+          ?.lastAccessedAt ?? null,
     }))
     .sort((a, b) => {
       const x = a.lastAccessedAt ?? a.createdAt!
@@ -64,6 +67,17 @@ export default function RoomsListZero() {
 
       return y - x
     })
+
+  if (roomsView === 'active') {
+    rooms = rooms
+      .filter((room) => room.roomParticipants.some((rp) => rp.isConnected))
+      .sort((a, b) => {
+        const x = Math.max(...a.roomParticipants.map((rp) => rp.connectedAt!))
+        const y = Math.max(...b.roomParticipants.map((rp) => rp.connectedAt!))
+
+        return x - y
+      })
+  }
 
   const pageReady = rooms.length > 0 || status === 'complete'
 
@@ -103,11 +117,7 @@ export default function RoomsListZero() {
               <LayersIcon className="group-hover:text-color-text-primary" />
               All
             </ToggleGroupItem>
-            <ToggleGroupItem
-              className="group disabled:blur-[1px]"
-              value="active"
-              disabled
-            >
+            <ToggleGroupItem className="group" value="active">
               <CircleDotIcon className="group-hover:text-color-text-primary" />
               Active
             </ToggleGroupItem>
@@ -162,28 +172,49 @@ export default function RoomsListZero() {
             </div>
           </div>
         ) : roomsDisplayType === 'list' ? (
-          <CodeRoomListView rooms={rooms} />
+          // @ts-ignore
+          <CodeRoomListView rooms={rooms} view={roomsView} />
         ) : null}
       </div>
     </div>
   )
 }
 
-const CodeRoomListView = ({ rooms }: { rooms: Array<Zero.Schema.Room> }) => {
+const CodeRoomListView = ({
+  view,
+  rooms,
+}: {
+  view: 'active' | 'all'
+  rooms: Array<
+    Zero.Schema.Room &
+      Pick<Zero.Schema.RoomParticipant, 'lastAccessedAt'> & {
+        roomParticipants: Array<
+          Zero.Schema.RoomParticipant & { user: Zero.Schema.User }
+        >
+      }
+  >
+}) => {
   return (
-    <div className="grid grid-cols-[max-content_max-content_max-content_minmax(0,_1fr)] gap-y-1">
+    <div className="grid grid-cols-[max-content_max-content_max-content_max-content_minmax(0,_1fr)] gap-y-1">
       {rooms.map((room) => (
         // @ts-ignore
-        <CodeRoomListItem key={room.id} room={room} />
+        <CodeRoomListItem key={room.id} room={room} view={view} />
       ))}
     </div>
   )
 }
 
 const CodeRoomListItem = ({
+  view,
   room,
 }: {
-  room: Zero.Schema.Room & Pick<Zero.Schema.RoomParticipant, 'lastAccessedAt'>
+  view: 'active' | 'all'
+  room: Zero.Schema.Room &
+    Pick<Zero.Schema.RoomParticipant, 'lastAccessedAt'> & {
+      roomParticipants: Array<
+        Zero.Schema.RoomParticipant & { user: Zero.Schema.User }
+      >
+    }
 }) => {
   const router = useRouter()
 
@@ -192,6 +223,14 @@ const CodeRoomListItem = ({
   )!
 
   const LanguageIcon = language.logo!
+
+  let data = room.roomParticipants.filter((rp) => !rp.user.isAnonymous)
+
+  if (view === 'active') {
+    data = data.filter((rp) => rp.isConnected)
+  }
+
+  const users = data.map((rp) => rp.user)
 
   async function handleDeleteRoom() {
     await Room.delete({ id: room.id })
@@ -226,7 +265,7 @@ const CodeRoomListItem = ({
 
   return (
     <div
-      className="group/item rounded-md hover:bg-gray-3 px-4 h-12 grid grid-cols-subgrid col-span-4 items-center gap-x-4 w-full"
+      className="group/item rounded-md hover:bg-gray-3 px-4 h-12 grid grid-cols-subgrid col-span-5 items-center gap-x-4 w-full"
       onClick={() => router.push(`/rooms/${room.slug}`)}
     >
       <div>
@@ -248,6 +287,7 @@ const CodeRoomListItem = ({
       <span className="text-color-text-quaternary ml-4">
         {relativeTime(room.lastAccessedAt ?? room.createdAt!)}
       </span>
+      <UsersListDisplay users={users} maxUsers={4} />
       <div className="justify-self-end hidden group-hover/item:flex items-center gap-1 z-10">
         <Button
           size="xs"

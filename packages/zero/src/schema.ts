@@ -86,6 +86,7 @@ export namespace Zero {
   export namespace Schema {
     export type Room = Row<typeof schema.tables.rooms>
     export type RoomParticipant = Row<typeof schema.tables.roomParticipants>
+    export type User = Row<typeof schema.tables.users>
   }
 }
 
