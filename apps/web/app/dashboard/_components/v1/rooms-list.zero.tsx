@@ -219,6 +219,7 @@ const CodeRoomListItem = ({
     }
 }) => {
   const router = useRouter()
+  const z = useZero()
 
   const language = languages.find(
     (l) => l.value === (room.editorLanguage as Language['value']),
@@ -234,7 +235,9 @@ const CodeRoomListItem = ({
 
   const users = data.map((rp) => rp.user)
 
-  const isRoomActive = data.some((rp) => rp.isConnected)
+  const isRoomActive = data.some(
+    (rp) => rp.userId !== z.userID && rp.isConnected,
+  )
 
   async function handleDeleteRoom() {
     await Room.delete({ id: room.id })
