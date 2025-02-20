@@ -9,6 +9,7 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react'
 type UsersListDisplayProps = {
   users: Array<Zero.Schema.User>
   maxUsers?: number
+  layoutId?: string
 }
 
 const UserAvatar = ({
@@ -40,18 +41,18 @@ const UserAvatar = ({
 export const UsersListDisplay = forwardRef<
   HTMLDivElement,
   ComponentPropsWithoutRef<'div'> & UsersListDisplayProps
->(({ users, maxUsers = 3, ...props }, ref) => {
+>(({ users, maxUsers = 3, layoutId, ...props }, ref) => {
   const displayedUsers = users.slice(0, maxUsers)
   const remainingUsersCount = users.length - displayedUsers.length
 
   return (
     <div ref={ref} className="flex items-center select-none h-8" {...props}>
-      <LayoutGroup>
+      <LayoutGroup id={layoutId}>
         <AnimatePresence initial={false} mode="popLayout">
           {displayedUsers.map((user) => (
             <motion.div
               layout
-              key={user.id}
+              key={`${user.id}-${layoutId}`}
               className="first:-ml-0 -ml-2.5"
               initial={{
                 opacity: 0,

@@ -8,6 +8,7 @@ import { relativeTime } from '@/lib/utils'
 import { useZero } from '@/lib/zero'
 import { useView } from '@/providers/view-provider'
 import {
+  ActivityIcon,
   CircleDotIcon,
   CopyIcon,
   LayersIcon,
@@ -232,6 +233,8 @@ const CodeRoomListItem = ({
 
   const users = data.map((rp) => rp.user)
 
+  const isRoomActive = data.some((rp) => rp.isConnected)
+
   async function handleDeleteRoom() {
     await Room.delete({ id: room.id })
   }
@@ -287,7 +290,19 @@ const CodeRoomListItem = ({
       <span className="text-color-text-quaternary ml-4">
         {relativeTime(room.lastAccessedAt ?? room.createdAt!)}
       </span>
-      <UsersListDisplay users={users} maxUsers={4} />
+      <div className="flex items-center gap-2">
+        <UsersListDisplay
+          layoutId={`${room.id}-view-${view}`}
+          users={users}
+          maxUsers={4}
+        />
+        {view === 'all' && isRoomActive && (
+          <div className="flex items-center gap-1.5 text-xs font-medium rounded-md bg-green-5 px-2 py-0.5">
+            <ActivityIcon className="size-3" />
+            Active
+          </div>
+        )}
+      </div>
       <div className="justify-self-end hidden group-hover/item:flex items-center gap-1 z-10">
         <Button
           size="xs"
