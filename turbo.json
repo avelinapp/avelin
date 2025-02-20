@@ -31,7 +31,13 @@
         "HOCUSPOCUS_WEBHOOK_SECRET",
         "BASE_DOMAIN",
         "CI",
-        "ZERO_SCHEMA_VERSION"
+        "ZERO_SCHEMA_VERSION",
+        "RUNTIME",
+        "BUN_VERSION",
+        "NODE_VERSION",
+        "NEXT_PUBLIC_RUNTIME",
+        "NEXT_PUBLIC_BUN_VERSION",
+        "NEXT_PUBLIC_NODE_VERSION"
       ]
     },
     "//#check": {},
