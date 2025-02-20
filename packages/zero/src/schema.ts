@@ -58,6 +58,7 @@ export const schema = createZeroSchema(drizzleSchema, {
       isConnected: true,
       connectedAt: true,
       disconnectedAt: true,
+      connectionCount: true,
       createdAt: true,
       updatedAt: true,
       deletedAt: true,
@@ -86,6 +87,7 @@ export namespace Zero {
   export namespace Schema {
     export type Room = Row<typeof schema.tables.rooms>
     export type RoomParticipant = Row<typeof schema.tables.roomParticipants>
+    export type User = Row<typeof schema.tables.users>
   }
 }
 

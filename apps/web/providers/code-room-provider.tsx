@@ -283,6 +283,7 @@ export const createCodeRoomStore = () =>
           document: ydoc,
           awareness: get().awareness,
           token: session?.id,
+          preserveConnection: false,
           onStatus: ({ status }) => {
             console.log('Avelin Sync - connection status:', status)
             set({ networkProviderStatus: status })
@@ -303,6 +304,19 @@ export const createCodeRoomStore = () =>
             // to the default since they had not yet synced with the network to receive the actual editor language.
             setupEditorLanguageObserver()
           },
+          onDisconnect: (data) => {
+            console.log(
+              `Avelin Sync - disconnected (code ${data.event.code} - reason: ${data.event.reason})`,
+            )
+          },
+          onClose: (data) => {
+            console.log(
+              `Avelin Sync - closed (code ${data.event.code} - reason: ${data.event.reason})`,
+            )
+          },
+          onDestroy: () => {
+            console.log('Avelin Sync - destroyed')
+          },
         })
 
         set({ networkProvider: ws, isInitialSyncConnect: true })
@@ -321,13 +335,6 @@ export const createCodeRoomStore = () =>
         usersObserver,
       } = get()
 
-      awareness?.destroy()
-      ydoc.destroy()
-      networkProvider?.awareness?.destroy()
-      networkProvider?.disconnect()
-      networkProvider?.destroy()
-      persistenceProvider?.destroy()
-
       if (editorObserver) {
         const editorMap = ydoc.getMap('editor')
         editorMap.unobserve(editorObserver)
@@ -342,6 +349,13 @@ export const createCodeRoomStore = () =>
         networkProvider?.awareness?.off('change', usersObserver)
       }
 
+      awareness?.destroy()
+      ydoc.destroy()
+      networkProvider?.awareness?.destroy()
+      networkProvider?.disconnect()
+      networkProvider?.destroy()
+      persistenceProvider?.destroy()
+
       set({
         ydoc: new Y.Doc(),
         networkProvider: undefined,
@@ -353,6 +367,9 @@ export const createCodeRoomStore = () =>
         editorLanguage: undefined,
         editorObserver: undefined,
         skipRoomAwarenessChangeEvent: true,
+        awareness: undefined,
+        usersObserver: undefined,
+        isInitialSyncConnect: false,
       })
     },
     setUsers: (users) => {

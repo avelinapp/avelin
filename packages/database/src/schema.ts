@@ -1,5 +1,11 @@
 import { relations } from 'drizzle-orm'
-import { pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
+import {
+  integer,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+} from 'drizzle-orm/pg-core'
 import { boolean } from 'drizzle-orm/pg-core'
 import type { AnyPgColumn } from 'drizzle-orm/pg-core'
 import { bytea } from './db.js'
@@ -106,6 +112,8 @@ export const roomParticipants = pgTable(
     isConnected: boolean().notNull().default(false),
     connectedAt: timestamp({ withTimezone: true }),
     disconnectedAt: timestamp({ withTimezone: true }),
+    /* The number of active sessions that this user has in the room. */
+    connectionCount: integer().notNull().default(0),
     /* createdAt holds to the initial join date. */
     ...timestamps,
   },

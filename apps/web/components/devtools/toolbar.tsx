@@ -1,6 +1,7 @@
 'use client'
 
-import { LogoAvelin } from '@avelin/icons'
+import { useView } from '@/providers/view-provider'
+import { LoaderIcon, LogoAvelin } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
 import { useRouter } from 'next/navigation'
@@ -15,6 +16,8 @@ export default function AvelinDevToolsToolbar() {
   const FF_zero = useFeatureFlagEnabled('zero')
   const FF_dashboard = useFeatureFlagEnabled('dashboard')
   const FF_dashboard_ui_refresh = useFeatureFlagEnabled('dashboard-ui-refresh')
+
+  const { setIsSimulation } = useView()
 
   function toggleZeroFeatureFlag() {
     posthog.featureFlags.overrideFeatureFlags({
@@ -46,13 +49,22 @@ export default function AvelinDevToolsToolbar() {
     router.refresh()
   }
 
+  function simulateFullReload() {
+    console.log('Simulating full reload...')
+    setIsSimulation(true)
+    setTimeout(() => {
+      console.log('hello')
+      setIsSimulation(false)
+    }, 3000)
+  }
+
   if (!FF_devtools) return null
 
   console.log('Loading Avelin developer tools...')
 
   return (
     <div className="z-10 dark:bg-black bg-white h-9 flex items-center px-4 border-t border-color-border-subtle text-sm">
-      <div className="flex items-center h-full gap-4">
+      <div className="flex items-center h-full gap-6">
         <LogoAvelin className="size-5" />
         <FPSMeter />
         <div className="flex items-center gap-0 *:px-3">
@@ -106,6 +118,20 @@ export default function AvelinDevToolsToolbar() {
               )}
             />
             <span>Dashboard - UI refresh</span>
+          </Button>
+        </div>
+        <div className="flex items-center ml-2">
+          <span className="mx-2 font-medium text-color-text-primary !tracking-normal">
+            Triggers
+          </span>
+          <Button
+            className={cn(
+              'h-full w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary text-color-text-quaternary px-3',
+            )}
+            onClick={simulateFullReload}
+          >
+            <LoaderIcon className="size-4 text-white" strokeWidth={2.25} />
+            <span>Loading fallback</span>
           </Button>
         </div>
       </div>

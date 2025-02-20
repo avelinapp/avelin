@@ -8,6 +8,7 @@ import { relativeTime } from '@/lib/utils'
 import { useZero } from '@/lib/zero'
 import { useView } from '@/providers/view-provider'
 import {
+  ActivityIcon,
   CircleDotIcon,
   CopyIcon,
   LayersIcon,
@@ -25,10 +26,12 @@ import { ToggleGroup, ToggleGroupItem } from '@avelin/ui/toggle-group'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@avelin/ui/tooltip'
 import type { Zero } from '@avelin/zero'
 import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
+import { AnimatePresence, motion } from 'motion/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useMemo } from 'react'
 import { EmptyDashboardIcon } from './empty-state-icon'
+import { UsersListDisplay } from './user-avatar-list'
 
 export default function RoomsListZero() {
   const router = useRouter()
@@ -43,7 +46,7 @@ export default function RoomsListZero() {
 
   const q = z.query.rooms
     .where('deletedAt', 'IS', null)
-    .related('roomParticipants', (q) => q.where('userId', '=', z.userID))
+    .related('roomParticipants', (q) => q.related('user'))
 
   let [rooms, { type: status }] = useZeroQuery(q)
 
@@ -56,7 +59,9 @@ export default function RoomsListZero() {
     )
     .map((room) => ({
       ...room,
-      lastAccessedAt: room.roomParticipants[0]?.lastAccessedAt ?? null,
+      lastAccessedAt:
+        room.roomParticipants.find((rp) => rp.userId === z.userID)
+          ?.lastAccessedAt ?? null,
     }))
     .sort((a, b) => {
       const x = a.lastAccessedAt ?? a.createdAt!
@@ -64,6 +69,17 @@ export default function RoomsListZero() {
 
       return y - x
     })
+
+  if (roomsView === 'active') {
+    rooms = rooms
+      .filter((room) => room.roomParticipants.some((rp) => rp.isConnected))
+      .sort((a, b) => {
+        const x = Math.max(...a.roomParticipants.map((rp) => rp.connectedAt!))
+        const y = Math.max(...b.roomParticipants.map((rp) => rp.connectedAt!))
+
+        return x - y
+      })
+  }
 
   const pageReady = rooms.length > 0 || status === 'complete'
 
@@ -84,7 +100,7 @@ export default function RoomsListZero() {
   }
 
   return (
-    <div className={cn('flex-1 flex flex-col gap-4 h-full select-none')}>
+    <div className={cn('flex-1 flex flex-col gap-6 h-full select-none')}>
       <div className="flex items-end justify-between">
         <div className="flex items-center gap-6">
           <h2 className="text-xl font-semibold">Code Rooms</h2>
@@ -103,11 +119,7 @@ export default function RoomsListZero() {
               <LayersIcon className="group-hover:text-color-text-primary" />
               All
             </ToggleGroupItem>
-            <ToggleGroupItem
-              className="group disabled:blur-[1px]"
-              value="active"
-              disabled
-            >
+            <ToggleGroupItem className="group" value="active">
               <CircleDotIcon className="group-hover:text-color-text-primary" />
               Active
             </ToggleGroupItem>
@@ -128,11 +140,7 @@ export default function RoomsListZero() {
             <ToggleGroupItem value="list">
               <LayoutListIcon />
             </ToggleGroupItem>
-            <ToggleGroupItem
-              className="disabled:blur-[1px]"
-              value="grid"
-              disabled
-            >
+            <ToggleGroupItem value="grid" disabled>
               <LayoutGridIcon />
             </ToggleGroupItem>
           </ToggleGroup>
@@ -162,36 +170,70 @@ export default function RoomsListZero() {
             </div>
           </div>
         ) : roomsDisplayType === 'list' ? (
-          <CodeRoomListView rooms={rooms} />
+          // @ts-ignore
+          <CodeRoomListView rooms={rooms} view={roomsView} />
         ) : null}
       </div>
     </div>
   )
 }
 
-const CodeRoomListView = ({ rooms }: { rooms: Array<Zero.Schema.Room> }) => {
+const CodeRoomListView = ({
+  view,
+  rooms,
+}: {
+  view: 'active' | 'all'
+  rooms: Array<
+    Zero.Schema.Room &
+      Pick<Zero.Schema.RoomParticipant, 'lastAccessedAt'> & {
+        roomParticipants: Array<
+          Zero.Schema.RoomParticipant & { user: Zero.Schema.User }
+        >
+      }
+  >
+}) => {
   return (
-    <div className="grid grid-cols-[max-content_max-content_max-content_minmax(0,_1fr)] gap-y-1">
+    <div className="grid grid-cols-[max-content_max-content_max-content_max-content_minmax(0,_1fr)] gap-y-1">
       {rooms.map((room) => (
         // @ts-ignore
-        <CodeRoomListItem key={room.id} room={room} />
+        <CodeRoomListItem key={room.id} room={room} view={view} />
       ))}
     </div>
   )
 }
 
 const CodeRoomListItem = ({
+  view,
   room,
 }: {
-  room: Zero.Schema.Room & Pick<Zero.Schema.RoomParticipant, 'lastAccessedAt'>
+  view: 'active' | 'all'
+  room: Zero.Schema.Room &
+    Pick<Zero.Schema.RoomParticipant, 'lastAccessedAt'> & {
+      roomParticipants: Array<
+        Zero.Schema.RoomParticipant & { user: Zero.Schema.User }
+      >
+    }
 }) => {
   const router = useRouter()
+  const z = useZero()
 
   const language = languages.find(
     (l) => l.value === (room.editorLanguage as Language['value']),
   )!
 
   const LanguageIcon = language.logo!
+
+  let data = room.roomParticipants.filter((rp) => !rp.user.isAnonymous)
+
+  if (view === 'active') {
+    data = data.filter((rp) => rp.isConnected)
+  }
+
+  const users = data.map((rp) => rp.user)
+
+  const isRoomActive = data.some(
+    (rp) => rp.userId !== z.userID && rp.isConnected,
+  )
 
   async function handleDeleteRoom() {
     await Room.delete({ id: room.id })
@@ -226,7 +268,7 @@ const CodeRoomListItem = ({
 
   return (
     <div
-      className="group/item rounded-md hover:bg-gray-3 px-4 h-12 grid grid-cols-subgrid col-span-4 items-center gap-x-4 w-full"
+      className="group/item rounded-md hover:bg-gray-3 px-4 h-12 grid grid-cols-subgrid col-span-5 items-center gap-x-4 w-full"
       onClick={() => router.push(`/rooms/${room.slug}`)}
     >
       <div>
@@ -248,6 +290,27 @@ const CodeRoomListItem = ({
       <span className="text-color-text-quaternary ml-4">
         {relativeTime(room.lastAccessedAt ?? room.createdAt!)}
       </span>
+      <div className="flex items-center gap-2">
+        <UsersListDisplay
+          layoutId={`${room.id}-view-${view}`}
+          users={users}
+          maxUsers={4}
+        />
+        <AnimatePresence initial={false}>
+          {view === 'all' && isRoomActive && (
+            <motion.div
+              className="flex items-center gap-1.5 text-xs font-medium rounded-md bg-green-5 px-2 py-0.5"
+              initial={{ opacity: 0, filter: 'blur(2px)' }}
+              animate={{ opacity: 1, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, filter: 'blur(2px)' }}
+              transition={{ ease: 'easeOut' }}
+            >
+              <ActivityIcon className="size-3" />
+              Active
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
       <div className="justify-self-end hidden group-hover/item:flex items-center gap-1 z-10">
         <Button
           size="xs"
