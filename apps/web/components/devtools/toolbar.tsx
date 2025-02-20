@@ -18,6 +18,7 @@ export default function AvelinDevToolsToolbar() {
   function toggleZeroFeatureFlag() {
     posthog.featureFlags.overrideFeatureFlags({
       flags: {
+        ...posthog.featureFlags.getFlagVariants(),
         zero: !FF_zero,
       },
     })
@@ -27,10 +28,11 @@ export default function AvelinDevToolsToolbar() {
   function toggleDashboardFeatureFlag() {
     posthog.featureFlags.overrideFeatureFlags({
       flags: {
+        ...posthog.featureFlags.getFlagVariants(),
         dashboard: !FF_dashboard,
       },
     })
-    // router.refresh()
+    router.refresh()
   }
 
   if (!FF_devtools) return null
