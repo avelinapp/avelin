@@ -4,6 +4,8 @@ import './globals.css'
 import '@avelin/ui/globals.css'
 import CommandMenu from '@/components/command-menu/command-menu'
 import AvelinDevToolsToolbar from '@/components/devtools/toolbar'
+import OneDollarStatsScript from '@/components/misc/one-dollar-stats'
+import { env } from '@/lib/env'
 import Providers from '@/providers'
 import QueryClientProvider from '@/providers/query-client-provider'
 import { Toaster } from '@avelin/ui/sonner'
@@ -20,6 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      {env.NODE_ENV === 'production' && <OneDollarStatsScript />}
       <body
         className={`${innovatorGrotesk.variable} ${berkeleyMono.variable} font-sans font-settings antialiased bg-color-background h-screen w-screen`}
       >
