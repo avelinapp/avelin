@@ -9,17 +9,21 @@ import { create, useStore } from 'zustand'
 
 type ViewState = {
   ready: boolean
+  isSimulation: boolean
 }
 
 type ViewActions = {
   setReady: (value: boolean) => void
+  setIsSimulation: (value: boolean) => void
 }
 
 type ViewStore = ViewState & ViewActions
 
 export const viewStore = create<ViewStore>((set) => ({
   ready: false,
+  isSimulation: false,
   setReady: (value) => set({ ready: value }),
+  setIsSimulation: (value) => set({ isSimulation: value }),
 }))
 
 export const useView = () => useStore(viewStore, (state) => state)
@@ -27,7 +31,7 @@ export const useView = () => useStore(viewStore, (state) => state)
 export default function ViewProvider({
   children,
 }: { children: React.ReactNode }) {
-  const { ready, setReady } = useView()
+  const { ready, setReady, isSimulation } = useView()
   const [showFallback, setShowFallback] = useState(false)
   const pathname = usePathname()
 
@@ -41,20 +45,25 @@ export default function ViewProvider({
   }, [pathname, setReady])
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (!ready) {
-        console.log('[VIEW PROVIDER] Fallback')
-        setShowFallback(true)
-      }
-    }, 100)
+    let interval: Timer
+    if (!ready || isSimulation) {
+      interval = setTimeout(() => {
+        if (!ready || isSimulation) {
+          console.log('[VIEW PROVIDER] Fallback')
+          setShowFallback(true)
+        }
+      }, 100)
+    }
 
-    if (ready && showFallback) {
+    if (ready && !isSimulation && showFallback) {
       console.log('[VIEW PROVIDER] Removing fallback', ready)
       setShowFallback(false)
     }
 
-    return () => clearTimeout(timeout)
-  }, [ready])
+    return () => {
+      clearTimeout(interval)
+    }
+  }, [ready, isSimulation])
 
   useEffect(() => {
     console.log('[VIEW PROVIDER] ready', ready)
@@ -97,7 +106,7 @@ export default function ViewProvider({
           transition: { delay: 0.1, duration: 0.3 },
         }}
         transition={{ duration: 0.1, ease: 'easeOut' }}
-        style={{ visibility: ready ? 'visible' : 'hidden' }}
+        style={{ visibility: ready && !isSimulation ? 'visible' : 'hidden' }}
       >
         {children}
       </motion.div>
