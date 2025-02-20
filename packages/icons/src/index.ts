@@ -1,4 +1,6 @@
 export * from './icons/logo-google'
 export * from './icons/logo-github'
 export * from './icons/logo-avelin'
+export * from './icons/runtimes/bun-logo'
+export * from './icons/runtimes/nodejs-logo'
 export * from './lucide'
