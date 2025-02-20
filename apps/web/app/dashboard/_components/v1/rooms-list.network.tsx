@@ -54,7 +54,7 @@ export default function RoomsListNetwork() {
   const dashboardIsEmpty = !isPending && !error && !data.length
 
   return (
-    <div className={cn('flex-1 flex flex-col gap-4 h-full select-none')}>
+    <div className={cn('flex-1 flex flex-col gap-6 h-full select-none')}>
       <div className="flex items-end justify-between">
         <div className="flex items-center gap-6">
           <h2 className="text-xl font-semibold">Code Rooms</h2>
@@ -73,11 +73,7 @@ export default function RoomsListNetwork() {
               <LayersIcon className="group-hover:text-color-text-primary" />
               All
             </ToggleGroupItem>
-            <ToggleGroupItem
-              className="group disabled:blur-[1px]"
-              value="active"
-              disabled
-            >
+            <ToggleGroupItem className="group" value="active" disabled>
               <CircleDotIcon className="group-hover:text-color-text-primary" />
               Active
             </ToggleGroupItem>
@@ -98,11 +94,7 @@ export default function RoomsListNetwork() {
             <ToggleGroupItem value="list">
               <LayoutListIcon />
             </ToggleGroupItem>
-            <ToggleGroupItem
-              className="disabled:blur-[1px]"
-              value="grid"
-              disabled
-            >
+            <ToggleGroupItem value="grid" disabled>
               <LayoutGridIcon />
             </ToggleGroupItem>
           </ToggleGroup>

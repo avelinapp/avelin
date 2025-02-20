@@ -100,7 +100,7 @@ export default function RoomsListZero() {
   }
 
   return (
-    <div className={cn('flex-1 flex flex-col gap-4 h-full select-none')}>
+    <div className={cn('flex-1 flex flex-col gap-6 h-full select-none')}>
       <div className="flex items-end justify-between">
         <div className="flex items-center gap-6">
           <h2 className="text-xl font-semibold">Code Rooms</h2>
