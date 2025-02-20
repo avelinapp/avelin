@@ -47,7 +47,7 @@ export function getZeroClient({
 
     client.query.rooms
       .where('deletedAt', 'IS', null)
-      .related('roomParticipants')
+      .related('roomParticipants', (q) => q.related('user'))
       .preload()
   }
 
