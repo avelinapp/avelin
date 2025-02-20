@@ -9,7 +9,6 @@ import {
   eq,
   getTableColumns,
   isNull,
-  ne,
   or,
   schema,
   sql,
@@ -231,7 +230,7 @@ export const rooms = new Elysia({ prefix: '/rooms' })
 
             const { user } = auth
 
-            const updatedRp = await db
+            await db
               .insert(schema.roomParticipants)
               .values({
                 roomId: roomId,
@@ -250,9 +249,7 @@ export const rooms = new Elysia({ prefix: '/rooms' })
                   connectedAt: new Date(),
                 },
               })
-              .returning()
 
-            console.log('Updated room participant:', updatedRp)
             return {}
           }
 
