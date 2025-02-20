@@ -22,6 +22,7 @@
     "release:patch": "release-it patch",
     "release:minor": "release-it minor",
     "release:major": "release-it major",
+    "release:next-version": "release-it --ci --release-version | tail -n1",
     "prepare": "husky",
     "clean": "rm -rf **/node_modules **/.turbo **/.next **/dist"
   },
