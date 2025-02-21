@@ -21,6 +21,7 @@ import {
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
 import { useCopyToClipboard } from '@avelin/ui/hooks'
+import { ScrollArea } from '@avelin/ui/scroll-area'
 import { toast } from '@avelin/ui/sonner'
 import { ToggleGroup, ToggleGroupItem } from '@avelin/ui/toggle-group'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@avelin/ui/tooltip'
@@ -28,9 +29,10 @@ import type { Zero } from '@avelin/zero'
 import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMemo } from 'react'
-import { EmptyDashboardIcon } from './empty-state-icon'
+import Container from './container'
+import EmptyRooms from './empty-rooms'
 import { UsersListDisplay } from './user-avatar-list'
 
 export default function RoomsListZero() {
@@ -55,7 +57,9 @@ export default function RoomsListZero() {
       (room) =>
         (room.creatorId === z.userID &&
           !room.roomParticipants.find((rp) => rp.userId === z.userID)) ||
-        !!room.roomParticipants.find((rp) => rp.userId === z.userID),
+        !!room.roomParticipants.find(
+          (rp) => rp.userId === z.userID && rp.deletedAt === null,
+        ),
     )
     .map((room) => ({
       ...room,
@@ -96,11 +100,11 @@ export default function RoomsListZero() {
 
     if (!room) return
 
-    router.push(`/rooms/${room.slug}`)
+    // router.push(`/rooms/${room.slug}`)
   }
 
   return (
-    <div className={cn('flex-1 flex flex-col gap-6 h-full select-none')}>
+    <div className="flex-1 flex flex-col gap-6 h-full select-none">
       <div className="flex items-end justify-between">
         <div className="flex items-center gap-6">
           <h2 className="text-xl font-semibold">Code Rooms</h2>
@@ -154,21 +158,9 @@ export default function RoomsListZero() {
           </Button>
         </div>
       </div>
-      <div className="flex-1 h-full flex flex-col gap-1  ">
+      <div className="flex-1 h-full flex flex-col gap-1 overflow-hidden">
         {dashboardIsEmpty ? (
-          <div className="flex items-center gap-8 m-auto">
-            <EmptyDashboardIcon className="size-32 stroke-gray-8 stroke-1" />
-            <div className="space-y-4">
-              <p className="font-medium">Create or join a code room</p>
-              <div>
-                <p>
-                  Your code rooms will be available to you from this dashboard.
-                </p>
-                <p>You can get started by creating a code room.</p>
-              </div>
-              <Button onClick={handleCreateRoom}>Create room</Button>
-            </div>
-          </div>
+          <EmptyRooms handleCreateRoom={handleCreateRoom} />
         ) : roomsDisplayType === 'list' ? (
           // @ts-ignore
           <CodeRoomListView rooms={rooms} view={roomsView} />
@@ -193,11 +185,13 @@ const CodeRoomListView = ({
   >
 }) => {
   return (
-    <div className="grid grid-cols-[max-content_max-content_max-content_max-content_minmax(0,_1fr)] gap-y-1">
-      {rooms.map((room) => (
-        // @ts-ignore
-        <CodeRoomListItem key={room.id} room={room} view={view} />
-      ))}
+    <div className="overflow-y-scroll overflow-x-hidden">
+      <div className="grid grid-cols-[max-content_max-content_max-content_max-content_minmax(0,_1fr)] gap-y-1">
+        {rooms.map((room) => (
+          // @ts-ignore
+          <CodeRoomListItem key={room.id} room={room} view={view} />
+        ))}
+      </div>
     </div>
   )
 }
@@ -206,7 +200,7 @@ const CodeRoomListItem = ({
   view,
   room,
 }: {
-  view: 'active' | 'all'
+  view: 'active' | 'all' | 'hidden'
   room: Zero.Schema.Room &
     Pick<Zero.Schema.RoomParticipant, 'lastAccessedAt'> & {
       roomParticipants: Array<
@@ -224,6 +218,8 @@ const CodeRoomListItem = ({
   const LanguageIcon = language.logo!
 
   let data = room.roomParticipants.filter((rp) => !rp.user.isAnonymous)
+
+  const isRoomCreator = room.creatorId === z.userID
 
   if (view === 'active') {
     data = data.filter((rp) => rp.isConnected)
@@ -331,6 +327,7 @@ const CodeRoomListItem = ({
           tooltip={{
             content: 'Delete code room',
           }}
+          disabled={!isRoomCreator}
           onClick={(e) => {
             e.stopPropagation()
             handleDeleteRoom()

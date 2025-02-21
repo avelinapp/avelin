@@ -11,9 +11,11 @@ export default function Layout({
   children: React.ReactNode
 }>) {
   return (
-    <div className="flex-1 h-full w-full max-w-screen-lg mx-auto p-4 flex flex-col gap-8">
+    <div className="flex-1 h-full w-full px-4 flex flex-col gap-8">
       <Toolbar />
-      {children}
+      <div className="flex-1 h-full w-full max-w-screen-2xl mx-auto pt-4 flex flex-col gap-8">
+        {children}
+      </div>
     </div>
   )
 }

@@ -24,16 +24,16 @@ export default function Page() {
   }
 
   return (
-    <div className="flex-1 flex flex-col gap-4 h-full">
+    <div className="flex-1 flex flex-col gap-4 h-full overflow-hidden">
       <PostHogFeature
-        className="flex-1 flex flex-col"
+        className="flex-1 flex flex-col h-full"
         flag="dashboard-ui-refresh"
         match={false}
       >
         <Dashboard_v0 />
       </PostHogFeature>
       <PostHogFeature
-        className="flex-1 flex flex-col"
+        className="flex-1 flex flex-col h-full"
         flag="dashboard-ui-refresh"
         match={true}
       >
