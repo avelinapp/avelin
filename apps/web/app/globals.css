@@ -16,6 +16,7 @@
   h6,
   .font-display {
     letter-spacing: -0.02em;
+
     @supports (font-variation-settings: normal) {
       font-variation-settings: "opsz" 32;
     }
@@ -25,6 +26,7 @@
   span,
   .font-body {
     letter-spacing: -0.01em;
+
     @supports (font-variation-settings: normal) {
       font-variation-settings: "opsz" 16;
     }
@@ -53,5 +55,11 @@
 
   body {
     @apply text-color-text-primary;
+  }
+}
+
+@layer utilities {
+  .flex-full {
+    @apply flex-1 flex flex-col h-full w-full;
   }
 }
