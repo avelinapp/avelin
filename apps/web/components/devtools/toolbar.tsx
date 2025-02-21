@@ -6,11 +6,11 @@ import { LoaderIcon, LogoAvelin } from '@avelin/icons'
 import { BunLogo, NodeJSLogo } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
-import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation'
 import posthog from 'posthog-js'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { FPSMeter } from './fps'
+import ZeroCache from './zero-cache'
 
 export default function AvelinDevToolsToolbar() {
   const router = useRouter()
@@ -61,36 +61,35 @@ export default function AvelinDevToolsToolbar() {
     }, 3000)
   }
 
-  function toggleRuntime() {
-    const RUNTIME = env.NEXT_PUBLIC_RUNTIME
-
-    if (RUNTIME === 'bun') {
-      Cookies.remove('runtime')
-    } else {
-      // TODO: SET OPTIONS
-      Cookies.set('runtime', 'bun')
-    }
-
-    location.reload()
-  }
+  // function toggleRuntime() {
+  //   const RUNTIME = env.NEXT_PUBLIC_RUNTIME
+  //
+  //   if (RUNTIME === 'bun') {
+  //     Cookies.remove('runtime')
+  //   } else {
+  //     Cookies.set('runtime', 'bun')
+  //   }
+  //
+  //   location.reload()
+  // }
 
   if (!FF_devtools) return null
 
   console.log('Loading Avelin developer tools...')
 
   return (
-    <div className="z-10 dark:bg-black bg-white h-9 flex items-center px-4 border-t border-color-border-subtle text-sm">
-      <div className="flex items-center h-full gap-6">
+    <div className="z-10 dark:bg-black bg-white flex items-center px-4 border-t border-color-border-subtle text-sm py-0">
+      <div className="flex items-center gap-6">
         <LogoAvelin className="size-5" />
         <FPSMeter />
         <Button
           className="flex bg-transparent rounded-none text-color-text-primary hover:bg-gray-3 items-center gap-2 font-medium"
-          onClick={toggleRuntime}
+          // onClick={toggleRuntime}
           tooltip={{
             content:
               env.NEXT_PUBLIC_RUNTIME === 'bun'
-                ? 'Connect to Node.js-based runtime'
-                : 'Connect to Bun-based runtime',
+                ? `Running Bun v${env.NEXT_PUBLIC_BUN_VERSION}`
+                : `Running Node.js v${env.NEXT_PUBLIC_NODE_VERSION}`,
           }}
         >
           {env.NEXT_PUBLIC_RUNTIME === 'bun' ? (
@@ -99,7 +98,6 @@ export default function AvelinDevToolsToolbar() {
             <NodeJSLogo className="size-4" />
           )}
           <div className="flex items-center gap-1">
-            {env.NEXT_PUBLIC_RUNTIME === 'bun' ? 'Bun' : 'Node.js'}
             <span className="text-color-text-quaternary">
               v
               {env.NEXT_PUBLIC_RUNTIME === 'bun'
@@ -111,7 +109,7 @@ export default function AvelinDevToolsToolbar() {
         <div className="flex items-center gap-0 *:px-3">
           <Button
             className={cn(
-              'h-full w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
+              'w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
               FF_zero
                 ? 'text-color-text-primary'
                 : 'text-color-text-quaternary',
@@ -128,7 +126,7 @@ export default function AvelinDevToolsToolbar() {
           </Button>
           <Button
             className={cn(
-              'h-full w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
+              'w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
               FF_dashboard
                 ? 'text-color-text-primary'
                 : 'text-color-text-quaternary',
@@ -145,7 +143,7 @@ export default function AvelinDevToolsToolbar() {
           </Button>
           <Button
             className={cn(
-              'h-full w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
+              'w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
               FF_dashboard_ui_refresh
                 ? 'text-color-text-primary'
                 : 'text-color-text-quaternary',
@@ -163,17 +161,18 @@ export default function AvelinDevToolsToolbar() {
         </div>
         <div className="flex items-center ml-2">
           <span className="mx-2 font-medium text-color-text-primary !tracking-normal">
-            Triggers
+            Actions
           </span>
           <Button
             className={cn(
-              'h-full w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary text-color-text-quaternary px-3',
+              'w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary text-color-text-quaternary px-3',
             )}
             onClick={simulateFullReload}
           >
             <LoaderIcon className="size-4 text-white" strokeWidth={2.25} />
             <span>Loading fallback</span>
           </Button>
+          {FF_zero && <ZeroCache />}
         </div>
       </div>
     </div>

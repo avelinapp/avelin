@@ -18,28 +18,28 @@ export default function Page() {
       </div>
       <div className="w-full flex gap-2">
         <LoginWithGoogle />
-        <Button
-          className="w-full"
-          variant="secondary"
-          tooltip={{
-            content: 'Login with GitHub',
-            side: 'bottom',
-          }}
-          disabled
-        >
-          <LogoGithub />
-        </Button>
-        <Button
-          className="w-full"
-          variant="secondary"
-          tooltip={{
-            content: 'Login with magic link',
-            side: 'bottom',
-          }}
-          disabled
-        >
-          <MailIcon />
-        </Button>
+        {/* <Button */}
+        {/*   className="w-full" */}
+        {/*   variant="secondary" */}
+        {/*   tooltip={{ */}
+        {/*     content: 'Login with GitHub', */}
+        {/*     side: 'bottom', */}
+        {/*   }} */}
+        {/*   disabled */}
+        {/* > */}
+        {/*   <LogoGithub /> */}
+        {/* </Button> */}
+        {/* <Button */}
+        {/*   className="w-full" */}
+        {/*   variant="secondary" */}
+        {/*   tooltip={{ */}
+        {/*     content: 'Login with magic link', */}
+        {/*     side: 'bottom', */}
+        {/*   }} */}
+        {/*   disabled */}
+        {/* > */}
+        {/*   <MailIcon /> */}
+        {/* </Button> */}
       </div>
     </div>
   )

@@ -42,4 +42,14 @@ export class Room {
       }
     })
   }
+
+  static async hide({ id }: { id: string }) {
+    const z = zeroClient!
+
+    await z.mutate.roomParticipants.update({
+      roomId: id,
+      userId: z.userID,
+      deletedAt: now(),
+    })
+  }
 }

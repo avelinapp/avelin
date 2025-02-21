@@ -28,12 +28,10 @@ export default function RootLayout({
       >
         <QueryClientProvider>
           <Providers>
-            <div className="flex flex-col h-screen w-screen">
-              <div className="flex-1 w-full h-full overflow-y-scroll overflow-x-hidden">
-                {children}
-              </div>
-              <AvelinDevToolsToolbar />
+            <div className="flex-1 h-full w-full overflow-hidden">
+              {children}
             </div>
+            <AvelinDevToolsToolbar />
             <Toaster richColors />
             <CommandMenu />
           </Providers>

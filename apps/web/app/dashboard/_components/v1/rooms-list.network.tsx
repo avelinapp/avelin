@@ -15,7 +15,6 @@ import {
   LayoutListIcon,
   LinkIcon,
   PlusIcon,
-  SquareArrowUpRightIcon,
   TrashIcon,
 } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
@@ -26,15 +25,13 @@ import { toast } from '@avelin/ui/sonner'
 import { ToggleGroup, ToggleGroupItem } from '@avelin/ui/toggle-group'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@avelin/ui/tooltip'
 import { useQuery as useReactQuery } from '@tanstack/react-query'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
-import { EmptyDashboardIcon } from './empty-state-icon'
+import EmptyRooms from './empty-rooms'
 
 export default function RoomsListNetwork() {
   const router = useRouter()
   const queryClient = getQueryClient()
-  const { user } = useAuth()
 
   const createRoom = useCreateRoom({ queryClient })
 
@@ -113,20 +110,10 @@ export default function RoomsListNetwork() {
       ) : (
         <FadeInContainer className="flex-1 h-full flex flex-col gap-1">
           {dashboardIsEmpty ? (
-            <div className="flex items-center gap-8 m-auto">
-              <EmptyDashboardIcon className="size-32 stroke-gray-8 stroke-1" />
-              <div className="space-y-4">
-                <p className="font-medium">Create or join a code room</p>
-                <div>
-                  <p>
-                    Your code rooms will be available to you from this
-                    dashboard.
-                  </p>
-                  <p>You can get started by creating a code room.</p>
-                </div>
-                <Button onClick={handleCreateRoom}>Create room</Button>
-              </div>
-            </div>
+            <EmptyRooms
+              handleCreateRoom={handleCreateRoom}
+              disabled={createRoom.isPending}
+            />
           ) : roomsDisplayType === 'list' ? (
             <CodeRoomListView rooms={data} />
           ) : null}

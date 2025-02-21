@@ -9,7 +9,6 @@ import { CodeRoomProvider } from './code-room-provider'
 import { CommandMenuProvider } from './command-menu-provider'
 import { PostHogPageView, PostHogProvider } from './posthog-provider'
 import { ThemeProvider } from './theme-provider'
-import ViewProvider from './view-provider'
 import ZeroRootProvider from './zero-root-provider'
 
 export default async function Providers({
@@ -30,6 +29,7 @@ export default async function Providers({
 
     if (auth) {
       const flags = await getFlags(auth.user.id)
+
       posthogBootstrapData = {
         distinctID: auth.user.id,
         featureFlags: flags,
@@ -46,10 +46,7 @@ export default async function Providers({
               <PostHogPageView />
               <CommandMenuProvider>
                 <CodeRoomProvider>
-                  <TooltipProvider>
-                    {/* <ViewProvider>{children}</ViewProvider> */}
-                    {children}
-                  </TooltipProvider>
+                  <TooltipProvider>{children}</TooltipProvider>
                 </CodeRoomProvider>
               </CommandMenuProvider>
             </ZeroRootProvider>
