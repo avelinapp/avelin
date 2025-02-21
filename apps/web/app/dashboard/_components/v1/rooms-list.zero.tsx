@@ -21,7 +21,6 @@ import {
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
 import { useCopyToClipboard } from '@avelin/ui/hooks'
-import { ScrollArea } from '@avelin/ui/scroll-area'
 import { toast } from '@avelin/ui/sonner'
 import { ToggleGroup, ToggleGroupItem } from '@avelin/ui/toggle-group'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@avelin/ui/tooltip'
@@ -31,7 +30,6 @@ import { AnimatePresence, motion } from 'motion/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useMemo } from 'react'
-import Container from './container'
 import EmptyRooms from './empty-rooms'
 import { UsersListDisplay } from './user-avatar-list'
 
@@ -100,7 +98,7 @@ export default function RoomsListZero() {
 
     if (!room) return
 
-    // router.push(`/rooms/${room.slug}`)
+    router.push(`/rooms/${room.slug}`)
   }
 
   return (
