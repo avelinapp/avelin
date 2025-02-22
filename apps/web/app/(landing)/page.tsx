@@ -14,7 +14,6 @@ import { cn } from '@avelin/ui/cn'
 import { Input } from '@avelin/ui/input'
 import { type Variants, motion } from 'motion/react'
 import Link from 'next/link'
-import type { HTMLAttributes } from 'react'
 
 const SocialButton = ({ children, className, ...props }: ButtonProps) => {
   return (
@@ -66,7 +65,7 @@ const variants: Variants = {
 export default function Landing() {
   return (
     <motion.div
-      className="relative flex w-full flex-1 h-full flex-col items-center justify-center gap-12 p-4 select-none"
+      className="flex w-full flex-1 h-full flex-col items-center justify-center gap-12 p-4 select-none"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -76,11 +75,6 @@ export default function Landing() {
         variants={variants}
       >
         <LogoAvelin className="text-primary-bg size-24 drop-shadow-xl" />
-        {/* <h1 className="text-4xl font-semibold !tracking-tighter"> */}
-        {/*   <span className="!tracking-[-0.2rem]">Av</span> */}
-        {/*   <span className="ml-[0.08rem]">elin</span> */}
-        {/* </h1> */}
-
         <h1 className="font-semibold text-4xl font-mono !tracking-tighter text-white relative">
           <span className="!tracking-[-0.05em]">Avelin</span>
           <span
@@ -98,12 +92,12 @@ export default function Landing() {
                 <XLogo className="w-5 h-5" />
               </Link>
             </SocialButton>
-            <SocialButton>
+            <SocialButton asChild>
               <Link href="https://discord.gg/wvmVJtqkYR">
                 <DiscordLogo className="w-5 h-5" />
               </Link>
             </SocialButton>
-            <SocialButton>
+            <SocialButton asChild>
               <Link href="https://github.com/avelinapp">
                 <GitHubLogo className="w-5 h-5" />
               </Link>
