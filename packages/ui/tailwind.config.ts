@@ -1,6 +1,8 @@
 import type { Config } from 'tailwindcss'
+import plugin from 'tailwindcss'
 import tailwindCssAnimate from 'tailwindcss-animate'
 import { fontFamily } from 'tailwindcss/defaultTheme'
+import hoverExpand from './src/tw/plugins/hover-expand'
 
 function color(cssVar: string) {
   return `hsl(var(--${cssVar}) / <alpha-value>)`
@@ -194,5 +196,5 @@ export default {
       },
     },
   },
-  plugins: [tailwindCssAnimate],
+  plugins: [tailwindCssAnimate, hoverExpand],
 } satisfies Config

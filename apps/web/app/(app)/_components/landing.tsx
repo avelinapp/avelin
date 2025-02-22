@@ -7,10 +7,10 @@ import {
   ZapIcon,
 } from '@avelin/icons'
 import Link from 'next/link'
-import { Actions } from './_components/actions'
-import Title from './_components/title'
+import { Actions } from './actions'
+import Title from './title'
 
-export default function Home() {
+export default function Landing() {
   return (
     <div className="flex w-full flex-1 h-full m-auto flex-col items-center justify-center gap-12 p-4">
       <div className="flex flex-col items-center gap-12">
