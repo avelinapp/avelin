@@ -6,7 +6,15 @@ import { AuthenticatedActions, UnauthenticatedActions } from './auth-actions'
 import CreateRoomButton from './create-room-button'
 
 export function Actions() {
-  const { isAuthenticated, isAnonymous, isPending, user } = useAuth()
+  const {
+    isAuthenticated,
+    // isAnonymous,
+    isPending,
+    user,
+  } = useAuth()
+
+  // const showAuthActions = isAuthenticated && !isAnonymous
+  const showAuthActions = isAuthenticated
 
   return (
     <LayoutGroup id="actions">
@@ -14,7 +22,7 @@ export function Actions() {
         <motion.div layout="position">
           <CreateRoomButton />
         </motion.div>
-        {isPending ? null : isAuthenticated && !isAnonymous ? (
+        {isPending ? null : showAuthActions ? (
           <AuthenticatedActions user={user!} />
         ) : (
           <UnauthenticatedActions />

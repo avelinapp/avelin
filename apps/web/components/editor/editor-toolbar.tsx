@@ -19,14 +19,23 @@ export function EditorToolbar() {
   const pathname = usePathname()
 
   const { room } = useCodeRoom()
-  const { isPending, isAuthenticated, isAnonymous, user } = useAuth()
+  const {
+    isPending,
+    isAuthenticated,
+    // TODO: Add back anonymous users
+    // isAnonymous,
+    user,
+  } = useAuth()
 
   return (
     <div className="flex items-center m-2 drop-shadow-sm py-2 px-4 max-w-full bg-popover-bg rounded-lg border border-color-border-subtle">
       <div className="w-full grid grid-cols-3">
         <div className="flex items-center place-self-start">
           <div className="flex items-center h-6">
-            {isAuthenticated && !isAnonymous ? (
+            {isAuthenticated &&
+            {
+              /* !isAnonymous  */
+            } ? (
               <Link href="/dashboard">
                 <LogoAvelin className="size-6 shrink-0" />
               </Link>
@@ -51,7 +60,9 @@ export function EditorToolbar() {
             <CopyRoomURL roomSlug={room?.slug ?? ''} />
           </div>
           <Separator className="mx-3" orientation="vertical" />
-          {isPending ? null : !isAuthenticated || isAnonymous ? (
+          {/* TODO: Add back anonymous users */}
+          {/* The check below should show Login/Signup if the user is not authed or **anonymous** */}
+          {isPending ? null : !isAuthenticated ? (
             <Button
               asChild
               size="xs"
