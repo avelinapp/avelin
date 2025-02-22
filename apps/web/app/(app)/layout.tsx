@@ -43,6 +43,8 @@ export default async function RootLayout({
     return redirect('/dashboard')
   }
 
+  console.log('here')
+
   return (
     <html lang="en" suppressHydrationWarning>
       {env.NODE_ENV === 'production' && <OneDollarStatsScript />}

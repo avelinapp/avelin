@@ -6,7 +6,6 @@ import { ZeroProvider as ZeroProviderPrimitive } from '@rocicorp/zero/react'
 import { decodeJwt } from 'jose/jwt/decode'
 import Cookies from 'js-cookie'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
-import { useAuth } from './auth-provider'
 import ViewProvider from './view-provider'
 
 export default function ZeroProvider({
@@ -16,14 +15,8 @@ export default function ZeroProvider({
 }) {
   const FF_zero = useFeatureFlagEnabled('zero')
 
-  const { isPending, isAuthenticated } = useAuth()
-
-  if (isPending || !isAuthenticated) {
-    return null
-  }
-
   if (!FF_zero) {
-    return <>{children}</>
+    return <div className="flex-1 flex flex-col h-full w-full">{children}</div>
   }
 
   const jwt = Cookies.get('avelin_jwt')

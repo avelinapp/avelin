@@ -73,48 +73,52 @@ export const auth = new Elysia({ prefix: '/auth' })
       .post(
         '/anonymous',
         async ({ cookie: { avelin_session_id, avelin_jwt }, error }) => {
-          try {
-            const user = await createAnonymousUser({ db })
-            const session = await createSession(user.id, { db })
+          return error(500, {
+            error: 'This route has been disabled.',
+          })
 
-            avelin_session_id?.set({
-              value: session.id,
-              path: '/',
-              httpOnly: true,
-              secure: env.NODE_ENV === 'production',
-              sameSite: 'lax',
-              expires: session.expiresAt,
-              domain: `.${env.BASE_DOMAIN}`,
-            })
-
-            avelin_jwt?.set({
-              value: await createAuthJwt({ user }),
-              path: '/',
-              httpOnly: false,
-              sameSite: 'lax',
-              expires: session.expiresAt,
-              domain: `.${env.BASE_DOMAIN}`,
-            })
-
-            return {
-              isAuthenticated: true,
-              isAnonymous: true,
-              user,
-              session,
-            }
-          } catch (err) {
-            if (err instanceof Error) {
-              return error(500, {
-                error:
-                  err.message ??
-                  'Failed to create anonymous user - unknown error.',
-              })
-            }
-
-            return error(500, {
-              error: 'Failed to create anonymous user - unknown error.',
-            })
-          }
+          // try {
+          //   const user = await createAnonymousUser({ db })
+          //   const session = await createSession(user.id, { db })
+          //
+          //   avelin_session_id?.set({
+          //     value: session.id,
+          //     path: '/',
+          //     httpOnly: true,
+          //     secure: env.NODE_ENV === 'production',
+          //     sameSite: 'lax',
+          //     expires: session.expiresAt,
+          //     domain: `.${env.BASE_DOMAIN}`,
+          //   })
+          //
+          //   avelin_jwt?.set({
+          //     value: await createAuthJwt({ user }),
+          //     path: '/',
+          //     httpOnly: false,
+          //     sameSite: 'lax',
+          //     expires: session.expiresAt,
+          //     domain: `.${env.BASE_DOMAIN}`,
+          //   })
+          //
+          //   return {
+          //     isAuthenticated: true,
+          //     isAnonymous: true,
+          //     user,
+          //     session,
+          //   }
+          // } catch (err) {
+          //   if (err instanceof Error) {
+          //     return error(500, {
+          //       error:
+          //         err.message ??
+          //         'Failed to create anonymous user - unknown error.',
+          //     })
+          //   }
+          //
+          //   return error(500, {
+          //     error: 'Failed to create anonymous user - unknown error.',
+          //   })
+          // }
         },
       )
       .get(

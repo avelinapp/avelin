@@ -108,7 +108,7 @@ export default function RoomsListNetwork() {
       {isPending ? null : error ? (
         <div>{error.message}</div>
       ) : (
-        <FadeInContainer className="flex-1 h-full flex flex-col gap-1">
+        <FadeInContainer className="flex-1 h-full flex flex-col gap-1 overflow-hidden">
           {dashboardIsEmpty ? (
             <EmptyRooms
               handleCreateRoom={handleCreateRoom}
@@ -127,11 +127,13 @@ type Room = Omit<TRoom, 'ydoc'> & { lastAccessedAt: Date | null }
 
 const CodeRoomListView = ({ rooms }: { rooms: Array<Room> }) => {
   return (
-    <div className="grid grid-cols-[max-content_max-content_max-content_minmax(0,_1fr)] gap-y-1">
-      {rooms.map((room) => (
-        // @ts-ignore
-        <CodeRoomListItem key={room.id} room={room} />
-      ))}
+    <div className="overflow-y-scroll overflow-x-hidden">
+      <div className="grid grid-cols-[max-content_max-content_max-content_minmax(0,_1fr)] gap-y-1">
+        {rooms.map((room) => (
+          // @ts-ignore
+          <CodeRoomListItem key={room.id} room={room} />
+        ))}
+      </div>
     </div>
   )
 }
