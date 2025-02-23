@@ -20,7 +20,6 @@
     "@avelin/zero": "workspace:*",
     "@elysiajs/cors": "^1.2.0",
     "@elysiajs/eden": "^1.2.0",
-    "@elysiajs/swagger": "^1.2.0",
     "@mobily/ts-belt": "^3.13.1",
     "@t3-oss/env-core": "^0.11.1",
     "arctic": "catalog:",
