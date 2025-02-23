@@ -1,5 +1,4 @@
 import {
-  createAnonymousUser,
   createSession,
   createUserViaGoogle,
   generateGoogleAuthorizationUrl,
@@ -14,7 +13,6 @@ import Elysia, { t } from 'elysia'
 import type { Response } from 'undici-types'
 import { env } from '../env'
 import { authMiddleware } from '../middleware/auth'
-import { linkAnonymousToRealAccount } from '../utils/auth.utils'
 import { createAuthJwt, verifyAuthJwt } from '../utils/jwt.utils'
 
 export const auth = new Elysia({ prefix: '/auth' })
@@ -230,8 +228,6 @@ export const auth = new Elysia({ prefix: '/auth' })
           const auth = currentSessionId
             ? await validateSession(currentSessionId, { db })
             : null
-
-          console.log('current authed user is anon:', auth?.user.isAnonymous)
 
           // Check if an existing user exists with this Google account
           const existingUser = await getUserByGoogleId(claims.sub, { db })
