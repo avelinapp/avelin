@@ -224,78 +224,36 @@ export const auth = new Elysia({ prefix: '/auth' })
           }
 
           // Get the anonymous session
-          const currentSessionId = avelin_session_id?.value
-          const auth = currentSessionId
-            ? await validateSession(currentSessionId, { db })
-            : null
+          // const currentSessionId = avelin_session_id?.value
+          // const auth = currentSessionId
+          //   ? await validateSession(currentSessionId, { db })
+          //   : null
 
           // Check if an existing user exists with this Google account
           const existingUser = await getUserByGoogleId(claims.sub, { db })
 
-          // If the user already exists, log them in
-          if (existingUser) {
-            // Link anonymous to existing real account
-            // if (auth?.user.isAnonymous) {
-            //   console.log(
-            //     `Linking anonymous user ${auth.user.id} to real existing user ${existingUser.id}`,
-            //   )
-            //   await linkAnonymousToRealAccount({
-            //     anonymousUserId: auth.user.id,
-            //     userId: existingUser.id,
-            //   })
-            // }
-
-            const session = await createSession(existingUser.id, { db })
-            avelin_session_id?.set({
-              value: session.id,
-              path: '/',
-              httpOnly: true,
-              secure: env.NODE_ENV === 'production',
-              sameSite: 'lax',
-              expires: session.expiresAt,
-              domain: `.${env.BASE_DOMAIN}`,
+          // If the user doesn't exist, do not create their account.
+          // TODO: Allow invited users to create an account.
+          if (!existingUser) {
+            return error(401, {
+              error:
+                'User is not on the private launch waitlist and/or has not been invited.',
             })
-
-            avelin_jwt?.set({
-              value: await createAuthJwt({ user: existingUser }),
-              path: '/',
-              httpOnly: false,
-              sameSite: 'lax',
-              domain: `.${env.BASE_DOMAIN}`,
-            })
-
-            post_login_redirect?.set({
-              value: '',
-              path: '/',
-              expires: new Date(0),
-            })
-
-            return redirect(env.APP_URL + redirectUrl)
           }
 
-          // If the user doesn't exist, create their account
-          const newUser = await createUserViaGoogle(
-            {
-              ...claims,
-              googleId: claims.sub,
-            },
-            { db },
-          )
-
-          // Link anonymous account to new account
+          // If the user already exists, log them in
+          // Link anonymous to existing real account
           // if (auth?.user.isAnonymous) {
           //   console.log(
-          //     `Linking anonymous user ${auth.user.id} to new real user ${newUser.id}`,
+          //     `Linking anonymous user ${auth.user.id} to real existing user ${existingUser.id}`,
           //   )
-          //
           //   await linkAnonymousToRealAccount({
           //     anonymousUserId: auth.user.id,
-          //     userId: newUser.id,
+          //     userId: existingUser.id,
           //   })
           // }
 
-          const session = await createSession(newUser.id, { db })
-
+          const session = await createSession(existingUser.id, { db })
           avelin_session_id?.set({
             value: session.id,
             path: '/',
@@ -307,7 +265,7 @@ export const auth = new Elysia({ prefix: '/auth' })
           })
 
           avelin_jwt?.set({
-            value: await createAuthJwt({ user: newUser }),
+            value: await createAuthJwt({ user: existingUser }),
             path: '/',
             httpOnly: false,
             sameSite: 'lax',
