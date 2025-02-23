@@ -59,6 +59,10 @@ export function EditorTextArea({ className }: EditorProps) {
           keybinding: KeyMod.CtrlCmd | KeyCode.KeyK,
           command: null,
         },
+        {
+          keybinding: KeyMod.CtrlCmd | KeyMod.Shift | KeyCode.KeyD,
+          command: null,
+        },
       ])
 
       setEditorMounted(true)
@@ -106,6 +110,9 @@ export function EditorTextArea({ className }: EditorProps) {
           minimap: { enabled: false },
           renderLineHighlight: 'none',
           scrollBeyondLastLine: false,
+          scrollbar: {
+            vertical: 'hidden',
+          },
         }}
       />
     </div>
