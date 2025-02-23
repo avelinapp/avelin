@@ -166,12 +166,16 @@ export const createCodeRoomStore = () =>
 
         const localUser: UserAwareness['user'] = {
           clientId: awareness.clientID,
-          name: user && !user.isAnonymous ? user.name : generateUniqueName(),
+          // TODO: Add back anonymous users
+          // name: user && !user.isAnonymous ? user.name : generateUniqueName(),
+          name: user ? user.name : generateUniqueName(),
           color: color,
-          picture:
-            user && !user.isAnonymous && !!user.picture
-              ? user.picture
-              : undefined,
+          // TODO: Add back anonymous users
+          // picture:
+          //   user && !user.isAnonymous && !!user.picture
+          //     ? user.picture
+          //     : undefined,
+          picture: user?.picture ?? undefined,
           lastActive: Date.now(),
         }
 

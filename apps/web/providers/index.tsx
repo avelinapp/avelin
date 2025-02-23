@@ -4,6 +4,7 @@ import { getHeaders } from '@/lib/utils'
 import { TooltipProvider } from '@avelin/ui/tooltip'
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query'
 import { cookies, headers as nextHeaders } from 'next/headers'
+import { redirect } from 'next/navigation'
 import AuthProvider from './auth-provider'
 import { CodeRoomProvider } from './code-room-provider'
 import { CommandMenuProvider } from './command-menu-provider'
@@ -21,6 +22,11 @@ export default async function Providers({
   const cookieStore = await cookies()
   const sessionId = cookieStore.get('avelin_session_id')?.value
 
+  // if (!sessionId) {
+  //   console.log('providers layout - redirecting to login')
+  //   return redirect('/login')
+  // }
+  //
   let posthogBootstrapData = undefined
 
   if (sessionId) {

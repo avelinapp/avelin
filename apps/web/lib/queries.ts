@@ -100,24 +100,26 @@ const authQueries = {
           return auth.data
         }
 
+        throw new Error('Failed to verify user session')
+
         // Create anonymous user & session if the user does not have a session.
-        const anonAuth = await api.auth.anonymous.post(
-          {},
-          {
-            headers: { ...headers },
-          },
-        )
-
-        if (anonAuth.error) {
-          switch (anonAuth.error.status) {
-            case 500:
-              throw new Error(anonAuth.error.value.error)
-            default:
-              throw new Error('Error in anonymous user creation.')
-          }
-        }
-
-        return anonAuth.data
+        // const anonAuth = await api.auth.anonymous.post(
+        //   {},
+        //   {
+        //     headers: { ...headers },
+        //   },
+        // )
+        //
+        // if (anonAuth.error) {
+        //   switch (anonAuth.error.status) {
+        //     case 500:
+        //       throw new Error(anonAuth.error.value.error)
+        //     default:
+        //       throw new Error('Error in anonymous user creation.')
+        //   }
+        // }
+        //
+        // return anonAuth.data
       },
     }),
 } as const

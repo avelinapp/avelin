@@ -1,4 +1,4 @@
-import CreateRoomButton from '@/app/_components/create-room-button'
+import CreateRoomButton from '@/app/(app)/_components/create-room-button'
 import { LogoAvelin } from '@avelin/icons'
 import { cn } from '@avelin/ui/cn'
 import { motion } from 'motion/react'

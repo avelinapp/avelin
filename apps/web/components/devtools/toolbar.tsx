@@ -78,12 +78,12 @@ export default function AvelinDevToolsToolbar() {
   console.log('Loading Avelin developer tools...')
 
   return (
-    <div className="z-10 dark:bg-black bg-white flex items-center px-4 border-t border-color-border-subtle text-sm py-0">
-      <div className="flex items-center gap-6">
+    <div className="h-9 dark:bg-black bg-white flex items-center px-4 border-t border-color-border-subtle text-sm py-0">
+      <div className="flex items-center gap-6 h-full">
         <LogoAvelin className="size-5" />
         <FPSMeter />
         <Button
-          className="flex bg-transparent rounded-none text-color-text-primary hover:bg-gray-3 items-center gap-2 font-medium"
+          className="h-full py-0 flex bg-transparent rounded-none text-color-text-primary hover:bg-gray-3 items-center gap-2 font-medium"
           // onClick={toggleRuntime}
           tooltip={{
             content:
@@ -106,10 +106,10 @@ export default function AvelinDevToolsToolbar() {
             </span>
           </div>
         </Button>
-        <div className="flex items-center gap-0 *:px-3">
+        <div className="flex items-center gap-0 *:px-3 h-full">
           <Button
             className={cn(
-              'w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
+              'h-full  py-0 w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
               FF_zero
                 ? 'text-color-text-primary'
                 : 'text-color-text-quaternary',
@@ -126,7 +126,7 @@ export default function AvelinDevToolsToolbar() {
           </Button>
           <Button
             className={cn(
-              'w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
+              'h-full  py-0 w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
               FF_dashboard
                 ? 'text-color-text-primary'
                 : 'text-color-text-quaternary',
@@ -143,7 +143,7 @@ export default function AvelinDevToolsToolbar() {
           </Button>
           <Button
             className={cn(
-              'w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
+              'h-full py-0 w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
               FF_dashboard_ui_refresh
                 ? 'text-color-text-primary'
                 : 'text-color-text-quaternary',
@@ -159,13 +159,13 @@ export default function AvelinDevToolsToolbar() {
             <span>Dashboard - UI refresh</span>
           </Button>
         </div>
-        <div className="flex items-center ml-2">
+        <div className="flex items-center ml-2 h-full">
           <span className="mx-2 font-medium text-color-text-primary !tracking-normal">
             Actions
           </span>
           <Button
             className={cn(
-              'w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary text-color-text-quaternary px-3',
+              'h-full py-0 w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary text-color-text-quaternary px-3',
             )}
             onClick={simulateFullReload}
           >

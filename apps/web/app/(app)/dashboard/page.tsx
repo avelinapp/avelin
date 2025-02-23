@@ -1,6 +1,7 @@
 'use client'
 
 import { dashboardComingSoonToast } from '@/lib/toasts'
+import { useAuth } from '@/providers/auth-provider'
 import { useRouter } from 'next/navigation'
 import { PostHogFeature, useFeatureFlagEnabled } from 'posthog-js/react'
 import { useEffect } from 'react'
@@ -8,20 +9,22 @@ import Dashboard_v0 from './_components/v0/dashboard'
 import Dashboard_v1 from './_components/v1/dashboard'
 
 export default function Page() {
-  const router = useRouter()
-
-  const userCanSeeDashboard = useFeatureFlagEnabled('dashboard')
-
-  useEffect(() => {
-    if (!userCanSeeDashboard) {
-      dashboardComingSoonToast()
-      router.push('/')
-    }
-  }, [userCanSeeDashboard, router])
-
-  if (!userCanSeeDashboard) {
-    return null
-  }
+  // const router = useRouter()
+  // const { user } = useAuth()
+  //
+  // // const userCanSeeDashboard = useFeatureFlagEnabled('dashboard')
+  // const userCanSeeDashboard = !user?.isAnonymous
+  //
+  // useEffect(() => {
+  //   if (!userCanSeeDashboard) {
+  //     // dashboardComingSoonToast()
+  //     router.push('/login')
+  //   }
+  // }, [userCanSeeDashboard, router])
+  //
+  // if (!userCanSeeDashboard) {
+  //   return null
+  // }
 
   return (
     <div className="flex-1 flex flex-col gap-4 h-full overflow-hidden">
