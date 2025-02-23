@@ -30,14 +30,14 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning className="dark">
       {env.NODE_ENV === 'production' && <OneDollarStatsScript />}
       <body
-        className={`${innovatorGrotesk.variable} ${berkeleyMono.variable} font-sans font-settings antialiased h-screen w-screen flex flex-col`}
+        className={`${innovatorGrotesk.variable} ${berkeleyMono.variable} font-sans font-settings antialiased h-dvh sm:h-screen w-screen flex flex-col`}
         style={{
           background:
             'radial-gradient(circle, rgba(10,10,10,1) 20%, rgba(5,5,5,1) 40%, rgba(0,0,0,1) 60%)',
         }}
       >
         {children}
-        <footer className="absolute bottom-0 w-full pb-4 flex flex-col items-center">
+        <footer className="absolute bottom-0 w-full pb-4 flex flex-col items-center text-sm sm:text-base">
           <span className="!tracking-normal text-gray-8 font-medium">
             Crafted by{' '}
             <Link
