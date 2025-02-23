@@ -92,7 +92,7 @@ export default function Landing() {
         variants={variants}
       >
         <LogoAvelin className="text-primary-bg size-16 sm:size-24 drop-shadow-xl" />
-        <h1 className="font-semibold text-3xl sm:text-4xl font-mono !tracking-tighter text-white relative">
+        <h1 className="font-semibold text-2xl sm:text-4xl font-mono !tracking-tighter text-white relative">
           <span className="!tracking-[-0.05em]">Avelin</span>
           <span
             className="text-xs sm:text-sm text-pink-9 absolute ml-1 left-full"
@@ -101,7 +101,7 @@ export default function Landing() {
             (alpha)
           </span>
         </h1>
-        <div className="flex flex-col items-center gap-4 text-lg sm:text-xl text-color-text-quaternary">
+        <div className="flex flex-col items-center gap-4 text-base sm:text-xl text-color-text-quaternary">
           <p>Collaborative code editor for the web.</p>
           <div className="flex items-center gap-1 text-color-text-quaternary ">
             <SocialButton asChild>
@@ -122,12 +122,12 @@ export default function Landing() {
           </div>
         </div>
       </motion.div>
-      <div className="w-[50px] h-[1px] bg-color-border-subtle mb-0" />
       <motion.div
         className="flex flex-col items-center gap-2 sm:gap-6 !tracking-normal *:!tracking-normal"
         variants={variants}
       >
-        <div className="flex flex-col items-center gap-2 *:sm:text-xl *:text-lg">
+        <div className="w-[50px] h-[1px] bg-color-border-subtle mb-9 sm:mb-5" />
+        <div className="flex flex-col items-center gap-2 *:sm:text-xl *:text-base">
           <span className="text-white font-medium">
             Stay tuned for early access.
           </span>
@@ -138,11 +138,11 @@ export default function Landing() {
         </div>
         <Link
           href="https://x.com/kianbazza"
-          className="mt-2 text-lg sm:text-xl text-color-text-quaternary font-medium relative"
+          className="mt-2 text-base sm:text-xl text-color-text-quaternary font-medium relative"
         >
           Follow me on{' '}
           <XLogo className="size-4 sm:size-5 inline-block relative translate-y-[-1px] text-white mx-[0.5px]" />{' '}
-          <span className="text-white underline underline-offset-2">
+          <span className="text-white underline transition-colors decoration-transparent hover:decoration-white underline-offset-2 duration-150 ease-in">
             @kianbazza
           </span>{' '}
           for updates.
