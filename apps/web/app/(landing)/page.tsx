@@ -1,23 +1,11 @@
 'use client'
 
-import {
-  ArrowRightIcon,
-  DiscordLogo,
-  GitHubLogo,
-  LogoAvelin,
-  XLogo,
-} from '@avelin/icons'
+import { DiscordLogo, GitHubLogo, LogoAvelin, XLogo } from '@avelin/icons'
 import '../globals.css'
 import '@avelin/ui/globals.css'
-import { Button, type ButtonProps, buttonVariants } from '@avelin/ui/button'
+import { Button, type ButtonProps } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
-import { Input, inputVariants } from '@avelin/ui/input'
-import {
-  AnimatePresence,
-  LayoutGroup,
-  type Variants,
-  motion,
-} from 'motion/react'
+import { AnimatePresence, type Variants, motion } from 'motion/react'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { FormView, SubmittingView } from './components'

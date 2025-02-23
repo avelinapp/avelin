@@ -9,7 +9,7 @@ import type { RefObject } from 'react'
 export function FormView({
   handleJoinWaitlist,
   ref,
-}: { handleJoinWaitlist: () => void; ref: RefObject<HTMLDivElement> }) {
+}: { handleJoinWaitlist: () => void; ref?: RefObject<HTMLDivElement> }) {
   return (
     <motion.div ref={ref} className="flex gap-4 w-[400px]">
       <motion.input
@@ -48,7 +48,7 @@ export function FormView({
   )
 }
 
-export function SubmittingView({ ref }: { ref: RefObject<HTMLDivElement> }) {
+export function SubmittingView({ ref }: { ref?: RefObject<HTMLDivElement> }) {
   return (
     <motion.div ref={ref} className="flex gap-4 w-[400px] rounded-md">
       <motion.button
