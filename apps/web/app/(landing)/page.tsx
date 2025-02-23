@@ -1,6 +1,12 @@
 'use client'
 
-import { DiscordLogo, GitHubLogo, LogoAvelin, XLogo } from '@avelin/icons'
+import {
+  ArrowRightIcon,
+  DiscordLogo,
+  GitHubLogo,
+  LogoAvelin,
+  XLogo,
+} from '@avelin/icons'
 import '../globals.css'
 import '@avelin/ui/globals.css'
 import { Button, type ButtonProps } from '@avelin/ui/button'
@@ -126,21 +132,41 @@ export default function Landing() {
         className="flex flex-col items-center gap-6 !tracking-normal *:!tracking-normal"
         variants={variants}
       >
-        <div className="w-[50px] h-[1px] bg-color-border-subtle mb-4" />
-        <span className="text-xl text-white font-medium">
-          Join the waitlist for early access.
-        </span>
-        <div className="w-[400px] h-14 flex-1">
-          <AnimatePresence mode="popLayout" initial={false}>
-            {content}
-          </AnimatePresence>
+        <div className="w-[50px] h-[1px] bg-color-border-subtle mb-5" />
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-xl text-white font-medium">
+            Stay tuned for early access.
+          </span>
+          <span className="text-xl text-color-text-quaternary font-medium">
+            We are getting ready for our private{' '}
+            <span className="text-pink-9">alpha</span> launch.
+          </span>
         </div>
         <Link
-          href="/readme"
-          className="!tracking-normal text-color-text-quaternary sm:hover-expand-6 sm:blur-sm sm:hover:blur-none hover:text-white hover:underline transition-all"
+          href="https://x.com/kianbazza"
+          className="mt-2 text-xl text-color-text-quaternary font-medium relative"
         >
-          Why are we building this?
+          Follow me on{' '}
+          <XLogo className="w-5 h-5 inline-block relative translate-y-[-1px] text-white mx-[0.5px]" />{' '}
+          <span className="text-white underline underline-offset-2">
+            @kianbazza
+          </span>{' '}
+          for updates.
         </Link>
+        {/* <span className="text-xl text-white font-medium"> */}
+        {/*   Join the waitlist for early access. */}
+        {/* </span> */}
+        {/* <div className="w-[400px] h-14 flex-1"> */}
+        {/*   <AnimatePresence mode="popLayout" initial={false}> */}
+        {/*     {content} */}
+        {/*   </AnimatePresence> */}
+        {/* </div> */}
+        {/* <Link */}
+        {/*   href="/readme" */}
+        {/*   className="!tracking-normal text-color-text-quaternary sm:hover-expand-6 sm:blur-sm sm:hover:blur-none hover:text-white hover:underline transition-all" */}
+        {/* > */}
+        {/*   Why are we building this? */}
+        {/* </Link> */}
       </motion.div>
     </motion.div>
   )
