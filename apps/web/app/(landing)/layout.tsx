@@ -17,7 +17,6 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const cookiesStore = await cookies()
-
   const sessionId = cookiesStore.get('avelin_session_id')?.value
 
   console.log('landing layout')

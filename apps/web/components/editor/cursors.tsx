@@ -26,7 +26,9 @@ export function Cursors({ provider }: CursorsProps) {
       updated: number[]
       // removed: number[]
     }) {
-      const newAwarenessUsers = (
+      // console.log('Added client IDs:', added)
+      // console.log('Updated client IDs:', updated)
+      const updatedAwarenessUsers = (
         [...provider.awareness!.getStates()] as AwarenessList
       ).map(([clientId, client]: [number, UserAwareness]) => {
         if (
@@ -34,6 +36,8 @@ export function Cursors({ provider }: CursorsProps) {
           !!client.user
         ) {
           // Update lastActive timestamp
+          console.log(`[CHANGED] ${client.user.name}`)
+
           return [
             clientId,
             {
@@ -41,10 +45,33 @@ export function Cursors({ provider }: CursorsProps) {
             },
           ] satisfies [number, UserAwareness]
         }
-        return [clientId, client] satisfies [number, UserAwareness]
+
+        console.log(
+          `[UNCHANGED] ${client?.user?.name} last active ${client?.user ? new Date(client.user.lastActive).toLocaleTimeString() : 'UNKNOWN'}`,
+        )
+
+        const prevAwarenessEntry = awarenessUsers.find(
+          ([clientId2]) => clientId2 === clientId,
+        )
+
+        if (!prevAwarenessEntry) {
+          console.log(
+            'No previous awareness entry found for',
+            client.user?.name,
+          )
+          return [clientId, client] satisfies [number, UserAwareness]
+        }
+
+        const [_, prevAwareness] = prevAwarenessEntry
+
+        const newAwareness: UserAwareness = {
+          ...client,
+          user: { ...client.user!, lastActive: prevAwareness.user!.lastActive },
+        }
+        return [clientId, newAwareness] satisfies [number, UserAwareness]
       })
 
-      setAwarenessUsers(newAwarenessUsers)
+      setAwarenessUsers(updatedAwarenessUsers)
     }
 
     provider.awareness!.on('change', setUsers)
@@ -52,7 +79,7 @@ export function Cursors({ provider }: CursorsProps) {
     return () => {
       provider.awareness!.off('change', setUsers)
     }
-  }, [provider])
+  }, [provider, awarenessUsers])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -66,9 +93,24 @@ export function Cursors({ provider }: CursorsProps) {
   const styleSheet = useMemo(() => {
     let cursorStyles = ''
 
+    const now = Date.now()
+
+    // console.log('Awareness users no.:', awarenessUsers.length)
+
     for (const [clientId, client] of awarenessUsers) {
       if (client?.user) {
-        const isActive = Date.now() - client.user.lastActive < USER_IDLE_TIMEOUT
+        const elapsed = now - client.user.lastActive
+        const isActive = elapsed < USER_IDLE_TIMEOUT
+        // const isActive = Date.now() - client.user.lastActive < USER_IDLE_TIMEOUT
+
+        if (client.user.name !== 'Kian Bazarjani') {
+          // console.log(
+          //   `[CURSORS] ${client.user.name} last active: ${new Date(client.user.lastActive).toLocaleTimeString()}`,
+          // )
+        }
+        console.log(
+          `[CURSORS] ${client.user.name} ${isActive ? 'ACTIVE' : 'NOT ACTIVE'} - last active ${client.user.lastActive}`,
+        )
         const color = colors[client.user.color as BaseColor]
 
         cursorStyles += `
@@ -89,6 +131,8 @@ export function Cursors({ provider }: CursorsProps) {
         `
       }
     }
+
+    // console.log('---------')
 
     return { __html: cursorStyles }
     // eslint-disable-next-line react-hooks/exhaustive-deps

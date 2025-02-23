@@ -9,6 +9,9 @@ import { cn } from '@avelin/ui/cn'
 import { useRouter } from 'next/navigation'
 import posthog from 'posthog-js'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
+import { useEffect, useState } from 'react'
+// @ts-ignore
+import { tinykeys } from 'tinykeys'
 import { FPSMeter } from './fps'
 import ZeroCache from './zero-cache'
 
@@ -16,6 +19,9 @@ export default function AvelinDevToolsToolbar() {
   const router = useRouter()
 
   const FF_devtools = useFeatureFlagEnabled('avelin-devtools')
+
+  const [show, setShow] = useState(FF_devtools)
+
   const FF_zero = useFeatureFlagEnabled('zero')
   const FF_dashboard = useFeatureFlagEnabled('dashboard')
   const FF_dashboard_ui_refresh = useFeatureFlagEnabled('dashboard-ui-refresh')
@@ -61,30 +67,33 @@ export default function AvelinDevToolsToolbar() {
     }, 3000)
   }
 
-  // function toggleRuntime() {
-  //   const RUNTIME = env.NEXT_PUBLIC_RUNTIME
-  //
-  //   if (RUNTIME === 'bun') {
-  //     Cookies.remove('runtime')
-  //   } else {
-  //     Cookies.set('runtime', 'bun')
-  //   }
-  //
-  //   location.reload()
-  // }
+  useEffect(() => {
+    const unsubscribe = tinykeys(window, {
+      '$mod+Shift+D': () => {
+        setShow(!show)
+      },
+    })
+    return () => {
+      unsubscribe()
+    }
+  }, [show])
 
   if (!FF_devtools) return null
 
   console.log('Loading Avelin developer tools...')
 
   return (
-    <div className="h-9 dark:bg-black bg-white flex items-center px-4 border-t border-color-border-subtle text-sm py-0">
+    <div
+      className={cn(
+        'h-9 dark:bg-black bg-white flex items-center px-4 border-t border-color-border-subtle text-sm py-0',
+        !show && 'hidden',
+      )}
+    >
       <div className="flex items-center gap-6 h-full">
         <LogoAvelin className="size-5" />
         <FPSMeter />
         <Button
           className="h-full py-0 flex bg-transparent rounded-none text-color-text-primary hover:bg-gray-3 items-center gap-2 font-medium"
-          // onClick={toggleRuntime}
           tooltip={{
             content:
               env.NEXT_PUBLIC_RUNTIME === 'bun'
