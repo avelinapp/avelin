@@ -64,7 +64,7 @@ export const auth = new Elysia({ prefix: '/auth' })
 
           return {
             isAuthenticated: true,
-            isAnonymous: auth.user.isAnonymous,
+            // isAnonymous: auth.user.isAnonymous,
             user: auth.user,
             session: auth.session,
           }
@@ -134,15 +134,8 @@ export const auth = new Elysia({ prefix: '/auth' })
           error,
         }) => {
           try {
-            console.log('redirectPath', redirectPath)
-
             const { state, codeVerifier, url } =
               generateGoogleAuthorizationUrl()
-
-            console.log('state', state)
-            console.log('codeVerifier', codeVerifier)
-            console.log('url', url)
-            console.log('url.toString()', url.toString())
 
             google_oauth_state?.set({
               value: state,
@@ -173,7 +166,6 @@ export const auth = new Elysia({ prefix: '/auth' })
 
             return redirect(url.toString(), 302) as Response
           } catch (err) {
-            console.log('err', err)
             error(500, {
               error: 'Failed to generate Google authorization URL.',
             })
@@ -247,15 +239,15 @@ export const auth = new Elysia({ prefix: '/auth' })
           // If the user already exists, log them in
           if (existingUser) {
             // Link anonymous to existing real account
-            if (auth?.user.isAnonymous) {
-              console.log(
-                `Linking anonymous user ${auth.user.id} to real existing user ${existingUser.id}`,
-              )
-              await linkAnonymousToRealAccount({
-                anonymousUserId: auth.user.id,
-                userId: existingUser.id,
-              })
-            }
+            // if (auth?.user.isAnonymous) {
+            //   console.log(
+            //     `Linking anonymous user ${auth.user.id} to real existing user ${existingUser.id}`,
+            //   )
+            //   await linkAnonymousToRealAccount({
+            //     anonymousUserId: auth.user.id,
+            //     userId: existingUser.id,
+            //   })
+            // }
 
             const session = await createSession(existingUser.id, { db })
             avelin_session_id?.set({
@@ -295,16 +287,16 @@ export const auth = new Elysia({ prefix: '/auth' })
           )
 
           // Link anonymous account to new account
-          if (auth?.user.isAnonymous) {
-            console.log(
-              `Linking anonymous user ${auth.user.id} to new real user ${newUser.id}`,
-            )
-
-            await linkAnonymousToRealAccount({
-              anonymousUserId: auth.user.id,
-              userId: newUser.id,
-            })
-          }
+          // if (auth?.user.isAnonymous) {
+          //   console.log(
+          //     `Linking anonymous user ${auth.user.id} to new real user ${newUser.id}`,
+          //   )
+          //
+          //   await linkAnonymousToRealAccount({
+          //     anonymousUserId: auth.user.id,
+          //     userId: newUser.id,
+          //   })
+          // }
 
           const session = await createSession(newUser.id, { db })
 
@@ -339,11 +331,6 @@ export const auth = new Elysia({ prefix: '/auth' })
   .guard({}, (app) =>
     app
       .use(authMiddleware)
-      .get('/check', async (ctx) => {
-        console.log('ctx.user', ctx.user)
-        console.log('ctx.session', ctx.session)
-        return { user: ctx.user, session: ctx.session }
-      })
       .get('/token/refresh', async ({ user, cookie: { avelin_jwt } }) => {
         const jwt = await createAuthJwt({ user })
 
