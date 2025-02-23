@@ -30,7 +30,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning className="dark">
       {env.NODE_ENV === 'production' && <OneDollarStatsScript />}
       <body
-        className={`${innovatorGrotesk.variable} ${berkeleyMono.variable} font-sans font-settings antialiased h-dvh sm:h-screen w-screen flex flex-col border border-red-500`}
+        className={`${innovatorGrotesk.variable} ${berkeleyMono.variable} font-sans font-settings antialiased h-dvh sm:h-screen w-screen flex flex-col`}
         style={{
           background:
             'radial-gradient(circle, rgba(10,10,10,1) 20%, rgba(5,5,5,1) 40%, rgba(0,0,0,1) 60%)',
