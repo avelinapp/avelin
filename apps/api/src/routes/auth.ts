@@ -224,10 +224,10 @@ export const auth = new Elysia({ prefix: '/auth' })
           }
 
           // Get the anonymous session
-          const currentSessionId = avelin_session_id?.value
-          const auth = currentSessionId
-            ? await validateSession(currentSessionId, { db })
-            : null
+          // const currentSessionId = avelin_session_id?.value
+          // const auth = currentSessionId
+          //   ? await validateSession(currentSessionId, { db })
+          //   : null
 
           // Check if an existing user exists with this Google account
           const existingUser = await getUserByGoogleId(claims.sub, { db })
