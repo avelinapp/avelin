@@ -3,7 +3,7 @@ import * as React from 'react'
 import { cn } from '@avelin/ui/cn'
 import { type VariantProps, cva } from 'class-variance-authority'
 
-const inputVariants = cva(
+export const inputVariants = cva(
   'flex w-full rounded-md border border-color-border-subtle bg-popover-bg text-sm placeholder:text-color-text-primary/50 ring-offset-color-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-color-border-subtle focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {

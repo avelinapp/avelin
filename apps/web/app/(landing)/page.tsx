@@ -9,11 +9,18 @@ import {
 } from '@avelin/icons'
 import '../globals.css'
 import '@avelin/ui/globals.css'
-import { Button, type ButtonProps } from '@avelin/ui/button'
+import { Button, type ButtonProps, buttonVariants } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
-import { Input } from '@avelin/ui/input'
-import { type Variants, motion } from 'motion/react'
+import { Input, inputVariants } from '@avelin/ui/input'
+import {
+  AnimatePresence,
+  LayoutGroup,
+  type Variants,
+  motion,
+} from 'motion/react'
 import Link from 'next/link'
+import { useMemo, useState } from 'react'
+import { FormView, SubmittingView } from './components'
 
 const SocialButton = ({ children, className, ...props }: ButtonProps) => {
   return (
@@ -63,6 +70,28 @@ const variants: Variants = {
 }
 
 export default function Landing() {
+  const [status, setStatus] = useState<
+    'idle' | 'submitting' | 'success' | 'error'
+  >('idle')
+
+  function handleJoinWaitlist() {
+    setStatus('submitting')
+    setTimeout(() => {
+      setStatus('idle')
+    }, 3000)
+  }
+
+  const content = useMemo(() => {
+    switch (status) {
+      case 'idle':
+      case 'success':
+      case 'error':
+        return <FormView key="form" handleJoinWaitlist={handleJoinWaitlist} />
+      case 'submitting':
+        return <SubmittingView key="submitting" />
+    }
+  }, [status])
+
   return (
     <motion.div
       className="flex w-full flex-1 h-full flex-col items-center justify-center gap-12 p-4 select-none"
@@ -113,12 +142,10 @@ export default function Landing() {
         <span className="text-xl text-white font-medium">
           Join the waitlist for early access.
         </span>
-        <div className="flex gap-4">
-          <Input className="w-[300px]" placeholder="Email address" />
-          <Button className="bg-white group">
-            Join
-            <ArrowRightIcon className="group-hover:translate-x-0.5 transition-transform" />
-          </Button>
+        <div className="w-[400px] h-14 flex-1">
+          <AnimatePresence mode="popLayout" initial={false}>
+            {content}
+          </AnimatePresence>
         </div>
         <Link
           href="/readme"
