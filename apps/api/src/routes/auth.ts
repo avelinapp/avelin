@@ -24,7 +24,10 @@ export const auth = new Elysia({ prefix: '/auth' })
           const sessionId = avelin_session_id?.value
 
           if (!sessionId) {
-            return error(400, {
+            avelin_session_id?.remove()
+            avelin_jwt?.remove()
+
+            return error(401, {
               isAuthenticated: false,
               error: 'Session not defined in request',
               user: null,
@@ -35,7 +38,10 @@ export const auth = new Elysia({ prefix: '/auth' })
           const auth = await validateSession(sessionId, { db })
 
           if (!auth) {
-            return error(400, {
+            avelin_session_id?.remove()
+            avelin_jwt?.remove()
+
+            return error(401, {
               isAuthenticated: false,
               error: 'Invalid session',
               user: null,
@@ -62,63 +68,17 @@ export const auth = new Elysia({ prefix: '/auth' })
 
           return {
             isAuthenticated: true,
-            // isAnonymous: auth.user.isAnonymous,
+            isAnonymous: auth.user.isAnonymous,
             user: auth.user,
             session: auth.session,
           }
         },
       )
-      .post(
-        '/anonymous',
-        async ({ cookie: { avelin_session_id, avelin_jwt }, error }) => {
-          return error(500, {
-            error: 'This route has been disabled.',
-          })
-
-          // try {
-          //   const user = await createAnonymousUser({ db })
-          //   const session = await createSession(user.id, { db })
-          //
-          //   avelin_session_id?.set({
-          //     value: session.id,
-          //     path: '/',
-          //     httpOnly: true,
-          //     secure: env.NODE_ENV === 'production',
-          //     sameSite: 'lax',
-          //     expires: session.expiresAt,
-          //     domain: `.${env.BASE_DOMAIN}`,
-          //   })
-          //
-          //   avelin_jwt?.set({
-          //     value: await createAuthJwt({ user }),
-          //     path: '/',
-          //     httpOnly: false,
-          //     sameSite: 'lax',
-          //     expires: session.expiresAt,
-          //     domain: `.${env.BASE_DOMAIN}`,
-          //   })
-          //
-          //   return {
-          //     isAuthenticated: true,
-          //     isAnonymous: true,
-          //     user,
-          //     session,
-          //   }
-          // } catch (err) {
-          //   if (err instanceof Error) {
-          //     return error(500, {
-          //       error:
-          //         err.message ??
-          //         'Failed to create anonymous user - unknown error.',
-          //     })
-          //   }
-          //
-          //   return error(500, {
-          //     error: 'Failed to create anonymous user - unknown error.',
-          //   })
-          // }
-        },
-      )
+      .post('/anonymous', async ({ error }) => {
+        return error(500, {
+          error: 'This route has been disabled.',
+        })
+      })
       .get(
         '/google',
         async ({
@@ -223,12 +183,6 @@ export const auth = new Elysia({ prefix: '/auth' })
             family_name: string
           }
 
-          // Get the anonymous session
-          // const currentSessionId = avelin_session_id?.value
-          // const auth = currentSessionId
-          //   ? await validateSession(currentSessionId, { db })
-          //   : null
-
           // Check if an existing user exists with this Google account
           const existingUser = await getUserByGoogleId(claims.sub, { db })
 
@@ -240,18 +194,6 @@ export const auth = new Elysia({ prefix: '/auth' })
                 'User is not on the private launch waitlist and/or has not been invited.',
             })
           }
-
-          // If the user already exists, log them in
-          // Link anonymous to existing real account
-          // if (auth?.user.isAnonymous) {
-          //   console.log(
-          //     `Linking anonymous user ${auth.user.id} to real existing user ${existingUser.id}`,
-          //   )
-          //   await linkAnonymousToRealAccount({
-          //     anonymousUserId: auth.user.id,
-          //     userId: existingUser.id,
-          //   })
-          // }
 
           const session = await createSession(existingUser.id, { db })
           avelin_session_id?.set({

@@ -100,7 +100,14 @@ const authQueries = {
           return auth.data
         }
 
-        throw new Error('Failed to verify user session')
+        switch (auth.error.status) {
+          case 401:
+            return null
+          default:
+            throw new Error('Error verifying user session.')
+        }
+
+        // throw new Error('Failed to verify user session')
 
         // Create anonymous user & session if the user does not have a session.
         // const anonAuth = await api.auth.anonymous.post(

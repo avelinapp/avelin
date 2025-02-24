@@ -38,10 +38,10 @@ export default async function RootLayout({
     return redirect('/login')
   }
 
-  if (sessionId && pathname === '/login') {
-    console.log('redirecting to dashboard')
-    return redirect('/dashboard')
-  }
+  // if (sessionId && pathname === '/login') {
+  //   console.log('redirecting to dashboard')
+  //   return redirect('/dashboard')
+  // }
 
   console.log('here')
 

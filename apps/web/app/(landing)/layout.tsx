@@ -22,7 +22,7 @@ export default async function RootLayout({
   console.log('landing layout')
 
   if (sessionId) {
-    return redirect('/login')
+    return redirect('/dashboard')
   }
 
   return (
