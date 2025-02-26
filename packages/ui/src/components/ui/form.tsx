@@ -14,7 +14,7 @@ import {
 } from 'react-hook-form'
 
 import { cn } from '@avelin/ui/cn'
-import { Label } from '@avelin/ui/components/ui/label'
+import { Label } from './label'
 
 const Form = FormProvider
 

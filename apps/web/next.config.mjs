@@ -10,9 +10,8 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  reactStrictMode: false,
+  // reactStrictMode: false,
   output: 'standalone',
-  transpilePackages: ['@avelin/ui'],
   images: {
     remotePatterns: [
       {
