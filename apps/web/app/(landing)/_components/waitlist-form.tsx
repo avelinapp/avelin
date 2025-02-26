@@ -105,7 +105,7 @@ export function FormView({
         layoutId="join-button"
         className={cn(
           buttonVariants({ variant: 'default' }),
-          'bg-white hover:bg-white group w-full flex-1',
+          'bg-white group w-full flex-1',
         )}
         style={{ borderRadius: 10, zIndex: '2' }}
         onClick={handleJoinWaitlist}
