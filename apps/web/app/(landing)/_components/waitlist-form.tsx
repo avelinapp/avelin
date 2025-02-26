@@ -59,12 +59,12 @@ export function WaitlistForm({
           {content}
         </AnimatePresence>
       </div>
-      <Link
-        href="/readme"
-        className="!tracking-normal text-color-text-quaternary sm:hover-expand-6 sm:blur-sm sm:hover:blur-none hover:text-white hover:underline transition-all"
-      >
-        Why are we building this?
-      </Link>
+      {/* <Link */}
+      {/*   href="/readme" */}
+      {/*   className="!tracking-normal text-color-text-quaternary sm:hover-expand-6 sm:blur-sm sm:hover:blur-none hover:text-white hover:underline transition-all" */}
+      {/* > */}
+      {/*   Why are we building this? */}
+      {/* </Link> */}
     </motion.div>
   )
 }
