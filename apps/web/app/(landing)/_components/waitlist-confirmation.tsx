@@ -29,7 +29,7 @@ export default function WaitlistConfirmation() {
       </span>
       <div className="flex flex-col gap-1 *:text-lg *:text-color-text-quaternary *:text-center">
         <p>We're thrilled to have you on board!</p>
-        <p>You should receive a confirmation email shortly.</p>
+        {/* <p>You should receive a confirmation email shortly.</p> */}
       </div>
       <div className="flex flex-col gap-1 *:text-lg *:text-color-text-quaternary *:text-center">
         <p>
