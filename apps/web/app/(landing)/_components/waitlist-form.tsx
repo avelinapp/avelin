@@ -5,7 +5,6 @@ import { buttonVariants } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
 import { inputVariants } from '@avelin/ui/input'
 import { AnimatePresence, motion } from 'motion/react'
-import Link from 'next/link'
 import { type RefObject, useMemo } from 'react'
 import { sectionVariants } from './variants'
 
@@ -20,10 +19,6 @@ export function WaitlistForm({
     setStatus('submitting')
     setTimeout(() => {
       setStatus('success')
-
-      // setTimeout(() => {
-      //   setStatus('idle')
-      // }, 2000)
     }, 3000)
   }
 
@@ -51,20 +46,22 @@ export function WaitlistForm({
       variants={sectionVariants}
     >
       <div className="w-[50px] h-[1px] bg-color-border-subtle mb-9 sm:mb-5" />
-      <span className="text-xl text-white font-medium">
+      <span className="text-xl text-white font-medium leading-none">
         Join the waitlist for early access.
       </span>
+      <div className="flex flex-col gap-1 items-center text-color-text-quaternary">
+        <span className="!tracking-normal">
+          Our private alpha is launching soon.
+        </span>
+        <span className="!tracking-normal">
+          We'll let you know when it's ready for you to join.
+        </span>
+      </div>
       <div className="w-[400px] h-14 flex-1">
         <AnimatePresence mode="popLayout" initial={false}>
           {content}
         </AnimatePresence>
       </div>
-      {/* <Link */}
-      {/*   href="/readme" */}
-      {/*   className="!tracking-normal text-color-text-quaternary sm:hover-expand-6 sm:blur-sm sm:hover:blur-none hover:text-white hover:underline transition-all" */}
-      {/* > */}
-      {/*   Why are we building this? */}
-      {/* </Link> */}
     </motion.div>
   )
 }
