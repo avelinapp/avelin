@@ -35,7 +35,7 @@ export const env = createEnv({
     ASSETS_URL: z.string().url(),
 
     /* Resend */
-    RESEND_API_KEY: z.string().min(1),
+    // RESEND_API_KEY: z.string().min(1),
   },
 
   /**
