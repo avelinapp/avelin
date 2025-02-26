@@ -136,9 +136,9 @@ export const roomParticipantsRelations = relations(
 )
 
 export const waitlistStatusEnum = pgEnum('waitlist_entry_status', [
-  'joined',
-  'invited',
-  'converted',
+  'waitlist_joined',
+  'invite_sent',
+  'invite_accepted',
 ])
 
 export const waitlistEntries = pgTable('waitlist_entries', {
@@ -151,13 +151,13 @@ export const waitlistEntries = pgTable('waitlist_entries', {
   /* The position of the user in the waitlist. */
   position: integer().generatedByDefaultAsIdentity({ startWith: 1 }),
   /* The status of the user in the waitlist. */
-  status: waitlistStatusEnum().notNull().default('joined'),
+  status: waitlistStatusEnum().notNull().default('waitlist_joined'),
   /* The date the user was joined the waitlist. */
   joinedAt: timestamp({ withTimezone: true, mode: 'date' }).defaultNow(),
   /* The date when the user was invited to join the pre-launch. */
   invitedAt: timestamp({ withTimezone: true, mode: 'date' }),
   /* The date when the user accepted their invitation and joined the pre-launch. */
-  convertedAt: timestamp({ withTimezone: true, mode: 'date' }),
+  acceptedAt: timestamp({ withTimezone: true, mode: 'date' }),
   ...timestamps,
 })
 

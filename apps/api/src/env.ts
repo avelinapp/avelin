@@ -33,6 +33,9 @@ export const env = createEnv({
     R2_SECRET_ACCESS_KEY: z.string().min(1),
     R2_BUCKET_NAME: z.string().min(1),
     ASSETS_URL: z.string().url(),
+
+    /* Resend */
+    RESEND_API_KEY: z.string().min(1),
   },
 
   /**

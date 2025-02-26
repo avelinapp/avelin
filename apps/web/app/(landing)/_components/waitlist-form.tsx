@@ -1,12 +1,29 @@
 'use client'
 
+import { api } from '@/lib/api'
+import { delay } from '@/lib/utils'
 import { CircleCheckBigIcon } from '@avelin/icons'
 import { buttonVariants } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@avelin/ui/form'
 import { inputVariants } from '@avelin/ui/input'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { AnimatePresence, motion } from 'motion/react'
 import { type RefObject, useMemo } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 import { sectionVariants } from './variants'
+
+const waitlistFormSchema = z.object({
+  email: z.string().email({ message: 'Invalid email address.' }),
+})
+type WaitlistFormSchema = z.infer<typeof waitlistFormSchema>
 
 export function WaitlistForm({
   status,
@@ -15,11 +32,36 @@ export function WaitlistForm({
   status: 'idle' | 'submitting' | 'success' | 'error'
   setStatus: (status: 'idle' | 'submitting' | 'success' | 'error') => void
 }) {
-  function handleJoinWaitlist() {
+  // 1. Define your form.
+  const form = useForm<WaitlistFormSchema>({
+    resolver: zodResolver(waitlistFormSchema),
+    defaultValues: {
+      email: '',
+    },
+  })
+
+  // 2. Define a submit handler.
+  async function handleJoinWaitlist(values: WaitlistFormSchema) {
+    console.log(values)
+
     setStatus('submitting')
-    setTimeout(() => {
-      setStatus('success')
-    }, 3000)
+    delay(1000)
+    const start = performance.now()
+    const { data, error } = await api.waitlist.join.post({
+      email: values.email,
+    })
+
+    const elapsed = performance.now() - start
+
+    if (error) {
+      return console.error(error)
+    }
+
+    if (elapsed <= 2000) {
+      await delay(3000 - elapsed)
+    }
+
+    setStatus('success')
   }
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -27,14 +69,15 @@ export function WaitlistForm({
     switch (status) {
       case 'idle':
       case 'error':
-        return <FormView key="form" handleJoinWaitlist={handleJoinWaitlist} />
-      case 'submitting':
         return (
-          <SubmittingView
-            key="submitting"
+          <FormView
+            key="form"
+            form={form}
             handleJoinWaitlist={handleJoinWaitlist}
           />
         )
+      case 'submitting':
+        return <SubmittingView key="submitting" />
       case 'success':
         return <SuccessView key="success" />
     }
@@ -68,35 +111,54 @@ export function WaitlistForm({
 
 export function FormView({
   handleJoinWaitlist,
+  form,
   ref,
 }: {
-  handleJoinWaitlist: () => void
+  handleJoinWaitlist: (values: WaitlistFormSchema) => Promise<void>
+  form: ReturnType<typeof useForm<WaitlistFormSchema>>
   ref?: RefObject<HTMLDivElement>
 }) {
   return (
     <motion.div ref={ref} className="flex gap-4 w-[400px]">
-      <motion.input
-        className={cn(inputVariants(), 'w-[300px]')}
-        placeholder="Email address"
-        initial={{ opacity: 0, translateX: -15, scale: 0.95 }}
-        animate={{
-          opacity: 1,
-          translateX: 0,
-          scale: 1,
-          transition: { delay: 0.1 },
-        }}
-        exit={{
-          opacity: 0,
-          translateX: -15,
-          scale: 0.95,
-        }}
-        transition={{ ease: 'easeInOut' }}
-        style={{ borderRadius: 10, zIndex: '1' }}
-        onKeyPress={(e) => {
-          if (e.key !== 'Enter') return
-          handleJoinWaitlist()
-        }}
-      />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleJoinWaitlist)}>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormControl>
+                  <motion.input
+                    {...field}
+                    className={cn(
+                      inputVariants(),
+                      'w-[300px]',
+                      'data-[error=true]:not-focus:ring-offset-1 data-[error=true]:ring-2 data-[error=true]:ring-red-7 data-[error=true]:bg-red-2',
+                    )}
+                    data-error={!!fieldState.error}
+                    placeholder="Email address"
+                    initial={{ opacity: 0, translateX: -15, scale: 0.95 }}
+                    animate={{
+                      opacity: 1,
+                      translateX: 0,
+                      scale: 1,
+                      transition: { delay: 0.1 },
+                    }}
+                    exit={{
+                      opacity: 0,
+                      translateX: -15,
+                      scale: 0.95,
+                    }}
+                    transition={{ ease: 'easeInOut' }}
+                    style={{ borderRadius: 10, zIndex: '1' }}
+                  />
+                </FormControl>
+                <FormMessage className="text-red-11" />
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
       <motion.button
         layout
         layoutId="join-button"
@@ -105,7 +167,8 @@ export function FormView({
           'bg-white group w-full flex-1',
         )}
         style={{ borderRadius: 10, zIndex: '2' }}
-        onClick={handleJoinWaitlist}
+        type="submit"
+        onClick={form.handleSubmit(handleJoinWaitlist)}
       >
         <motion.span
           className="w-[75px]"
@@ -121,10 +184,8 @@ export function FormView({
 }
 
 export function SubmittingView({
-  handleJoinWaitlist,
   ref,
 }: {
-  handleJoinWaitlist: () => void
   ref?: RefObject<HTMLDivElement>
 }) {
   return (
@@ -137,7 +198,6 @@ export function SubmittingView({
           'bg-white group w-full flex-1 hover:bg-white',
         )}
         style={{ borderRadius: 10, zIndex: '2' }}
-        onClick={handleJoinWaitlist}
       >
         <motion.span
           className="w-[75px]"

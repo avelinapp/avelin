@@ -17,4 +17,6 @@ export const schema = {
   sessionsRelations: drizzleSchema.sessionsRelations,
   roomsRelations: drizzleSchema.roomsRelations,
   roomParticipantsRelations: drizzleSchema.roomParticipantsRelations,
+  waitlistEntries: drizzleSchema.waitlistEntries,
+  waitlistEntriesRelations: drizzleSchema.waitlistEntriesRelations,
 }
