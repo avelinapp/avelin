@@ -29,7 +29,7 @@ const socials: Array<{
   url: string
 }> = [
   { name: 'X', icon: XLogo, url: 'https://x.com/kianbazza' },
-  { name: 'Discord', icon: DiscordLogo, url: 'https://discord.gg/wvmVJtqkYR' },
+  { name: 'Discord', icon: DiscordLogo, url: 'https://go.avelin.app/discord' },
   { name: 'GitHub', icon: GitHubLogo, url: 'https://github.com/avelinapp' },
 ]
 
