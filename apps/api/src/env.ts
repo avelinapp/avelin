@@ -34,6 +34,8 @@ export const env = createEnv({
     R2_BUCKET_NAME: z.string().min(1),
     ASSETS_URL: z.string().url(),
 
+    POSTHOG_KEY: z.string().min(1),
+
     /* Resend */
     // RESEND_API_KEY: z.string().min(1),
   },

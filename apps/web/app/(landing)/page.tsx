@@ -1,43 +1,25 @@
-'use client'
+import posthog from '@/lib/posthog'
+import { Landing } from './_components/landing'
 
-import '../globals.css'
-import '@avelin/ui/globals.css'
-import { AnimatePresence, motion } from 'motion/react'
-import { useEffect, useState } from 'react'
-import { Header } from './_components/header'
-import { containerVariants } from './_components/variants'
-import WaitlistConfirmation from './_components/waitlist-confirmation'
-import { WaitlistForm } from './_components/waitlist-form'
+export interface WaitlistConfig {
+  enabled: boolean
+  stage: 'alpha'
+  visibility: 'public' | 'private'
+}
 
-export default function Landing() {
-  const [status, setStatus] = useState<
-    'idle' | 'submitting' | 'success' | 'error'
-  >('idle')
-  const [showPostSignup, setShowPostSignup] = useState(false)
+const missingConfig: WaitlistConfig = {
+  enabled: false,
+  stage: 'alpha',
+  visibility: 'private',
+}
 
-  useEffect(() => {
-    if (status === 'success') {
-      setTimeout(() => {
-        setShowPostSignup(true)
-      }, 1500)
-    }
-  }, [status])
+export default async function Page() {
+  const waitlistConfig = (await posthog.getFeatureFlagPayload(
+    'waitlist',
+    '_irrelevant',
+  )) as WaitlistConfig | undefined
 
-  return (
-    <motion.div
-      className="flex w-full flex-1 h-full flex-col items-center justify-center gap-12 p-4 select-none"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      <Header />
-      <AnimatePresence mode="popLayout">
-        {!showPostSignup ? (
-          <WaitlistForm status={status} setStatus={setStatus} />
-        ) : (
-          <WaitlistConfirmation />
-        )}
-      </AnimatePresence>
-    </motion.div>
-  )
+  console.log('waitlist config', waitlistConfig)
+
+  return <Landing config={waitlistConfig ?? missingConfig} />
 }

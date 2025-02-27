@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from '@avelin/ui/form'
 import { inputVariants } from '@avelin/ui/input'
+import { toast } from '@avelin/ui/sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AnimatePresence, motion } from 'motion/react'
 import { type RefObject, useMemo } from 'react'
@@ -42,19 +43,32 @@ export function WaitlistForm({
 
   // 2. Define a submit handler.
   async function handleJoinWaitlist(values: WaitlistFormSchema) {
-    console.log(values)
-
     setStatus('submitting')
-    delay(1000)
+
     const start = performance.now()
-    const { data, error } = await api.waitlist.join.post({
+    const { error } = await api.waitlist.join.post({
       email: values.email,
     })
-
     const elapsed = performance.now() - start
 
     if (error) {
-      return console.error(error)
+      setStatus('idle')
+
+      switch (error.status) {
+        // @ts-ignore
+        case 403:
+          toast.error("We couldn't add you to the waitlist.", {
+            description: 'Waitlist is disabled.',
+          })
+          break
+        default:
+          toast.error("We couldn't add you to the waitlist.", {
+            description: 'Something went wrong.',
+          })
+          break
+      }
+
+      return
     }
 
     if (elapsed <= 2000) {
@@ -85,11 +99,11 @@ export function WaitlistForm({
 
   return (
     <motion.div
-      className="flex flex-col items-center gap-2 sm:gap-6 !tracking-normal *:!tracking-normal"
+      className="flex flex-col items-center gap-4 sm:gap-6 !tracking-normal *:!tracking-normal"
       variants={sectionVariants}
     >
       <div className="w-[50px] h-[1px] bg-color-border-subtle mb-9 sm:mb-5" />
-      <span className="text-xl text-white font-medium leading-none">
+      <span className="sm:text-xl text-lg text-white font-medium leading-none">
         Join the waitlist for early access.
       </span>
       <div className="flex flex-col gap-1 items-center text-color-text-quaternary">
@@ -100,7 +114,7 @@ export function WaitlistForm({
           We'll let you know when it's ready for you to join.
         </span>
       </div>
-      <div className="w-[400px] h-14 flex-1">
+      <div className="w-[300px] sm:w-[400px] h-14 flex-1">
         <AnimatePresence mode="popLayout" initial={false}>
           {content}
         </AnimatePresence>
@@ -119,7 +133,10 @@ export function FormView({
   ref?: RefObject<HTMLDivElement>
 }) {
   return (
-    <motion.div ref={ref} className="flex gap-4 w-[400px]">
+    <motion.div
+      ref={ref}
+      className="flex gap-2 sm:gap-4 w-[300px] sm:w-[400px]"
+    >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleJoinWaitlist)}>
           <FormField
@@ -132,7 +149,7 @@ export function FormView({
                     {...field}
                     className={cn(
                       inputVariants(),
-                      'w-[300px]',
+                      'w-[225px] sm:w-[300px]',
                       'data-[error=true]:not-focus:ring-offset-1 data-[error=true]:ring-2 data-[error=true]:ring-red-7 data-[error=true]:bg-red-2',
                     )}
                     data-error={!!fieldState.error}
@@ -171,7 +188,7 @@ export function FormView({
         onClick={form.handleSubmit(handleJoinWaitlist)}
       >
         <motion.span
-          className="w-[75px]"
+          // className="w-[50px]"
           layout="position"
           layoutId="join-button-text"
           exit={{ filter: 'blur(5px)' }}
