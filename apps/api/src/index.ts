@@ -9,7 +9,7 @@ export const app = new Elysia()
   /* Global middleware */
   .use(
     cors({
-      origin: [env.APP_URL!],
+      origin: [env.APP_URL],
       credentials: true,
     }),
   )

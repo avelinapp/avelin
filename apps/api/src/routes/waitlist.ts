@@ -17,8 +17,6 @@ export const waitlist = new Elysia({ prefix: '/waitlist' }).post(
       .onConflictDoNothing({ target: schema.waitlistEntries.email })
       .returning()
 
-    console.log(res)
-
     return {}
   },
   {
