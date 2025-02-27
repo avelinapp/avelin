@@ -92,6 +92,13 @@
       "when": 1740029709646,
       "tag": "0012_track_user_connection_count_to_room",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1740677170160,
+      "tag": "0013_waitlist-entries",
+      "breakpoints": true
     }
   ]
 }
