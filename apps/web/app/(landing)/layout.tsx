@@ -1,7 +1,10 @@
+import '@avelin/ui/globals.css'
+import '../globals.css'
 import OneDollarStatsScript from '@/components/misc/one-dollar-stats'
 import { env } from '@/lib/env'
 import { berkeleyMono, innovatorGrotesk } from '@/lib/fonts'
-import type { Metadata } from 'next'
+import { Toaster } from '@avelin/ui/sonner'
+import type { Metadata, Viewport } from 'next'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
@@ -11,18 +14,23 @@ export const metadata: Metadata = {
   description: 'Code together, right now.',
 }
 
+export const viewport: Viewport = {
+  themeColor: '#000000',
+}
+
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   const cookiesStore = await cookies()
+
   const sessionId = cookiesStore.get('avelin_session_id')?.value
 
   console.log('landing layout')
 
   if (sessionId) {
-    return redirect('/dashboard')
+    return redirect('/login')
   }
 
   return (
@@ -48,6 +56,7 @@ export default async function RootLayout({
             @ <span className="text-color-text-quaternary">Bazza Labs</span>.
           </span>
         </footer>
+        <Toaster richColors theme="dark" />
       </body>
     </html>
   )

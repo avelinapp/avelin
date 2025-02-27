@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss'
-import plugin from 'tailwindcss'
 import tailwindCssAnimate from 'tailwindcss-animate'
 import { fontFamily } from 'tailwindcss/defaultTheme'
 import hoverExpand from './src/tw/plugins/hover-expand'
@@ -162,6 +161,11 @@ export default {
           hover: 'hsl(var(--color-secondary-hover))',
           active: 'hsl(var(--color-secondary-active))',
           text: 'hsl(var(--color-secondary-text))',
+        },
+        destructive: {
+          bg: 'hsl(var(--color-destructive-bg))',
+          hover: 'hsl(var(--color-destructive-hover))',
+          text: 'hsl(var(--color-destructive-text))',
         },
       },
       borderRadius: {

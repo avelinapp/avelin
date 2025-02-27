@@ -23,8 +23,9 @@
     "@mobily/ts-belt": "^3.13.1",
     "@t3-oss/env-core": "^0.11.1",
     "arctic": "catalog:",
-    "elysia": "1.2.10",
+    "elysia": "1.2.22",
     "jose": "^5.9.6",
+    "posthog-node": "^4.4.1",
     "remeda": "^2.19.2",
     "superjson": "^2.2.1",
     "zod": "^3.24.1"

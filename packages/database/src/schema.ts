@@ -1,6 +1,7 @@
 import { relations } from 'drizzle-orm'
 import {
   integer,
+  pgEnum,
   pgTable,
   primaryKey,
   text,
@@ -130,6 +131,42 @@ export const roomParticipantsRelations = relations(
     room: one(rooms, {
       fields: [roomParticipants.roomId],
       references: [rooms.id],
+    }),
+  }),
+)
+
+export const waitlistStatusEnum = pgEnum('waitlist_entry_status', [
+  'waitlist_joined',
+  'invite_sent',
+  'invite_accepted',
+])
+
+export const waitlistEntries = pgTable('waitlist_entries', {
+  /* Prefixed with wl_ for clarity. */
+  id: text().primaryKey(),
+  /* User ID is set when the user accepts their invitation and joins the pre-launch. */
+  userId: text().references(() => users.id, { onDelete: 'no action' }),
+  /* Email is set when the user joins the waitlist. */
+  email: text().notNull().unique(),
+  /* The position of the user in the waitlist. */
+  position: integer().generatedByDefaultAsIdentity({ startWith: 1 }),
+  /* The status of the user in the waitlist. */
+  status: waitlistStatusEnum().notNull().default('waitlist_joined'),
+  /* The date the user was joined the waitlist. */
+  joinedAt: timestamp({ withTimezone: true, mode: 'date' }).defaultNow(),
+  /* The date when the user was invited to join the pre-launch. */
+  invitedAt: timestamp({ withTimezone: true, mode: 'date' }),
+  /* The date when the user accepted their invitation and joined the pre-launch. */
+  acceptedAt: timestamp({ withTimezone: true, mode: 'date' }),
+  ...timestamps,
+})
+
+export const waitlistEntriesRelations = relations(
+  waitlistEntries,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [waitlistEntries.userId],
+      references: [users.id],
     }),
   }),
 )
