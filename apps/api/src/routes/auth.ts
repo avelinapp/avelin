@@ -114,7 +114,7 @@ export const auth = new Elysia({ prefix: '/auth' })
             })
 
             post_login_redirect?.set({
-              value: redirectPath ?? '/',
+              value: redirectPath ?? '/dashboard',
               path: '/',
               httpOnly: true,
               secure: env.NODE_ENV === 'production',
@@ -150,7 +150,7 @@ export const auth = new Elysia({ prefix: '/auth' })
           const state = url.searchParams.get('state')
           const storedState = google_oauth_state?.value
           const codeVerifier = google_code_verifier?.value
-          const redirectUrl = post_login_redirect?.value ?? '/'
+          const redirectUrl = post_login_redirect?.value ?? '/dashboard'
 
           if (!code || !state || !storedState || !codeVerifier) {
             return error(400, {
