@@ -26,24 +26,11 @@ export default async function RootLayout({
   const cookieStore = await cookies()
 
   const sessionId = cookieStore.get('avelin_session_id')?.value
-  const pathname = headerStore.get('X-Avelin-Path')
-
-  console.log('app layout')
-
-  console.log('sessionId', sessionId)
-  console.log('pathname', pathname)
+  const pathname = headerStore.get('X-Avelin-Path') ?? '/'
 
   if (!sessionId && pathname !== '/login') {
-    console.log('redirecting to login')
-    return redirect('/login')
+    return redirect(`/login?redirect=${encodeURIComponent(pathname)}`)
   }
-
-  // if (sessionId && pathname === '/login') {
-  //   console.log('redirecting to dashboard')
-  //   return redirect('/dashboard')
-  // }
-
-  console.log('here')
 
   return (
     <html lang="en" suppressHydrationWarning>
