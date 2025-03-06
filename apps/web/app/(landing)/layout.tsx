@@ -27,8 +27,6 @@ export default async function RootLayout({
 
   const sessionId = cookiesStore.get('avelin_session_id')?.value
 
-  console.log('landing layout')
-
   if (sessionId) {
     return redirect('/login')
   }
