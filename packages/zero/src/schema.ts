@@ -3,6 +3,7 @@ import {
   ANYONE_CAN,
   type ExpressionBuilder,
   NOBODY_CAN,
+  type PermissionsConfig,
   type Row,
   definePermissions,
 } from '@rocicorp/zero'
@@ -185,5 +186,5 @@ export const permissions: ReturnType<typeof definePermissions> =
           select: NOBODY_CAN,
         },
       },
-    }
+    } satisfies PermissionsConfig<AuthData, Schema>
   })
