@@ -33,6 +33,9 @@ catalogs:
     arctic:
       specifier: ^2.0.1
       version: 2.3.4
+    better-auth:
+      specifier: ^1.2.3
+      version: 1.2.3
     dotenv:
       specifier: ^16.4.5
       version: 16.4.7
@@ -125,6 +128,9 @@ importers:
       arctic:
         specifier: 'catalog:'
         version: 2.3.4
+      better-auth:
+        specifier: 'catalog:'
+        version: 1.2.3(typescript@5.7.3)
       elysia:
         specifier: 1.2.22
         version: 1.2.22(@sinclair/typebox@0.34.16)(openapi-types@12.1.3)(typescript@5.7.3)
@@ -404,6 +410,9 @@ importers:
       arctic:
         specifier: 'catalog:'
         version: 2.3.4
+      better-auth:
+        specifier: 'catalog:'
+        version: 1.2.3(typescript@5.7.3)
       react:
         specifier: ^19
         version: 19.0.0
@@ -420,6 +429,9 @@ importers:
 
   packages/database:
     dependencies:
+      '@avelin/id':
+        specifier: workspace:*
+        version: link:../id
       '@neondatabase/serverless':
         specifier: 'catalog:'
         version: 0.10.4
@@ -428,10 +440,10 @@ importers:
         version: 16.4.7
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)
+        version: 0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)
       drizzle-zod:
         specifier: ^0.5.1
-        version: 0.5.1(drizzle-orm@0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0))(zod@3.24.1)
+        version: 0.5.1(drizzle-orm@0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0))(zod@3.24.1)
       remeda:
         specifier: ^2.19.2
         version: 2.20.1
@@ -638,10 +650,10 @@ importers:
         version: 16.4.7
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)
+        version: 0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)
       drizzle-zero:
         specifier: ^0.5.0
-        version: 0.5.0(@rocicorp/zero@0.16.2025022800(bufferutil@4.0.9))(drizzle-orm@0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0))
+        version: 0.5.0(@rocicorp/zero@0.16.2025022800(bufferutil@4.0.9))(drizzle-orm@0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0))
     devDependencies:
       '@avelin/typescript-config':
         specifier: workspace:*
@@ -877,6 +889,12 @@ packages:
   '@badrap/valita@0.3.11':
     resolution: {integrity: sha512-oak0W8bycFjnrLeVCVvZqkOWTGh74wCPKUxGLJyhRukRs+V/hQdfZp1eDcQE4Gf3UrtJWfR/Ou4Xe0DZqJZ2FA==}
     engines: {node: '>= 16'}
+
+  '@better-auth/utils@0.2.3':
+    resolution: {integrity: sha512-Ap1GaSmo6JYhJhxJOpUB0HobkKPTNzfta+bLV89HfpyCAHN7p8ntCrmNFHNAVD0F6v0mywFVEUg1FUhNCc81Rw==}
+
+  '@better-fetch/fetch@1.1.15':
+    resolution: {integrity: sha512-0Bl8YYj1f8qCTNHeSn5+1DWv2hy7rLBrQ8rS8Y9XYloiwZEfc3k4yspIG0llRxafxqhGCwlGRg+F8q1HZRCMXA==}
 
   '@biomejs/biome@1.9.4':
     resolution: {integrity: sha512-1rkd7G70+o9KkTn5KLmDYXihGoTaIGO9PIIN2ZB7UJxFrWw04CZHPYiMRjYsaDvVV7hP1dYNRLxSANLaBFGpog==}
@@ -1601,6 +1619,9 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
+  '@hexagon/base64@1.1.28':
+    resolution: {integrity: sha512-lhqDEAvWixy3bZ+UOYbPwUbBkwBq5C1LAJ/xPC8Oi+lL54oyakv/npbA0aU2hgCsx/1NUd4IBvV03+aUBWxerw==}
+
   '@hocuspocus/common@2.15.2':
     resolution: {integrity: sha512-wU1wxXNnQQMXyeL3mdSDYiQsm/r/QyJVjjQhF7sUBrLnjdsN7bA1cvfcSvJBr1ymrMSeYRmUL3UlQmEHEOaP7w==}
 
@@ -1783,6 +1804,9 @@ packages:
   '@js-sdsl/ordered-map@4.4.2':
     resolution: {integrity: sha512-iUKgm52T8HOE/makSxjqoWhe95ZJA1/G1sYsGev2JDKUSS14KAgg1LHb+Ba+IPow0xflbnSkOsZcO08C7w1gYw==}
 
+  '@levischuck/tiny-cbor@0.2.11':
+    resolution: {integrity: sha512-llBRm4dT4Z89aRsm6u2oEZ8tfwL/2l6BwpZ7JcyieouniDECM5AqNgr/y08zalEIvW3RSK4upYyybDcmjXqAow==}
+
   '@lifeomic/attempt@3.1.0':
     resolution: {integrity: sha512-QZqem4QuAnAyzfz+Gj5/+SLxqwCAw2qmt7732ZXodr6VDWGeYLG6w1i/vYLa55JQM9wRuBKLmXmiZ2P0LtE5rw==}
 
@@ -1855,6 +1879,13 @@ packages:
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
+
+  '@noble/ciphers@0.6.0':
+    resolution: {integrity: sha512-mIbq/R9QXk5/cTfESb1OKtyFnk7oc1Om/8onA1158K9/OZUQFDEVy55jVTato+xmp3XX6F6Qh0zz0Nc1AxAlRQ==}
+
+  '@noble/hashes@1.7.1':
+    resolution: {integrity: sha512-B8XBPsn4vT/KJAGqDzbwztd+6Yte3P4V7iafm24bxgDe/mlRuK6xmWPuCNrKt2vDafZ8MfJLlchDG/vYafQEjQ==}
+    engines: {node: ^14.21.3 || >=16}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2117,6 +2148,21 @@ packages:
 
   '@oslojs/jwt@0.2.0':
     resolution: {integrity: sha512-bLE7BtHrURedCn4Mco3ma9L4Y1GR2SMBuIvjWr7rmQ4/W/4Jy70TIAgZ+0nIlk0xHz1vNP8x8DCns45Sb2XRbg==}
+
+  '@peculiar/asn1-android@2.3.15':
+    resolution: {integrity: sha512-8U2TIj59cRlSXTX2d0mzUKP7whfWGFMzTeC3qPgAbccXFrPNZLaDhpNEdG5U2QZ/tBv/IHlCJ8s+KYXpJeop6w==}
+
+  '@peculiar/asn1-ecc@2.3.15':
+    resolution: {integrity: sha512-/HtR91dvgog7z/WhCVdxZJ/jitJuIu8iTqiyWVgRE9Ac5imt2sT/E4obqIVGKQw7PIy+X6i8lVBoT6wC73XUgA==}
+
+  '@peculiar/asn1-rsa@2.3.15':
+    resolution: {integrity: sha512-p6hsanvPhexRtYSOHihLvUUgrJ8y0FtOM97N5UEpC+VifFYyZa0iZ5cXjTkZoDwxJ/TTJ1IJo3HVTB2JJTpXvg==}
+
+  '@peculiar/asn1-schema@2.3.15':
+    resolution: {integrity: sha512-QPeD8UA8axQREpgR5UTAfu2mqQmm97oUqahDtNdBcfj3qAnoXzFdQW+aNf/tD2WVXF8Fhmftxoj0eMIT++gX2w==}
+
+  '@peculiar/asn1-x509@2.3.15':
+    resolution: {integrity: sha512-0dK5xqTqSLaxv1FHXIcd4Q/BZNuopg+u1l23hT9rOmQ1g4dNtw0g/RnEi+TboB0gOwGtrWn269v27cMgchFIIg==}
 
   '@pivanov/utils@0.0.1':
     resolution: {integrity: sha512-JQ/pXeG9/Yq3UuwH2Xp4F6bSAIDGzbxT0Vrg/82tMi3Yp+Ps9AYzjSDE+zfvBRqc7J11V6MMonUrWj4+2dYgrg==}
@@ -2612,6 +2658,13 @@ packages:
     peerDependenciesMeta:
       rollup:
         optional: true
+
+  '@simplewebauthn/browser@13.1.0':
+    resolution: {integrity: sha512-WuHZ/PYvyPJ9nxSzgHtOEjogBhwJfC8xzYkPC+rR/+8chl/ft4ngjiK8kSU5HtRJfczupyOh33b25TjYbvwAcg==}
+
+  '@simplewebauthn/server@13.1.1':
+    resolution: {integrity: sha512-1hsLpRHfSuMB9ee2aAdh0Htza/X3f4djhYISrggqGe3xopNjOcePiSDkDDoPzDYaaMCrbqGP1H2TYU7bgL9PmA==}
+    engines: {node: '>=20.0.0'}
 
   '@sinclair/typebox@0.34.16':
     resolution: {integrity: sha512-rIljj8VPYAfn26ANY+5pCNVBPiv6hSufuKGe46y65cJZpvx8vHvPXlU0Q/Le4OGtlNaL8Jg2FuhtvQX18lSIqA==}
@@ -3160,6 +3213,10 @@ packages:
   array-ify@1.0.0:
     resolution: {integrity: sha512-c5AMf34bKdvPhQ7tBGhqkgKNUzMr4WUs+WDtC2ZUGOUncbxKMTvqxYctiseW3+L4bA8ec+GcZ6/A/FW4m8ukng==}
 
+  asn1js@3.0.5:
+    resolution: {integrity: sha512-FVnvrKJwpt9LP2lAMl8qZswRNm3T4q9CON+bxldk2iwk3FFpuwhx2FfinyitizWHsVYyaY+y5JzDR0rCMV5yTQ==}
+    engines: {node: '>=12.0.0'}
+
   ast-types@0.13.4:
     resolution: {integrity: sha512-x1FCFnFifvYDDzTaLII71vG5uvDwgtmDTEVWAxrgeiR8VjMONcCXJx7E+USjDtHlwFmt9MysbqgF9b9Vjr6w+w==}
     engines: {node: '>=4'}
@@ -3213,6 +3270,12 @@ packages:
 
   before-after-hook@2.2.3:
     resolution: {integrity: sha512-NzUnlZexiaH/46WDhANlyR2bXRopNg4F/zuSA3OpZnllCUgRaOF2znDioDWrmbNVsuZk6l9pMquQB38cfBZwkQ==}
+
+  better-auth@1.2.3:
+    resolution: {integrity: sha512-y97/ah2SOWaW81IRg36m7xMSMVl7ATaHie/nhQ0in/reVlEX/6juVPszNqq0gcTwQtFsB8oe15wQKgdf4yHP9Q==}
+
+  better-call@1.0.4:
+    resolution: {integrity: sha512-NdAihYdkS0IOz1mtz8mw1gWacCxR9r921U8YqB+VB6++rt8edMG13vVL16Y4TBL4XkjMK/DUewEsOOFkw9LJYQ==}
 
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
@@ -4521,6 +4584,10 @@ packages:
     resolution: {integrity: sha512-zYEr/gh7uLW2l4su11bmQ2M9xLgQLjyvx58UyNM/6nuqyWFHPX5ktMjvpev3F8QWdjSsHUpnWew4PBCswBNuMQ==}
     engines: {node: '>=18'}
 
+  kysely@0.27.6:
+    resolution: {integrity: sha512-FIyV/64EkKhJmjgC0g2hygpBv5RNWVPyNCqSAD7eTCv6eFWNIi4PN1UvdSJGicN/o35bnevgis4Y0UDC0qi8jQ==}
+    engines: {node: '>=14.0.0'}
+
   latest-version@9.0.0:
     resolution: {integrity: sha512-7W0vV3rqv5tokqkBAFV1LbR7HPOWzXQDpDgEuib/aJ1jsZZx6x3c2mBI+TJhJzOhkGeaLbCKEHXEXLfirtG2JA==}
     engines: {node: '>=18'}
@@ -4807,6 +4874,10 @@ packages:
     resolution: {integrity: sha512-Aooyr6MXU6HpvvWXKoVoXwKMs/KyVakWwg7xQfv5/S/RIgJMy0Ifa45H9qqYy7pTCszrHzP21Uk4PZq2HpEM8Q==}
     engines: {node: ^18 || >=20}
     hasBin: true
+
+  nanostores@0.11.4:
+    resolution: {integrity: sha512-k1oiVNN4hDK8NcNERSZLQiMfRzEGtfnvZvdBvey3SQbgn8Dcrk0h1I6vpxApjb10PFUflZrgJ2WEZyJQ+5v7YQ==}
+    engines: {node: ^18.0.0 || >=20.0.0}
 
   napi-build-utils@2.0.0:
     resolution: {integrity: sha512-GEbrYkbfF7MoNaoh2iGG84Mnf/WZfB0GdGEsM8wz7Expx/LlWf5U8t9nvJKXSp3qr5IsEbK04cBGhol/KwOsWA==}
@@ -5346,6 +5417,13 @@ packages:
     resolution: {integrity: sha512-FLpr4flz5xZTSJxSeaheeMKN/EDzMdK7b8PTOC6a5PYFKTucWbdqjgqaEyH0shFiSJrVB1+Qqi4Tk19ccU6Aug==}
     engines: {node: '>=12.20'}
 
+  pvtsutils@1.3.6:
+    resolution: {integrity: sha512-PLgQXQ6H2FWCaeRak8vvk1GW462lMxB5s3Jm673N82zI4vqtVUPuZdffdZbPDFRoU8kAhItWFtPCWiPpp4/EDg==}
+
+  pvutils@1.1.3:
+    resolution: {integrity: sha512-pMpnA0qRdFp32b1sJl1wOJNxZLQ2cbQx+k6tjNtZ8CpvVhNqEPRgivZ2WOUev2YMajecdH7ctUPDvEe87nariQ==}
+    engines: {node: '>=6.0.0'}
+
   qs@6.13.0:
     resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
     engines: {node: '>=0.6'}
@@ -5543,6 +5621,9 @@ packages:
 
   rope-sequence@1.3.4:
     resolution: {integrity: sha512-UT5EDe2cu2E/6O4igUr5PSFs23nvvukicWHx6GnOPlHAiiYbzNuCRQCuiUdHJQcqKalLKlrYJnjY0ySGsXNQXQ==}
+
+  rou3@0.5.1:
+    resolution: {integrity: sha512-OXMmJ3zRk2xeXFGfA3K+EOPHC5u7RDFG7lIOx0X1pdnhUkI8MdVrbV+sNsD80ElpUZ+MRHdyxPnFthq9VHs8uQ==}
 
   router@2.1.0:
     resolution: {integrity: sha512-/m/NSLxeYEgWNtyC+WtNHCF7jbGxOibVWKnn+1Psff4dJGOfoXP+MuC/f2CwSmyiHdOIzYnYFp4W6GxWfekaLA==}
@@ -5960,6 +6041,9 @@ packages:
     engines: {node: '>=0.8.0'}
     hasBin: true
 
+  uncrypto@0.1.3:
+    resolution: {integrity: sha512-Ql87qFHB3s/De2ClA9e0gsnS6zXG27SkTiSJwjCc9MebbfapQfuPzumMIUMi38ezPZVNFcHI9sUIepeQfw8J8Q==}
+
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
 
@@ -6042,6 +6126,14 @@ packages:
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
+
+  valibot@1.0.0-beta.15:
+    resolution: {integrity: sha512-BKy8XosZkDHWmYC+cJG74LBzP++Gfntwi33pP3D3RKztz2XV9jmFWnkOi21GoqARP8wAWARwhV6eTr1JcWzjGw==}
+    peerDependencies:
+      typescript: '>=5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
@@ -6813,6 +6905,12 @@ snapshots:
 
   '@badrap/valita@0.3.11': {}
 
+  '@better-auth/utils@0.2.3':
+    dependencies:
+      uncrypto: 0.1.3
+
+  '@better-fetch/fetch@1.1.15': {}
+
   '@biomejs/biome@1.9.4':
     optionalDependencies:
       '@biomejs/cli-darwin-arm64': 1.9.4
@@ -7252,6 +7350,8 @@ snapshots:
       protobufjs: 7.4.0
       yargs: 17.7.2
 
+  '@hexagon/base64@1.1.28': {}
+
   '@hocuspocus/common@2.15.2':
     dependencies:
       lib0: 0.2.99
@@ -7438,6 +7538,8 @@ snapshots:
 
   '@js-sdsl/ordered-map@4.4.2': {}
 
+  '@levischuck/tiny-cbor@0.2.11': {}
+
   '@lifeomic/attempt@3.1.0': {}
 
   '@mobily/ts-belt@3.13.1': {}
@@ -7483,6 +7585,10 @@ snapshots:
 
   '@next/swc-win32-x64-msvc@15.2.1':
     optional: true
+
+  '@noble/ciphers@0.6.0': {}
+
+  '@noble/hashes@1.7.1': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -7806,6 +7912,39 @@ snapshots:
   '@oslojs/jwt@0.2.0':
     dependencies:
       '@oslojs/encoding': 0.4.1
+
+  '@peculiar/asn1-android@2.3.15':
+    dependencies:
+      '@peculiar/asn1-schema': 2.3.15
+      asn1js: 3.0.5
+      tslib: 2.8.1
+
+  '@peculiar/asn1-ecc@2.3.15':
+    dependencies:
+      '@peculiar/asn1-schema': 2.3.15
+      '@peculiar/asn1-x509': 2.3.15
+      asn1js: 3.0.5
+      tslib: 2.8.1
+
+  '@peculiar/asn1-rsa@2.3.15':
+    dependencies:
+      '@peculiar/asn1-schema': 2.3.15
+      '@peculiar/asn1-x509': 2.3.15
+      asn1js: 3.0.5
+      tslib: 2.8.1
+
+  '@peculiar/asn1-schema@2.3.15':
+    dependencies:
+      asn1js: 3.0.5
+      pvtsutils: 1.3.6
+      tslib: 2.8.1
+
+  '@peculiar/asn1-x509@2.3.15':
+    dependencies:
+      '@peculiar/asn1-schema': 2.3.15
+      asn1js: 3.0.5
+      pvtsutils: 1.3.6
+      tslib: 2.8.1
 
   '@pivanov/utils@0.0.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
@@ -8324,6 +8463,18 @@ snapshots:
       '@types/estree': 1.0.6
       estree-walker: 2.0.2
       picomatch: 4.0.2
+
+  '@simplewebauthn/browser@13.1.0': {}
+
+  '@simplewebauthn/server@13.1.1':
+    dependencies:
+      '@hexagon/base64': 1.1.28
+      '@levischuck/tiny-cbor': 0.2.11
+      '@peculiar/asn1-android': 2.3.15
+      '@peculiar/asn1-ecc': 2.3.15
+      '@peculiar/asn1-rsa': 2.3.15
+      '@peculiar/asn1-schema': 2.3.15
+      '@peculiar/asn1-x509': 2.3.15
 
   '@sinclair/typebox@0.34.16': {}
 
@@ -9008,6 +9159,12 @@ snapshots:
 
   array-ify@1.0.0: {}
 
+  asn1js@3.0.5:
+    dependencies:
+      pvtsutils: 1.3.6
+      pvutils: 1.1.3
+      tslib: 2.8.1
+
   ast-types@0.13.4:
     dependencies:
       tslib: 2.8.1
@@ -9071,6 +9228,31 @@ snapshots:
   basic-ftp@5.0.5: {}
 
   before-after-hook@2.2.3: {}
+
+  better-auth@1.2.3(typescript@5.7.3):
+    dependencies:
+      '@better-auth/utils': 0.2.3
+      '@better-fetch/fetch': 1.1.15
+      '@noble/ciphers': 0.6.0
+      '@noble/hashes': 1.7.1
+      '@simplewebauthn/browser': 13.1.0
+      '@simplewebauthn/server': 13.1.1
+      better-call: 1.0.4
+      defu: 6.1.4
+      jose: 5.9.6
+      kysely: 0.27.6
+      nanostores: 0.11.4
+      valibot: 1.0.0-beta.15(typescript@5.7.3)
+      zod: 3.24.1
+    transitivePeerDependencies:
+      - typescript
+
+  better-call@1.0.4:
+    dependencies:
+      '@better-fetch/fetch': 1.1.15
+      rou3: 0.5.1
+      set-cookie-parser: 2.7.1
+      uncrypto: 0.1.3
 
   binary-extensions@2.3.0: {}
 
@@ -9541,25 +9723,26 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0):
+  drizzle-orm@0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0):
     optionalDependencies:
       '@neondatabase/serverless': 0.10.4
       '@opentelemetry/api': 1.9.0
       '@types/pg': 8.11.6
       '@types/react': 19.0.8
       bun-types: 1.2.2
+      kysely: 0.27.6
       pg: 8.13.3
       postgres: 3.4.5
       react: 19.0.0
 
-  drizzle-zero@0.5.0(@rocicorp/zero@0.16.2025022800(bufferutil@4.0.9))(drizzle-orm@0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)):
+  drizzle-zero@0.5.0(@rocicorp/zero@0.16.2025022800(bufferutil@4.0.9))(drizzle-orm@0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)):
     dependencies:
       '@rocicorp/zero': 0.16.2025022800(bufferutil@4.0.9)
-      drizzle-orm: 0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)
+      drizzle-orm: 0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)
 
-  drizzle-zod@0.5.1(drizzle-orm@0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0))(zod@3.24.1):
+  drizzle-zod@0.5.1(drizzle-orm@0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0))(zod@3.24.1):
     dependencies:
-      drizzle-orm: 0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)
+      drizzle-orm: 0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)
       zod: 3.24.1
 
   dunder-proto@1.0.1:
@@ -10377,6 +10560,8 @@ snapshots:
 
   ky@1.7.4: {}
 
+  kysely@0.27.6: {}
+
   latest-version@9.0.0:
     dependencies:
       package-json: 10.0.1
@@ -10645,6 +10830,8 @@ snapshots:
   nanoid@3.3.8: {}
 
   nanoid@5.0.9: {}
+
+  nanostores@0.11.4: {}
 
   napi-build-utils@2.0.0: {}
 
@@ -11235,6 +11422,12 @@ snapshots:
     dependencies:
       escape-goat: 4.0.0
 
+  pvtsutils@1.3.6:
+    dependencies:
+      tslib: 2.8.1
+
+  pvutils@1.1.3: {}
+
   qs@6.13.0:
     dependencies:
       side-channel: 1.1.0
@@ -11455,6 +11648,8 @@ snapshots:
   rfdc@1.4.1: {}
 
   rope-sequence@1.3.4: {}
+
+  rou3@0.5.1: {}
 
   router@2.1.0:
     dependencies:
@@ -11900,6 +12095,8 @@ snapshots:
   uglify-js@3.19.3:
     optional: true
 
+  uncrypto@0.1.3: {}
+
   undici-types@6.19.8: {}
 
   undici-types@7.3.0: {}
@@ -11967,6 +12164,10 @@ snapshots:
   uuid@10.0.0: {}
 
   uuid@9.0.1: {}
+
+  valibot@1.0.0-beta.15(typescript@5.7.3):
+    optionalDependencies:
+      typescript: 5.7.3
 
   validate-npm-package-license@3.0.4:
     dependencies:

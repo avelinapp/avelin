@@ -24,6 +24,7 @@
     "@oslojs/crypto": "catalog:",
     "@oslojs/encoding": "catalog:",
     "arctic": "catalog:",
+    "better-auth": "catalog:",
     "react": "^19"
   },
   "devDependencies": {
