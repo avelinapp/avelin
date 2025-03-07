@@ -33,7 +33,7 @@ import { useMemo } from 'react'
 import EmptyRooms from './empty-rooms'
 import { UsersListDisplay } from './user-avatar-list'
 
-export default function RoomsListZero() {
+export default function RoomsList() {
   const router = useRouter()
   useRerender({ frequency: 1000 * 60 })
   const { ready, setReady } = useView()

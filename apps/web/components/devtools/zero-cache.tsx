@@ -1,18 +1,7 @@
 import { Button } from '@avelin/ui/button'
 import { useZero } from '@rocicorp/zero/react'
-import { useFeatureFlagEnabled } from 'posthog-js/react'
 
 export default function ZeroCache() {
-  const FF_zero = useFeatureFlagEnabled('zero')
-
-  if (!FF_zero) {
-    return null
-  }
-
-  return <_ZeroCache />
-}
-
-export function _ZeroCache() {
   const z = useZero()
 
   function clearZeroCache() {

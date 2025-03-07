@@ -2,10 +2,7 @@
 
 import { LOGOUT_ACTION_TOAST_ID } from '@/lib/constants'
 import { useLogout } from '@/lib/mutations'
-import {
-  dashboardComingSoonToast,
-  preferencesComingSoonToast,
-} from '@/lib/toasts'
+import { preferencesComingSoonToast } from '@/lib/toasts'
 import type { Auth } from '@avelin/database'
 import {
   HouseIcon,
@@ -25,19 +22,12 @@ import {
 } from '@avelin/ui/dropdown-menu'
 import { toast } from '@avelin/ui/sonner'
 import { useRouter } from 'next/navigation'
-import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { useState } from 'react'
 
 export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
   const router = useRouter()
 
-  const FF_dashboard = useFeatureFlagEnabled('dashboard')
-
   function handleDashboardClick() {
-    if (!FF_dashboard) {
-      return dashboardComingSoonToast()
-    }
-
     router.push('/dashboard')
   }
 
