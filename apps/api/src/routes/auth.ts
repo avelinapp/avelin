@@ -1,4 +1,5 @@
 import {
+  createAnonymousUser,
   createSession,
   createUserViaGoogle,
   generateGoogleAuthorizationUrl,
@@ -74,11 +75,54 @@ export const auth = new Elysia({ prefix: '/auth' })
           }
         },
       )
-      .post('/anonymous', async ({ error }) => {
-        return error(500, {
-          error: 'This route has been disabled.',
-        })
-      })
+      .post(
+        '/anonymous',
+        async ({ cookie: { avelin_session_id, avelin_jwt }, error }) => {
+          try {
+            const user = await createAnonymousUser({ db })
+            const session = await createSession(user.id, { db })
+
+            avelin_session_id?.set({
+              value: session.id,
+              path: '/',
+              httpOnly: true,
+              secure: env.NODE_ENV === 'production',
+              sameSite: 'lax',
+              expires: session.expiresAt,
+              domain: `.${env.BASE_DOMAIN}`,
+            })
+
+            avelin_jwt?.set({
+              value: await createAuthJwt({ user }),
+              path: '/',
+              httpOnly: false,
+              secure: env.NODE_ENV === 'production',
+              sameSite: 'lax',
+              expires: session.expiresAt,
+              domain: `.${env.BASE_DOMAIN}`,
+            })
+
+            return {
+              isAuthenticated: true,
+              isAnonymous: true,
+              user,
+              session,
+            }
+          } catch (err) {
+            if (err instanceof Error) {
+              return error(500, {
+                error:
+                  err.message ??
+                  'Failed to create anonymous user - unknown error.',
+              })
+            }
+
+            return error(500, {
+              error: 'Failed to create anonymous user - unknown error.',
+            })
+          }
+        },
+      )
       .get(
         '/google',
         async ({
@@ -188,7 +232,8 @@ export const auth = new Elysia({ prefix: '/auth' })
 
           // If the user doesn't exist, do not create their account.
           // TODO: Allow invited users to create an account.
-          if (!existingUser) {
+          // TODO: Link anonymous user to invited user account on creation
+          if (!existingUser || existingUser.isAnonymous) {
             return error(401, {
               error:
                 'User is not on the private launch waitlist and/or has not been invited.',
@@ -210,6 +255,7 @@ export const auth = new Elysia({ prefix: '/auth' })
             value: await createAuthJwt({ user: existingUser }),
             path: '/',
             httpOnly: false,
+            secure: env.NODE_ENV === 'production',
             sameSite: 'lax',
             domain: `.${env.BASE_DOMAIN}`,
           })

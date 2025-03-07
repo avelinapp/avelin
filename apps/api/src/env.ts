@@ -6,7 +6,7 @@ export const env = createEnv({
     /* Shared */
     NODE_ENV: z
       .enum(['development', 'production', 'test'])
-      .default('production'),
+      .default('development'),
     BASE_DOMAIN: z.string().min(1),
 
     /* Database */
