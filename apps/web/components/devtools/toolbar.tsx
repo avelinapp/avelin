@@ -7,7 +7,6 @@ import { BunLogo, NodeJSLogo } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
 import { useRouter } from 'next/navigation'
-import posthog from 'posthog-js'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { useEffect, useState } from 'react'
 // @ts-ignore
@@ -16,47 +15,11 @@ import { FPSMeter } from './fps'
 import ZeroCache from './zero-cache'
 
 export default function AvelinDevToolsToolbar() {
-  const router = useRouter()
-
   const FF_devtools = useFeatureFlagEnabled('avelin-devtools')
 
   const [show, setShow] = useState(FF_devtools)
 
-  const FF_zero = useFeatureFlagEnabled('zero')
-  const FF_dashboard = useFeatureFlagEnabled('dashboard')
-  const FF_dashboard_ui_refresh = useFeatureFlagEnabled('dashboard-ui-refresh')
-
   const { setIsSimulation } = useView()
-
-  function toggleZeroFeatureFlag() {
-    posthog.featureFlags.overrideFeatureFlags({
-      flags: {
-        ...posthog.featureFlags.getFlagVariants(),
-        zero: !FF_zero,
-      },
-    })
-    router.refresh()
-  }
-
-  function toggleDashboardFeatureFlag() {
-    posthog.featureFlags.overrideFeatureFlags({
-      flags: {
-        ...posthog.featureFlags.getFlagVariants(),
-        dashboard: !FF_dashboard,
-      },
-    })
-    router.refresh()
-  }
-
-  function toggleDashboardUiRefreshFeatureFlag() {
-    posthog.featureFlags.overrideFeatureFlags({
-      flags: {
-        ...posthog.featureFlags.getFlagVariants(),
-        'dashboard-ui-refresh': !FF_dashboard_ui_refresh,
-      },
-    })
-    router.refresh()
-  }
 
   function simulateFullReload() {
     console.log('Simulating full reload...')
@@ -115,59 +78,7 @@ export default function AvelinDevToolsToolbar() {
             </span>
           </div>
         </Button>
-        <div className="flex items-center gap-0 *:px-3 h-full">
-          <Button
-            className={cn(
-              'h-full  py-0 w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
-              FF_zero
-                ? 'text-color-text-primary'
-                : 'text-color-text-quaternary',
-            )}
-            onClick={toggleZeroFeatureFlag}
-          >
-            <div
-              className={cn(
-                'rounded-full size-1.5',
-                FF_zero ? 'bg-green-10' : 'bg-red-10',
-              )}
-            />
-            <span>Zero</span>
-          </Button>
-          <Button
-            className={cn(
-              'h-full  py-0 w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
-              FF_dashboard
-                ? 'text-color-text-primary'
-                : 'text-color-text-quaternary',
-            )}
-            onClick={toggleDashboardFeatureFlag}
-          >
-            <div
-              className={cn(
-                'rounded-full size-1.5',
-                FF_dashboard ? 'bg-green-10' : 'bg-red-10',
-              )}
-            />
-            <span>Dashboard</span>
-          </Button>
-          <Button
-            className={cn(
-              'h-full py-0 w-fit bg-transparent hover:bg-gray-3 rounded-none hover:text-color-text-primary',
-              FF_dashboard_ui_refresh
-                ? 'text-color-text-primary'
-                : 'text-color-text-quaternary',
-            )}
-            onClick={toggleDashboardUiRefreshFeatureFlag}
-          >
-            <div
-              className={cn(
-                'rounded-full size-1.5',
-                FF_dashboard_ui_refresh ? 'bg-green-10' : 'bg-red-10',
-              )}
-            />
-            <span>Dashboard - UI refresh</span>
-          </Button>
-        </div>
+        <div className="flex items-center gap-0 *:px-3 h-full"></div>
         <div className="flex items-center ml-2 h-full">
           <span className="mx-2 font-medium text-color-text-primary !tracking-normal">
             Actions
@@ -181,7 +92,7 @@ export default function AvelinDevToolsToolbar() {
             <LoaderIcon className="size-4 text-white" strokeWidth={2.25} />
             <span>Loading fallback</span>
           </Button>
-          {FF_zero && <ZeroCache />}
+          <ZeroCache />
         </div>
       </div>
     </div>

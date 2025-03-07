@@ -1,5 +1,5 @@
 import RoomsList from './rooms-list'
 
-export default function Dashboard_v1() {
+export default function Dashboard() {
   return <RoomsList />
 }
