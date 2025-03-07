@@ -35,7 +35,9 @@ export const env = createEnv({
 
   server: {
     DATABASE_URL: z.string().url().min(1),
-    NODE_ENV: z.enum(['development', 'production', 'test']),
+    NODE_ENV: z
+      .enum(['development', 'production', 'test'])
+      .default('development'),
     /* Runtime info */
     RUNTIME: z.enum(['node', 'bun']),
     BUN_VERSION: z

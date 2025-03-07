@@ -215,7 +215,8 @@ const CodeRoomListItem = ({
 
   const LanguageIcon = language.logo!
 
-  let data = room.roomParticipants.filter((rp) => !rp.user.isAnonymous)
+  // let data = room.roomParticipants.filter((rp) => !rp.user.isAnonymous)
+  let data = room.roomParticipants
 
   const isRoomCreator = room.creatorId === z.userID
 

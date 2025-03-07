@@ -19,13 +19,7 @@ export function EditorToolbar() {
   const pathname = usePathname()
 
   const { room } = useCodeRoom()
-  const {
-    isPending,
-    isAuthenticated,
-    // TODO: Add back anonymous users
-    // isAnonymous,
-    user,
-  } = useAuth()
+  const { isPending, isAuthenticated, isAnonymous, user } = useAuth()
 
   return (
     <div className="flex items-center m-2 drop-shadow-sm py-2 px-4 max-w-full bg-popover-bg rounded-lg border border-color-border-subtle">
@@ -62,7 +56,7 @@ export function EditorToolbar() {
           <Separator className="mx-3" orientation="vertical" />
           {/* TODO: Add back anonymous users */}
           {/* The check below should show Login/Signup if the user is not authed or **anonymous** */}
-          {isPending ? null : !isAuthenticated ? (
+          {isPending ? null : !isAuthenticated || isAnonymous ? (
             <Button
               asChild
               size="xs"
