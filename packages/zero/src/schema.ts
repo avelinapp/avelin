@@ -16,11 +16,11 @@ export const schema = createZeroSchema(drizzleSchema, {
     users: {
       id: true,
       email: true,
+      emailVerified: true,
       name: true,
       picture: true,
       isAnonymous: true,
       retiredAt: true,
-      linkedUserId: true,
       createdAt: true,
       updatedAt: true,
       deletedAt: true,

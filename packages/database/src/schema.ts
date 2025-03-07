@@ -1,3 +1,4 @@
+import { newId } from '@avelin/id'
 import { relations } from 'drizzle-orm'
 import {
   integer,
@@ -8,31 +9,25 @@ import {
   timestamp,
 } from 'drizzle-orm/pg-core'
 import { boolean } from 'drizzle-orm/pg-core'
-import type { AnyPgColumn } from 'drizzle-orm/pg-core'
 import { bytea } from './db.js'
 import { timestamps } from './helpers/columns.js'
 
 export const users = pgTable('users', {
-  id: text().primaryKey(),
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('user')),
   email: text().notNull().unique(),
+  emailVerified: boolean().notNull().default(false),
   name: text().notNull(),
   picture: text(),
   isAnonymous: boolean().default(false),
   /* When an anonymous user was transitioned to a real user. */
   retiredAt: timestamp({ withTimezone: true, mode: 'date' }),
-  /* User ID for the real user account initiated from this anonymous user. */
-  linkedUserId: text().references((): AnyPgColumn => users.id, {
-    onDelete: 'cascade',
-  }),
   ...timestamps,
 })
 
-export const usersRelations = relations(users, ({ one, many }) => ({
+export const usersRelations = relations(users, ({ many }) => ({
   oauthAccounts: many(oauthAccounts),
-  linkedUser: one(users, {
-    fields: [users.linkedUserId],
-    references: [users.id],
-  }),
   sessions: many(sessions),
   createdRooms: many(rooms),
   joinedRooms: many(roomParticipants),

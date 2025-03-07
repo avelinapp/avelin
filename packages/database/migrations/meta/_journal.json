@@ -99,6 +99,13 @@
       "when": 1740677170160,
       "tag": "0013_waitlist-entries",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1741381344332,
+      "tag": "0014_better-auth-migrate-users-table",
+      "breakpoints": true
     }
   ]
 }
