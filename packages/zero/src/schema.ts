@@ -28,7 +28,7 @@ export const schema = createZeroSchema(drizzleSchema, {
     oauthAccounts: {
       id: true,
       providerId: true,
-      providerUserId: true,
+      accountId: true,
       userId: true,
       accessToken: false,
       refreshToken: false,

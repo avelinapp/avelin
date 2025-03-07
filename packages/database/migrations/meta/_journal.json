@@ -120,6 +120,13 @@
       "when": 1741389256111,
       "tag": "0016_oauth_accounts-add-better-auth-columns",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1741389374794,
+      "tag": "0017_oauth_accounts-rename-providerUserId-to-accountId",
+      "breakpoints": true
     }
   ]
 }

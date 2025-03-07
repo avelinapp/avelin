@@ -40,7 +40,7 @@ export const oauthAccounts = pgTable(
       .notNull()
       .$defaultFn(() => newId('account')),
     providerId: text().notNull(),
-    providerUserId: text().notNull(),
+    accountId: text().notNull(),
     userId: text()
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
@@ -53,9 +53,7 @@ export const oauthAccounts = pgTable(
     password: text(),
     ...timestamps,
   },
-  (table) => [
-    primaryKey({ columns: [table.providerId, table.providerUserId] }),
-  ],
+  (table) => [primaryKey({ columns: [table.providerId, table.accountId] })],
 )
 
 export const oauthAccountsRelations = relations(oauthAccounts, ({ one }) => ({
