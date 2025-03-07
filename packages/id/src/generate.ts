@@ -5,6 +5,7 @@ const prefixes = {
   user: 'user',
   session: 'session',
   oauth: 'oauth',
+  account: 'account',
   room: 'room',
   waitlistEntry: 'wle',
 }

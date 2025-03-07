@@ -113,6 +113,13 @@
       "when": 1741383117156,
       "tag": "0015_better-auth-migrate-sessions-table",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1741389256111,
+      "tag": "0016_oauth_accounts-add-better-auth-columns",
+      "breakpoints": true
     }
   ]
 }

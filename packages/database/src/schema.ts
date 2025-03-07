@@ -36,11 +36,21 @@ export const usersRelations = relations(users, ({ many }) => ({
 export const oauthAccounts = pgTable(
   'oauth_accounts',
   {
+    id: text()
+      .notNull()
+      .$defaultFn(() => newId('account')),
     providerId: text().notNull(),
     providerUserId: text().notNull(),
     userId: text()
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
+    accessToken: text(),
+    refreshToken: text(),
+    idToken: text(),
+    accessTokenExpiresAt: timestamp({ withTimezone: true, mode: 'date' }),
+    refreshTokenExpiresAt: timestamp({ withTimezone: true, mode: 'date' }),
+    scope: text(),
+    password: text(),
     ...timestamps,
   },
   (table) => [
