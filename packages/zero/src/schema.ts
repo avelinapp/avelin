@@ -35,7 +35,10 @@ export const schema = createZeroSchema(drizzleSchema, {
     },
     sessions: {
       id: true,
+      token: false,
       userId: true,
+      ipAddress: true,
+      userAgent: true,
       expiresAt: true,
       createdAt: true,
       updatedAt: true,

@@ -56,10 +56,15 @@ export const oauthAccountsRelations = relations(oauthAccounts, ({ one }) => ({
 }))
 
 export const sessions = pgTable('sessions', {
-  id: text().primaryKey(),
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('session')),
+  token: text().notNull().unique(),
   userId: text()
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
+  ipAddress: text(),
+  userAgent: text(),
   expiresAt: timestamp({
     withTimezone: true,
     mode: 'date',
