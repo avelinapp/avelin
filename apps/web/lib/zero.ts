@@ -1,4 +1,4 @@
-import { type AuthJWT, type ZeroSchema, schema } from '@avelin/zero'
+import { type AuthData, type ZeroSchema, schema } from '@avelin/zero'
 import { Zero } from '@rocicorp/zero'
 import { createUseZero } from '@rocicorp/zero/react'
 import type { Metadata } from 'next'
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export function getZeroClient({
   jwt,
   payload,
-}: { jwt?: string; payload?: AuthJWT }) {
+}: { jwt?: string; payload?: AuthData }) {
   if (!client) {
     console.log(
       typeof window !== 'undefined' ? '[CLIENT]' : '[SERVER]',

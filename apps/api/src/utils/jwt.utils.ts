@@ -1,5 +1,5 @@
 import type { User } from '@avelin/database'
-import type { AuthJWT } from '@avelin/zero'
+import type { AuthData } from '@avelin/zero'
 import { SignJWT } from 'jose/jwt/sign'
 import { jwtVerify } from 'jose/jwt/verify'
 import { env } from '../env'
@@ -12,7 +12,7 @@ export const createAuthJwt = async ({ user }: { user: User }) => {
     picture: user.picture,
     email: user.email,
     isAnonymous: user.isAnonymous,
-  } satisfies AuthJWT
+  } satisfies AuthData
 
   const jwt = await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })

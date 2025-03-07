@@ -72,7 +72,7 @@ export const schema = createZeroSchema(drizzleSchema, {
   },
 })
 
-export type AuthJWT = {
+export type AuthData = {
   sub: string
   iat: number
   name: string
@@ -95,14 +95,14 @@ export namespace Zero {
 type TableName = keyof Schema['tables']
 
 export const permissions: ReturnType<typeof definePermissions> =
-  definePermissions<AuthJWT, Schema>(schema, () => {
+  definePermissions<AuthData, Schema>(schema, () => {
     const userIsLoggedIn = (
-      authData: AuthJWT,
+      authData: AuthData,
       { cmpLit }: ExpressionBuilder<Schema, TableName>,
     ) => cmpLit(authData.sub, 'IS NOT', null)
 
     const loggedInUserIsCreator = (
-      authData: AuthJWT,
+      authData: AuthData,
       eb: ExpressionBuilder<Schema, 'rooms'>,
     ) =>
       eb.and(
@@ -111,13 +111,13 @@ export const permissions: ReturnType<typeof definePermissions> =
       )
 
     const loggedInUserIsRoomParticipant = (
-      authData: AuthJWT,
+      authData: AuthData,
       eb: ExpressionBuilder<Schema, 'roomParticipants'>,
     ) =>
       eb.and(userIsLoggedIn(authData, eb), eb.cmp('userId', '=', authData.sub))
 
     const canDeleteRoomParticipant = (
-      authData: AuthJWT,
+      authData: AuthData,
       eb: ExpressionBuilder<Schema, 'roomParticipants'>,
     ) =>
       eb.and(
