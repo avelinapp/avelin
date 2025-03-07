@@ -33,28 +33,24 @@ export const usersRelations = relations(users, ({ many }) => ({
   joinedRooms: many(roomParticipants),
 }))
 
-export const oauthAccounts = pgTable(
-  'oauth_accounts',
-  {
-    id: text()
-      .notNull()
-      .$defaultFn(() => newId('account')),
-    providerId: text().notNull(),
-    accountId: text().notNull(),
-    userId: text()
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    accessToken: text(),
-    refreshToken: text(),
-    idToken: text(),
-    accessTokenExpiresAt: timestamp({ withTimezone: true, mode: 'date' }),
-    refreshTokenExpiresAt: timestamp({ withTimezone: true, mode: 'date' }),
-    scope: text(),
-    password: text(),
-    ...timestamps,
-  },
-  (table) => [primaryKey({ columns: [table.providerId, table.accountId] })],
-)
+export const oauthAccounts = pgTable('oauth_accounts', {
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('account')),
+  providerId: text().notNull(),
+  accountId: text().notNull(),
+  userId: text()
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  accessToken: text(),
+  refreshToken: text(),
+  idToken: text(),
+  accessTokenExpiresAt: timestamp({ withTimezone: true, mode: 'date' }),
+  refreshTokenExpiresAt: timestamp({ withTimezone: true, mode: 'date' }),
+  scope: text(),
+  password: text(),
+  ...timestamps,
+})
 
 export const oauthAccountsRelations = relations(oauthAccounts, ({ one }) => ({
   user: one(users, {

@@ -127,6 +127,13 @@
       "when": 1741389374794,
       "tag": "0017_oauth_accounts-rename-providerUserId-to-accountId",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1741390437757,
+      "tag": "0018_oauth_accounts-change-pk-to-id",
+      "breakpoints": true
     }
   ]
 }
