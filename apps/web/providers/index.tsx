@@ -1,11 +1,8 @@
 import { getFlags } from '@/lib/posthog'
-import { getQueryClient, queries } from '@/lib/queries'
-import { getHeaders } from '@/lib/utils'
+import { auth } from '@avelin/auth'
 import { TooltipProvider } from '@avelin/ui/tooltip'
-import { HydrationBoundary, dehydrate } from '@tanstack/react-query'
-import { cookies, headers as nextHeaders } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import AuthProvider from './auth-provider'
 import { CodeRoomProvider } from './code-room-provider'
 import { CommandMenuProvider } from './command-menu-provider'
 import { PostHogPageView, PostHogProvider } from './posthog-provider'
@@ -17,23 +14,40 @@ export default async function Providers({
 }: {
   children: React.ReactNode
 }) {
-  const queryClient = getQueryClient()
   const cookieStore = await cookies()
 
   const sessionId = cookieStore.get('avelin_session_id')?.value
   let posthogBootstrapData = undefined
 
+  console.log('here')
+
   if (sessionId) {
-    const headers = getHeaders(await nextHeaders())
-
     try {
-      const auth = await queryClient.fetchQuery(queries.auth.check(headers))
+      let user = undefined
 
-      if (auth) {
-        const flags = await getFlags(auth.user.id)
+      console.log('here2')
+
+      const authData = await auth.api.getSession({
+        headers: await headers(),
+      })
+
+      if (!authData) {
+        const anonAuthData = await auth.api.signInAnonymous()
+        console.log('anonAuthData', anonAuthData)
+
+        if (!anonAuthData) {
+          throw new Error('Anonymous authentication failed')
+        }
+
+        user = anonAuthData.user
+      }
+
+      if (authData) {
+        user = authData.user
+        const flags = await getFlags(user.id)
 
         posthogBootstrapData = {
-          distinctID: auth.user.id,
+          distinctID: user.id,
           featureFlags: flags,
         }
       }
@@ -44,21 +58,17 @@ export default async function Providers({
   }
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <ThemeProvider>
-        <AuthProvider>
-          <PostHogProvider bootstrap={posthogBootstrapData}>
-            <ZeroRootProvider>
-              <PostHogPageView />
-              <CommandMenuProvider>
-                <CodeRoomProvider>
-                  <TooltipProvider>{children}</TooltipProvider>
-                </CodeRoomProvider>
-              </CommandMenuProvider>
-            </ZeroRootProvider>
-          </PostHogProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </HydrationBoundary>
+    <ThemeProvider>
+      <PostHogProvider bootstrap={posthogBootstrapData}>
+        <ZeroRootProvider>
+          <PostHogPageView />
+          <CommandMenuProvider>
+            <CodeRoomProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </CodeRoomProvider>
+          </CommandMenuProvider>
+        </ZeroRootProvider>
+      </PostHogProvider>
+    </ThemeProvider>
   )
 }

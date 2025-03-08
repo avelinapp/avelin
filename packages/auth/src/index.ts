@@ -1,6 +1,7 @@
 import { db, schema } from '@avelin/database'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { anonymous } from 'better-auth/plugins'
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -15,6 +16,11 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
+  plugins: [
+    anonymous({
+      emailDomainName: 'anon.avelin.app',
+    }),
+  ],
   user: {
     fields: {
       image: schema.users.picture.name,

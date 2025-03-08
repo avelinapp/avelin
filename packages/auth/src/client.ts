@@ -1,5 +1,2 @@
-import { createAuthClient } from 'better-auth/client'
-
-export const auth: ReturnType<typeof createAuthClient> = createAuthClient({
-  baseURL: `${process.env.API_URL}/auth`,
-})
+export { createAuthClient } from 'better-auth/react'
+export { anonymousClient } from 'better-auth/client/plugins'
