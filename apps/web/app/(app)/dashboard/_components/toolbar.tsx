@@ -1,13 +1,19 @@
 'use client'
 
 import { MyAccountDropdown } from '@/components/editor/my-account-dropdown'
-import { useAuth } from '@/providers/auth-provider'
+import { authClient } from '@/lib/auth'
 import type { Auth } from '@avelin/database'
 import { LogoAvelin } from '@avelin/icons'
 import Link from 'next/link'
 
 export default function Toolbar() {
-  const { user } = useAuth()
+  const { data, isPending, error } = authClient.useSession()
+
+  if (isPending || error || !data) {
+    return null
+  }
+
+  const { user, session } = data
 
   return (
     <div className="flex-0 sticky top-4 flex items-center drop-shadow-sm py-2 px-4 w-full bg-popover-bg rounded-lg border border-color-border-subtle">

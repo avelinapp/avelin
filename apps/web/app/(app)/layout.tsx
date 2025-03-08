@@ -25,7 +25,7 @@ export default async function RootLayout({
   const headerStore = await headers()
   const cookieStore = await cookies()
 
-  const sessionId = cookieStore.get('avelin_session_id')?.value
+  const sessionId = cookieStore.get('avelin.session_token')?.value
   const pathname = headerStore.get('X-Avelin-Path') ?? '/'
 
   if (!sessionId && pathname !== '/login') {

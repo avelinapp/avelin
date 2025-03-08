@@ -1,20 +1,16 @@
 'use client'
 
+import { authClient } from '@/lib/auth'
 import { env } from '@/lib/env'
 import { LogoGoogle } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
-import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
 
 export const LoginWithGoogle = () => {
-  const searchParams = useSearchParams()
-
-  const redirect = searchParams.get('redirect')
-
-  let linkUrl = `${env.NEXT_PUBLIC_API_URL}/auth/google`
-
-  if (redirect) {
-    linkUrl += `?redirect=${encodeURIComponent(redirect)}`
+  async function signIn() {
+    await authClient.signIn.social({
+      provider: 'google',
+      callbackURL: `${env.NEXT_PUBLIC_APP_URL}/dashboard`,
+    })
   }
 
   return (
@@ -25,11 +21,9 @@ export const LoginWithGoogle = () => {
         content: 'Login with Google',
         side: 'bottom',
       }}
-      asChild
+      onClick={signIn}
     >
-      <Link href={linkUrl}>
-        <LogoGoogle />
-      </Link>
+      <LogoGoogle />
     </Button>
   )
 }
