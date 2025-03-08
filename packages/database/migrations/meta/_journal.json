@@ -141,6 +141,13 @@
       "when": 1741390907453,
       "tag": "0019_oauth_accounts-rename-table-to-accounts",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1741405047550,
+      "tag": "0020_better-auth-add-verifications-table",
+      "breakpoints": true
     }
   ]
 }

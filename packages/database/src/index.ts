@@ -10,6 +10,7 @@ export const schema = {
   users: drizzleSchema.users,
   accounts: drizzleSchema.accounts,
   sessions: drizzleSchema.sessions,
+  verifications: drizzleSchema.verifications,
   rooms: drizzleSchema.rooms,
   roomParticipants: drizzleSchema.roomParticipants,
   usersRelations: drizzleSchema.usersRelations,

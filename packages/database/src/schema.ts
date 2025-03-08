@@ -83,6 +83,16 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   }),
 }))
 
+export const verifications = pgTable('verifications', {
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('verification')),
+  identifier: text().notNull(),
+  value: text().notNull(),
+  expiresAt: timestamp({ withTimezone: true, mode: 'date' }).notNull(),
+  ...timestamps,
+})
+
 export const rooms = pgTable('rooms', {
   id: text()
     .primaryKey()

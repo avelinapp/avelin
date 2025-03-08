@@ -52,6 +52,7 @@ export const schema = createZeroSchema(drizzleSchema, {
       updatedAt: true,
       deletedAt: true,
     },
+    verifications: false,
     rooms: {
       id: true,
       slug: true,
