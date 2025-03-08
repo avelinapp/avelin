@@ -33,6 +33,12 @@ export const auth = betterAuth({
     }),
     nextCookies(),
   ],
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60,
+    },
+  },
   user: {
     fields: {
       image: schema.users.picture.name,
