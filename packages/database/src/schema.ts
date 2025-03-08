@@ -27,13 +27,13 @@ export const users = pgTable('users', {
 })
 
 export const usersRelations = relations(users, ({ many }) => ({
-  oauthAccounts: many(oauthAccounts),
+  oauthAccounts: many(accounts),
   sessions: many(sessions),
   createdRooms: many(rooms),
   joinedRooms: many(roomParticipants),
 }))
 
-export const oauthAccounts = pgTable('oauth_accounts', {
+export const accounts = pgTable('accounts', {
   id: text()
     .primaryKey()
     .$defaultFn(() => newId('account')),
@@ -52,9 +52,9 @@ export const oauthAccounts = pgTable('oauth_accounts', {
   ...timestamps,
 })
 
-export const oauthAccountsRelations = relations(oauthAccounts, ({ one }) => ({
+export const accountsRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
-    fields: [oauthAccounts.userId],
+    fields: [accounts.userId],
     references: [users.id],
   }),
 }))

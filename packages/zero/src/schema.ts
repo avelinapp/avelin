@@ -1,4 +1,4 @@
-import * as drizzleSchema from '@avelin/database/schema'
+import { schema as drizzleSchema } from '@avelin/database'
 import {
   ANYONE_CAN,
   type ExpressionBuilder,
@@ -25,7 +25,7 @@ export const schema = createZeroSchema(drizzleSchema, {
       updatedAt: true,
       deletedAt: true,
     },
-    oauthAccounts: {
+    accounts: {
       id: true,
       providerId: true,
       accountId: true,
@@ -177,7 +177,7 @@ export const permissions: ReturnType<typeof definePermissions> =
           select: ANYONE_CAN,
         },
       },
-      oauthAccounts: {
+      accounts: {
         row: {
           insert: NOBODY_CAN,
           update: {
