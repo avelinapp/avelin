@@ -148,6 +148,13 @@
       "when": 1741405047550,
       "tag": "0020_better-auth-add-verifications-table",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1741439160844,
+      "tag": "0021_better-auth_create-jwks-table",
+      "breakpoints": true
     }
   ]
 }

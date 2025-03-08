@@ -2,7 +2,12 @@ import { db, schema } from '@avelin/database'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { nextCookies } from 'better-auth/next-js'
-import { anonymous, createAuthMiddleware } from 'better-auth/plugins'
+import {
+  anonymous,
+  bearer,
+  createAuthMiddleware,
+  jwt,
+} from 'better-auth/plugins'
 
 const APP_URL = (process.env.APP_URL ||
   process.env.NEXT_PUBLIC_APP_URL) as string
@@ -11,14 +16,17 @@ const API_URL = (process.env.API_URL ||
 const BASE_DOMAIN = (process.env.BASE_DOMAIN ||
   process.env.NEXT_PUBLIC_BASE_DOMAIN) as string
 
-console.log('APP_URL', APP_URL)
-
 export const auth = betterAuth({
   trustedOrigins: [APP_URL],
   database: drizzleAdapter(db, {
     provider: 'pg',
-    schema,
-    usePlural: true,
+    schema: {
+      user: schema.users,
+      account: schema.accounts,
+      session: schema.sessions,
+      verification: schema.verifications,
+      jwks: schema.jwks,
+    },
   }),
   baseURL: `${API_URL}/auth`,
   socialProviders: {
@@ -31,6 +39,8 @@ export const auth = betterAuth({
     anonymous({
       emailDomainName: 'anon.avelin.app',
     }),
+    jwt(),
+    bearer(),
     nextCookies(),
   ],
   session: {

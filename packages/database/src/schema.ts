@@ -93,6 +93,15 @@ export const verifications = pgTable('verifications', {
   ...timestamps,
 })
 
+export const jwks = pgTable('jwks', {
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('jwk')),
+  publicKey: text().notNull(),
+  privateKey: text().notNull(),
+  ...timestamps,
+})
+
 export const rooms = pgTable('rooms', {
   id: text()
     .primaryKey()
