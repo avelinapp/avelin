@@ -84,7 +84,9 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
 }))
 
 export const rooms = pgTable('rooms', {
-  id: text().primaryKey(),
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('room')),
   slug: text().unique(),
   ydoc: bytea(),
   title: text(),
@@ -147,7 +149,9 @@ export const waitlistStatusEnum = pgEnum('waitlist_entry_status', [
 
 export const waitlistEntries = pgTable('waitlist_entries', {
   /* Prefixed with wl_ for clarity. */
-  id: text().primaryKey(),
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('waitlistEntry')),
   /* User ID is set when the user accepts their invitation and joins the pre-launch. */
   userId: text().references(() => users.id, { onDelete: 'no action' }),
   /* Email is set when the user joins the waitlist. */
