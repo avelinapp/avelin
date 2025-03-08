@@ -1,4 +1,4 @@
-import { validateSession } from '@avelin/auth'
+import { auth } from '@avelin/auth'
 import { createDb, eq, schema } from '@avelin/database'
 import { Database } from '@hocuspocus/extension-database'
 import { Logger } from '@hocuspocus/extension-logger'
@@ -16,14 +16,15 @@ const db = createDb(ws)
 
 const server = new Hocuspocus({
   port: PORT,
-  async onAuthenticate(data) {
-    const auth = await validateSession(data.token, { db })
+  async onAuthenticate(ctx) {
+    // @ts-expect-error
+    const authData = await auth.api.getSession({ headers: ctx.request.headers })
 
-    if (!auth) {
-      throw new Error(`Invalid session with ID ${data.token}`)
+    if (!authData) {
+      throw new Error(`Invalid session with ID ${ctx.token}`)
     }
 
-    const { user, session } = auth
+    const { user, session } = authData
 
     return { user, session }
   },

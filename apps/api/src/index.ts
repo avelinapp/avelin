@@ -1,5 +1,6 @@
 import { cors } from '@elysiajs/cors'
 import { Elysia } from 'elysia'
+import type * as UndiciTypes from 'undici-types'
 import { env } from './env'
 import { auth } from './routes/auth'
 import { rooms } from './routes/rooms'
