@@ -9,12 +9,6 @@ catalogs:
     '@neondatabase/serverless':
       specifier: ^0.10.1
       version: 0.10.4
-    '@oslojs/crypto':
-      specifier: ^1.0.1
-      version: 1.0.1
-    '@oslojs/encoding':
-      specifier: ^1.1.0
-      version: 1.1.0
     '@rocicorp/zero':
       specifier: ~0.16
       version: 0.16.2025022800
@@ -401,15 +395,6 @@ importers:
       '@avelin/storage':
         specifier: workspace:*
         version: link:../storage
-      '@oslojs/crypto':
-        specifier: 'catalog:'
-        version: 1.0.1
-      '@oslojs/encoding':
-        specifier: 'catalog:'
-        version: 1.1.0
-      arctic:
-        specifier: 'catalog:'
-        version: 2.3.4
       better-auth:
         specifier: 'catalog:'
         version: 1.2.3(typescript@5.7.3)

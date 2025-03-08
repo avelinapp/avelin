@@ -12,18 +12,15 @@
       "types": "./src/index.ts",
       "default": "./dist/index.js"
     },
-    "./cached": {
-      "types": "./src/cached/index.ts",
-      "default": "./dist/cached/index.js"
+    "./client": {
+      "types": "./src/client.ts",
+      "default": "./dist/client.js"
     }
   },
   "dependencies": {
     "@avelin/database": "workspace:*",
     "@avelin/id": "workspace:*",
     "@avelin/storage": "workspace:*",
-    "@oslojs/crypto": "catalog:",
-    "@oslojs/encoding": "catalog:",
-    "arctic": "catalog:",
     "better-auth": "catalog:",
     "react": "^19"
   },
