@@ -8,6 +8,12 @@ export const auth = betterAuth({
     schema,
     usePlural: true,
   }),
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
+  },
   user: {
     fields: {
       image: schema.users.picture.name,
@@ -15,5 +21,10 @@ export const auth = betterAuth({
   },
   advanced: {
     generateId: false,
+    crossSubDomainCookies: {
+      enabled: true,
+      // Leading period to make the cookie accessible across al subdomains.
+      domain: `.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`,
+    },
   },
 })
