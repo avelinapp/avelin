@@ -35,7 +35,6 @@ export const env = createEnv({
 
   server: {
     DATABASE_URL: z.string().url().min(1),
-    API_URL: z.string().url(),
     NODE_ENV: z
       .enum(['development', 'production', 'test'])
       .default('development'),
@@ -79,7 +78,6 @@ export const env = createEnv({
     NEXT_PUBLIC_NODE_VERSION: process.env.NEXT_PUBLIC_NODE_VERSION,
     /* Server */
     DATABASE_URL: process.env.DATABASE_URL,
-    API_URL: process.env.API_URL,
     NODE_ENV: process.env.NODE_ENV,
     RUNTIME: process.env.RUNTIME,
     BUN_VERSION: process.env.BUN_VERSION,

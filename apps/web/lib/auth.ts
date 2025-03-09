@@ -3,9 +3,11 @@ import { anonymousClient, createAuthClient } from '@avelin/auth/client'
 
 const API_URL = env.NEXT_PUBLIC_API_URL
 
-export const authClient: ReturnType<typeof createAuthClient> = createAuthClient(
-  {
-    baseURL: `${API_URL}/auth`,
-    plugins: [anonymousClient()],
-  },
-)
+type AuthClient = ReturnType<
+  typeof createAuthClient<{ plugins: [ReturnType<typeof anonymousClient>] }>
+>
+
+export const authClient: AuthClient = createAuthClient({
+  baseURL: `${API_URL}/auth`,
+  plugins: [anonymousClient()],
+})

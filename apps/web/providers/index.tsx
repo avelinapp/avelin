@@ -1,8 +1,8 @@
+import { authClient } from '@/lib/auth'
 import { getFlags } from '@/lib/posthog'
-import { auth } from '@avelin/auth'
 import { TooltipProvider } from '@avelin/ui/tooltip'
 import { cookies, headers } from 'next/headers'
-import { redirect } from 'next/navigation'
+import AuthProvider from './auth-provider'
 import { CodeRoomProvider } from './code-room-provider'
 import { CommandMenuProvider } from './command-menu-provider'
 import { PostHogPageView, PostHogProvider } from './posthog-provider'
@@ -15,60 +15,59 @@ export default async function Providers({
   children: React.ReactNode
 }) {
   const cookieStore = await cookies()
-
-  const sessionId = cookieStore.get('avelin_session_id')?.value
+  const sessionId = cookieStore.get('avelin.session_token')?.value
+  let authData = undefined
   let posthogBootstrapData = undefined
-
-  console.log('here')
+  let jwt = undefined
+  let onSuccessResolve: (value?: unknown) => void
+  const onSuccessPromise = new Promise((resolve) => {
+    onSuccessResolve = resolve
+  })
 
   if (sessionId) {
-    try {
-      let user = undefined
-
-      console.log('here2')
-
-      const authData = await auth.api.getSession({
+    const { data, error } = await authClient.getSession({
+      query: {
+        disableCookieCache: true,
+      },
+      fetchOptions: {
         headers: await headers(),
-      })
+        onSuccess: (ctx) => {
+          jwt = ctx.response.headers.get('set-auth-jwt')
+          onSuccessResolve()
+        },
+      },
+    })
 
-      if (!authData) {
-        const anonAuthData = await auth.api.signInAnonymous()
-        console.log('anonAuthData', anonAuthData)
+    if (!error) {
+      await onSuccessPromise
+    }
 
-        if (!anonAuthData) {
-          throw new Error('Anonymous authentication failed')
-        }
+    authData = error ? undefined : data
 
-        user = anonAuthData.user
+    if (authData) {
+      const user = authData.user
+      const flags = await getFlags(user.id)
+      posthogBootstrapData = {
+        distinctID: user.id,
+        featureFlags: flags,
       }
-
-      if (authData) {
-        user = authData.user
-        const flags = await getFlags(user.id)
-
-        posthogBootstrapData = {
-          distinctID: user.id,
-          featureFlags: flags,
-        }
-      }
-    } catch (error) {
-      console.log('error', error)
-      return redirect('/login')
     }
   }
 
   return (
     <ThemeProvider>
-      <PostHogProvider bootstrap={posthogBootstrapData}>
-        <ZeroRootProvider>
-          <PostHogPageView />
-          <CommandMenuProvider>
-            <CodeRoomProvider>
-              <TooltipProvider>{children}</TooltipProvider>
-            </CodeRoomProvider>
-          </CommandMenuProvider>
-        </ZeroRootProvider>
-      </PostHogProvider>
+      <AuthProvider bootstrap={authData ?? undefined}>
+        <PostHogProvider bootstrap={posthogBootstrapData}>
+          <ZeroRootProvider jwt={jwt}>
+            <PostHogPageView />
+            <CommandMenuProvider>
+              <CodeRoomProvider>
+                <TooltipProvider>{children}</TooltipProvider>
+              </CodeRoomProvider>
+            </CommandMenuProvider>
+          </ZeroRootProvider>
+        </PostHogProvider>
+      </AuthProvider>
     </ThemeProvider>
   )
 }

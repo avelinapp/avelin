@@ -1,7 +1,6 @@
 'use client'
 
 import { LOGOUT_ACTION_TOAST_ID } from '@/lib/constants'
-import { useLogout } from '@/lib/mutations'
 import { preferencesComingSoonToast } from '@/lib/toasts'
 import type { Auth } from '@avelin/database'
 import {
@@ -33,26 +32,26 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
 
   const [open, setOpen] = useState(false)
 
-  const logout = useLogout()
-
-  const handleLogout = async () => {
-    logout.mutate(undefined, {
-      onSuccess: () => {
-        toast('Logged out.', {
-          id: LOGOUT_ACTION_TOAST_ID,
-          icon: <KeyRoundIcon className="size-4 shrink-0" />,
-        })
-        router.push('/login')
-      },
-      onError: (err) => {
-        toast.error('Failed to log out.', {
-          id: LOGOUT_ACTION_TOAST_ID,
-          icon: <KeyRoundIcon className="size-4 shrink-0" />,
-          description: err.message,
-        })
-      },
-    })
-  }
+  // const logout = useLogout()
+  //
+  // const handleLogout = async () => {
+  //   logout.mutate(undefined, {
+  //     onSuccess: () => {
+  //       toast('Logged out.', {
+  //         id: LOGOUT_ACTION_TOAST_ID,
+  //         icon: <KeyRoundIcon className="size-4 shrink-0" />,
+  //       })
+  //       router.push('/login')
+  //     },
+  //     onError: (err) => {
+  //       toast.error('Failed to log out.', {
+  //         id: LOGOUT_ACTION_TOAST_ID,
+  //         icon: <KeyRoundIcon className="size-4 shrink-0" />,
+  //         description: err.message,
+  //       })
+  //     },
+  //   })
+  // }
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -125,7 +124,10 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
           Preferences
           {/* </Link> */}
         </DropdownMenuItem>
-        <DropdownMenuItem className="group" onClick={handleLogout}>
+        <DropdownMenuItem
+          className="group"
+          // onClick={handleLogout}
+        >
           <LogOutIcon strokeWidth={2.25} className="size-4 shrink-0" />
           Log out
         </DropdownMenuItem>

@@ -2,7 +2,6 @@ import { type AuthData, type ZeroSchema, schema } from '@avelin/zero'
 import { Zero } from '@rocicorp/zero'
 import { createUseZero } from '@rocicorp/zero/react'
 import type { Metadata } from 'next'
-import { api } from './api'
 import { authClient } from './auth'
 import { env } from './env'
 
@@ -38,6 +37,8 @@ export function getZeroClient({
           if (error) {
             throw error
           }
+
+          console.log('[Zero] session data:', data)
 
           const res = await fetch(`${env.NEXT_PUBLIC_API_URL}/auth/token`, {
             method: 'GET',

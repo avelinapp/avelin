@@ -7,6 +7,7 @@ import {
   bearer,
   createAuthMiddleware,
   jwt,
+  openAPI,
 } from 'better-auth/plugins'
 
 const APP_URL = (process.env.APP_URL ||
@@ -15,6 +16,11 @@ const API_URL = (process.env.API_URL ||
   process.env.NEXT_PUBLIC_API_URL) as string
 const BASE_DOMAIN = (process.env.BASE_DOMAIN ||
   process.env.NEXT_PUBLIC_BASE_DOMAIN) as string
+
+console.log('API_URL:', API_URL)
+
+export type User = typeof auth.$Infer.Session.user
+export type Session = typeof auth.$Infer.Session.session
 
 export const auth = betterAuth({
   trustedOrigins: [APP_URL],
@@ -36,12 +42,13 @@ export const auth = betterAuth({
     },
   },
   plugins: [
+    bearer(),
     anonymous({
       emailDomainName: 'anon.avelin.app',
     }),
     jwt(),
-    bearer(),
     nextCookies(),
+    openAPI(),
   ],
   session: {
     cookieCache: {
@@ -56,9 +63,8 @@ export const auth = betterAuth({
   },
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
-      if (ctx.path.startsWith('/callback/google')) {
-        console.log('hellooo')
-      }
+      const session = ctx.context.session || ctx.context.newSession
+      console.log('session', session !== null)
     }),
   },
   advanced: {

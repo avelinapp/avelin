@@ -1,3 +1,4 @@
+import { authClient } from '@/lib/auth'
 import { auth } from '@avelin/auth'
 import type { Metadata } from 'next'
 import { cookies, headers } from 'next/headers'
@@ -21,11 +22,13 @@ export default async function DashboardLayout({
     return redirect(`/login?redirect=${encodeURIComponent('/dashboard')}`)
   }
 
-  const data = await auth.api.getSession({
-    headers: await headers(),
+  const { data, error } = await authClient.getSession({
+    fetchOptions: {
+      headers: await headers(),
+    },
   })
 
-  if (!data || data.user.isAnonymous) {
+  if (!data || error || data.user.isAnonymous) {
     return redirect(`/login?redirect=${encodeURIComponent('/dashboard')}`)
   }
 
