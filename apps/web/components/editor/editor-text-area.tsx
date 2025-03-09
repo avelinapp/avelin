@@ -2,10 +2,10 @@
 
 import { useMonacoBinding } from '@/hooks/use-monaco-binding'
 import { berkeleyMono } from '@/lib/fonts'
-import { useCodeRoom } from '@/providers/code-room-provider'
+import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { type Monaco, default as MonacoEditor } from '@monaco-editor/react'
 import { KeyCode, KeyMod, type editor } from 'monaco-editor'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { Cursors } from './cursors'
 import { themes } from './themes'
 import './cursors.css'
@@ -19,10 +19,18 @@ interface EditorProps
   language?: string
 }
 
-export function EditorTextArea({ className }: EditorProps) {
+export const EditorTextArea = memo(__EditorTextArea)
+
+function __EditorTextArea({ className }: EditorProps) {
   const { theme, systemTheme } = useTheme()
 
-  const { ydoc, networkProvider, editorLanguage } = useCodeRoom()
+  const [ydoc, networkProvider, editorLanguage] = useCodeRoomStore((state) => [
+    state.ydoc,
+    state.networkProvider,
+    state.editorLanguage,
+  ])
+
+  console.log('**** [EditorTextArea] RE-RENDER')
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
   const monacoRef = useRef<Monaco | null>(null)

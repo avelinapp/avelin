@@ -371,6 +371,9 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.0.3(@types/react@19.0.8)
+      '@types/use-sync-external-store':
+        specifier: ^0.0.6
+        version: 0.0.6
       postcss:
         specifier: ^8
         version: 8.5.2
@@ -3095,6 +3098,9 @@ packages:
 
   '@types/shimmer@1.2.0':
     resolution: {integrity: sha512-UE7oxhQLLd9gub6JKIAhDq06T0F6FnztwMNRvYgjeQSBeMc1ZG/tA47EwfduvkuQS8apbkM/lpLpWsaCeYsXVg==}
+
+  '@types/use-sync-external-store@0.0.6':
+    resolution: {integrity: sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==}
 
   '@types/uuid@10.0.0':
     resolution: {integrity: sha512-7gqG38EyHgyP1S+7+xomFtL+ZNHcKv6DwNaCZmJmo1vgMugyF3TCnXVg4t1uk89mLNwnLtnY3TpOpCOyp1/xHQ==}
@@ -9047,6 +9053,8 @@ snapshots:
       '@types/send': 0.17.4
 
   '@types/shimmer@1.2.0': {}
+
+  '@types/use-sync-external-store@0.0.6': {}
 
   '@types/uuid@10.0.0': {}
 

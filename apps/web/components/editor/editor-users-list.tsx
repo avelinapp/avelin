@@ -2,7 +2,10 @@
 
 import { type BaseColor, colors } from '@/lib/rooms'
 import type { UserInfo } from '@/lib/sync'
-import { useCodeRoom } from '@/providers/code-room-provider'
+import {
+  useCodeRoomStore,
+  useCustomUsersSelector,
+} from '@/providers/code-room-provider'
 import { ChevronDownIcon } from '@avelin/icons'
 import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
 import { Button } from '@avelin/ui/button'
@@ -20,12 +23,13 @@ import { AnimatePresence, LayoutGroup, motion } from 'motion/react'
 import {
   type ComponentPropsWithoutRef,
   forwardRef,
+  memo,
   useMemo,
   useState,
 } from 'react'
 
 type UsersListDisplayProps = {
-  users: UserInfo[]
+  users: Array<Omit<UserInfo, 'lastActive'>>
   maxUsers?: number
 }
 
@@ -33,7 +37,7 @@ const UserAvatar = ({
   user,
   className,
 }: {
-  user: UserInfo
+  user: Omit<UserInfo, 'lastActive'>
   className?: string
 }) => {
   return (
@@ -139,7 +143,7 @@ function UsersListMenu({
   users,
   clientId,
 }: {
-  users: UserInfo[]
+  users: Array<Omit<UserInfo, 'lastActive'>>
   clientId: number
 }) {
   return (
@@ -164,12 +168,17 @@ function UsersListMenu({
   )
 }
 
-export function UsersList() {
+export const UsersList = memo(__UsersList)
+
+function __UsersList() {
   const [open, setOpen] = useState(false)
-  const { users: roomUsers, clientId } = useCodeRoom()
+  const [clientId] = useCodeRoomStore((state) => [state.clientId])
+  const __users = useCustomUsersSelector()
   const { isOnline } = useNetworkStatus()
 
-  const users = useMemo(() => Array.from(roomUsers.values()), [roomUsers])
+  console.log('**** [UsersList] RE-RENDER')
+
+  const users = useMemo(() => Array.from(__users.values()), [__users])
 
   if (!isOnline || !users || !users.length || !clientId) return null
 

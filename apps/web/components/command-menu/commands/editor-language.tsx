@@ -1,5 +1,5 @@
 import { languages } from '@/lib/constants'
-import { useCodeRoom } from '@/providers/code-room-provider'
+import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { ChevronRightIcon, CodeXmlIcon } from '@avelin/icons'
 import { CommandItem, type CommandItemProps } from '@avelin/ui/command'
 
@@ -19,7 +19,9 @@ interface Props {
 }
 
 export function ChangeEditorLanguageCommands({ closeMenu }: Props) {
-  const { setEditorLanguage } = useCodeRoom()
+  const [setEditorLanguage] = useCodeRoomStore((state) => [
+    state.setEditorLanguage,
+  ])
   return (
     <>
       {languages.map((language) => (

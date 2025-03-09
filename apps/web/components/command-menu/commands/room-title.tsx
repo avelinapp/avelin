@@ -1,4 +1,4 @@
-import { useCodeRoom } from '@/providers/code-room-provider'
+import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { PencilIcon } from '@avelin/icons'
 import { CommandItem, type CommandItemProps } from '@avelin/ui/command'
 import { useEffect } from 'react'
@@ -19,7 +19,10 @@ type Props = {
 }
 
 export function EditRoomTitleCommand({ closeMenu, search, setSearch }: Props) {
-  const { roomTitle, setRoomTitle } = useCodeRoom()
+  const [roomTitle, setRoomTitle] = useCodeRoomStore((state) => [
+    state.roomTitle,
+    state.setRoomTitle,
+  ])
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
