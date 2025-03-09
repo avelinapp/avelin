@@ -1,4 +1,5 @@
 import { authClient } from '@/lib/auth'
+import { authCookies } from '@/lib/constants'
 import { getFlags } from '@/lib/posthog'
 import { TooltipProvider } from '@avelin/ui/tooltip'
 import { cookies, headers } from 'next/headers'
@@ -17,7 +18,7 @@ export default async function Providers({
   const start = performance.now()
 
   const cookieStore = await cookies()
-  const sessionId = cookieStore.get('avelin.session_token')?.value
+  const sessionId = cookieStore.get(authCookies.sessionToken.name)?.value
   let auth = undefined
   let posthogBootstrapData = undefined
   let jwt = undefined

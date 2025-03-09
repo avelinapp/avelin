@@ -1,3 +1,4 @@
+import { auth } from '@avelin/auth'
 import {
   BashLogo,
   GraphQLLogo,
@@ -99,3 +100,5 @@ export const languages: Language[] = [
 ] as const
 
 export const LOGOUT_ACTION_TOAST_ID = 'logout-action'
+
+export const authCookies = (await auth.$context).authCookies

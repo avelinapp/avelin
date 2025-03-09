@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
-import { auth } from '@avelin/auth'
+import { auth, authCookies } from '@avelin/auth'
 import { type User, and, db, eq, schema, sql } from '@avelin/database'
 import { readableStreamToArrayBuffer } from 'bun'
 import Elysia from 'elysia'
@@ -103,7 +103,7 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
             .filter((c) => c !== undefined)
 
           const sessionCookie = cookies.find(
-            (c) => c.key === 'avelin.session_token',
+            (c) => c.key === authCookies.sessionToken.name,
           )
 
           if (!sessionCookie) {

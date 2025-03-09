@@ -1,4 +1,5 @@
 import { authClient } from '@/lib/auth'
+import { authCookies } from '@/lib/constants'
 import type { Metadata } from 'next'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -15,7 +16,7 @@ export default async function DashboardLayout({
 }>) {
   const cookieStore = await cookies()
 
-  const sessionId = cookieStore.get('avelin.session_token')?.value
+  const sessionId = cookieStore.get(authCookies.sessionToken.name)?.value
 
   if (!sessionId) {
     return redirect(`/login?redirect=${encodeURIComponent('/dashboard')}`)

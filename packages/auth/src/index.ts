@@ -48,6 +48,9 @@ export const auth = betterAuth({
       emailDomainName: 'anon.avelin.app',
     }),
     jwt({
+      jwt: {
+        expirationTime: '1d',
+      },
       // jwt: {
       //   definePayload: (auth) => {
       //     return {
@@ -84,3 +87,5 @@ export const auth = betterAuth({
     },
   },
 })
+
+export const authCookies = (await auth.$context).authCookies
