@@ -2,8 +2,6 @@ import { LogoAvelin } from '@avelin/icons'
 import { LoginWithGoogle } from './buttons'
 
 export default function Page() {
-  console.log('here in login page')
-
   return (
     <div className="w-[400px] m-auto bg-popover-bg border border-color-border-subtle rounded-xl shadow-lg flex flex-col gap-6 p-8 items-center">
       <LogoAvelin className="size-16" />

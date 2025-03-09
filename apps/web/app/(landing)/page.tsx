@@ -19,7 +19,5 @@ export default async function Page() {
     '_irrelevant',
   )) as WaitlistConfig | undefined
 
-  console.log('waitlist config', waitlistConfig)
-
   return <Landing config={waitlistConfig ?? missingConfig} />
 }

@@ -7,7 +7,7 @@ import { LogoAvelin } from '@avelin/icons'
 import Link from 'next/link'
 
 export default function Toolbar() {
-  const { isPending, isAuthenticated, user, session } = useAuth()
+  const { user } = useAuth()
 
   return (
     <div className="flex-0 sticky top-4 flex items-center drop-shadow-sm py-2 px-4 w-full bg-popover-bg rounded-lg border border-color-border-subtle">
