@@ -1,13 +1,12 @@
 'use client'
 
-import { authClient } from '@/lib/auth'
 import { env } from '@/lib/env'
 import { usePathname, useSearchParams } from 'next/navigation'
 import posthog from 'posthog-js'
 import { usePostHog } from 'posthog-js/react'
 import { PostHogProvider as PostHogProviderPrimitive } from 'posthog-js/react'
 import { useEffect } from 'react'
-const { useSession } = authClient
+import { useAuth } from './auth-provider'
 
 type PosthogBootstrapData = {
   distinctID: string
@@ -20,7 +19,7 @@ interface Props {
 }
 
 export function PostHogProvider({ bootstrap, children }: Props) {
-  const { isPending, data, error } = useSession()
+  const { isPending, user, session } = useAuth()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -39,8 +38,7 @@ export function PostHogProvider({ bootstrap, children }: Props) {
     }
   }, [bootstrap])
 
-  if (!isPending && !error && data) {
-    const { user, session } = data
+  if (!isPending && user && session) {
     posthog.identify(user.id, {
       session_id: session.id,
       email: user.email,

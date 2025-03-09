@@ -28,12 +28,35 @@ export const viewStore = create<ViewStore>((set) => ({
 
 export const useView = () => useStore(viewStore, (state) => state)
 
+type Timing =
+  | { start: undefined; end: undefined }
+  | { start: number; end: undefined }
+  | { start: number; end: number }
+
 export default function ViewProvider({
   children,
 }: { children: React.ReactNode }) {
   const { ready, setReady, isSimulation } = useView()
   const [showFallback, setShowFallback] = useState(false)
+  const [timing, setTiming] = useState<Timing>({
+    start: undefined,
+    end: undefined,
+  })
   const pathname = usePathname()
+
+  useEffect(() => {
+    setTiming((prev) => ({ ...prev, start: performance.now() }))
+  }, [])
+
+  useEffect(() => {
+    if (ready && timing.end === undefined) {
+      const end = performance.now()
+      // @ts-ignore
+      setTiming((prev) => ({ ...prev, end }))
+
+      console.log('[VIEW PROVIDER] took', end - timing.start!, 'ms')
+    }
+  }, [ready, timing.end])
 
   useEffect(() => {
     if (

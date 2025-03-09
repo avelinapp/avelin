@@ -2,7 +2,7 @@
 
 import { authClient } from '@/lib/auth'
 const { useSession } = authClient
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect } from 'react'
 
 type User = typeof authClient.$Infer.Session.user
 type Session = typeof authClient.$Infer.Session.session
@@ -50,9 +50,11 @@ export default function AuthProvider({
   bootstrap,
   children,
 }: AuthProviderProps) {
-  const { data, isPending, error } = useSession()
+  const { data, isPending: isAuthPending, error } = useSession()
 
   const authData = data ?? bootstrap
+
+  const isPending = Boolean(!bootstrap) ?? isAuthPending
 
   let value: AuthContextData
 
@@ -81,6 +83,20 @@ export default function AuthProvider({
 
     anonymousLogin()
   }, [authData, isPending])
+
+  useEffect(() => {
+    console.log('AuthProvider - data', data)
+    console.log('AuthProvider - isPending', isAuthPending)
+    console.log('AuthProvider - error', error)
+  }, [data, isAuthPending, error])
+
+  // const value = {
+  //   isPending: false,
+  //   isAuthenticated: true,
+  //   isAnonymous: bootstrap!.user.isAnonymous ?? false,
+  //   user: bootstrap!.user,
+  //   session: bootstrap!.session,
+  // }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

@@ -23,6 +23,9 @@ export function getZeroClient({
       'creating zero client',
     )
 
+    console.log('[getZeroClient] jwt', jwt)
+    console.log('[getZeroClient] payload', payload)
+
     client = new Zero({
       logLevel: 'debug',
       userID: payload?.sub ?? 'anon',

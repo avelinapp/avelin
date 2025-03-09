@@ -1,7 +1,4 @@
-import { LogoGithub } from '@avelin/icons'
-import { MailIcon } from '@avelin/icons'
 import { LogoAvelin } from '@avelin/icons'
-import { Button } from '@avelin/ui/button'
 import { LoginWithGoogle } from './buttons'
 
 export default function Page() {
@@ -20,28 +17,6 @@ export default function Page() {
       </div>
       <div className="w-full flex gap-2">
         <LoginWithGoogle />
-        {/* <Button */}
-        {/*   className="w-full" */}
-        {/*   variant="secondary" */}
-        {/*   tooltip={{ */}
-        {/*     content: 'Login with GitHub', */}
-        {/*     side: 'bottom', */}
-        {/*   }} */}
-        {/*   disabled */}
-        {/* > */}
-        {/*   <LogoGithub /> */}
-        {/* </Button> */}
-        {/* <Button */}
-        {/*   className="w-full" */}
-        {/*   variant="secondary" */}
-        {/*   tooltip={{ */}
-        {/*     content: 'Login with magic link', */}
-        {/*     side: 'bottom', */}
-        {/*   }} */}
-        {/*   disabled */}
-        {/* > */}
-        {/*   <MailIcon /> */}
-        {/* </Button> */}
       </div>
     </div>
   )

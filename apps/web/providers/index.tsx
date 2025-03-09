@@ -14,9 +14,11 @@ export default async function Providers({
 }: {
   children: React.ReactNode
 }) {
+  const start = performance.now()
+
   const cookieStore = await cookies()
   const sessionId = cookieStore.get('avelin.session_token')?.value
-  let authData = undefined
+  let auth = undefined
   let posthogBootstrapData = undefined
   let jwt = undefined
   let onSuccessResolve: (value?: unknown) => void
@@ -42,21 +44,24 @@ export default async function Providers({
       await onSuccessPromise
     }
 
-    authData = error ? undefined : data
+    auth = error ? undefined : data
 
-    if (authData) {
-      const user = authData.user
-      const flags = await getFlags(user.id)
+    if (auth) {
+      const flags = await getFlags(auth.user.id)
       posthogBootstrapData = {
-        distinctID: user.id,
+        distinctID: auth.user.id,
         featureFlags: flags,
       }
     }
   }
 
+  const end = performance.now()
+
+  console.log('took', end - start, 'ms')
+
   return (
     <ThemeProvider>
-      <AuthProvider bootstrap={authData ?? undefined}>
+      <AuthProvider bootstrap={auth ?? undefined}>
         <PostHogProvider bootstrap={posthogBootstrapData}>
           <ZeroRootProvider jwt={jwt}>
             <PostHogPageView />

@@ -1,5 +1,4 @@
 import { authClient } from '@/lib/auth'
-import { auth } from '@avelin/auth'
 import type { Metadata } from 'next'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'

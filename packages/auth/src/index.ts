@@ -1,14 +1,9 @@
 import { db, schema } from '@avelin/database'
+import type { AuthData } from '@avelin/zero'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { nextCookies } from 'better-auth/next-js'
-import {
-  anonymous,
-  bearer,
-  createAuthMiddleware,
-  jwt,
-  openAPI,
-} from 'better-auth/plugins'
+import { anonymous, bearer, jwt, openAPI } from 'better-auth/plugins'
 
 const APP_URL = (process.env.APP_URL ||
   process.env.NEXT_PUBLIC_APP_URL) as string
@@ -46,7 +41,19 @@ export const auth = betterAuth({
     anonymous({
       emailDomainName: 'anon.avelin.app',
     }),
-    jwt(),
+    jwt({
+      // jwt: {
+      //   definePayload: (auth) => {
+      //     return {
+      //       ...auth.user,
+      //       sub: auth.user.id,
+      //       picture: auth.user.image ?? null,
+      //       iat: Math.floor(Date.now() / 1000),
+      //       isAnonymous: auth.user.isAnonymous ?? false,
+      //     } satisfies AuthData
+      //   },
+      // },
+    }),
     nextCookies(),
     openAPI(),
   ],
@@ -60,12 +67,6 @@ export const auth = betterAuth({
     fields: {
       image: schema.users.picture.name,
     },
-  },
-  hooks: {
-    after: createAuthMiddleware(async (ctx) => {
-      const session = ctx.context.session || ctx.context.newSession
-      console.log('session', session !== null)
-    }),
   },
   advanced: {
     cookiePrefix: 'avelin',

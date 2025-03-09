@@ -405,6 +405,9 @@ importers:
       '@avelin/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@avelin/zero':
+        specifier: workspace:*
+        version: link:../zero
       '@types/bun':
         specifier: 'catalog:'
         version: 1.2.2
