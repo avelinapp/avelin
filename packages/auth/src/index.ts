@@ -3,7 +3,13 @@ import type { AuthData } from '@avelin/zero'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { nextCookies } from 'better-auth/next-js'
-import { anonymous, bearer, jwt, openAPI } from 'better-auth/plugins'
+import {
+  anonymous,
+  bearer,
+  createAuthMiddleware,
+  jwt,
+  openAPI,
+} from 'better-auth/plugins'
 
 const APP_URL = (process.env.APP_URL ||
   process.env.NEXT_PUBLIC_APP_URL) as string

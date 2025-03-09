@@ -281,12 +281,13 @@ export const createCodeRoomStore = () =>
       }
 
       if (!networkProvider) {
+        console.log('[networkProvider] session', session)
         const ws = new HocuspocusProvider({
           url: env.NEXT_PUBLIC_SYNC_URL as string,
           name: room.id,
           document: ydoc,
           awareness: get().awareness,
-          token: session?.id,
+          token: session?.token,
           preserveConnection: false,
           onStatus: ({ status }) => {
             console.log('Avelin Sync - connection status:', status)

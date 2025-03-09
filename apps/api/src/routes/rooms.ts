@@ -103,23 +103,25 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
             .filter((c) => c !== undefined)
 
           const sessionCookie = cookies.find(
-            (c) => c.key === 'avelin_session_id',
+            (c) => c.key === 'avelin.session_token',
           )
 
           if (!sessionCookie) {
             console.log('Session cookie not found')
-            return c.error(401)
+            return c.error(401, {
+              error: '[connect webhook] Session cookie not found',
+            })
           }
 
-          // const auth = await validateSession(sessionCookie.value, { db })
-
           const data = await auth.api.getSession({
-            headers: c.request.headers,
+            headers: payload.requestHeaders,
           })
 
           if (!data) {
             console.log('Invalid session ID', sessionCookie.value)
-            return c.error(401)
+            return c.error(401, {
+              error: `[connect webhook] invalid session token: ${sessionCookie.value}`,
+            })
           }
 
           const { user } = data
