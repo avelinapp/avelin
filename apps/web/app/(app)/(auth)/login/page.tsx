@@ -1,12 +1,7 @@
-import { LogoGithub } from '@avelin/icons'
-import { MailIcon } from '@avelin/icons'
 import { LogoAvelin } from '@avelin/icons'
-import { Button } from '@avelin/ui/button'
 import { LoginWithGoogle } from './buttons'
 
 export default function Page() {
-  console.log('here in login page')
-
   return (
     <div className="w-[400px] m-auto bg-popover-bg border border-color-border-subtle rounded-xl shadow-lg flex flex-col gap-6 p-8 items-center">
       <LogoAvelin className="size-16" />
@@ -20,28 +15,6 @@ export default function Page() {
       </div>
       <div className="w-full flex gap-2">
         <LoginWithGoogle />
-        {/* <Button */}
-        {/*   className="w-full" */}
-        {/*   variant="secondary" */}
-        {/*   tooltip={{ */}
-        {/*     content: 'Login with GitHub', */}
-        {/*     side: 'bottom', */}
-        {/*   }} */}
-        {/*   disabled */}
-        {/* > */}
-        {/*   <LogoGithub /> */}
-        {/* </Button> */}
-        {/* <Button */}
-        {/*   className="w-full" */}
-        {/*   variant="secondary" */}
-        {/*   tooltip={{ */}
-        {/*     content: 'Login with magic link', */}
-        {/*     side: 'bottom', */}
-        {/*   }} */}
-        {/*   disabled */}
-        {/* > */}
-        {/*   <MailIcon /> */}
-        {/* </Button> */}
       </div>
     </div>
   )

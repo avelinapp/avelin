@@ -4,7 +4,9 @@ import { v7 as uuidv7 } from 'uuid'
 const prefixes = {
   user: 'user',
   session: 'session',
-  oauth: 'oauth',
+  account: 'account',
+  verification: 'verification',
+  jwk: 'jwk',
   room: 'room',
   waitlistEntry: 'wle',
 }

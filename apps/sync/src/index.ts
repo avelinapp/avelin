@@ -1,4 +1,5 @@
-import { validateSession } from '@avelin/auth'
+import { auth } from '@avelin/auth'
+import { createAuthClient } from '@avelin/auth/client'
 import { createDb, eq, schema } from '@avelin/database'
 import { Database } from '@hocuspocus/extension-database'
 import { Logger } from '@hocuspocus/extension-logger'
@@ -8,6 +9,7 @@ import express from 'express'
 import expressWebsockets from 'express-ws'
 import ws from 'ws'
 import { Doc } from 'yjs'
+import { authClient } from './auth.js'
 import { env } from './env.js'
 
 const PORT = 4100
@@ -16,16 +18,30 @@ const db = createDb(ws)
 
 const server = new Hocuspocus({
   port: PORT,
-  async onAuthenticate(data) {
-    const auth = await validateSession(data.token, { db })
+  async onAuthenticate(ctx) {
+    try {
+      console.log('[onAuthenticate] ctx', ctx.requestHeaders)
+      const { data, error } = await authClient.getSession({
+        fetchOptions: {
+          auth: {
+            type: 'Bearer',
+            token: ctx.token,
+          },
+        },
+      })
 
-    if (!auth) {
-      throw new Error(`Invalid session with ID ${data.token}`)
+      if (error || !data) {
+        throw new Error(`Invalid session with ID ${ctx.token}`)
+      }
+
+      const { user, session } = data
+
+      return { user, session }
+    } catch (err) {
+      console.log('err', err)
     }
 
-    const { user, session } = auth
-
-    return { user, session }
+    return undefined
   },
   extensions: [
     new Webhook({

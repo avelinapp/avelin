@@ -36,7 +36,7 @@ export function Cursors({ provider }: CursorsProps) {
           !!client.user
         ) {
           // Update lastActive timestamp
-          console.log(`[CHANGED] ${client.user.name}`)
+          // console.log(`[CHANGED] ${client.user.name}`)
 
           return [
             clientId,
@@ -46,19 +46,19 @@ export function Cursors({ provider }: CursorsProps) {
           ] satisfies [number, UserAwareness]
         }
 
-        console.log(
-          `[UNCHANGED] ${client?.user?.name} last active ${client?.user ? new Date(client.user.lastActive).toLocaleTimeString() : 'UNKNOWN'}`,
-        )
+        // console.log(
+        //   `[UNCHANGED] ${client?.user?.name} last active ${client?.user ? new Date(client.user.lastActive).toLocaleTimeString() : 'UNKNOWN'}`,
+        // )
 
         const prevAwarenessEntry = awarenessUsers.find(
           ([clientId2]) => clientId2 === clientId,
         )
 
         if (!prevAwarenessEntry) {
-          console.log(
-            'No previous awareness entry found for',
-            client.user?.name,
-          )
+          // console.log(
+          //   'No previous awareness entry found for',
+          //   client.user?.name,
+          // )
           return [clientId, client] satisfies [number, UserAwareness]
         }
 
@@ -108,9 +108,9 @@ export function Cursors({ provider }: CursorsProps) {
           //   `[CURSORS] ${client.user.name} last active: ${new Date(client.user.lastActive).toLocaleTimeString()}`,
           // )
         }
-        console.log(
-          `[CURSORS] ${client.user.name} ${isActive ? 'ACTIVE' : 'NOT ACTIVE'} - last active ${client.user.lastActive}`,
-        )
+        // console.log(
+        //   `[CURSORS] ${client.user.name} ${isActive ? 'ACTIVE' : 'NOT ACTIVE'} - last active ${client.user.lastActive}`,
+        // )
         const color = colors[client.user.color as BaseColor]
 
         cursorStyles += `

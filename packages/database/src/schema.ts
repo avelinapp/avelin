@@ -1,3 +1,4 @@
+import { newId } from '@avelin/id'
 import { relations } from 'drizzle-orm'
 import {
   integer,
@@ -8,63 +9,66 @@ import {
   timestamp,
 } from 'drizzle-orm/pg-core'
 import { boolean } from 'drizzle-orm/pg-core'
-import type { AnyPgColumn } from 'drizzle-orm/pg-core'
 import { bytea } from './db.js'
 import { timestamps } from './helpers/columns.js'
 
 export const users = pgTable('users', {
-  id: text().primaryKey(),
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('user')),
   email: text().notNull().unique(),
+  emailVerified: boolean().notNull().default(false),
   name: text().notNull(),
   picture: text(),
   isAnonymous: boolean().default(false),
   /* When an anonymous user was transitioned to a real user. */
   retiredAt: timestamp({ withTimezone: true, mode: 'date' }),
-  /* User ID for the real user account initiated from this anonymous user. */
-  linkedUserId: text().references((): AnyPgColumn => users.id, {
-    onDelete: 'cascade',
-  }),
   ...timestamps,
 })
 
-export const usersRelations = relations(users, ({ one, many }) => ({
-  oauthAccounts: many(oauthAccounts),
-  linkedUser: one(users, {
-    fields: [users.linkedUserId],
-    references: [users.id],
-  }),
+export const usersRelations = relations(users, ({ many }) => ({
+  oauthAccounts: many(accounts),
   sessions: many(sessions),
   createdRooms: many(rooms),
   joinedRooms: many(roomParticipants),
 }))
 
-export const oauthAccounts = pgTable(
-  'oauth_accounts',
-  {
-    providerId: text().notNull(),
-    providerUserId: text().notNull(),
-    userId: text()
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    ...timestamps,
-  },
-  (table) => [
-    primaryKey({ columns: [table.providerId, table.providerUserId] }),
-  ],
-)
+export const accounts = pgTable('accounts', {
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('account')),
+  providerId: text().notNull(),
+  accountId: text().notNull(),
+  userId: text()
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  accessToken: text(),
+  refreshToken: text(),
+  idToken: text(),
+  accessTokenExpiresAt: timestamp({ withTimezone: true, mode: 'date' }),
+  refreshTokenExpiresAt: timestamp({ withTimezone: true, mode: 'date' }),
+  scope: text(),
+  password: text(),
+  ...timestamps,
+})
 
-export const oauthAccountsRelations = relations(oauthAccounts, ({ one }) => ({
+export const accountsRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
-    fields: [oauthAccounts.userId],
+    fields: [accounts.userId],
     references: [users.id],
   }),
 }))
 
 export const sessions = pgTable('sessions', {
-  id: text().primaryKey(),
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('session')),
+  token: text().notNull().unique(),
   userId: text()
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
+  ipAddress: text(),
+  userAgent: text(),
   expiresAt: timestamp({
     withTimezone: true,
     mode: 'date',
@@ -79,8 +83,29 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   }),
 }))
 
+export const verifications = pgTable('verifications', {
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('verification')),
+  identifier: text().notNull(),
+  value: text().notNull(),
+  expiresAt: timestamp({ withTimezone: true, mode: 'date' }).notNull(),
+  ...timestamps,
+})
+
+export const jwks = pgTable('jwks', {
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('jwk')),
+  publicKey: text().notNull(),
+  privateKey: text().notNull(),
+  ...timestamps,
+})
+
 export const rooms = pgTable('rooms', {
-  id: text().primaryKey(),
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('room')),
   slug: text().unique(),
   ydoc: bytea(),
   title: text(),
@@ -143,7 +168,9 @@ export const waitlistStatusEnum = pgEnum('waitlist_entry_status', [
 
 export const waitlistEntries = pgTable('waitlist_entries', {
   /* Prefixed with wl_ for clarity. */
-  id: text().primaryKey(),
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('waitlistEntry')),
   /* User ID is set when the user accepts their invitation and joins the pre-launch. */
   userId: text().references(() => users.id, { onDelete: 'no action' }),
   /* Email is set when the user joins the waitlist. */

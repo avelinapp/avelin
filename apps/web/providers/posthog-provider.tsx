@@ -19,7 +19,7 @@ interface Props {
 }
 
 export function PostHogProvider({ bootstrap, children }: Props) {
-  const { isPending, isAuthenticated, user, session } = useAuth()
+  const { isPending, user, session } = useAuth()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -38,7 +38,7 @@ export function PostHogProvider({ bootstrap, children }: Props) {
     }
   }, [bootstrap])
 
-  if (!isPending && isAuthenticated) {
+  if (!isPending && user && session) {
     posthog.identify(user.id, {
       session_id: session.id,
       email: user.email,

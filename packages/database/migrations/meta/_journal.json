@@ -99,6 +99,62 @@
       "when": 1740677170160,
       "tag": "0013_waitlist-entries",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1741381344332,
+      "tag": "0014_better-auth-migrate-users-table",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1741383117156,
+      "tag": "0015_better-auth-migrate-sessions-table",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1741389256111,
+      "tag": "0016_oauth_accounts-add-better-auth-columns",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1741389374794,
+      "tag": "0017_oauth_accounts-rename-providerUserId-to-accountId",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1741390437757,
+      "tag": "0018_oauth_accounts-change-pk-to-id",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1741390907453,
+      "tag": "0019_oauth_accounts-rename-table-to-accounts",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1741405047550,
+      "tag": "0020_better-auth-add-verifications-table",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1741439160844,
+      "tag": "0021_better-auth_create-jwks-table",
+      "breakpoints": true
     }
   ]
 }

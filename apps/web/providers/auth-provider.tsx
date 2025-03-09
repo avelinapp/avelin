@@ -1,88 +1,102 @@
 'use client'
 
-import { queries } from '@/lib/queries'
-import type { Auth } from '@avelin/database'
-import { useQuery } from '@tanstack/react-query'
-import { useFeatureFlagEnabled } from 'posthog-js/react'
-import { createContext, useContext } from 'react'
+import { authClient } from '@/lib/auth'
+const { useSession } = authClient
+import { createContext, useContext, useEffect } from 'react'
 
-export type AuthContextType =
+type User = typeof authClient.$Infer.Session.user
+type Session = typeof authClient.$Infer.Session.session
+
+export type AuthContextData =
   | {
       isPending: true
-      isAuthenticated?: false
-      isAnonymous?: undefined
-      user?: undefined
-      session?: undefined
+      isAuthenticated: false
+      isAnonymous?: never
+      user?: never
+      session?: never
     }
   | {
       isPending: false
       isAuthenticated: true
       isAnonymous: boolean
-      user: Auth['user']
-      session: Auth['session']
+      user: User
+      session: Session
     }
   | {
       isPending: false
       isAuthenticated: false
-      isAnonymous?: undefined
-      user?: undefined
-      session?: undefined
+      error: unknown
+      isAnonymous?: never
+      user?: never
+      session?: never
     }
 
-const AuthContext = createContext<AuthContextType>({
+const AuthContext = createContext<AuthContextData>({
   isPending: true,
-  isAnonymous: undefined,
+  isAuthenticated: false,
 })
 
+type AuthData = {
+  user: User
+  session: Session
+}
+
 type AuthProviderProps = {
+  bootstrap: AuthData | undefined
   children: React.ReactNode
 }
 
-export default function AuthProvider({ children }: AuthProviderProps) {
-  const authDebug = useFeatureFlagEnabled('auth-debug')
+export default function AuthProvider({
+  bootstrap,
+  children,
+}: AuthProviderProps) {
+  const { data, isPending: isAuthPending, error } = useSession()
 
-  const { data, isPending } = useQuery({
-    ...queries.auth.check(),
-    retry: false,
-    staleTime: 30 * 60 * 1000, // Data considered fresh for 5 minutes
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  })
+  const authData = data ?? bootstrap
 
-  const isAuthenticated = !data || isPending ? false : data.isAuthenticated
-  const isAnonymous = !data || isPending ? undefined : data.isAnonymous
-  const user =
-    !data || isPending ? undefined : isAuthenticated ? data.user! : undefined
-  const session =
-    !data || isPending ? undefined : isAuthenticated ? data.session! : undefined
+  const isPending = Boolean(!bootstrap) ?? isAuthPending
 
-  // Construct the context value based on the current state
-  let value: AuthContextType
+  let value: AuthContextData
 
   if (isPending) {
-    // When authentication is pending
-    value = { isPending: true, isAnonymous: undefined }
-  } else if (isAuthenticated) {
-    // When authenticated
+    value = { isPending: true, isAuthenticated: false }
+  } else if (error || !authData) {
+    value = { isPending: false, isAuthenticated: false, error }
+  } else {
     value = {
       isPending: false,
       isAuthenticated: true,
-      isAnonymous: isAnonymous as boolean,
-      user: user!,
-      session: session!,
-    }
-  } else {
-    // When not authenticated
-    value = {
-      isPending: false,
-      isAuthenticated: false,
-      isAnonymous: undefined,
+      isAnonymous: authData.user.isAnonymous ?? false,
+      user: authData.user,
+      session: authData.session,
     }
   }
 
-  if (authDebug) {
-    console.log('AUTHENTICATION:', JSON.stringify(value, null, '\t'))
-  }
+  useEffect(() => {
+    async function anonymousLogin() {
+      if (!isPending && !authData) {
+        console.log('user is not authenticated')
+        console.log('creating anonymous user')
+        await authClient.signIn.anonymous()
+      }
+    }
+
+    anonymousLogin()
+  }, [authData, isPending])
+
+  useEffect(() => {
+    console.log('AuthProvider - data', data)
+    console.log('AuthProvider - isPending', isAuthPending)
+    console.log('AuthProvider - error', error)
+  }, [data, isAuthPending, error])
+
+  // const value = {
+  //   isPending: false,
+  //   isAuthenticated: true,
+  //   isAnonymous: bootstrap!.user.isAnonymous ?? false,
+  //   user: bootstrap!.user,
+  //   session: bootstrap!.session,
+  // }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
@@ -91,7 +105,7 @@ export function useAuth() {
   const auth = useContext(AuthContext)
 
   if (!auth) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error('useAuth must be used within a AuthProvider')
   }
 
   return auth

@@ -1,8 +1,9 @@
 'use client'
 
+import { authClient } from '@/lib/auth'
 import { LOGOUT_ACTION_TOAST_ID } from '@/lib/constants'
-import { useLogout } from '@/lib/mutations'
 import { preferencesComingSoonToast } from '@/lib/toasts'
+import type { User } from '@avelin/auth'
 import type { Auth } from '@avelin/database'
 import {
   HouseIcon,
@@ -24,7 +25,7 @@ import { toast } from '@avelin/ui/sonner'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
+export function MyAccountDropdown({ user }: { user: User }) {
   const router = useRouter()
 
   function handleDashboardClick() {
@@ -33,23 +34,22 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
 
   const [open, setOpen] = useState(false)
 
-  const logout = useLogout()
-
-  const handleLogout = async () => {
-    logout.mutate(undefined, {
-      onSuccess: () => {
-        toast('Logged out.', {
-          id: LOGOUT_ACTION_TOAST_ID,
-          icon: <KeyRoundIcon className="size-4 shrink-0" />,
-        })
-        router.push('/login')
-      },
-      onError: (err) => {
-        toast.error('Failed to log out.', {
-          id: LOGOUT_ACTION_TOAST_ID,
-          icon: <KeyRoundIcon className="size-4 shrink-0" />,
-          description: err.message,
-        })
+  async function handleLogout() {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          toast('Logged out.', {
+            id: LOGOUT_ACTION_TOAST_ID,
+            icon: <KeyRoundIcon className="size-4 shrink-0" />,
+          })
+          router.push('/login')
+        },
+        onError: () => {
+          toast.error('Failed to log out.', {
+            id: LOGOUT_ACTION_TOAST_ID,
+            icon: <KeyRoundIcon className="size-4 shrink-0" />,
+          })
+        },
       },
     })
   }
@@ -72,7 +72,7 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
               'dark:hover:brightness-110 dark:group-data-[state=open]:brightness-110',
             )}
           >
-            <AvatarImage src={user?.picture ?? undefined} />
+            <AvatarImage src={user?.image ?? undefined} />
             <AvatarFallback className="leading-none bg-gray-3 text-sm">
               {user.name
                 .split(' ')
@@ -85,7 +85,7 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
       <DropdownMenuContent align="end" className="min-w-[200px]">
         <DropdownMenuItem className="justify-between gap-4 focus:bg-transparent">
           <Avatar className="size-7 shrink-0">
-            <AvatarImage src={user?.picture ?? undefined} />
+            <AvatarImage src={user?.image ?? undefined} />
             <AvatarFallback className="leading-none bg-gray-3 text-sm">
               {user.name
                 .split(' ')
@@ -101,11 +101,7 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
           </div>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="group"
-          onSelect={handleDashboardClick}
-          // asChild
-        >
+        <DropdownMenuItem className="group" onSelect={handleDashboardClick}>
           <HouseIcon
             strokeWidth={2.25}
             className="size-4 shrink-0 group-hover:text-color-text-primary"
@@ -115,15 +111,12 @@ export function MyAccountDropdown({ user }: { user: Auth['user'] }) {
         <DropdownMenuItem
           className="group"
           onSelect={preferencesComingSoonToast}
-          // asChild
         >
-          {/* <Link href={`/settings`}> */}
           <SettingsIcon
             strokeWidth={2.25}
             className="size-4 shrink-0 group-hover:text-color-text-primary"
           />
           Preferences
-          {/* </Link> */}
         </DropdownMenuItem>
         <DropdownMenuItem className="group" onClick={handleLogout}>
           <LogOutIcon strokeWidth={2.25} className="size-4 shrink-0" />

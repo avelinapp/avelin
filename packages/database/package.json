@@ -23,6 +23,7 @@
     "db:migrate": "NODE_OPTIONS='--import tsx' drizzle-kit migrate"
   },
   "dependencies": {
+    "@avelin/id": "workspace:*",
     "@neondatabase/serverless": "catalog:",
     "dotenv": "catalog:",
     "drizzle-orm": "catalog:",

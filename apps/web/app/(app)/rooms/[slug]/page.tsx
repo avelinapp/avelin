@@ -32,7 +32,9 @@ export default function Page({ params }: { params: Params }) {
     initialize({
       // @ts-ignore
       room: room,
+      // @ts-ignore
       user: user,
+      // @ts-ignore
       session: session,
     })
 

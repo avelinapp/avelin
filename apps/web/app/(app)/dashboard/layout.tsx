@@ -1,7 +1,7 @@
-import { validateSession } from '@avelin/auth'
-import { db } from '@avelin/database'
+import { authClient } from '@/lib/auth'
+import { authCookies } from '@/lib/constants'
 import type { Metadata } from 'next'
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Toolbar from './_components/toolbar'
 
@@ -16,15 +16,19 @@ export default async function DashboardLayout({
 }>) {
   const cookieStore = await cookies()
 
-  const sessionId = cookieStore.get('avelin_session_id')?.value
+  const sessionId = cookieStore.get(authCookies.sessionToken.name)?.value
 
   if (!sessionId) {
     return redirect(`/login?redirect=${encodeURIComponent('/dashboard')}`)
   }
 
-  const auth = await validateSession(sessionId, { db })
+  const { data, error } = await authClient.getSession({
+    fetchOptions: {
+      headers: await headers(),
+    },
+  })
 
-  if (!auth || auth.user.isAnonymous) {
+  if (!data || error || data.user.isAnonymous) {
     return redirect(`/login?redirect=${encodeURIComponent('/dashboard')}`)
   }
 

@@ -10,7 +10,8 @@ import {
   type UserAwareness,
   type UserInfo,
 } from '@/lib/sync'
-import type { Room, Session, User } from '@avelin/database'
+import type { Session, User } from '@avelin/auth'
+import type { Room } from '@avelin/database'
 import { toast } from '@avelin/ui/sonner'
 import { HocuspocusProvider, type WebSocketStatus } from '@hocuspocus/provider'
 import { createContext, useContext, useState } from 'react'
@@ -175,7 +176,7 @@ export const createCodeRoomStore = () =>
           //   user && !user.isAnonymous && !!user.picture
           //     ? user.picture
           //     : undefined,
-          picture: user?.picture ?? undefined,
+          picture: user?.image ?? undefined,
           lastActive: Date.now(),
         }
 
@@ -281,12 +282,13 @@ export const createCodeRoomStore = () =>
       }
 
       if (!networkProvider) {
+        console.log('[networkProvider] session', session)
         const ws = new HocuspocusProvider({
           url: env.NEXT_PUBLIC_SYNC_URL as string,
           name: room.id,
           document: ydoc,
           awareness: get().awareness,
-          token: session?.id,
+          token: session?.token,
           preserveConnection: false,
           onStatus: ({ status }) => {
             console.log('Avelin Sync - connection status:', status)

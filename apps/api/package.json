@@ -23,6 +23,7 @@
     "@mobily/ts-belt": "^3.13.1",
     "@t3-oss/env-core": "^0.11.1",
     "arctic": "catalog:",
+    "better-auth": "catalog:",
     "elysia": "1.2.22",
     "jose": "^5.9.6",
     "posthog-node": "^4.4.1",

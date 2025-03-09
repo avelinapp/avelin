@@ -1,10 +1,8 @@
+import { authClient } from '@/lib/auth'
+import { authCookies } from '@/lib/constants'
 import { getFlags } from '@/lib/posthog'
-import { getQueryClient, queries } from '@/lib/queries'
-import { getHeaders } from '@/lib/utils'
 import { TooltipProvider } from '@avelin/ui/tooltip'
-import { HydrationBoundary, dehydrate } from '@tanstack/react-query'
-import { cookies, headers as nextHeaders } from 'next/headers'
-import { redirect } from 'next/navigation'
+import { cookies, headers } from 'next/headers'
 import AuthProvider from './auth-provider'
 import { CodeRoomProvider } from './code-room-provider'
 import { CommandMenuProvider } from './command-menu-provider'
@@ -17,48 +15,65 @@ export default async function Providers({
 }: {
   children: React.ReactNode
 }) {
-  const queryClient = getQueryClient()
-  const cookieStore = await cookies()
+  const start = performance.now()
 
-  const sessionId = cookieStore.get('avelin_session_id')?.value
+  const cookieStore = await cookies()
+  const sessionId = cookieStore.get(authCookies.sessionToken.name)?.value
+  let auth = undefined
   let posthogBootstrapData = undefined
+  let jwt = undefined
+  let onSuccessResolve: (value?: unknown) => void
+  const onSuccessPromise = new Promise((resolve) => {
+    onSuccessResolve = resolve
+  })
 
   if (sessionId) {
-    const headers = getHeaders(await nextHeaders())
+    const { data, error } = await authClient.getSession({
+      query: {
+        disableCookieCache: true,
+      },
+      fetchOptions: {
+        headers: await headers(),
+        onSuccess: (ctx) => {
+          jwt = ctx.response.headers.get('set-auth-jwt')
+          onSuccessResolve()
+        },
+      },
+    })
 
-    try {
-      const auth = await queryClient.fetchQuery(queries.auth.check(headers))
+    if (!error) {
+      await onSuccessPromise
+    }
 
-      if (auth) {
-        const flags = await getFlags(auth.user.id)
+    auth = error ? undefined : data
 
-        posthogBootstrapData = {
-          distinctID: auth.user.id,
-          featureFlags: flags,
-        }
+    if (auth) {
+      const flags = await getFlags(auth.user.id)
+      posthogBootstrapData = {
+        distinctID: auth.user.id,
+        featureFlags: flags,
       }
-    } catch (error) {
-      console.log('error', error)
-      return redirect('/login')
     }
   }
 
+  const end = performance.now()
+
+  console.log('took', end - start, 'ms')
+
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <ThemeProvider>
-        <AuthProvider>
-          <PostHogProvider bootstrap={posthogBootstrapData}>
-            <ZeroRootProvider>
-              <PostHogPageView />
-              <CommandMenuProvider>
-                <CodeRoomProvider>
-                  <TooltipProvider>{children}</TooltipProvider>
-                </CodeRoomProvider>
-              </CommandMenuProvider>
-            </ZeroRootProvider>
-          </PostHogProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </HydrationBoundary>
+    <ThemeProvider>
+      <AuthProvider bootstrap={auth ?? undefined}>
+        <PostHogProvider bootstrap={posthogBootstrapData}>
+          <ZeroRootProvider jwt={jwt}>
+            <PostHogPageView />
+            <CommandMenuProvider>
+              <CodeRoomProvider>
+                <TooltipProvider>{children}</TooltipProvider>
+              </CodeRoomProvider>
+            </CommandMenuProvider>
+          </ZeroRootProvider>
+        </PostHogProvider>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }

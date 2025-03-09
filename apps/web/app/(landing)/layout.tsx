@@ -1,6 +1,7 @@
 import '@avelin/ui/globals.css'
 import '../globals.css'
 import OneDollarStatsScript from '@/components/misc/one-dollar-stats'
+import { authCookies } from '@/lib/constants'
 import { env } from '@/lib/env'
 import { berkeleyMono, innovatorGrotesk } from '@/lib/fonts'
 import { Toaster } from '@avelin/ui/sonner'
@@ -25,7 +26,7 @@ export default async function RootLayout({
 }>) {
   const cookiesStore = await cookies()
 
-  const sessionId = cookiesStore.get('avelin_session_id')?.value
+  const sessionId = cookiesStore.get(authCookies.sessionToken.name)?.value
 
   if (sessionId) {
     return redirect('/login')
