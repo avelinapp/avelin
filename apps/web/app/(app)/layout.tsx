@@ -35,9 +35,6 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       {env.NODE_ENV === 'production' && <OneDollarStatsScript />}
-      <head>
-        <script src="https://unpkg.com/react-scan/dist/auto.global.js" />
-      </head>
       <body
         className={`${innovatorGrotesk.variable} ${berkeleyMono.variable} font-sans font-settings antialiased bg-color-background h-screen w-screen`}
       >
