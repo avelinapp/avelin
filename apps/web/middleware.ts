@@ -1,5 +1,7 @@
 import { type Session, type User, authCookies } from '@avelin/auth'
 import { betterFetch } from '@better-fetch/fetch'
+import { decodeJwt } from 'jose'
+import { ResponseCookies } from 'next/dist/compiled/@edge-runtime/cookies'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { env } from './lib/env'
@@ -64,12 +66,16 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
 
+    // This value is in seconds
+    const jwtExpiration = decodeJwt(jwt.token).exp ?? 0
+
     response.cookies.set('avelin.session_jwt', jwt.token, {
       path: '/',
       httpOnly: false,
       secure: env.NODE_ENV === 'production',
       sameSite: 'lax',
       domain: `.${env.NEXT_PUBLIC_BASE_DOMAIN}`,
+      expires: jwtExpiration * 1000, // Convert to milliseconds
     })
 
     console.timeEnd('middleware')
@@ -81,15 +87,24 @@ export async function middleware(request: NextRequest) {
   // Create anonymous session if user is not on landing page or login
   if (!inArray(pathname, ['/', '/login']) && !sessionToken) {
     console.log('no session, creating anonymous session')
-    const { data: session } = await betterFetch<{
+
+    const { data: session, error: sessionError } = await betterFetch<{
       token: Session['token']
       user: User
     }>(`${env.NEXT_PUBLIC_API_URL}/auth/sign-in/anonymous`, {
       method: 'POST',
+      onResponse: (ctx) => {
+        const cookiesToSet = new ResponseCookies(ctx.response.headers).getAll()
+
+        for (const cookie of cookiesToSet) {
+          response.cookies.set(cookie)
+        }
+      },
     })
 
-    if (!session) {
-      console.error('no session')
+    if (sessionError || !session) {
+      console.error('Failed to create anonymous session')
+      console.error('Error:', sessionError)
       console.timeEnd('middleware')
       return NextResponse.redirect(new URL('/login', request.url))
     }
@@ -106,8 +121,8 @@ export async function middleware(request: NextRequest) {
     )
 
     if (error || !jwt) {
-      console.log('failed to create/set JWT, returning to /login')
-      console.error('error:', error)
+      console.log('Failed to create/set JWT, returning to /login')
+      console.error('Error:', error)
 
       response.cookies.delete(authCookies.sessionToken.name)
       response.cookies.delete(authCookies.sessionData.name)
@@ -117,12 +132,18 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
 
+    console.log('JWT payload:', decodeJwt(jwt.token))
+
+    // This value is in seconds
+    const jwtExpiration = decodeJwt(jwt.token).exp ?? 0
+
     response.cookies.set('avelin.session_jwt', jwt.token, {
       path: '/',
       httpOnly: false,
       sameSite: 'lax',
       secure: env.NODE_ENV === 'production',
       domain: `.${env.NEXT_PUBLIC_BASE_DOMAIN}`,
+      expires: jwtExpiration * 1000, // Convert to milliseconds
     })
   }
 
