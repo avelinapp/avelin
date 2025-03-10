@@ -253,6 +253,9 @@ importers:
       '@avelin/zero':
         specifier: workspace:*
         version: link:../../packages/zero
+      '@better-fetch/fetch':
+        specifier: ^1.1.15
+        version: 1.1.15
       '@hocuspocus/provider':
         specifier: ^2.13.7
         version: 2.15.2(bufferutil@4.0.9)(y-protocols@1.0.6(yjs@13.6.23))(yjs@13.6.23)

@@ -21,29 +21,13 @@ export default async function Providers({
   const sessionId = cookieStore.get(authCookies.sessionToken.name)?.value
   let auth = undefined
   let posthogBootstrapData = undefined
-  let jwt = undefined
-  let onSuccessResolve: (value?: unknown) => void
-  const onSuccessPromise = new Promise((resolve) => {
-    onSuccessResolve = resolve
-  })
 
   if (sessionId) {
     const { data, error } = await authClient.getSession({
-      query: {
-        disableCookieCache: true,
-      },
       fetchOptions: {
         headers: await headers(),
-        onSuccess: (ctx) => {
-          jwt = ctx.response.headers.get('set-auth-jwt')
-          onSuccessResolve()
-        },
       },
     })
-
-    if (!error) {
-      await onSuccessPromise
-    }
 
     auth = error ? undefined : data
 
@@ -64,7 +48,7 @@ export default async function Providers({
     <ThemeProvider>
       <AuthProvider bootstrap={auth ?? undefined}>
         <PostHogProvider bootstrap={posthogBootstrapData}>
-          <ZeroRootProvider jwt={jwt}>
+          <ZeroRootProvider>
             <PostHogPageView />
             <CommandMenuProvider>
               <CodeRoomProvider>

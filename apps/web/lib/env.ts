@@ -8,6 +8,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: z.string().url(),
     NEXT_PUBLIC_SYNC_URL: z.string().url(),
     NEXT_PUBLIC_ZERO_URL: z.string().url(),
+    NEXT_PUBLIC_BASE_DOMAIN: z.string().min(1),
     NEXT_PUBLIC_POSTHOG_KEY: z.string().min(1),
     /* Runtime info */
     NEXT_PUBLIC_RUNTIME: z.enum(['node', 'bun']),
@@ -72,6 +73,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_SYNC_URL: process.env.NEXT_PUBLIC_SYNC_URL,
     NEXT_PUBLIC_ZERO_URL: process.env.NEXT_PUBLIC_ZERO_URL,
+    NEXT_PUBLIC_BASE_DOMAIN: process.env.NEXT_PUBLIC_BASE_DOMAIN,
     NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
     NEXT_PUBLIC_RUNTIME: process.env.NEXT_PUBLIC_RUNTIME,
     NEXT_PUBLIC_BUN_VERSION: process.env.NEXT_PUBLIC_BUN_VERSION,

@@ -1,19 +1,26 @@
 'use client'
 
 import { authClient } from '@/lib/auth'
+import { useRouter } from 'next/navigation'
 const { useSession } = authClient
-import { createContext, useContext, useEffect } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 type User = typeof authClient.$Infer.Session.user
 type Session = typeof authClient.$Infer.Session.session
 
-export type AuthContextData =
+export type AuthState =
   | {
       isPending: true
       isAuthenticated: false
-      isAnonymous?: never
-      user?: never
-      session?: never
+      isAnonymous?: undefined
+      user?: undefined
+      session?: undefined
     }
   | {
       isPending: false
@@ -26,14 +33,21 @@ export type AuthContextData =
       isPending: false
       isAuthenticated: false
       error: unknown
-      isAnonymous?: never
-      user?: never
-      session?: never
+      isAnonymous?: undefined
+      user?: undefined
+      session?: undefined
     }
 
-const AuthContext = createContext<AuthContextData>({
+export type AuthActions = {
+  signOut: () => Promise<void>
+}
+
+export type AuthStore = AuthState & AuthActions
+
+const AuthContext = createContext<AuthStore>({
   isPending: true,
   isAuthenticated: false,
+  signOut: async () => {},
 })
 
 type AuthData = {
@@ -50,54 +64,32 @@ export default function AuthProvider({
   bootstrap,
   children,
 }: AuthProviderProps) {
-  const { data, isPending: isAuthPending, error } = useSession()
+  const router = useRouter()
 
-  const authData = data ?? bootstrap
+  const [data, setData] = useState<AuthData | undefined>(bootstrap)
+  const [isPending, setIsPending] = useState<boolean>(!bootstrap)
 
-  const isPending = Boolean(!bootstrap) ?? isAuthPending
+  const isAuthenticated = Boolean(!isPending && data)
+  const isAnonymous = Boolean(
+    isAuthenticated ? data?.user.isAnonymous : undefined,
+  )
 
-  let value: AuthContextData
+  const signOut = useCallback(async () => {
+    await authClient.signOut()
+    setData(undefined)
+    router.push('/login')
+  }, [])
 
-  if (isPending) {
-    value = { isPending: true, isAuthenticated: false }
-  } else if (error || !authData) {
-    value = { isPending: false, isAuthenticated: false, error }
-  } else {
-    value = {
-      isPending: false,
-      isAuthenticated: true,
-      isAnonymous: authData.user.isAnonymous ?? false,
-      user: authData.user,
-      session: authData.session,
-    }
+  const value = {
+    user: data?.user,
+    session: data?.session,
+    isPending,
+    isAuthenticated,
+    isAnonymous,
+    signOut,
   }
 
-  useEffect(() => {
-    async function anonymousLogin() {
-      if (!isPending && !authData) {
-        console.log('user is not authenticated')
-        console.log('creating anonymous user')
-        await authClient.signIn.anonymous()
-      }
-    }
-
-    anonymousLogin()
-  }, [authData, isPending])
-
-  useEffect(() => {
-    console.log('AuthProvider - data', data)
-    console.log('AuthProvider - isPending', isAuthPending)
-    console.log('AuthProvider - error', error)
-  }, [data, isAuthPending, error])
-
-  // const value = {
-  //   isPending: false,
-  //   isAuthenticated: true,
-  //   isAnonymous: bootstrap!.user.isAnonymous ?? false,
-  //   user: bootstrap!.user,
-  //   session: bootstrap!.session,
-  // }
-
+  // @ts-expect-error
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 

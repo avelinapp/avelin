@@ -18,6 +18,8 @@ export default async function DashboardLayout({
 
   const sessionId = cookieStore.get(authCookies.sessionToken.name)?.value
 
+  // console.log('[DashboardLayout] sessionId:', sessionId)
+
   if (!sessionId) {
     return redirect(`/login?redirect=${encodeURIComponent('/dashboard')}`)
   }
@@ -27,6 +29,8 @@ export default async function DashboardLayout({
       headers: await headers(),
     },
   })
+
+  // console.log('[DashboardLayout] active session:', data)
 
   if (!data || error || data.user.isAnonymous) {
     return redirect(`/login?redirect=${encodeURIComponent('/dashboard')}`)

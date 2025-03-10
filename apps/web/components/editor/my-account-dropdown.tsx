@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from '@avelin/ui/dropdown-menu'
 import { toast } from '@avelin/ui/sonner'
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -37,6 +38,9 @@ export function MyAccountDropdown({ user }: { user: User }) {
   async function handleLogout() {
     await authClient.signOut({
       fetchOptions: {
+        onResponse: () => {
+          Cookies.remove('avelin.session_jwt')
+        },
         onSuccess: () => {
           toast('Logged out.', {
             id: LOGOUT_ACTION_TOAST_ID,

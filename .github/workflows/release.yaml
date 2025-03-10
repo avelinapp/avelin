@@ -124,6 +124,7 @@ jobs:
             NEXT_PUBLIC_API_URL=https://api.avelin.app
             NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
             NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
+            NEXT_PUBLIC_BASE_DOMAIN=avelin.app
             NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -211,6 +212,7 @@ jobs:
             NEXT_PUBLIC_API_URL=https://api.avelin.app
             NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
             NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
+            NEXT_PUBLIC_BASE_DOMAIN=avelin.app
             NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
           cache-from: type=gha
           cache-to: type=gha,mode=max
