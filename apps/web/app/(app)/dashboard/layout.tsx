@@ -1,5 +1,5 @@
 import { authClient } from '@/lib/auth'
-import { authCookies } from '@/lib/constants'
+import { authCookies } from '@avelin/auth'
 import type { Metadata } from 'next'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'

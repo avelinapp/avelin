@@ -1,6 +1,6 @@
 import { authClient } from '@/lib/auth'
-import { authCookies } from '@/lib/constants'
 import { getFlags } from '@/lib/posthog'
+import { authCookies } from '@avelin/auth'
 import { TooltipProvider } from '@avelin/ui/tooltip'
 import { cookies, headers } from 'next/headers'
 import AuthProvider from './auth-provider'
