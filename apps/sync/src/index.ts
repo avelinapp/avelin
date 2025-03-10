@@ -1,5 +1,3 @@
-import { auth } from '@avelin/auth'
-import { createAuthClient } from '@avelin/auth/client'
 import { createDb, eq, schema } from '@avelin/database'
 import { Database } from '@hocuspocus/extension-database'
 import { Logger } from '@hocuspocus/extension-logger'

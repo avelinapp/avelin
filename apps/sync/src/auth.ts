@@ -1,5 +1,5 @@
 import { anonymousClient, createAuthClient } from '@avelin/auth/client'
-import { env } from './env'
+import { env } from './env.js'
 
 const API_URL = env.API_URL
 
