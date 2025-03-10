@@ -7,8 +7,12 @@ const EditorTextArea = dynamic(
 import { EditorToolbar } from '@/components/editor/editor-toolbar'
 import { motion } from 'motion/react'
 import dynamic from 'next/dynamic'
+import { memo } from 'react'
 
-export default function CodeRoom() {
+export const CodeRoom = memo(__CodeRoom)
+
+function __CodeRoom() {
+  console.log('**** [CodeRoom] RE-RENDER')
   return (
     <div className="flex flex-col h-full w-full">
       <motion.div
@@ -26,3 +30,5 @@ export default function CodeRoom() {
     </div>
   )
 }
+
+export default CodeRoom

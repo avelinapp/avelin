@@ -19,6 +19,7 @@ import { IndexeddbPersistence } from 'y-indexeddb'
 import { Awareness } from 'y-protocols/awareness'
 import * as Y from 'yjs'
 import { type StoreApi, createStore, useStore } from 'zustand'
+import { useShallow } from 'zustand/react/shallow'
 
 const CodeRoomContext = createContext<StoreApi<CodeRoomStore> | null>(null)
 
@@ -427,6 +428,15 @@ export const CodeRoomProvider = ({ children }: CodeRoomProviderProps) => {
   )
 }
 
+export function useCodeRoomStore<T>(selector: (state: CodeRoomStore) => T) {
+  const store = useContext(CodeRoomContext)
+
+  if (!store) {
+    throw new Error('useCodeRoom must be used within a CodeRoomProvider')
+  }
+  return useStore(store, useShallow(selector))
+}
+
 export const useCodeRoom = () => {
   const store = useContext(CodeRoomContext)
 
@@ -435,4 +445,45 @@ export const useCodeRoom = () => {
   }
 
   return useStore(store)
+}
+
+function shallowEqualUsers(
+  a: Omit<UserInfo, 'lastActive'>[],
+  b: Omit<UserInfo, 'lastActive'>[],
+): boolean {
+  if (a.length !== b.length) return false
+  for (let i = 0; i < a.length; i++) {
+    const ua = a[i]!
+    const ub = b[i]!
+    if (
+      ua.clientId !== ub.clientId ||
+      ua.name !== ub.name ||
+      ua.color !== ub.color ||
+      ua.picture !== ub.picture
+    ) {
+      return false
+    }
+  }
+  return true
+}
+
+import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector'
+
+export function useCustomUsersSelector() {
+  const store = useContext(CodeRoomContext)
+  if (!store) {
+    throw new Error(
+      'useCustomUsersSelector must be used within a CodeRoomProvider',
+    )
+  }
+
+  return useSyncExternalStoreWithSelector(
+    store.subscribe, // subscribe to store changes
+    store.getState, // get the current state snapshot
+    store.getState, // for server-side rendering, same as getState
+    (state: CodeRoomStore) =>
+      // Create a new array from the users map that omits the `lastActive` field.
+      Array.from(state.users.values()).map(({ lastActive, ...user }) => user),
+    shallowEqualUsers, // Custom equality function that ignores changes in `lastActive`
+  )
 }

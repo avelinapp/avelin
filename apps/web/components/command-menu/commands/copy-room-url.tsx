@@ -1,6 +1,6 @@
 import { env } from '@/lib/env'
 import { getPrettyHostname } from '@/lib/utils'
-import { useCodeRoom } from '@/providers/code-room-provider'
+import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { CopyIcon, LinkIcon } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { CommandItem } from '@avelin/ui/command'
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function CopyRoomUrlCommand({ closeMenu }: Props) {
-  const { room } = useCodeRoom()
+  const [room] = useCodeRoomStore((state) => [state.room])
   const [, copy] = useCopyToClipboard()
   const roomUrl = useMemo(
     () => `${env.NEXT_PUBLIC_APP_URL}/${room?.slug}`,

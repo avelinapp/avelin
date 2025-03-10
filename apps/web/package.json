@@ -57,6 +57,7 @@
     "@types/node": "^20",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@types/use-sync-external-store": "^0.0.6",
     "postcss": "^8",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",

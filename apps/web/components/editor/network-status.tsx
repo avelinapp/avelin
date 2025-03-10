@@ -1,6 +1,6 @@
 'use client'
 
-import { useCodeRoom } from '@/providers/code-room-provider'
+import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { ZapIcon } from '@avelin/icons'
 import { Badge } from '@avelin/ui/badge'
 import { cn } from '@avelin/ui/cn'
@@ -13,11 +13,13 @@ interface NetworkStatusBadgeProps
   extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function NetworkStatusBadge({ className }: NetworkStatusBadgeProps) {
-  const {
-    networkProvider: provider,
-    networkProviderStatus: syncStatus,
-    isInitialSyncConnect,
-  } = useCodeRoom()
+  const [provider, syncStatus, isInitialSyncConnect] = useCodeRoomStore(
+    (state) => [
+      state.networkProvider,
+      state.networkProviderStatus,
+      state.isInitialSyncConnect,
+    ],
+  )
   const { isOnline } = useNetworkStatus()
   const [show, setShow] = useState(false)
 

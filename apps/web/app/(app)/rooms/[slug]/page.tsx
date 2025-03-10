@@ -2,7 +2,7 @@
 
 import { useZero } from '@/lib/zero'
 import { useAuth } from '@/providers/auth-provider'
-import { useCodeRoom } from '@/providers/code-room-provider'
+import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { useView } from '@/providers/view-provider'
 import { useQuery } from '@rocicorp/zero/react'
 import { use, useEffect, useMemo } from 'react'
@@ -12,7 +12,10 @@ type Params = Promise<{ slug: string }>
 
 export default function Page({ params }: { params: Params }) {
   const { slug } = use(params)
-  const { initialize, destroy } = useCodeRoom()
+  const [initialize, destroy] = useCodeRoomStore((state) => [
+    state.initialize,
+    state.destroy,
+  ])
   const z = useZero()
   const q = z.query.rooms.where('slug', 'IS', slug)
   const [rooms, { type: status }] = useQuery(q)
