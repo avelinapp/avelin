@@ -71,7 +71,7 @@ export const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
               <CommandGroup>
                 {options.map((option) => (
                   <CommandItem
-                    className="whitespace-nowrap"
+                    className="whitespace-nowrap font-[450]"
                     key={option.value}
                     value={option.value}
                     onSelect={(currentValue) => {

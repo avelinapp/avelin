@@ -41,10 +41,10 @@ export function Header() {
       layout="position"
     >
       <LogoAvelin className="text-primary-bg size-16 sm:size-24 drop-shadow-xl" />
-      <h1 className="font-semibold text-2xl sm:text-4xl font-mono !tracking-tighter text-white relative">
-        <span className="!tracking-[-0.05em]">Avelin</span>
+      <h1 className="font-semibold text-2xl sm:text-4xl font-mono tracking-tighter text-white relative">
+        <span>Avelin</span>
         <span
-          className="text-xs sm:text-sm text-pink-9 absolute ml-1 left-full"
+          className="text-xs sm:text-sm text-pink-9 absolute ml-1 left-full tracking-normal"
           style={{ verticalAlign: 'super' }}
         >
           (alpha)

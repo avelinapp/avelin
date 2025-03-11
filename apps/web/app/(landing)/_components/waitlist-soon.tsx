@@ -6,7 +6,7 @@ import { sectionVariants } from './variants'
 export function WaitlistSoon() {
   return (
     <motion.div
-      className="flex flex-col items-center gap-2 sm:gap-6 !tracking-normal *:!tracking-normal"
+      className="flex flex-col items-center gap-2 sm:gap-6"
       variants={sectionVariants}
     >
       <div className="w-[50px] h-[1px] bg-color-border-subtle mb-9 sm:mb-5" />

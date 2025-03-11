@@ -1,4 +1,4 @@
-import { berkeleyMono, innovatorGrotesk } from '@/lib/fonts'
+import { berkeleyMono } from '@/lib/fonts'
 import type { Metadata } from 'next'
 import '../globals.css'
 import '@avelin/ui/globals.css'
@@ -22,8 +22,12 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       {env.NODE_ENV === 'production' && <OneDollarStatsScript />}
+      <head>
+        <link rel="preconnect" href="https://rsms.me/" />
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+      </head>
       <body
-        className={`${innovatorGrotesk.variable} ${berkeleyMono.variable} font-sans font-settings antialiased bg-color-background h-screen w-screen`}
+        className={`${berkeleyMono.variable} font-sans font-settings antialiased bg-color-background h-screen w-screen`}
       >
         <Providers>
           <div className="flex-1 h-full w-full overflow-hidden">{children}</div>

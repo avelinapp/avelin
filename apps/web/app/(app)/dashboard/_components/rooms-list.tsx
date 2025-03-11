@@ -105,7 +105,7 @@ export default function RoomsList() {
     <div className="flex-1 flex flex-col gap-6 h-full select-none">
       <div className="flex items-end justify-between">
         <div className="flex items-center gap-6">
-          <h2 className="text-xl font-semibold">Code Rooms</h2>
+          <h2 className="font-medium tracking-[-0.01575em]">Code Rooms</h2>
           <ToggleGroup
             className="*:h-8"
             size="sm"
@@ -279,7 +279,7 @@ const CodeRoomListItem = ({
           </TooltipContent>
         </Tooltip>
       </div>
-      <span className="font-medium">
+      <span className="font-[450] tracking-[-0.01575em]">
         {room.title && room.title.length >= 1 ? room.title : 'Untitled room'}
       </span>
       <span className="text-color-text-quaternary ml-4">

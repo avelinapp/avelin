@@ -4,32 +4,20 @@
 
 :root {
   .font-sans {
+    font-family: Inter, sans-serif;
     text-rendering: geometricPrecision;
-    font-feature-settings: "liga", "calt";
+    font-feature-settings: "liga", "calt", "cv01", "ss03";
+    /*font-variation-settings: "opsz" 28;*/
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  .font-display {
-    letter-spacing: -0.02em;
-
-    @supports (font-variation-settings: normal) {
-      font-variation-settings: "opsz" 32;
+  @supports (font-variation-settings: normal) {
+    .font-sans {
+      font-family: InterVariable, sans-serif;
     }
   }
 
-  p,
-  span,
-  .font-body {
-    letter-spacing: -0.01em;
-
-    @supports (font-variation-settings: normal) {
-      font-variation-settings: "opsz" 16;
-    }
+  .text-3xl {
+    font-variation-settings: "opsz" 28;
   }
 }
 

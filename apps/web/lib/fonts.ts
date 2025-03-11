@@ -1,17 +1,4 @@
-import { JetBrains_Mono } from 'next/font/google'
 import localFont from 'next/font/local'
-
-export const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-jetbrains-mono',
-})
-
-export const innovatorGrotesk = localFont({
-  display: 'block',
-  variable: '--font-innovator-grotesk',
-  src: '../static/fonts/innovator-grotesk/InnovatorGrotesk-Variable.woff2',
-})
 
 export const berkeleyMono = localFont({
   display: 'block',

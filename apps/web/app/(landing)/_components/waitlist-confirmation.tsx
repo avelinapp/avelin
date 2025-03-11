@@ -5,7 +5,7 @@ import Link from 'next/link'
 export default function WaitlistConfirmation() {
   return (
     <motion.div
-      className="flex flex-col items-center gap-2 sm:gap-6 !tracking-nromal *:!tracking-normal"
+      className="flex flex-col items-center gap-2 sm:gap-6"
       initial={{
         opacity: 0,
         scale: 0.99,
