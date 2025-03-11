@@ -289,6 +289,7 @@ const CodeRoomListItem = ({
         <UsersListDisplay
           layoutId={`${room.id}-view-${view}`}
           users={users}
+          hideAnonymous={view === 'all' ? 'display' : 'none'}
           maxUsers={4}
         />
         <AnimatePresence initial={false}>
