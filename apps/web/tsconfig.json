@@ -5,7 +5,6 @@
     "paths": {
       "@/*": ["./*"]
     },
-
     "plugins": [
       {
         "name": "next"
@@ -17,7 +16,9 @@
     "next.config.mjs",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "components/editor/tsdefs/react/index.d.ts.txt",
+    "components/editor/tsdefs/react/jsx-runtime.d.ts.txt"
   ],
   "exclude": ["node_modules"]
 }

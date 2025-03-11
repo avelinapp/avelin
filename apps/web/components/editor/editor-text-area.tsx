@@ -12,6 +12,8 @@ import './cursors.css'
 import { cn } from '@avelin/ui/cn'
 import { useAnimate } from 'motion/react-mini'
 import { useTheme } from 'next-themes'
+import reactDTsContent from './tsdefs/react/index.d.ts.txt'
+import reactJsxRuntimeDTsContent from './tsdefs/react/jsx-runtime.d.ts.txt'
 
 interface EditorProps
   extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className'> {
@@ -56,6 +58,31 @@ function __EditorTextArea({ className }: EditorProps) {
 
       monacoInstance.editor.defineTheme('avelin-dark', themes.dark)
       monacoInstance.editor.defineTheme('avelin-light', themes.light)
+
+      monacoInstance.languages.typescript.typescriptDefaults.setCompilerOptions(
+        {
+          target: monacoInstance.languages.typescript.ScriptTarget.ES2016,
+          allowNonTsExtensions: true,
+          moduleResolution:
+            monacoInstance.languages.typescript.ModuleResolutionKind.NodeJs,
+          module: monacoInstance.languages.typescript.ModuleKind.CommonJS,
+          noEmit: true,
+          typeRoots: ['node_modules/@types'],
+          jsx: monacoInstance.languages.typescript.JsxEmit.ReactJSX,
+          jsxFactory: 'React.createElement',
+          reactNamespace: 'React',
+        },
+      )
+
+      monacoInstance.languages.typescript.typescriptDefaults.addExtraLib(
+        reactDTsContent,
+        'file:///node_modules/@types/react/index.d.ts',
+      )
+
+      monacoInstance.languages.typescript.typescriptDefaults.addExtraLib(
+        reactJsxRuntimeDTsContent,
+        'file:///node_modules/@types/react/jsx-runtime.d.ts',
+      )
 
       const themeActual = theme === 'system' ? systemTheme : theme
       monacoInstance.editor.setTheme(
@@ -107,6 +134,7 @@ function __EditorTextArea({ className }: EditorProps) {
         theme="light"
         loading={null}
         defaultValue=""
+        defaultPath="file:///main.tsx"
         language={editorLanguage}
         onMount={setupEditor}
         options={{

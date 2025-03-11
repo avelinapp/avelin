@@ -11,6 +11,16 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   // reactStrictMode: false,
+  experimental: {
+    turbo: {
+      rules: {
+        '*.txt': {
+          loaders: ['raw-loader'],
+          as: '*.js',
+        },
+      },
+    },
+  },
   output: 'standalone',
   images: {
     remotePatterns: [
