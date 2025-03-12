@@ -3,7 +3,7 @@ import { LoginWithGoogle } from './buttons'
 
 export default function Page() {
   return (
-    <div className="w-[400px] m-auto bg-popover-bg border border-color-border-subtle rounded-xl shadow-lg flex flex-col gap-6 px-8 py-12 items-center">
+    <div className="w-[400px] m-auto bg-popover-bg border border-color-border-subtle rounded-xl shadow-lg flex flex-col gap-6 p-8 items-center">
       <LogoAvelin className="size-16" />
       <div className="space-y-4">
         <h1 className="text-2xl font-[538] text-center">Login to Avelin</h1>

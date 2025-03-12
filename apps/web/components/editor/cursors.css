@@ -50,7 +50,7 @@
   line-height: normal;
   white-space: nowrap;
   font-size: 12px;
-  font-family: var(--font-innovator-grotesk);
+  font-family: "Inter Variable", "Inter", sans-serif;
   font-style: normal;
   font-weight: 600;
   pointer-events: none;

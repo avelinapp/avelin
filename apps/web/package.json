@@ -19,7 +19,7 @@
     "@better-fetch/fetch": "^1.1.15",
     "@hocuspocus/provider": "^2.13.7",
     "@hookform/resolvers": "^4.1.2",
-    "@monaco-editor/react": "^4.7.0-rc.0",
+    "@monaco-editor/react": "^4.7.0",
     "@radix-ui/react-visually-hidden": "^1.1.0",
     "@rocicorp/zero": "catalog:",
     "@t3-oss/env-nextjs": "^0.11.1",
@@ -55,12 +55,14 @@
   "devDependencies": {
     "@avelin/database": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
+    "@shikijs/monaco": "^3.2.1",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/use-sync-external-store": "^0.0.6",
     "postcss": "^8",
+    "shiki": "^3.2.1",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "undici-types": "^7.2.3"

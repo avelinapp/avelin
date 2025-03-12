@@ -155,6 +155,13 @@
       "when": 1741439160844,
       "tag": "0021_better-auth_create-jwks-table",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1741808812316,
+      "tag": "0022_drop-pgsql-language",
+      "breakpoints": true
     }
   ]
 }
