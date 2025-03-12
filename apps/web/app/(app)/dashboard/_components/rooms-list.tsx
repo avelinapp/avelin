@@ -213,7 +213,7 @@ const CodeRoomListItem = ({
     (l) => l.value === (room.editorLanguage as Language['value']),
   )!
 
-  const LanguageIcon = language.logo!
+  const LanguageIcon = language.logo
 
   // let data = room.roomParticipants.filter((rp) => !rp.user.isAnonymous)
   let data = room.roomParticipants
@@ -269,7 +269,7 @@ const CodeRoomListItem = ({
       <div>
         <Tooltip>
           <TooltipTrigger asChild>
-            <LanguageIcon className="size-5 shrink-0" />
+            {LanguageIcon && <LanguageIcon className="size-5 shrink-0" />}
           </TooltipTrigger>
           <TooltipContent
             className="text-xs border-color-border-subtle"
@@ -289,6 +289,7 @@ const CodeRoomListItem = ({
         <UsersListDisplay
           layoutId={`${room.id}-view-${view}`}
           users={users}
+          hideAnonymous={view === 'all' ? 'display' : 'none'}
           maxUsers={4}
         />
         <AnimatePresence initial={false}>

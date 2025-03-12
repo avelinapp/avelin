@@ -7,11 +7,17 @@ import { type Monaco, default as MonacoEditor } from '@monaco-editor/react'
 import { KeyCode, KeyMod, type editor } from 'monaco-editor'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { Cursors } from './cursors'
-import { themes } from './themes'
+import { avelinDark, avelinLight } from './themes'
 import './cursors.css'
+import { languages } from '@/lib/constants'
+import { inArray } from '@/lib/utils'
 import { cn } from '@avelin/ui/cn'
+import { shikiToMonaco } from '@shikijs/monaco'
 import { useAnimate } from 'motion/react-mini'
 import { useTheme } from 'next-themes'
+import { createHighlighter } from 'shiki'
+import reactDTsContent from './tsdefs/react/index.d.ts.txt'
+import reactJsxRuntimeDTsContent from './tsdefs/react/jsx-runtime.d.ts.txt'
 
 interface EditorProps
   extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className'> {
@@ -47,15 +53,55 @@ function __EditorTextArea({ className }: EditorProps) {
     }
   }, [editorMounted, theme, systemTheme])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: false
   const setupEditor = useCallback(
-    (editorInstance: editor.IStandaloneCodeEditor, monacoInstance: Monaco) => {
+    async (
+      editorInstance: editor.IStandaloneCodeEditor,
+      monacoInstance: Monaco,
+    ) => {
       editorInstance.focus()
       editorRef.current = editorInstance
       monacoRef.current = monacoInstance
 
-      monacoInstance.editor.defineTheme('avelin-dark', themes.dark)
-      monacoInstance.editor.defineTheme('avelin-light', themes.light)
+      const highlighter = await createHighlighter({
+        themes: [avelinLight, avelinDark],
+        langs: languages.map((l) => l.value),
+      })
+
+      monacoInstance.languages.register({ id: 'tsx' })
+
+      shikiToMonaco(highlighter, monacoInstance)
+
+      monacoInstance.languages.typescript.typescriptDefaults.setDiagnosticsOptions(
+        {
+          noSemanticValidation: false,
+          noSyntaxValidation: false,
+        },
+      )
+
+      monacoInstance.languages.typescript.typescriptDefaults.setCompilerOptions(
+        {
+          target: monacoInstance.languages.typescript.ScriptTarget.ES2016,
+          allowNonTsExtensions: true,
+          moduleResolution:
+            monacoInstance.languages.typescript.ModuleResolutionKind.NodeJs,
+          module: monacoInstance.languages.typescript.ModuleKind.CommonJS,
+          noEmit: true,
+          typeRoots: ['node_modules/@types'],
+          jsx: monacoInstance.languages.typescript.JsxEmit.ReactJSX,
+          jsxFactory: 'React.createElement',
+          reactNamespace: 'React',
+        },
+      )
+
+      monacoInstance.languages.typescript.typescriptDefaults.addExtraLib(
+        reactDTsContent,
+        'file:///node_modules/@types/react/index.d.ts',
+      )
+
+      monacoInstance.languages.typescript.typescriptDefaults.addExtraLib(
+        reactJsxRuntimeDTsContent,
+        'file:///node_modules/@types/react/jsx-runtime.d.ts',
+      )
 
       const themeActual = theme === 'system' ? systemTheme : theme
       monacoInstance.editor.setTheme(
@@ -104,9 +150,10 @@ function __EditorTextArea({ className }: EditorProps) {
       {networkProvider ? <Cursors provider={networkProvider} /> : null}
       <MonacoEditor
         width="100vw"
-        theme="light"
+        theme="avelin-light"
         loading={null}
         defaultValue=""
+        // defaultPath="file:///main.tsx"
         language={editorLanguage}
         onMount={setupEditor}
         options={{

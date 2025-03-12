@@ -16,6 +16,7 @@
     }
   }
 
+  .text-2xl,
   .text-3xl {
     font-variation-settings: "opsz" 28;
   }

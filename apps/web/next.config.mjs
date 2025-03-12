@@ -11,6 +11,24 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   // reactStrictMode: false,
+  experimental: {
+    turbo: {
+      rules: {
+        '*.txt': {
+          loaders: ['raw-loader'],
+          as: '*.js',
+        },
+      },
+    },
+  },
+  webpack: (config, context) => {
+    config.module.rules.push({
+      test: /^.*\.txt$/i,
+      loader: 'raw-loader',
+    })
+
+    return config
+  },
   output: 'standalone',
   images: {
     remotePatterns: [
