@@ -21,6 +21,14 @@ const nextConfig = {
       },
     },
   },
+  webpack: (config, context) => {
+    config.module.rules.push({
+      test: /^.*\.txt$/i,
+      loader: 'raw-loader',
+    })
+
+    return config
+  },
   output: 'standalone',
   images: {
     remotePatterns: [
