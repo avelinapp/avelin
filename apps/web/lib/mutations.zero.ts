@@ -19,7 +19,7 @@ export class Room {
       updatedAt: now(),
     })
 
-    const [room] = z.query.rooms.where('id', id).run()
+    const [room] = await z.query.rooms.where('id', id).run()
 
     return room
   }
@@ -27,7 +27,7 @@ export class Room {
   static async delete({ id }: { id: string }) {
     const z = zeroClient!
 
-    const roomParticipants = z.query.roomParticipants
+    const roomParticipants = await z.query.roomParticipants
       .where('roomId', '=', id)
       .run()
 
