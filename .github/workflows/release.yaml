@@ -467,14 +467,19 @@ jobs:
           pnpm run db:migrate
           rm packages/database/.env
 
-      - name: Bump Zero schema version
-        env:
-          ZERO_UPSTREAM_DB: ${{ secrets.DATABASE_URL }}
-        run: |
-          echo "ZERO_UPSTREAM_DB=$ZERO_UPSTREAM_DB" >> packages/zero/.env
-          echo "CI=$CI" >> packages/zero/.env
+      ### Not used since Zero v0.17
+        # `schemaVersion` is no longer used, in favour of
+        # TypeScript-style structural typing to detect schema changes
+        # https://zero.rocicorp.dev/docs/release-notes/0.17
+      ################################################################
+      # - name: Bump Zero schema version
+      #   env:
+      #     ZERO_UPSTREAM_DB: ${{ secrets.DATABASE_URL }}
+      #   run: |
+      #     echo "ZERO_UPSTREAM_DB=$ZERO_UPSTREAM_DB" >> packages/zero/.env
+      #     echo "CI=$CI" >> packages/zero/.env
 
-          pnpm run zero:migrate
+      #     pnpm run zero:migrate
 
       - name: Deploy latest Zero permissions
         env:
