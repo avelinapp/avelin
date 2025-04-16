@@ -655,8 +655,8 @@ importers:
         specifier: 'catalog:'
         version: 0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)
       drizzle-zero:
-        specifier: ^0.5.1
-        version: 0.5.1(@rocicorp/zero@0.18.2025040300(bufferutil@4.0.9))(drizzle-orm@0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0))
+        specifier: ^0.7.0
+        version: 0.7.0(@rocicorp/zero@0.18.2025040300(bufferutil@4.0.9))(drizzle-orm@0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0))
     devDependencies:
       '@avelin/typescript-config':
         specifier: workspace:*
@@ -4019,8 +4019,9 @@ packages:
       sqlite3:
         optional: true
 
-  drizzle-zero@0.5.1:
-    resolution: {integrity: sha512-kPpkAxOAzWAeqlzdFbRGZVRm1xfjlCdScPP55Xz6SCziJZqTiuYbbddgoGAq50fwNlgkYATG5ZIc53QfbDmkhw==}
+  drizzle-zero@0.7.0:
+    resolution: {integrity: sha512-5UG704i0DilUGi7/+pfHrLKmHjugS8lB6q8xv/5kH+Q/8j2u3eM3Pnqg/O0Hu7FH6uNrdt11donF38c6MWo+vA==}
+    hasBin: true
     peerDependencies:
       '@rocicorp/zero': '>=0.13.2025013101'
       drizzle-orm: '>=0.36.0'
@@ -10365,7 +10366,7 @@ snapshots:
       postgres: 3.4.5
       react: 19.0.0
 
-  drizzle-zero@0.5.1(@rocicorp/zero@0.18.2025040300(bufferutil@4.0.9))(drizzle-orm@0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)):
+  drizzle-zero@0.7.0(@rocicorp/zero@0.18.2025040300(bufferutil@4.0.9))(drizzle-orm@0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)):
     dependencies:
       '@rocicorp/zero': 0.18.2025040300(bufferutil@4.0.9)
       drizzle-orm: 0.38.4(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.8)(bun-types@1.2.2)(kysely@0.27.6)(pg@8.13.3)(postgres@3.4.5)(react@19.0.0)

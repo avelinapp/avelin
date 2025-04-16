@@ -27,6 +27,6 @@
     "@rocicorp/zero": "catalog:",
     "dotenv": "^16.4.7",
     "drizzle-orm": "catalog:",
-    "drizzle-zero": "^0.5.1"
+    "drizzle-zero": "^0.7.0"
   }
 }
