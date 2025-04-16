@@ -8,10 +8,8 @@ import {
   definePermissions,
 } from '@rocicorp/zero'
 import { createZeroSchema } from 'drizzle-zero'
-import zeroConfig from './zero-config.json' with { type: 'json' }
 
 export const schema = createZeroSchema(drizzleSchema, {
-  version: zeroConfig.zero.schemaVersion,
   tables: {
     users: {
       id: true,
