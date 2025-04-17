@@ -29,8 +29,8 @@ export function EditRoomTitleCommand({ closeMenu, search, setSearch }: Props) {
     setSearch(roomTitle ?? '')
   }, [setSearch])
 
-  function save() {
-    setRoomTitle(search)
+  async function save() {
+    await setRoomTitle(search)
     closeMenu()
   }
 

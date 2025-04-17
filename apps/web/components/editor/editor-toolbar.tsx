@@ -24,7 +24,7 @@ function __EditorToolbar() {
   const { isPending, isAuthenticated, isAnonymous, user } = useAuth()
   const [room] = useCodeRoomStore((state) => [state.room])
 
-  console.log('**** [EditorToolbar] RE-RENDER')
+  // console.log('**** [EditorToolbar] RE-RENDER')
 
   return (
     <div className="flex items-center m-2 drop-shadow-sm py-2 px-4 max-w-full bg-popover-bg rounded-lg border border-color-border-subtle">

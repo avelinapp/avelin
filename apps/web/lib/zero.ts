@@ -66,7 +66,7 @@ export function getZeroClient({
     client.query.rooms
       .where('deletedAt', 'IS', null)
       .related('roomParticipants', (q) => q.related('user'))
-      .preload()
+      .preload({ ttl: 'forever' })
   }
 
   return client

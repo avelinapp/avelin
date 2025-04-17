@@ -176,7 +176,7 @@ function __UsersList() {
   const __users = useCustomUsersSelector()
   const { isOnline } = useNetworkStatus()
 
-  console.log('**** [UsersList] RE-RENDER')
+  // console.log('**** [UsersList] RE-RENDER')
 
   const users = useMemo(() => Array.from(__users.values()), [__users])
 

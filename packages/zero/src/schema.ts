@@ -122,6 +122,17 @@ export const permissions: ReturnType<typeof definePermissions> =
         eb.cmp('creatorId', '=', authData.sub),
       )
 
+    const loggedInUserIsRoomParticipantForRoom = (
+      authData: AuthData,
+      eb: ExpressionBuilder<Schema, 'rooms'>,
+    ) =>
+      eb.and(
+        userIsLoggedIn(authData, eb),
+        eb.exists('participants', (q) =>
+          q.where((eb) => eb.cmp('id', authData.sub)),
+        ),
+      )
+
     const loggedInUserIsRoomParticipant = (
       authData: AuthData,
       eb: ExpressionBuilder<Schema, 'roomParticipants'>,
@@ -145,8 +156,14 @@ export const permissions: ReturnType<typeof definePermissions> =
         row: {
           insert: [loggedInUserIsCreator],
           update: {
-            preMutation: [loggedInUserIsCreator],
-            postMutation: [loggedInUserIsCreator],
+            preMutation: [
+              loggedInUserIsCreator,
+              loggedInUserIsRoomParticipantForRoom,
+            ],
+            postMutation: [
+              loggedInUserIsCreator,
+              loggedInUserIsRoomParticipantForRoom,
+            ],
           },
           delete: [loggedInUserIsCreator],
           select: ANYONE_CAN,

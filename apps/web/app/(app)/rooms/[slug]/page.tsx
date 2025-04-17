@@ -5,8 +5,10 @@ import { useAuth } from '@/providers/auth-provider'
 import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { useView } from '@/providers/view-provider'
 import { useQuery } from '@rocicorp/zero/react'
+import { AnimatePresence } from 'motion/react'
 import { use, useEffect, useMemo } from 'react'
 import CodeRoom from './_components/code-room'
+import { LoadingRoom } from './_components/code-room-loading'
 
 type Params = Promise<{ slug: string }>
 
@@ -17,9 +19,8 @@ export default function Page({ params }: { params: Params }) {
     state.destroy,
   ])
   const z = useZero()
-  const q = z.query.rooms.where('slug', 'IS', slug)
-  const [rooms, { type: status }] = useQuery(q)
-  const room = useMemo(() => rooms[0], [rooms])
+  const q = z.query.rooms.where('slug', 'IS', slug).one()
+  const [room, { type: status }] = useQuery(q)
   const { isPending: isAuthPending, user, session } = useAuth()
   const { ready, setReady } = useView()
 
@@ -29,20 +30,28 @@ export default function Page({ params }: { params: Params }) {
     }
   }, [status, room, ready, setReady])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (status === 'unknown' || isAuthPending) return
+    if (status === 'unknown' || !room || isAuthPending) return
 
     initialize({
-      // @ts-ignore
-      room: room,
-      // @ts-ignore
-      user: user,
-      // @ts-ignore
-      session: session,
+      room,
+      user,
+      session,
     })
 
     return () => destroy()
   }, [initialize, destroy, status, isAuthPending, user, session])
 
-  return <CodeRoom />
+  const content = useMemo(
+    () =>
+      room ? (
+        <CodeRoom key="room-loaded" />
+      ) : (
+        <LoadingRoom key="room-loading" />
+      ),
+    [room],
+  )
+
+  return <AnimatePresence mode="wait">{content}</AnimatePresence>
 }

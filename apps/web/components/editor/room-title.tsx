@@ -14,7 +14,7 @@ export const RoomTitle = memo(function RoomTitle() {
   const [value, setValue] = useState<string>('')
   const ref = useRef<HTMLInputElement | null>(null)
 
-  console.log('**** [RoomTitle] RE-RENDER')
+  // console.log('**** [RoomTitle] RE-RENDER')
 
   useEffect(() => {
     setValue(roomTitle ?? '')
@@ -38,8 +38,8 @@ export const RoomTitle = memo(function RoomTitle() {
             setValue(e.target.value)
           }}
           size="xs"
-          onBlur={(e) => {
-            setRoomTitle(e.target.value)
+          onBlur={async (e) => {
+            await setRoomTitle(e.target.value)
           }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {

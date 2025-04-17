@@ -3,7 +3,7 @@
 import { languages } from '@/lib/constants'
 import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { Combobox } from '@avelin/ui/combobox'
-import { memo, useEffect } from 'react'
+import { memo } from 'react'
 
 const languageOptions = languages.map((l) => ({
   value: l.value,
@@ -19,15 +19,7 @@ function __EditorLanguageCombobox() {
     state.setEditorLanguage,
   ])
 
-  console.log('**** RE-RENDER')
-
-  useEffect(() => {
-    console.log('**** Editor language changed')
-  }, [editorLanguage])
-
-  useEffect(() => {
-    console.log('**** Set editor language changed')
-  }, [setEditorLanguage])
+  // console.log('**** RE-RENDER')
 
   return (
     <div className="flex items-center gap-2">
@@ -36,8 +28,8 @@ function __EditorLanguageCombobox() {
         namePlural="languages"
         options={languageOptions}
         value={editorLanguage}
-        onValueChange={(value) => {
-          setEditorLanguage(value)
+        onValueChange={async (value) => {
+          await setEditorLanguage(value)
         }}
         tooltip={{
           content: 'Change editor language',
