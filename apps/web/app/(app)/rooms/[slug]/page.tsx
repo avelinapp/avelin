@@ -6,7 +6,7 @@ import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { useView } from '@/providers/view-provider'
 import { useQuery } from '@rocicorp/zero/react'
 import { AnimatePresence } from 'motion/react'
-import { use, useEffect } from 'react'
+import { use, useEffect, useMemo } from 'react'
 import CodeRoom from './_components/code-room'
 import { LoadingRoom } from './_components/code-room-loading'
 
@@ -30,6 +30,7 @@ export default function Page({ params }: { params: Params }) {
     }
   }, [status, room, ready, setReady])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (status === 'unknown' || !room || isAuthPending) return
 
@@ -42,13 +43,15 @@ export default function Page({ params }: { params: Params }) {
     return () => destroy()
   }, [initialize, destroy, status, isAuthPending, user, session])
 
-  return (
-    <AnimatePresence mode="wait">
-      {!room ? (
-        <LoadingRoom key="room-loading" />
-      ) : (
+  const content = useMemo(
+    () =>
+      room ? (
         <CodeRoom key="room-loaded" />
-      )}
-    </AnimatePresence>
+      ) : (
+        <LoadingRoom key="room-loading" />
+      ),
+    [room],
   )
+
+  return <AnimatePresence mode="wait">{content}</AnimatePresence>
 }
