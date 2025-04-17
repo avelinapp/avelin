@@ -387,13 +387,17 @@ export const createCodeRoomStore = () =>
       let newLanguage: string | undefined = language
 
       if (!localOnly) {
-        await z.mutate.rooms.update({
-          id: room.id,
-          editorLanguage: language,
-        })
+        try {
+          await z.mutate.rooms.update({
+            id: room.id,
+            editorLanguage: language,
+          })
 
-        const [newRoom] = await z.query.rooms.where('id', room.id).run()
-        newLanguage = newRoom?.editorLanguage ?? undefined
+          const [newRoom] = await z.query.rooms.where('id', room.id).run()
+          newLanguage = newRoom?.editorLanguage ?? undefined
+        } catch (e) {
+          console.error('Error setting editor language:', e)
+        }
       }
 
       set({
@@ -406,16 +410,20 @@ export const createCodeRoomStore = () =>
 
       if (!z || !room) return
 
-      let newTitle: string = title
+      let newTitle: string | undefined = title
 
       if (!localOnly) {
-        await z.mutate.rooms.update({
-          id: room.id,
-          title,
-        })
+        try {
+          await z.mutate.rooms.update({
+            id: room.id,
+            title,
+          })
 
-        const [newRoom] = await z.query.rooms.where('id', room.id).run()
-        newTitle = newRoom?.title ?? ''
+          const [newRoom] = await z.query.rooms.where('id', room.id).run()
+          newTitle = newRoom?.title ?? ''
+        } catch (e) {
+          console.error('Error setting room title:', e)
+        }
       }
 
       set({
