@@ -10,11 +10,14 @@ import {
   type UserAwareness,
   type UserInfo,
 } from '@/lib/sync'
+import { client } from '@/lib/zero'
 import type { Session, User } from '@avelin/auth'
 import type { Room } from '@avelin/database'
 import { toast } from '@avelin/ui/sonner'
+import type { Zero } from '@avelin/zero'
 import { HocuspocusProvider, type WebSocketStatus } from '@hocuspocus/provider'
 import { createContext, useContext, useState } from 'react'
+import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector'
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { Awareness } from 'y-protocols/awareness'
 import * as Y from 'yjs'
@@ -33,7 +36,7 @@ export type CodeRoomState = {
   networkProvider?: HocuspocusProvider
   networkProviderStatus?: WebSocketStatus
   persistenceProvider?: IndexeddbPersistence
-  room?: Omit<Room, 'ydoc'>
+  room?: Omit<Zero.Schema.Room, 'ydoc'>
   clientId?: number
   users: Map<number, UserInfo>
   activeUsers: Map<number, number>
@@ -54,7 +57,7 @@ export type CodeRoomActions = {
     user,
     session,
   }: {
-    room: Omit<Room, 'ydoc'>
+    room: Zero.Schema.Room
     user?: User
     session?: Session
   }) => void
@@ -63,7 +66,10 @@ export type CodeRoomActions = {
   setUserActive: (userId: number) => void
   setUserInactive: (userId: number) => void
   cleanIdleUsers: () => void
-  setEditorLanguage: (language: Language['value']) => void
+  setEditorLanguage: (
+    language: Language['value'],
+    localOnly?: boolean,
+  ) => Promise<void>
   setRoomTitle: (title: string) => void
 }
 
@@ -88,6 +94,7 @@ export const createCodeRoomStore = () =>
       if (!room) throw new Error('Cannot initialize code room without a room')
 
       set({ room })
+      set({ editorLanguage: room.editorLanguage ?? undefined })
 
       const { ydoc, networkProvider, persistenceProvider } = get()
 
@@ -119,36 +126,32 @@ export const createCodeRoomStore = () =>
       }
 
       function setupEditorLanguageObserver() {
-        const editorMap = ydoc.getMap('editor')
-        if (!editorMap.has('language')) {
-          editorMap.set('language', 'plaintext') // Set your default language here
-        }
-
-        // Set the initial editorLanguage state from Yjs
-        set({
-          editorLanguage: editorMap.get('language') as Language['value'],
-        })
-
-        // Define the observer function
-        // biome-ignore lint/suspicious/noExplicitAny: false
-        const observer = (event: Y.YMapEvent<any>) => {
-          if (event.keysChanged.has('language')) {
-            const newLanguage = editorMap.get('language') as Language['value']
-            const languageDetails = languages.find(
-              (l) => l.value === newLanguage,
-            )
-            set({ editorLanguage: newLanguage })
-            toast.info(
-              `Editor language set to ${languageDetails?.name ?? newLanguage}.`,
-            )
-          }
-        }
-
-        // Add the observer to the 'editor' map
-        editorMap.observe(observer)
-
-        // Store the observer for later cleanup
-        set({ editorObserver: observer })
+        // const editorMap = ydoc.getMap('editor')
+        // if (!editorMap.has('language')) {
+        //   editorMap.set('language', 'plaintext') // Set your default language here
+        // }
+        // // Set the initial editorLanguage state from Yjs
+        // set({
+        //   editorLanguage: editorMap.get('language') as Language['value'],
+        // })
+        // // Define the observer function
+        // // biome-ignore lint/suspicious/noExplicitAny: false
+        // const observer = (event: Y.YMapEvent<any>) => {
+        //   if (event.keysChanged.has('language')) {
+        //     const newLanguage = editorMap.get('language') as Language['value']
+        //     const languageDetails = languages.find(
+        //       (l) => l.value === newLanguage,
+        //     )
+        //     set({ editorLanguage: newLanguage })
+        //     toast.info(
+        //       `Editor language set to ${languageDetails?.name ?? newLanguage}.`,
+        //     )
+        //   }
+        // }
+        // // Add the observer to the 'editor' map
+        // editorMap.observe(observer)
+        // // Store the observer for later cleanup
+        // set({ editorObserver: observer })
       }
 
       function initializeLocalUserInfo(awareness: Awareness) {
@@ -406,10 +409,34 @@ export const createCodeRoomStore = () =>
 
       set({ activeUsers: users })
     },
-    setEditorLanguage: (language) => {
-      const { ydoc } = get()
+    setEditorLanguage: async (language, localOnly = false) => {
+      console.log(
+        '**** [CodeRoomProvider] setEditorLanguage - local?',
+        localOnly,
+      )
+      const z = client
+      const room = get().room
 
-      ydoc.getMap('editor').set('language', language)
+      if (!z || !room) return
+
+      let newLanguage: string | undefined = language
+
+      if (!localOnly) {
+        await z.mutate.rooms.update({
+          id: room.id,
+          editorLanguage: language,
+        })
+
+        const [newRoom] = await z.query.rooms.where('id', room.id).run()
+        newLanguage = newRoom?.editorLanguage ?? undefined
+      }
+
+      set({
+        editorLanguage: newLanguage,
+      })
+
+      // const { ydoc } = get()
+      // ydoc.getMap('editor').set('language', language)
     },
     setRoomTitle: (title) => {
       const { ydoc } = get()
@@ -466,8 +493,6 @@ function shallowEqualUsers(
   }
   return true
 }
-
-import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector'
 
 export function useCustomUsersSelector() {
   const store = useContext(CodeRoomContext)

@@ -12,7 +12,7 @@ import { memo } from 'react'
 export const CodeRoom = memo(__CodeRoom)
 
 function __CodeRoom() {
-  console.log('**** [CodeRoom] RE-RENDER')
+  // console.log('**** [CodeRoom] RE-RENDER')
   return (
     <div className="flex flex-col h-full w-full">
       <motion.div

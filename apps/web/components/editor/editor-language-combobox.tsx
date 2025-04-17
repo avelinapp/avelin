@@ -1,8 +1,10 @@
 'use client'
 
 import { languages } from '@/lib/constants'
+import { useZero } from '@/lib/zero'
 import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { Combobox } from '@avelin/ui/combobox'
+import { useQuery } from '@rocicorp/zero/react'
 import { memo, useEffect } from 'react'
 
 const languageOptions = languages.map((l) => ({
@@ -19,14 +21,14 @@ function __EditorLanguageCombobox() {
     state.setEditorLanguage,
   ])
 
-  console.log('**** RE-RENDER')
+  // console.log('**** RE-RENDER')
 
   useEffect(() => {
-    console.log('**** Editor language changed')
+    // console.log('**** Editor language changed to', editorLanguage)
   }, [editorLanguage])
 
   useEffect(() => {
-    console.log('**** Set editor language changed')
+    // console.log('**** Set editor language changed')
   }, [setEditorLanguage])
 
   return (
@@ -36,8 +38,8 @@ function __EditorLanguageCombobox() {
         namePlural="languages"
         options={languageOptions}
         value={editorLanguage}
-        onValueChange={(value) => {
-          setEditorLanguage(value)
+        onValueChange={async (value) => {
+          await setEditorLanguage(value)
         }}
         tooltip={{
           content: 'Change editor language',

@@ -14,7 +14,7 @@ export const RoomTitle = memo(function RoomTitle() {
   const [value, setValue] = useState<string>('')
   const ref = useRef<HTMLInputElement | null>(null)
 
-  console.log('**** [RoomTitle] RE-RENDER')
+  // console.log('**** [RoomTitle] RE-RENDER')
 
   useEffect(() => {
     setValue(roomTitle ?? '')

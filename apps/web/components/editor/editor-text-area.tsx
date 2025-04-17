@@ -10,7 +10,6 @@ import { Cursors } from './cursors'
 import { avelinDark, avelinLight } from './themes'
 import './cursors.css'
 import { languages } from '@/lib/constants'
-import { inArray } from '@/lib/utils'
 import { cn } from '@avelin/ui/cn'
 import { shikiToMonaco } from '@shikijs/monaco'
 import { useAnimate } from 'motion/react-mini'
@@ -36,7 +35,7 @@ function __EditorTextArea({ className }: EditorProps) {
     state.editorLanguage,
   ])
 
-  console.log('**** [EditorTextArea] RE-RENDER')
+  // console.log('**** [EditorTextArea] RE-RENDER')
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
   const monacoRef = useRef<Monaco | null>(null)
