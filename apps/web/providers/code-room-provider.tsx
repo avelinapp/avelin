@@ -104,7 +104,8 @@ export const createCodeRoomStore = () =>
       set({ awareness: new Awareness(ydoc) })
 
       function setupRoomObserver() {
-        const z = client!
+        const z = client
+        if (!z) return
 
         const q = z.query.rooms.where('id', room.id).one()
         const view = q.materialize()
