@@ -156,8 +156,14 @@ export const permissions: ReturnType<typeof definePermissions> =
         row: {
           insert: [loggedInUserIsCreator],
           update: {
-            preMutation: [loggedInUserIsRoomParticipantForRoom],
-            postMutation: [loggedInUserIsRoomParticipantForRoom],
+            preMutation: [
+              loggedInUserIsCreator,
+              loggedInUserIsRoomParticipantForRoom,
+            ],
+            postMutation: [
+              loggedInUserIsCreator,
+              loggedInUserIsRoomParticipantForRoom,
+            ],
           },
           delete: [loggedInUserIsCreator],
           select: ANYONE_CAN,

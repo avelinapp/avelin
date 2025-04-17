@@ -12,10 +12,10 @@ import {
 } from '@/lib/sync'
 import { client } from '@/lib/zero'
 import type { Session, User } from '@avelin/auth'
-import type { Room } from '@avelin/database'
 import { toast } from '@avelin/ui/sonner'
 import type { Zero } from '@avelin/zero'
 import { HocuspocusProvider, type WebSocketStatus } from '@hocuspocus/provider'
+import type { TypedView } from '@rocicorp/zero'
 import { createContext, useContext, useState } from 'react'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector'
 import { IndexeddbPersistence } from 'y-indexeddb'
@@ -36,18 +36,17 @@ export type CodeRoomState = {
   networkProvider?: HocuspocusProvider
   networkProviderStatus?: WebSocketStatus
   persistenceProvider?: IndexeddbPersistence
-  room?: Omit<Zero.Schema.Room, 'ydoc'>
+  room?: Zero.Schema.Room
   clientId?: number
   users: Map<number, UserInfo>
   activeUsers: Map<number, number>
   isInitialSyncConnect: boolean
   skipRoomAwarenessChangeEvent: boolean
+  isInitialZeroQueryMaterialized: boolean
   roomTitle?: string
   editorLanguage?: Language['value']
   // biome-ignore lint/suspicious/noExplicitAny: false
-  editorObserver?: (event: Y.YMapEvent<any>) => void
-  // biome-ignore lint/suspicious/noExplicitAny: false
-  roomTitleObserver?: (event: Y.YMapEvent<any>) => void
+  roomZeroView?: TypedView<Zero.Schema.Room | undefined>
   usersObserver?: (data: AwarenessChange) => void
 }
 
@@ -70,7 +69,7 @@ export type CodeRoomActions = {
     language: Language['value'],
     localOnly?: boolean,
   ) => Promise<void>
-  setRoomTitle: (title: string) => void
+  setRoomTitle: (title: string, localOnly?: boolean) => Promise<void>
 }
 
 export type CodeRoomStore = CodeRoomState & CodeRoomActions
@@ -89,69 +88,51 @@ export const createCodeRoomStore = () =>
     editorLanguage: undefined,
     usersObserver: undefined,
     isInitialSyncConnect: false,
+    isInitialZeroQueryMaterialized: true,
     skipRoomAwarenessChangeEvent: true,
     initialize: ({ room, user, session }) => {
       if (!room) throw new Error('Cannot initialize code room without a room')
 
       set({ room })
-      set({ editorLanguage: room.editorLanguage ?? undefined })
+      set({
+        editorLanguage: room.editorLanguage ?? undefined,
+        roomTitle: room.title ?? undefined,
+      })
 
       const { ydoc, networkProvider, persistenceProvider } = get()
 
       set({ awareness: new Awareness(ydoc) })
 
-      function setupRoomTitleObserver() {
-        const metaMap = ydoc.getMap('meta')
+      function setupRoomObserver() {
+        const z = client!
 
-        const roomTitle = metaMap.get('title') as string | undefined
+        const q = z.query.rooms.where('id', room.id).one()
+        const view = q.materialize()
+        set({ roomZeroView: view })
 
-        // Set the initial room title from Yjs
-        set({
-          roomTitle: roomTitle ?? '',
-        })
-
-        // Define the observer function
-        // biome-ignore lint/suspicious/noExplicitAny: false
-        const observer = (event: Y.YMapEvent<any>) => {
-          if (event.keysChanged.has('title')) {
-            const newTitle = metaMap.get('title') as string
-            console.log('Received room title update:', newTitle)
-            set({ roomTitle: newTitle })
+        view.addListener((data, result) => {
+          if (result !== 'complete') return
+          if (!data?.editorLanguage) return
+          if (get().isInitialZeroQueryMaterialized) {
+            set({ isInitialZeroQueryMaterialized: false })
+            return
           }
-        }
 
-        metaMap.observe(observer)
+          if (get().editorLanguage !== data.editorLanguage) {
+            const newLanguage = languages.find(
+              (l) => l.value === data.editorLanguage,
+            )
 
-        set({ roomTitleObserver: observer })
-      }
+            if (!newLanguage) return
 
-      function setupEditorLanguageObserver() {
-        // const editorMap = ydoc.getMap('editor')
-        // if (!editorMap.has('language')) {
-        //   editorMap.set('language', 'plaintext') // Set your default language here
-        // }
-        // // Set the initial editorLanguage state from Yjs
-        // set({
-        //   editorLanguage: editorMap.get('language') as Language['value'],
-        // })
-        // // Define the observer function
-        // // biome-ignore lint/suspicious/noExplicitAny: false
-        // const observer = (event: Y.YMapEvent<any>) => {
-        //   if (event.keysChanged.has('language')) {
-        //     const newLanguage = editorMap.get('language') as Language['value']
-        //     const languageDetails = languages.find(
-        //       (l) => l.value === newLanguage,
-        //     )
-        //     set({ editorLanguage: newLanguage })
-        //     toast.info(
-        //       `Editor language set to ${languageDetails?.name ?? newLanguage}.`,
-        //     )
-        //   }
-        // }
-        // // Add the observer to the 'editor' map
-        // editorMap.observe(observer)
-        // // Store the observer for later cleanup
-        // set({ editorObserver: observer })
+            set({ editorLanguage: newLanguage.value })
+            toast.info(`Editor language set to ${newLanguage.name}.`)
+          }
+
+          if (get().roomTitle !== data.title) {
+            set({ roomTitle: data.title ?? undefined })
+          }
+        })
       }
 
       function initializeLocalUserInfo(awareness: Awareness) {
@@ -172,15 +153,13 @@ export const createCodeRoomStore = () =>
         const localUser: UserAwareness['user'] = {
           clientId: awareness.clientID,
           // TODO: Add back anonymous users
-          // name: user && !user.isAnonymous ? user.name : generateUniqueName(),
-          name: user ? user.name : generateUniqueName(),
+          name: user && !user.isAnonymous ? user.name : generateUniqueName(),
+          // name: user ? user.name : generateUniqueName(),
           color: color,
           // TODO: Add back anonymous users
-          // picture:
-          //   user && !user.isAnonymous && !!user.picture
-          //     ? user.picture
-          //     : undefined,
-          picture: user?.image ?? undefined,
+          picture:
+            user && !user.isAnonymous && !!user.image ? user.image : undefined,
+          // picture: user?.image ?? undefined,
           lastActive: Date.now(),
         }
 
@@ -266,20 +245,17 @@ export const createCodeRoomStore = () =>
 
       const { awareness } = get()
 
+      setupRoomObserver()
       initializeLocalUserInfo(awareness!)
       setupUsersObserver(awareness!)
 
       if (!persistenceProvider) {
         const idbProvider = new IndexeddbPersistence(room.id, ydoc)
-
         idbProvider.on('synced', (idbPersistence: IndexeddbPersistence) => {
           console.log(
             `Content restored for ${idbPersistence.name} from IndexedDB.`,
           )
-
-          setupRoomTitleObserver()
         })
-
         set({ persistenceProvider: idbProvider })
       } else {
         console.log('Persistence provider already initialized.')
@@ -312,7 +288,6 @@ export const createCodeRoomStore = () =>
             // (or more realistic network scenarios with latency between local and network provider sync).
             // The issue resulted in new users joining a room to reset the room's editor language back
             // to the default since they had not yet synced with the network to receive the actual editor language.
-            setupEditorLanguageObserver()
           },
           onDisconnect: (data) => {
             console.log(
@@ -340,19 +315,12 @@ export const createCodeRoomStore = () =>
         awareness,
         networkProvider,
         persistenceProvider,
-        roomTitleObserver,
-        editorObserver,
+        roomZeroView,
         usersObserver,
       } = get()
 
-      if (editorObserver) {
-        const editorMap = ydoc.getMap('editor')
-        editorMap.unobserve(editorObserver)
-      }
-
-      if (roomTitleObserver) {
-        const metaMap = ydoc.getMap('meta')
-        metaMap.unobserve(roomTitleObserver)
+      if (roomZeroView) {
+        roomZeroView.destroy()
       }
 
       if (usersObserver) {
@@ -375,7 +343,7 @@ export const createCodeRoomStore = () =>
         users: new Map<number, UserInfo>(),
         activeUsers: undefined,
         editorLanguage: undefined,
-        editorObserver: undefined,
+        roomZeroView: undefined,
         skipRoomAwarenessChangeEvent: true,
         awareness: undefined,
         usersObserver: undefined,
@@ -434,14 +402,28 @@ export const createCodeRoomStore = () =>
       set({
         editorLanguage: newLanguage,
       })
-
-      // const { ydoc } = get()
-      // ydoc.getMap('editor').set('language', language)
     },
-    setRoomTitle: (title) => {
-      const { ydoc } = get()
+    setRoomTitle: async (title, localOnly = false) => {
+      const z = client
+      const room = get().room
 
-      ydoc.getMap('meta').set('title', title)
+      if (!z || !room) return
+
+      let newTitle: string = title
+
+      if (!localOnly) {
+        await z.mutate.rooms.update({
+          id: room.id,
+          title,
+        })
+
+        const [newRoom] = await z.query.rooms.where('id', room.id).run()
+        newTitle = newRoom?.title ?? ''
+      }
+
+      set({
+        roomTitle: newTitle,
+      })
     },
   }))
 

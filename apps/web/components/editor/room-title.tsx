@@ -38,8 +38,8 @@ export const RoomTitle = memo(function RoomTitle() {
             setValue(e.target.value)
           }}
           size="xs"
-          onBlur={(e) => {
-            setRoomTitle(e.target.value)
+          onBlur={async (e) => {
+            await setRoomTitle(e.target.value)
           }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {

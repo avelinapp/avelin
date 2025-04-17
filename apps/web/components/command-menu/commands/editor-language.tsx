@@ -29,8 +29,8 @@ export function ChangeEditorLanguageCommands({ closeMenu }: Props) {
           key={language.value}
           value={language.value}
           keywords={language.keywords}
-          onSelect={(value) => {
-            setEditorLanguage(value)
+          onSelect={async (value) => {
+            await setEditorLanguage(value)
             closeMenu()
           }}
         >
