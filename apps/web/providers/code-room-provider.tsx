@@ -378,10 +378,6 @@ export const createCodeRoomStore = () =>
       set({ activeUsers: users })
     },
     setEditorLanguage: async (language, localOnly = false) => {
-      console.log(
-        '**** [CodeRoomProvider] setEditorLanguage - local?',
-        localOnly,
-      )
       const z = client
       const room = get().room
 

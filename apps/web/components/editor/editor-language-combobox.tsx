@@ -23,14 +23,6 @@ function __EditorLanguageCombobox() {
 
   // console.log('**** RE-RENDER')
 
-  useEffect(() => {
-    // console.log('**** Editor language changed to', editorLanguage)
-  }, [editorLanguage])
-
-  useEffect(() => {
-    // console.log('**** Set editor language changed')
-  }, [setEditorLanguage])
-
   return (
     <div className="flex items-center gap-2">
       <Combobox
