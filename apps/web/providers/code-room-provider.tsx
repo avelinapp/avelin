@@ -45,7 +45,6 @@ export type CodeRoomState = {
   isInitialZeroQueryMaterialized: boolean
   roomTitle?: string
   editorLanguage?: Language['value']
-  // biome-ignore lint/suspicious/noExplicitAny: false
   roomZeroView?: TypedView<Zero.Schema.Room | undefined>
   usersObserver?: (data: AwarenessChange) => void
 }
@@ -153,14 +152,10 @@ export const createCodeRoomStore = () =>
 
         const localUser: UserAwareness['user'] = {
           clientId: awareness.clientID,
-          // TODO: Add back anonymous users
           name: user && !user.isAnonymous ? user.name : generateUniqueName(),
-          // name: user ? user.name : generateUniqueName(),
           color: color,
-          // TODO: Add back anonymous users
           picture:
             user && !user.isAnonymous && !!user.image ? user.image : undefined,
-          // picture: user?.image ?? undefined,
           lastActive: Date.now(),
         }
 
