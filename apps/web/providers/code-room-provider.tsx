@@ -113,7 +113,7 @@ export const createCodeRoomStore = () =>
 
         view.addListener((data, result) => {
           if (result !== 'complete') return
-          if (!data?.editorLanguage) return
+          if (!data) return
           if (get().isInitialZeroQueryMaterialized) {
             set({ isInitialZeroQueryMaterialized: false })
             return
@@ -124,10 +124,10 @@ export const createCodeRoomStore = () =>
               (l) => l.value === data.editorLanguage,
             )
 
-            if (!newLanguage) return
-
-            set({ editorLanguage: newLanguage.value })
-            toast.info(`Editor language set to ${newLanguage.name}.`)
+            if (newLanguage) {
+              set({ editorLanguage: newLanguage.value })
+              toast.info(`Editor language set to ${newLanguage.name}.`)
+            }
           }
 
           if (get().roomTitle !== data.title) {
