@@ -1,11 +1,9 @@
 'use client'
 
 import { languages } from '@/lib/constants'
-import { useZero } from '@/lib/zero'
 import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { Combobox } from '@avelin/ui/combobox'
-import { useQuery } from '@rocicorp/zero/react'
-import { memo, useEffect } from 'react'
+import { memo } from 'react'
 
 const languageOptions = languages.map((l) => ({
   value: l.value,
