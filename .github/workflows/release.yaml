@@ -480,13 +480,16 @@ jobs:
       #     echo "CI=$CI" >> packages/zero/.env
 
       #     pnpm run zero:migrate
-
+      
       - name: Deploy latest Zero permissions
         env:
           ZERO_UPSTREAM_DB: ${{ secrets.DATABASE_URL }}
         run: |
           # build database before deploying; otherwise drizzle schema won't load
           pnpm turbo @avelin/database#build
+          
+          echo "ZERO_UPSTREAM_DB=$ZERO_UPSTREAM_DB" >> packages/zero/.env
+          echo "CI=$CI" >> packages/zero/.env
 
           pnpm run zero:deploy-permissions
           rm packages/zero/.env
