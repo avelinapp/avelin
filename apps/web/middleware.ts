@@ -1,5 +1,6 @@
 import { type Session, type User, authCookies } from '@avelin/auth'
 import { betterFetch } from '@better-fetch/fetch'
+import { addSeconds } from 'date-fns'
 import { decodeJwt } from 'jose'
 import { ResponseCookies } from 'next/dist/compiled/@edge-runtime/cookies'
 import { NextResponse } from 'next/server'
@@ -66,8 +67,8 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
 
-    // This value is in seconds
     const jwtExpiration = decodeJwt(jwt.token).exp ?? 0
+    const jwtExpirationDate = new Date(jwtExpiration * 1000)
 
     response.cookies.set('avelin.session_jwt', jwt.token, {
       path: '/',
@@ -75,7 +76,7 @@ export async function middleware(request: NextRequest) {
       secure: env.NODE_ENV === 'production',
       sameSite: 'lax',
       domain: `.${env.NEXT_PUBLIC_BASE_DOMAIN}`,
-      expires: jwtExpiration * 1000, // Convert to milliseconds
+      expires: jwtExpirationDate,
     })
 
     console.timeEnd('middleware')
@@ -134,16 +135,16 @@ export async function middleware(request: NextRequest) {
 
     console.log('JWT payload:', decodeJwt(jwt.token))
 
-    // This value is in seconds
     const jwtExpiration = decodeJwt(jwt.token).exp ?? 0
+    const jwtExpirationDate = new Date(jwtExpiration * 1000)
 
     response.cookies.set('avelin.session_jwt', jwt.token, {
       path: '/',
       httpOnly: false,
-      sameSite: 'lax',
       secure: env.NODE_ENV === 'production',
+      sameSite: 'lax',
       domain: `.${env.NEXT_PUBLIC_BASE_DOMAIN}`,
-      expires: jwtExpiration * 1000, // Convert to milliseconds
+      expires: jwtExpirationDate,
     })
   }
 
