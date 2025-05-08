@@ -8,6 +8,7 @@ import { useQuery } from '@rocicorp/zero/react'
 import { AnimatePresence } from 'motion/react'
 import { use, useEffect, useMemo } from 'react'
 import CodeRoom from './_components/code-room'
+import { DeletedRoom } from './_components/code-room-deleted'
 import { LoadingRoom } from './_components/code-room-loading'
 
 type Params = Promise<{ slug: string }>
@@ -19,7 +20,10 @@ export default function Page({ params }: { params: Params }) {
     state.destroy,
   ])
   const z = useZero()
-  const q = z.query.rooms.where('slug', 'IS', slug).one()
+  const q = z.query.rooms
+    .where('slug', 'IS', slug)
+    // .where('deletedAt', 'IS', null)
+    .one()
   const [room, { type: status }] = useQuery(q, { ttl: '1d' })
   const { isPending: isAuthPending, user, session } = useAuth()
   const { ready, setReady } = useView()
@@ -45,10 +49,12 @@ export default function Page({ params }: { params: Params }) {
 
   const content = useMemo(
     () =>
-      room ? (
-        <CodeRoom key="room-loaded" />
-      ) : (
+      !room ? (
         <LoadingRoom key="room-loading" />
+      ) : room.deletedAt !== null ? (
+        <DeletedRoom key="room-deleted" />
+      ) : (
+        <CodeRoom key="room-loaded" />
       ),
     [room],
   )
