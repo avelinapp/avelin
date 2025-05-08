@@ -162,6 +162,13 @@
       "when": 1741808812316,
       "tag": "0022_drop-pgsql-language",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1746714312412,
+      "tag": "0023_create-room_connections-table",
+      "breakpoints": true
     }
   ]
 }
