@@ -1,6 +1,5 @@
 import { type Session, type User, authCookies } from '@avelin/auth'
 import { betterFetch } from '@better-fetch/fetch'
-import { addSeconds } from 'date-fns'
 import { decodeJwt } from 'jose'
 import { ResponseCookies } from 'next/dist/compiled/@edge-runtime/cookies'
 import { NextResponse } from 'next/server'

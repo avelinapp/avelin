@@ -4,13 +4,7 @@ import { authClient } from '@/lib/auth'
 import { env } from '@/lib/env'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation'
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import { createContext, useCallback, useContext, useState } from 'react'
 
 type User = typeof authClient.$Infer.Session.user
 type Session = typeof authClient.$Infer.Session.session
@@ -81,7 +75,7 @@ export default function AuthProvider({
     await authClient.signOut()
     setData(undefined)
     router.push('/login')
-  }, [router.push])
+  }, [router])
 
   const refreshJwt = useCallback(async () => {
     const { data, error } = await authClient.getSession()
