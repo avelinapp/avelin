@@ -1,4 +1,4 @@
-import { createDb, eq, schema } from '@avelin/database'
+import { type NeonDatabase, createDb, eq, schema } from '@avelin/database'
 import { generate } from '@avelin/id'
 import { Database } from '@hocuspocus/extension-database'
 import { Logger } from '@hocuspocus/extension-logger'
@@ -10,14 +10,23 @@ import ws from 'ws'
 import { Doc } from 'yjs'
 import { authClient } from './auth.js'
 import { env } from './env.js'
+import { cleanupActiveConnections, devBootstrap } from './lifecycle.js'
 
-const SERVER_ID = `avelin-sync-${generate(6)}`
+const SERVER_ID =
+  env.NODE_ENV !== 'production'
+    ? `avelin-sync-dev-${generate(6)}`
+    : `avelin-sync-${generate(6)}`
 const PORT = 4100
 
 const db = createDb(ws)
 
+await devBootstrap(SERVER_ID, db)
+
 const server = new Hocuspocus({
   name: SERVER_ID,
+  async onConnect(data) {
+    console.log('[onConnect] Request parameters:', data.requestParameters)
+  },
   async onAuthenticate(ctx) {
     try {
       const { data, error } = await authClient.getSession({
@@ -129,8 +138,47 @@ app.ws('/', (websocket, request) => {
   })
 })
 
-app.listen(PORT, () => {
+const http = app.listen(PORT, () => {
   console.log(
     `Avelin Sync (ID: ${server.configuration.name}) listening on port ${PORT}`,
   )
 })
+
+async function cleanup(
+  serverId: string = SERVER_ID,
+  dbInstance: NeonDatabase = db,
+) {
+  console.log('Shutting down...')
+  try {
+    for (const [, doc] of server.documents) {
+      for (const [, conn] of doc.connections) {
+        console.log(
+          'Closing connection to document',
+          doc.name,
+          'with connection ID:',
+          conn.connection.socketId,
+        )
+        conn.connection.close()
+      }
+    }
+    console.log('Closed all connections')
+    http.closeAllConnections()
+    console.log('Closed all HTTP connections')
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+    console.log('Starting cleanup of active connections...')
+    await cleanupActiveConnections(serverId, dbInstance)
+    console.log('Cleaned up active connections.')
+  } catch (err) {
+    console.error('Error while shutting down:', err)
+    process.exit(1)
+  }
+}
+
+if (env.NODE_ENV === 'production') {
+  process.on('SIGTERM', async () => {
+    await cleanup(SERVER_ID, db)
+  })
+  process.on('SIGINT', async () => {
+    await cleanup(SERVER_ID, db)
+  })
+}
