@@ -1,8 +1,9 @@
 'use client'
 
 import { authClient } from '@/lib/auth'
+import { env } from '@/lib/env'
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation'
-const { useSession } = authClient
 import {
   createContext,
   useCallback,
@@ -40,6 +41,7 @@ export type AuthState =
 
 export type AuthActions = {
   signOut: () => Promise<void>
+  refreshJwt: () => Promise<string>
 }
 
 export type AuthStore = AuthState & AuthActions
@@ -48,6 +50,7 @@ const AuthContext = createContext<AuthStore>({
   isPending: true,
   isAuthenticated: false,
   signOut: async () => {},
+  refreshJwt: async () => '',
 })
 
 type AuthData = {
@@ -78,7 +81,43 @@ export default function AuthProvider({
     await authClient.signOut()
     setData(undefined)
     router.push('/login')
-  }, [])
+  }, [router.push])
+
+  const refreshJwt = useCallback(async () => {
+    const { data, error } = await authClient.getSession()
+
+    console.log('[AuthProvider] refreshJwt', data, error)
+
+    if (!data || error) {
+      return signOut()
+    }
+
+    const res = await fetch(`${env.NEXT_PUBLIC_API_URL}/auth/token`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${data.session.token}`,
+      },
+    })
+
+    if (!res.ok) {
+      return signOut()
+    }
+
+    const { jwt } = (await res.json()) as { jwt: string }
+
+    Cookies.set('avelin.session_jwt', jwt, {
+      path: '/',
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      domain: `.${env.NEXT_PUBLIC_BASE_DOMAIN}`,
+      expires: 1,
+    })
+
+    console.log('[AuthProvider] refreshJwt => JWT refreshed:', jwt)
+
+    return jwt
+  }, [signOut])
 
   const value = {
     user: data?.user,
@@ -87,6 +126,7 @@ export default function AuthProvider({
     isAuthenticated,
     isAnonymous,
     signOut,
+    refreshJwt,
   }
 
   // @ts-expect-error
