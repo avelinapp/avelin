@@ -1,0 +1,1 @@
+ALTER TABLE "room_connections" RENAME COLUMN "serverSessionId" TO "serverId";

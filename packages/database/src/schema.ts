@@ -172,7 +172,7 @@ export const roomConnections = pgTable('room_connections', {
   userId: text()
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  serverSessionId: text().notNull(),
+  serverId: text().notNull(),
   connectedAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
   disconnectedAt: timestamp({ withTimezone: true }),
   isActive: boolean().notNull().default(true),
