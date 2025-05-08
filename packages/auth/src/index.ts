@@ -1,7 +1,15 @@
 import { db, schema } from '@avelin/database'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { anonymous, bearer, jwt, openAPI } from 'better-auth/plugins'
+import {
+  type JwtOptions,
+  anonymous,
+  bearer,
+  createAuthMiddleware,
+  getJwtToken,
+  jwt,
+  openAPI,
+} from 'better-auth/plugins'
 
 const APP_URL = (process.env.APP_URL ||
   process.env.NEXT_PUBLIC_APP_URL) as string
@@ -12,6 +20,12 @@ const BASE_DOMAIN = (process.env.BASE_DOMAIN ||
 
 export type User = typeof auth.$Infer.Session.user
 export type Session = typeof auth.$Infer.Session.session
+
+const jwtOptions = {
+  jwt: {
+    expirationTime: '1d',
+  },
+} as const satisfies JwtOptions
 
 export const auth = betterAuth({
   trustedOrigins: [APP_URL],
@@ -37,11 +51,7 @@ export const auth = betterAuth({
     anonymous({
       emailDomainName: 'anon.avelin.app',
     }),
-    jwt({
-      jwt: {
-        expirationTime: '1d',
-      },
-    }),
+    jwt(jwtOptions),
     openAPI(),
   ],
   session: {
@@ -63,6 +73,23 @@ export const auth = betterAuth({
       // Leading period to make the cookie accessible across al subdomains.
       domain: `.${BASE_DOMAIN}`,
     },
+  },
+  hooks: {
+    after: createAuthMiddleware(async (ctx) => {
+      if (ctx.path.startsWith('/callback')) {
+        ctx.context.session = ctx.context.newSession
+        const jwt = await getJwtToken(ctx, jwtOptions)
+        console.log('[Auth] JWT:', jwt)
+        ctx.setCookie('avelin.session_jwt', jwt, {
+          path: '/',
+          httpOnly: false,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          domain: `.${BASE_DOMAIN}`,
+          maxAge: 60 * 60 * 24, // 24h
+        })
+      }
+    }),
   },
 })
 
