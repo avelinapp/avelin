@@ -24,3 +24,5 @@ export function newId(prefix: keyof typeof prefixes): string {
 export function newRoomSlug() {
   return nanoid(6)
 }
+
+export const generate = nanoid
