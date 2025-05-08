@@ -1,4 +1,5 @@
 import { createDb, eq, schema } from '@avelin/database'
+import { generate } from '@avelin/id'
 import { Database } from '@hocuspocus/extension-database'
 import { Logger } from '@hocuspocus/extension-logger'
 import { Events, Webhook } from '@hocuspocus/extension-webhook'
@@ -10,15 +11,16 @@ import { Doc } from 'yjs'
 import { authClient } from './auth.js'
 import { env } from './env.js'
 
+const SERVER_ID = `avelin-sync-${generate(6)}`
 const PORT = 4100
 
 const db = createDb(ws)
 
 const server = new Hocuspocus({
+  name: SERVER_ID,
   port: PORT,
   async onAuthenticate(ctx) {
     try {
-      console.log('[onAuthenticate] ctx', ctx.requestHeaders)
       const { data, error } = await authClient.getSession({
         fetchOptions: {
           auth: {
@@ -115,9 +117,21 @@ const server = new Hocuspocus({
 const { app } = expressWebsockets(express())
 
 app.ws('/', (websocket, request) => {
-  server.handleConnection(websocket, request)
+  // Add serverId query param to the request URL
+  // We need this because the context is not sent to the onConnect webhook endpoint
+  if (request.url.includes('?')) {
+    request.url = `${request.url}&serverId=${server.configuration.name}`
+  } else {
+    request.url = `${request.url}?serverId=${server.configuration.name}`
+  }
+
+  server.handleConnection(websocket, request, {
+    serverId: server.configuration.name,
+  })
 })
 
 app.listen(PORT, () => {
-  console.log(`Avelin Sync listening on port ${PORT}`)
+  console.log(
+    `Avelin Sync (ID: ${server.configuration.name}) listening on port ${PORT}`,
+  )
 })

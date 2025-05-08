@@ -56,6 +56,7 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
 
       const { event, payload } = data
       const roomId = payload.documentName as string
+      const serverId = payload.requestParameters.serverName as string
 
       switch (event) {
         /*
@@ -77,7 +78,9 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
             })
             .where(eq(schema.rooms.id, roomId))
 
-          return {}
+          return {
+            serverId,
+          }
         }
 
         /*
@@ -155,7 +158,9 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
             console.error(err)
           }
 
-          return {}
+          return {
+            serverId,
+          }
         }
 
         /*
@@ -189,7 +194,9 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
             console.error(err)
           }
 
-          return {}
+          return {
+            serverId,
+          }
         }
 
         /*
