@@ -18,7 +18,6 @@ const db = createDb(ws)
 
 const server = new Hocuspocus({
   name: SERVER_ID,
-  port: PORT,
   async onAuthenticate(ctx) {
     try {
       const { data, error } = await authClient.getSession({
