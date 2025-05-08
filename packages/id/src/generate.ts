@@ -8,6 +8,7 @@ const prefixes = {
   verification: 'verification',
   jwk: 'jwk',
   room: 'room',
+  roomConnection: 'rc',
   waitlistEntry: 'wle',
 }
 

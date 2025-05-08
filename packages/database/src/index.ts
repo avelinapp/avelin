@@ -14,11 +14,13 @@ export const schema = {
   jwks: drizzleSchema.jwks,
   rooms: drizzleSchema.rooms,
   roomParticipants: drizzleSchema.roomParticipants,
+  roomConnections: drizzleSchema.roomConnections,
   usersRelations: drizzleSchema.usersRelations,
   accountsRelations: drizzleSchema.accountsRelations,
   sessionsRelations: drizzleSchema.sessionsRelations,
   roomsRelations: drizzleSchema.roomsRelations,
   roomParticipantsRelations: drizzleSchema.roomParticipantsRelations,
+  roomConnectionsRelations: drizzleSchema.roomConnectionsRelations,
   waitlistEntries: drizzleSchema.waitlistEntries,
   waitlistEntriesRelations: drizzleSchema.waitlistEntriesRelations,
 }

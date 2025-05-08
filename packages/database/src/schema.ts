@@ -31,6 +31,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   sessions: many(sessions),
   createdRooms: many(rooms),
   joinedRooms: many(roomParticipants),
+  roomConnections: many(roomConnections),
 }))
 
 export const accounts = pgTable('accounts', {
@@ -122,6 +123,7 @@ export const roomsRelations = relations(rooms, ({ one, many }) => ({
     references: [users.id],
   }),
   roomParticipants: many(roomParticipants),
+  connections: many(roomConnections),
 }))
 
 export const roomParticipants = pgTable(
@@ -148,13 +150,44 @@ export const roomParticipants = pgTable(
 
 export const roomParticipantsRelations = relations(
   roomParticipants,
-  ({ one }) => ({
+  ({ one, many }) => ({
     user: one(users, {
       fields: [roomParticipants.userId],
       references: [users.id],
     }),
     room: one(rooms, {
       fields: [roomParticipants.roomId],
+      references: [rooms.id],
+    }),
+  }),
+)
+
+export const roomConnections = pgTable('room_connections', {
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => newId('roomConnection')),
+  roomId: text()
+    .notNull()
+    .references(() => rooms.id, { onDelete: 'cascade' }),
+  userId: text()
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  serverId: text().notNull(),
+  connectedAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+  disconnectedAt: timestamp({ withTimezone: true }),
+  isActive: boolean().notNull().default(true),
+  ...timestamps,
+})
+
+export const roomConnectionsRelations = relations(
+  roomConnections,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [roomConnections.userId],
+      references: [users.id],
+    }),
+    room: one(rooms, {
+      fields: [roomConnections.roomId],
       references: [rooms.id],
     }),
   }),

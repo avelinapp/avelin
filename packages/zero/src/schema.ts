@@ -75,6 +75,18 @@ export const schema = createZeroSchema(drizzleSchema, {
       updatedAt: true,
       deletedAt: true,
     },
+    roomConnections: {
+      id: true,
+      roomId: true,
+      userId: true,
+      serverId: true,
+      connectedAt: true,
+      disconnectedAt: true,
+      isActive: true,
+      createdAt: true,
+      updatedAt: true,
+      deletedAt: true,
+    },
     waitlistEntries: false,
   },
   manyToMany: {
