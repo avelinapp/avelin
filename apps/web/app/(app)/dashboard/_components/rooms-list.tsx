@@ -47,6 +47,7 @@ export default function RoomsList() {
   const q = z.query.rooms
     .where('deletedAt', 'IS', null)
     .related('roomParticipants', (q) => q.related('user'))
+    .related('connections')
 
   let [rooms, { type: status }] = useZeroQuery(q)
 
@@ -74,10 +75,10 @@ export default function RoomsList() {
 
   if (roomsView === 'active') {
     rooms = rooms
-      .filter((room) => room.roomParticipants.some((rp) => rp.isConnected))
+      .filter((room) => room.connections.some((rp) => rp.isActive))
       .sort((a, b) => {
-        const x = Math.max(...a.roomParticipants.map((rp) => rp.connectedAt!))
-        const y = Math.max(...b.roomParticipants.map((rp) => rp.connectedAt!))
+        const x = Math.max(...a.connections.map((rp) => rp.connectedAt!))
+        const y = Math.max(...b.connections.map((rp) => rp.connectedAt!))
 
         return x - y
       })
@@ -179,7 +180,7 @@ const CodeRoomListView = ({
         roomParticipants: Array<
           Zero.Schema.RoomParticipant & { user: Zero.Schema.User }
         >
-      }
+      } & { connections: Array<Zero.Schema.RoomConnection> }
   >
 }) => {
   return (
@@ -204,7 +205,7 @@ const CodeRoomListItem = ({
       roomParticipants: Array<
         Zero.Schema.RoomParticipant & { user: Zero.Schema.User }
       >
-    }
+    } & { connections: Array<Zero.Schema.RoomConnection> }
 }) => {
   const router = useRouter()
   const z = useZero()
@@ -226,8 +227,8 @@ const CodeRoomListItem = ({
 
   const users = data.map((rp) => rp.user)
 
-  const isRoomActive = data.some(
-    (rp) => rp.userId !== z.userID && rp.isConnected,
+  const isRoomActive = room.connections.some(
+    (conn) => conn.userId !== z.userID && conn.isActive,
   )
 
   async function handleDeleteRoom() {
