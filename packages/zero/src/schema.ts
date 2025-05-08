@@ -112,6 +112,7 @@ export namespace Zero {
   export namespace Schema {
     export type Room = Row<typeof schema.tables.rooms>
     export type RoomParticipant = Row<typeof schema.tables.roomParticipants>
+    export type RoomConnection = Row<typeof schema.tables.roomConnections>
     export type User = Row<typeof schema.tables.users>
   }
 }
@@ -193,6 +194,16 @@ export const permissions: ReturnType<typeof definePermissions> =
            * (2) they are the room participant - they can delete only themselves
            */
           delete: [canDeleteRoomParticipant, loggedInUserIsRoomParticipant],
+          select: ANYONE_CAN,
+        },
+      },
+      roomConnections: {
+        row: {
+          insert: NOBODY_CAN,
+          update: {
+            preMutation: NOBODY_CAN,
+          },
+          delete: NOBODY_CAN,
           select: ANYONE_CAN,
         },
       },

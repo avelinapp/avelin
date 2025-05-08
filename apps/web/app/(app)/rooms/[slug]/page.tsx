@@ -20,7 +20,7 @@ export default function Page({ params }: { params: Params }) {
   ])
   const z = useZero()
   const q = z.query.rooms.where('slug', 'IS', slug).one()
-  const [room, { type: status }] = useQuery(q)
+  const [room, { type: status }] = useQuery(q, { ttl: '1d' })
   const { isPending: isAuthPending, user, session } = useAuth()
   const { ready, setReady } = useView()
 
