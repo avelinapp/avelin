@@ -49,7 +49,7 @@ export default function RoomsList() {
     .related('roomParticipants', (q) => q.related('user'))
     .related('connections')
 
-  let [rooms, { type: status }] = useZeroQuery(q)
+  let [rooms, { type: status }] = useZeroQuery(q, { ttl: '1d' })
 
   rooms = rooms
     .filter(
@@ -183,12 +183,30 @@ const CodeRoomListView = ({
       } & { connections: Array<Zero.Schema.RoomConnection> }
   >
 }) => {
+  const z = useZero()
+
+  async function preloadRoom(id: string) {
+    const { cleanup, complete } = z.query.rooms
+      .where('id', id)
+      .related('roomParticipants')
+      .preload({ ttl: '1d' })
+
+    await complete
+
+    console.log('Preloaded room', id)
+  }
+
   return (
     <div className="overflow-y-scroll overflow-x-hidden">
       <div className="grid grid-cols-[max-content_max-content_max-content_max-content_minmax(0,_1fr)] gap-y-1">
         {rooms.map((room) => (
           // @ts-ignore
-          <CodeRoomListItem key={room.id} room={room} view={view} />
+          <CodeRoomListItem
+            key={room.id}
+            room={room}
+            view={view}
+            preload={preloadRoom}
+          />
         ))}
       </div>
     </div>
@@ -198,6 +216,7 @@ const CodeRoomListView = ({
 const CodeRoomListItem = ({
   view,
   room,
+  preload,
 }: {
   view: 'active' | 'all' | 'hidden'
   room: Zero.Schema.Room &
@@ -205,7 +224,9 @@ const CodeRoomListItem = ({
       roomParticipants: Array<
         Zero.Schema.RoomParticipant & { user: Zero.Schema.User }
       >
-    } & { connections: Array<Zero.Schema.RoomConnection> }
+      connections: Array<Zero.Schema.RoomConnection>
+    }
+  preload: (id: string) => Promise<void>
 }) => {
   const router = useRouter()
   const z = useZero()
@@ -266,6 +287,7 @@ const CodeRoomListItem = ({
     <div
       className="group/item rounded-md hover:bg-gray-3 px-4 h-12 grid grid-cols-subgrid col-span-5 items-center gap-x-4 w-full"
       onClick={() => router.push(`/rooms/${room.slug}`)}
+      onMouseEnter={() => preload(room.id)}
     >
       <div>
         <Tooltip>
