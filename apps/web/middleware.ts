@@ -29,7 +29,8 @@ export async function middleware(request: NextRequest) {
   if (sessionToken?.includes('.')) {
     sessionToken = sessionToken.split('.')[0]
   }
-  const sessionJwt = request.cookies.get('avelin.session_jwt')?.value
+  let sessionJwt = request.cookies.get('avelin.session_jwt')?.value
+  if (sessionJwt === 'undefined') sessionJwt = undefined
 
   console.log('Session token:', sessionToken)
   console.log('Session JWT:', sessionJwt)
