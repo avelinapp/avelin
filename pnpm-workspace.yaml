@@ -11,7 +11,7 @@ catalog:
   "@typescript-eslint/parser": ^7.1.0
   "@rocicorp/zero": ^0.18.2025040300
   arctic: ^2.0.1
-  better-auth: ^1.2.3
+  better-auth: ^1.2.7
   dotenv: ^16.4.5
   drizzle-kit: ^0.30.1
   drizzle-orm: ^0.38.3
