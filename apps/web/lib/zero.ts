@@ -2,7 +2,6 @@ import { type AuthData, type ZeroSchema, schema } from '@avelin/zero'
 import { Zero } from '@rocicorp/zero'
 import { createUseZero } from '@rocicorp/zero/react'
 import type { Metadata } from 'next'
-import { authClient } from './auth'
 import { env } from './env'
 
 export const useZero = createUseZero<ZeroSchema>()
@@ -16,7 +15,12 @@ export const metadata: Metadata = {
 export function getZeroClient({
   jwt,
   payload,
-}: { jwt?: string; payload?: AuthData }) {
+  refreshJwt,
+}: {
+  jwt?: string
+  payload?: AuthData
+  refreshJwt: () => Promise<string>
+}) {
   if (!client) {
     console.log(
       typeof window !== 'undefined' ? '[CLIENT]' : '[SERVER]',
@@ -33,31 +37,13 @@ export function getZeroClient({
       server: env.NEXT_PUBLIC_ZERO_URL,
       kvStore: 'idb',
       auth: async (error?: 'invalid-token') => {
+        // Refresh JWT if missing or invalid
         if (!jwt || error === 'invalid-token') {
-          console.log('invalid token, refreshing...')
-          const { data, error } = await authClient.getSession()
-
-          if (error) {
-            throw error
-          }
-
-          console.log('[Zero] session data:', data)
-
-          const res = await fetch(`${env.NEXT_PUBLIC_API_URL}/auth/token`, {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${data.session.token}`,
-            },
-          })
-
-          if (!res.ok) {
-            throw new Error('Failed to refresh token')
-          }
-
-          const { jwt } = (await res.json()) as { jwt: string }
-
-          return jwt
+          console.log('[Zero] Auth - invalid token, refreshing...')
+          return await refreshJwt()
         }
+
+        console.log('[Zero] Auth - using existing token:', jwt)
 
         return jwt
       },
@@ -70,6 +56,11 @@ export function getZeroClient({
   }
 
   return client
+}
+
+export function clearZeroClient() {
+  client?.close()
+  client = undefined
 }
 
 export const now = () => Date.now()

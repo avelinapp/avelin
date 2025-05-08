@@ -28,7 +28,8 @@ export async function middleware(request: NextRequest) {
   if (sessionToken?.includes('.')) {
     sessionToken = sessionToken.split('.')[0]
   }
-  const sessionJwt = request.cookies.get('avelin.session_jwt')?.value
+  let sessionJwt = request.cookies.get('avelin.session_jwt')?.value
+  if (sessionJwt === 'undefined') sessionJwt = undefined
 
   console.log('Session token:', sessionToken)
   console.log('Session JWT:', sessionJwt)
@@ -66,8 +67,8 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
 
-    // This value is in seconds
     const jwtExpiration = decodeJwt(jwt.token).exp ?? 0
+    const jwtExpirationDate = new Date(jwtExpiration * 1000)
 
     response.cookies.set('avelin.session_jwt', jwt.token, {
       path: '/',
@@ -75,7 +76,7 @@ export async function middleware(request: NextRequest) {
       secure: env.NODE_ENV === 'production',
       sameSite: 'lax',
       domain: `.${env.NEXT_PUBLIC_BASE_DOMAIN}`,
-      expires: jwtExpiration * 1000, // Convert to milliseconds
+      expires: jwtExpirationDate,
     })
 
     console.timeEnd('middleware')
@@ -134,16 +135,16 @@ export async function middleware(request: NextRequest) {
 
     console.log('JWT payload:', decodeJwt(jwt.token))
 
-    // This value is in seconds
     const jwtExpiration = decodeJwt(jwt.token).exp ?? 0
+    const jwtExpirationDate = new Date(jwtExpiration * 1000)
 
     response.cookies.set('avelin.session_jwt', jwt.token, {
       path: '/',
       httpOnly: false,
-      sameSite: 'lax',
       secure: env.NODE_ENV === 'production',
+      sameSite: 'lax',
       domain: `.${env.NEXT_PUBLIC_BASE_DOMAIN}`,
-      expires: jwtExpiration * 1000, // Convert to milliseconds
+      expires: jwtExpirationDate,
     })
   }
 
