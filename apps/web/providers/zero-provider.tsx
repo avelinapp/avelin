@@ -5,6 +5,7 @@ import type { AuthData } from '@avelin/zero'
 import { ZeroProvider as ZeroProviderPrimitive } from '@rocicorp/zero/react'
 import { decodeJwt } from 'jose/jwt/decode'
 import Cookies from 'js-cookie'
+import { useAuth } from './auth-provider'
 import ViewProvider from './view-provider'
 
 export default function ZeroProvider({
@@ -12,12 +13,11 @@ export default function ZeroProvider({
 }: {
   children: React.ReactNode
 }) {
+  const { refreshJwt } = useAuth()
   const jwt = Cookies.get('avelin.session_jwt')
   const payload = jwt ? (decodeJwt(jwt) as AuthData) : undefined
 
-  console.log('[ZeroProvider] JWT payload:', payload)
-
-  const z = getZeroClient({ jwt, payload })
+  const z = getZeroClient({ jwt, payload, refreshJwt })
 
   z.query.rooms
     .where('deletedAt', 'IS', null)
