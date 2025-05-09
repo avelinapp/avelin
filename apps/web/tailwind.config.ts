@@ -12,7 +12,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['InterVariable'],
+        sans: ['var(--font-inter)'],
         mono: ['var(--font-berkeley-mono)'],
       },
       fontSize: {
