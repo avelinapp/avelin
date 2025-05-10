@@ -12,13 +12,14 @@
     ]
   },
   "include": [
-    "next-env.d.ts",
-    "next.config.mjs",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
     "components/editor/tsdefs/react/index.d.ts.txt",
-    "components/editor/tsdefs/react/jsx-runtime.d.ts.txt"
+    "components/editor/tsdefs/react/jsx-runtime.d.ts.txt",
+    "next-env.d.ts",
+    "next.config.mjs",
+    ".next-dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

@@ -7,17 +7,16 @@ await jiti.import('./lib/env')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  distDir: process.env.NODE_ENV === 'production' ? '.next' : '.next-dev',
   eslint: {
     ignoreDuringBuilds: true,
   },
   // reactStrictMode: false,
-  experimental: {
-    turbo: {
-      rules: {
-        '*.txt': {
-          loaders: ['raw-loader'],
-          as: '*.js',
-        },
+  turbopack: {
+    rules: {
+      '*.txt': {
+        loaders: ['raw-loader'],
+        as: '*.js',
       },
     },
   },
