@@ -118,13 +118,13 @@ export default function RoomsList() {
               setRoomsView(v)
             }}
           >
-            <ToggleGroupItem value="all" className="group">
-              <LayersIcon className="group-hover:text-color-text-primary" />
-              All
+            <ToggleGroupItem value="all">
+              <LayersIcon />
+              <span>All</span>
             </ToggleGroupItem>
-            <ToggleGroupItem className="group" value="active">
-              <CircleDotIcon className="group-hover:text-color-text-primary" />
-              Active
+            <ToggleGroupItem value="active">
+              <CircleDotIcon />
+              <span>Active</span>
             </ToggleGroupItem>
           </ToggleGroup>
         </div>
@@ -151,6 +151,11 @@ export default function RoomsList() {
             size="sm"
             className={cn(dashboardIsEmpty && 'hidden')}
             onClick={handleCreateRoom}
+            tooltip={{
+              content: 'Create a new room',
+              align: 'end',
+              side: 'bottom',
+            }}
           >
             <PlusIcon className="size-fit" />
             Create
@@ -247,6 +252,16 @@ const CodeRoomListItem = ({
   }
 
   const users = data.map((rp) => rp.user)
+
+  // Find the room creator
+  const [creator] = useZeroQuery(
+    z.query.users.where('id', room.creatorId ?? '').one(),
+  )
+
+  // If the creator is not in the list of room participants, add them
+  if (creator && !users.find((u) => u.id === creator.id)) {
+    users.push(creator)
+  }
 
   const isRoomActive = room.connections.some(
     (conn) => conn.userId !== z.userID && conn.isActive,
