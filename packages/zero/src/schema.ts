@@ -164,6 +164,23 @@ export const permissions: ReturnType<typeof definePermissions> =
         ),
       )
 
+    const loggedInUserIsRoomConnector = (
+      authData: AuthData,
+      eb: ExpressionBuilder<Schema, 'roomConnections'>,
+    ) =>
+      eb.and(userIsLoggedIn(authData, eb), eb.cmp('userId', '=', authData.sub))
+
+    const canDeleteRoomConnection = (
+      authDate: AuthData,
+      eb: ExpressionBuilder<Schema, 'roomConnections'>,
+    ) =>
+      eb.and(
+        userIsLoggedIn(authDate, eb),
+        eb.exists('room', (q) =>
+          q.where((eb) => loggedInUserIsCreator(authDate, eb)),
+        ),
+      )
+
     return {
       rooms: {
         row: {
@@ -201,9 +218,9 @@ export const permissions: ReturnType<typeof definePermissions> =
         row: {
           insert: NOBODY_CAN,
           update: {
-            preMutation: NOBODY_CAN,
+            preMutation: [loggedInUserIsRoomConnector],
           },
-          delete: NOBODY_CAN,
+          delete: [canDeleteRoomConnection],
           select: ANYONE_CAN,
         },
       },
