@@ -263,7 +263,11 @@ const CodeRoomListItem = ({
   )
 
   // If the creator is not in the list of room participants, add them
-  if (creator && !users.find((u) => u.id === creator.id)) {
+  if (
+    creator &&
+    creator.id !== 'user_system' &&
+    !users.find((u) => u.id === creator.id)
+  ) {
     users.push(creator)
   }
 
