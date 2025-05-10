@@ -23,7 +23,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       {env.NODE_ENV === 'production' && <OneDollarStatsScript />}
       <body
-        className={`${berkeleyMono.variable} ${inter.variable} font-sans font-settings antialiased bg-color-background h-screen w-screen`}
+        className={`${berkeleyMono.variable} ${inter.variable} font-sans font-settings antialiased bg-color-background h-screen w-screen overflow-y-hidden`}
       >
         <Providers>
           <div className="flex-1 h-full w-full overflow-hidden">{children}</div>
