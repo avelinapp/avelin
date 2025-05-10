@@ -2,7 +2,7 @@ import '@avelin/ui/globals.css'
 import '../globals.css'
 import OneDollarStatsScript from '@/components/misc/one-dollar-stats'
 import { env } from '@/lib/env'
-import { berkeleyMono } from '@/lib/fonts'
+import { berkeleyMono, inter } from '@/lib/fonts'
 import { authCookies } from '@avelin/auth'
 import { Toaster } from '@avelin/ui/sonner'
 import type { Metadata, Viewport } from 'next'
@@ -39,7 +39,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning className="dark">
       {env.NODE_ENV === 'production' && <OneDollarStatsScript />}
       <body
-        className={`${berkeleyMono.variable} font-sans antialiased h-dvh sm:h-screen w-screen flex flex-col`}
+        className={`${berkeleyMono.variable} ${inter.variable} font-sans antialiased h-dvh sm:h-screen w-screen flex flex-col`}
         style={{
           background:
             'radial-gradient(circle, rgba(10,10,10,1) 20%, rgba(5,5,5,1) 40%, rgba(0,0,0,1) 60%)',

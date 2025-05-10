@@ -43,6 +43,7 @@ export type CodeRoomState = {
   isInitialSyncConnect: boolean
   skipRoomAwarenessChangeEvent: boolean
   isInitialZeroQueryMaterialized: boolean
+  didClientDeleteRoom: boolean
   roomTitle?: string
   editorLanguage?: Language['value']
   roomZeroView?: TypedView<Zero.Schema.Room | undefined>
@@ -69,6 +70,7 @@ export type CodeRoomActions = {
     localOnly?: boolean,
   ) => Promise<void>
   setRoomTitle: (title: string, localOnly?: boolean) => Promise<void>
+  toggleRoomDeleted: (value: boolean) => void
 }
 
 export type CodeRoomStore = CodeRoomState & CodeRoomActions
@@ -89,8 +91,11 @@ export const createCodeRoomStore = () =>
     isInitialSyncConnect: false,
     isInitialZeroQueryMaterialized: true,
     skipRoomAwarenessChangeEvent: true,
+    didClientDeleteRoom: false,
     initialize: ({ room, user, session }) => {
       if (!room) throw new Error('Cannot initialize code room without a room')
+
+      if (room.deletedAt !== null) return
 
       set({ room })
       set({
@@ -131,6 +136,10 @@ export const createCodeRoomStore = () =>
 
           if (get().roomTitle !== data.title) {
             set({ roomTitle: data.title ?? undefined })
+          }
+
+          if (data.deletedAt !== null) {
+            get().destroy()
           }
         })
       }
@@ -424,6 +433,9 @@ export const createCodeRoomStore = () =>
       set({
         roomTitle: newTitle,
       })
+    },
+    toggleRoomDeleted: (value) => {
+      set({ didClientDeleteRoom: value })
     },
   }))
 

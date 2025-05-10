@@ -3,26 +3,6 @@
 @tailwind utilities;
 
 :root {
-  .font-sans {
-    font-family: Inter, sans-serif;
-    text-rendering: geometricPrecision;
-    font-feature-settings: "liga", "calt", "cv01", "ss03";
-    /*font-variation-settings: "opsz" 28;*/
-  }
-
-  @supports (font-variation-settings: normal) {
-    .font-sans {
-      font-family: InterVariable, sans-serif;
-    }
-  }
-
-  .text-2xl,
-  .text-3xl {
-    font-variation-settings: "opsz" 28;
-  }
-}
-
-:root {
   * {
     cursor: default;
   }

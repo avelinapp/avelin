@@ -31,13 +31,25 @@ export class Room {
       .where('roomId', '=', id)
       .run()
 
-    await z.mutateBatch(async (tx) => {
-      await tx.rooms.update({ id, deletedAt: now() })
+    const roomConnections = await z.query.roomConnections.where(
+      'roomId',
+      '=',
+      id,
+    )
+
+    z.mutateBatch((tx) => {
+      tx.rooms.update({ id, deletedAt: now() })
 
       for (const rp of roomParticipants) {
-        await tx.roomParticipants.delete({
+        tx.roomParticipants.delete({
           roomId: id,
           userId: rp.userId,
+        })
+      }
+
+      for (const rc of roomConnections) {
+        tx.roomConnections.delete({
+          id: rc.id,
         })
       }
     })

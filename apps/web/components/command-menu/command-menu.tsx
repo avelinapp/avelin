@@ -34,6 +34,7 @@ import {
   ChangeInterfaceThemeCommands,
   ChangeInterfaceThemeRootCommand,
 } from './commands/interface-theme'
+import { RoomDeleteCommand } from './commands/room-delete'
 import {
   EditRoomTitleCommand,
   RoomTitleRootCommand,
@@ -189,6 +190,9 @@ export default function CommandMenu() {
                               goToPage([...pages, 'room-title'])
                             }}
                           />
+                        )}
+                        {isCodeRoom && (
+                          <RoomDeleteCommand closeMenu={closeMenu} />
                         )}
                       </>
                     </CommandGroup>
