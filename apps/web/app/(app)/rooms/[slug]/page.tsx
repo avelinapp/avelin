@@ -8,7 +8,6 @@ import { useQuery } from '@rocicorp/zero/react'
 import { AnimatePresence } from 'motion/react'
 import { use, useEffect, useMemo } from 'react'
 import CodeRoom from './_components/code-room'
-import { DeletedRoom } from './_components/code-room-deleted'
 import { LoadingRoom } from './_components/code-room-loading'
 
 type Params = Promise<{ slug: string }>
@@ -54,16 +53,27 @@ export default function Page({ params }: { params: Params }) {
     }
   }, [room, didClientDeleteRoom])
 
+  const roomStatus =
+    status !== 'complete'
+      ? 'pending'
+      : !room
+        ? 'invalid'
+        : room.deletedAt !== null && !didClientDeleteRoom
+          ? 'deleted'
+          : 'complete'
+
   const content = useMemo(
     () =>
-      !room ? (
-        <LoadingRoom key="room-loading" />
-      ) : room.deletedAt !== null && !didClientDeleteRoom ? (
-        <DeletedRoom key="room-deleted" />
+      roomStatus !== 'complete' && !didClientDeleteRoom ? (
+        <LoadingRoom
+          key="room-loading"
+          status={roomStatus}
+          canCreateRoom={!user?.isAnonymous}
+        />
       ) : (
         <CodeRoom key="room-loaded" />
       ),
-    [room, didClientDeleteRoom],
+    [didClientDeleteRoom, roomStatus, user?.isAnonymous],
   )
 
   return <AnimatePresence mode="wait">{content}</AnimatePresence>
