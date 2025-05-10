@@ -1,8 +1,15 @@
-import { LogoAvelin } from '@avelin/icons'
+import { ChevronLeftIcon, ChevronRightIcon, LogoAvelin } from '@avelin/icons'
+import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
 import { motion } from 'motion/react'
+import Link from 'next/link'
 
-export function LoadingRoom() {
+interface LoadingRoomProps {
+  status: 'pending' | 'invalid' | 'deleted' | 'complete'
+  canCreateRoom?: boolean
+}
+
+export function LoadingRoom({ status, canCreateRoom }: LoadingRoomProps) {
   return (
     <motion.div
       layout
@@ -26,30 +33,50 @@ export function LoadingRoom() {
         className={cn('flex flex-col items-center justify-center gap-6 p-12')}
       >
         <motion.div layout="position">
-          <LogoAvelin className={cn('size-24 animate-pulse')} />
+          <LogoAvelin
+            className={cn('size-24', status === 'pending' && 'animate-pulse')}
+          />
         </motion.div>
         <motion.h1
           layout="position"
-          className="text-4xl font-semibold tracking-tighter w-[600px] text-center"
+          className="text-4xl font-semibold tracking-[-0.02em] w-[600px] text-center"
         >
-          {/* {isPending ? <LoadingHeader /> : error ? <ErrorHeader /> : 'Done.'} */}
-          <LoadingHeader />
+          {status === 'pending' ? (
+            <LoadingHeader />
+          ) : status === 'invalid' ? (
+            <InvalidHeader />
+          ) : status === 'deleted' ? (
+            <DeletedHeader />
+          ) : (
+            ''
+          )}
         </motion.h1>
         <motion.p
           layout="position"
           className="text-color-text-secondary mt-2 w-[600px] text-center"
         >
-          We're loading your code room...
-          {/* {isPending && "We're loading your code room..."} */}
-          {/* {error && "We couldn't find the room you were looking for."} */}
+          {status === 'pending'
+            ? "We're loading your code room..."
+            : status === 'invalid'
+              ? "We couldn't find the room you were looking for."
+              : status === 'deleted'
+                ? 'This code room has been deleted.'
+                : ''}
         </motion.p>
       </motion.div>
-      {/* {error && (
-        <motion.div layout="position">
-          <CreateRoomButton />
-        </motion.div>
+      {(status === 'deleted' || status === 'invalid') && canCreateRoom && (
+        <Button
+          variant="secondary"
+          asChild
+          className="group hover:text-color-text-primary transition-colors flex items-center gap-1.5"
+        >
+          <Link href="/dashboard">
+            <ChevronLeftIcon className="-ml-1 group-hover:-translate-x-0.5 transition-transform" />
+            Dashboard
+          </Link>
+        </Button>
       )}
-      {error && (
+      {status === 'invalid' && (
         <motion.div
           layout="position"
           className="absolute bottom-[-175px]"
@@ -63,7 +90,7 @@ export function LoadingRoom() {
         >
           <Error404 />
         </motion.div>
-      )} */}
+      )}
     </motion.div>
   )
 }
@@ -74,14 +101,20 @@ const LoadingHeader = () => (
   </>
 )
 
-const ErrorHeader = () => (
+const DeletedHeader = () => (
+  <>
+    Be warned, <span className="text-secondary-text">the abyss is ahead.</span>
+  </>
+)
+
+const InvalidHeader = () => (
   <>
     Oops! <span className="text-secondary-text">We ran into an issue.</span>
   </>
 )
 
 const Error404 = () => (
-  <div className="text-[24rem] font-black tracking-tighter bg-gradient-to-b from-gray-4 to-gray-1 text-transparent bg-clip-text ">
+  <div className="text-[24rem] font-black tracking-tighter bg-gradient-to-b from-gray-4 to-gray-1 dark:from-gray-11 dark:to-black text-transparent bg-clip-text">
     404
   </div>
 )
