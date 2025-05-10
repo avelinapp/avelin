@@ -248,7 +248,11 @@ const CodeRoomListItem = ({
   const isRoomCreator = room.creatorId === z.userID
 
   if (view === 'active') {
-    data = data.filter((rp) => rp.isConnected)
+    data = data.filter((rp) =>
+      room.connections.some(
+        (conn) => conn.userId === rp.userId && conn.isActive,
+      ),
+    )
   }
 
   const users = data.map((rp) => rp.user)
