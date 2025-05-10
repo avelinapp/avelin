@@ -15,10 +15,9 @@ type Params = Promise<{ slug: string }>
 
 export default function Page({ params }: { params: Params }) {
   const { slug } = use(params)
-  const [initialize, destroy] = useCodeRoomStore((state) => [
-    state.initialize,
-    state.destroy,
-  ])
+  const [initialize, destroy, didClientDeleteRoom] = useCodeRoomStore(
+    (state) => [state.initialize, state.destroy, state.didClientDeleteRoom],
+  )
   const z = useZero()
   const q = z.query.rooms
     .where('slug', 'IS', slug)
@@ -47,16 +46,24 @@ export default function Page({ params }: { params: Params }) {
     return () => destroy()
   }, [initialize, destroy, status, isAuthPending, user, session])
 
+  useEffect(() => {
+    console.log('ROOM', room)
+    console.log('DID CLIENT DELETE', didClientDeleteRoom)
+    if (room && room?.deletedAt !== null && !didClientDeleteRoom) {
+      console.log('ROOM DLEETED BY SOMEONE ELSE')
+    }
+  }, [room, didClientDeleteRoom])
+
   const content = useMemo(
     () =>
       !room ? (
         <LoadingRoom key="room-loading" />
-      ) : room.deletedAt !== null ? (
+      ) : room.deletedAt !== null && !didClientDeleteRoom ? (
         <DeletedRoom key="room-deleted" />
       ) : (
         <CodeRoom key="room-loaded" />
       ),
-    [room],
+    [room, didClientDeleteRoom],
   )
 
   return <AnimatePresence mode="wait">{content}</AnimatePresence>

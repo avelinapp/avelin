@@ -1,7 +1,9 @@
+import { languages } from '@/lib/constants'
 import { Room } from '@/lib/mutations.zero'
 import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { Trash2Icon } from '@avelin/icons'
 import { CommandItem } from '@avelin/ui/command'
+import { toast } from '@avelin/ui/sonner'
 import { useRouter } from 'next/navigation'
 
 interface RoomDeleteCommandProps {
@@ -9,14 +11,42 @@ interface RoomDeleteCommandProps {
 }
 
 export function RoomDeleteCommand({ closeMenu }: RoomDeleteCommandProps) {
-  const [room] = useCodeRoomStore((state) => [state.room])
+  const [room, roomTitle, editorLanguage, toggleRoomDeleted, destroy] =
+    useCodeRoomStore((state) => [
+      state.room,
+      state.roomTitle,
+      state.editorLanguage,
+      state.toggleRoomDeleted,
+      state.destroy,
+    ])
   const router = useRouter()
 
-  async function deleteRoom() {
+  function deleteRoom() {
     if (!room) return
-    await Room.delete({ id: room.id })
-    router.push('/dashboard')
+
+    Room.delete({ id: room.id })
+    toggleRoomDeleted(true)
+
     closeMenu()
+    router.push('/dashboard')
+
+    destroy()
+
+    toast('Room deleted.', {
+      description: () => {
+        const language = languages.find((l) => l.value === editorLanguage)
+        const Logo = language?.logo
+
+        return (
+          <div className="mt-2 flex items-center gap-2">
+            {Logo && <Logo />}
+            <span className="text-color-text-secondary max-w-full text-ellipsis">
+              {roomTitle ?? 'Untitled room'}
+            </span>
+          </div>
+        )
+      },
+    })
   }
 
   if (!room) return null
