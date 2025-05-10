@@ -146,10 +146,18 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
                 .values({
                   roomId: roomId,
                   userId: user.id,
-                  isConnected: true,
                   lastAccessedAt: new Date(),
                 })
-                .onConflictDoNothing()
+                .onConflictDoUpdate({
+                  target: [
+                    schema.roomParticipants.roomId,
+                    schema.roomParticipants.userId,
+                  ],
+                  set: {
+                    lastAccessedAt: new Date(),
+                  },
+                })
+
               await tx.insert(schema.roomConnections).values({
                 id: roomConnectionId,
                 roomId,
@@ -186,13 +194,27 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
           )
 
           try {
-            await db
-              .update(schema.roomConnections)
-              .set({
-                disconnectedAt: new Date(),
-                isActive: false,
-              })
-              .where(eq(schema.roomConnections.id, roomConnectionId))
+            await db.transaction(async (tx) => {
+              await tx
+                .update(schema.roomParticipants)
+                .set({
+                  lastAccessedAt: new Date(),
+                })
+                .where(
+                  and(
+                    eq(schema.roomParticipants.roomId, roomId),
+                    eq(schema.roomParticipants.userId, user.id),
+                  ),
+                )
+
+              await db
+                .update(schema.roomConnections)
+                .set({
+                  disconnectedAt: new Date(),
+                  isActive: false,
+                })
+                .where(eq(schema.roomConnections.id, roomConnectionId))
+            })
           } catch (err) {
             console.error(
               'Error on case DISCONNECT for sync webhook. Attempted to update room_connections table',
