@@ -26,7 +26,7 @@ import { ToggleGroup, ToggleGroupItem } from '@avelin/ui/toggle-group'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@avelin/ui/tooltip'
 import type { Zero } from '@avelin/zero'
 import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, type Variants, motion } from 'motion/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useMemo } from 'react'
@@ -205,7 +205,6 @@ const CodeRoomListView = ({
     <div className="overflow-y-scroll overflow-x-hidden">
       <div className="grid grid-cols-[max-content_max-content_max-content_max-content_minmax(0,_1fr)] gap-y-1">
         {rooms.map((room) => (
-          // @ts-ignore
           <CodeRoomListItem
             key={room.id}
             room={room}
@@ -332,24 +331,22 @@ const CodeRoomListItem = ({
         {relativeTime(room.lastAccessedAt ?? room.createdAt!)}
       </span>
       <div className="flex items-center gap-2">
-        <UsersListDisplay
-          layoutId={`${room.id}-view-${view}`}
-          users={users}
-          hideAnonymous={view === 'all' ? 'display' : 'none'}
-          maxUsers={4}
-        />
-        <AnimatePresence initial={false}>
+        {view === 'all' && (
+          <UsersListDisplay
+            users={users}
+            hideAnonymous="display"
+            maxUsers={4}
+          />
+        )}
+        {view === 'active' && (
+          <UsersListDisplay users={users} hideAnonymous="none" maxUsers={4} />
+        )}
+        <AnimatePresence initial={false} custom={view === 'active'}>
           {view === 'all' && isRoomActive && (
-            <motion.div
-              className="flex items-center gap-1.5 text-xs font-medium rounded-md bg-green-5 px-2 py-0.5"
-              initial={{ opacity: 0, filter: 'blur(2px)' }}
-              animate={{ opacity: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, filter: 'blur(2px)' }}
-              transition={{ ease: 'easeOut' }}
-            >
+            <div className="flex items-center gap-1.5 text-xs font-medium rounded-md bg-green-5 px-2 py-0.5">
               <ActivityIcon className="size-3" />
               Active
-            </motion.div>
+            </div>
           )}
         </AnimatePresence>
       </div>
