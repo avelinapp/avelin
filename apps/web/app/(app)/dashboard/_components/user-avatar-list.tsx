@@ -17,7 +17,7 @@ type UsersListDisplayProps = {
   layoutId?: string
 }
 
-const UserAvatar = ({
+export const UserAvatar = ({
   user,
   className,
 }: {
