@@ -85,6 +85,8 @@
     /* Deep black */
     /*--color-background: 210deg 11% 4%;*/
     --color-popover-bg: var(--gray-2);
+    --color-text-primary: white;
+
   }
 }
 
