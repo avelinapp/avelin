@@ -4,7 +4,8 @@
   "compilerOptions": {
     "outDir": "dist",
     "module": "ESNext",
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "types": ["undici-types"]
   },
   "include": ["src"],
   "exclude": ["node_modules"]

@@ -16,6 +16,7 @@ import { toast } from '@avelin/ui/sonner'
 import type { Zero } from '@avelin/zero'
 import { HocuspocusProvider, type WebSocketStatus } from '@hocuspocus/provider'
 import type { TypedView } from '@rocicorp/zero'
+import Cookies from 'js-cookie'
 import { createContext, useContext, useState } from 'react'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector'
 import { IndexeddbPersistence } from 'y-indexeddb'
@@ -273,7 +274,7 @@ export const createCodeRoomStore = () =>
           name: room.id,
           document: ydoc,
           awareness: get().awareness,
-          token: session?.token,
+          token: Cookies.get('avelin.session_jwt'),
           preserveConnection: false,
           onStatus: ({ status }) => {
             console.log('Avelin Sync - connection status:', status)

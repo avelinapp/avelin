@@ -1,14 +1,15 @@
+import { validateJwt } from '@avelin/auth/jwt'
 import { type NeonDatabase, createDb, eq, schema } from '@avelin/database'
 import { generate } from '@avelin/id'
 import { Database } from '@hocuspocus/extension-database'
 import { Logger } from '@hocuspocus/extension-logger'
 import { Events, Webhook } from '@hocuspocus/extension-webhook'
 import { Hocuspocus } from '@hocuspocus/server'
+import cookieParser from 'cookie-parser'
 import express from 'express'
 import expressWebsockets from 'express-ws'
 import ws from 'ws'
 import { Doc } from 'yjs'
-import { authClient } from './auth.js'
 import { env } from './env.js'
 import { cleanupActiveConnections, devBootstrap } from './lifecycle.js'
 
@@ -24,32 +25,17 @@ await devBootstrap(SERVER_ID, db)
 
 const server = new Hocuspocus({
   name: SERVER_ID,
-  async onConnect(data) {
-    console.log('[onConnect] Request parameters:', data.requestParameters)
-  },
+  // async onConnect(data) {
+  //   console.log('[onConnect] Request parameters:', data.requestParameters)
+  // },
   async onAuthenticate(ctx) {
     try {
-      const { data, error } = await authClient.getSession({
-        fetchOptions: {
-          auth: {
-            type: 'Bearer',
-            token: ctx.token,
-          },
-        },
-      })
-
-      if (error || !data) {
-        throw new Error(`Invalid session with ID ${ctx.token}`)
-      }
-
-      const { user, session } = data
-
-      return { user, session }
+      return await validateJwt(ctx.token)
     } catch (err) {
-      console.log('err', err)
+      throw new Error(
+        `[ERROR] Authentication failed. Invalid session with ID ${ctx.token}. Reason: ${err}`,
+      )
     }
-
-    return undefined
   },
   extensions: [
     new Webhook({
@@ -123,14 +109,16 @@ const server = new Hocuspocus({
 })
 
 const { app } = expressWebsockets(express())
+app.use(cookieParser())
 
 app.ws('/', (websocket, request) => {
+  const token = request.cookies['avelin.session_jwt'] as string | undefined
   // Add serverId query param to the request URL
   // We need this because the context is not sent to the onConnect webhook endpoint
   if (request.url.includes('?')) {
-    request.url = `${request.url}&serverId=${server.configuration.name}`
+    request.url = `${request.url}&serverId=${server.configuration.name}&token=${token}`
   } else {
-    request.url = `${request.url}?serverId=${server.configuration.name}`
+    request.url = `${request.url}?serverId=${server.configuration.name}&token=${token}`
   }
 
   server.handleConnection(websocket, request, {

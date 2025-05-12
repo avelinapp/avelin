@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { auth, authCookies } from '@avelin/auth'
+import { type AuthJWTPayload, validateJwt } from '@avelin/auth/jwt'
 import { type User, and, db, eq, schema, sql } from '@avelin/database'
 import { newId } from '@avelin/id'
 import { readableStreamToArrayBuffer } from 'bun'
@@ -107,34 +108,38 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
             })
             .filter((c) => c !== undefined)
 
-          const sessionCookie = cookies.find(
-            (c) => c.key === authCookies.sessionToken.name,
+          const sessionToken = cookies.find(
+            (c) => c.key === 'avelin.session_jwt',
           )
 
-          if (!sessionCookie) {
-            console.log('Session cookie not found')
+          if (!sessionToken) {
+            console.log('Session token not found')
             return c.error(401, {
-              error: '[connect webhook] Session cookie not found',
+              error: '[connect webhook] Session token cookie not found',
             })
           }
 
-          const data = await auth.api.getSession({
-            headers: payload.requestHeaders,
-          })
+          // const data = await auth.api.getSession({
+          //   headers: payload.requestHeaders,
+          // })
+          let auth: AuthJWTPayload
 
-          if (!data) {
-            console.log('Invalid session ID', sessionCookie.value)
+          try {
+            auth = await validateJwt(sessionToken.value)
+          } catch (error) {
+            console.log('Invalid session JWT', error)
             return c.error(401, {
-              error: `[connect webhook] invalid session token: ${sessionCookie.value}`,
+              error: `[connect webhook] invalid session jwt: ${error}`,
             })
           }
 
-          const { user } = data
           const roomConnectionId = newId('roomConnection')
+
+          console.log('auth:', auth)
 
           console.log(
             '[Sync] onConnect - user:',
-            user.id,
+            auth.id,
             'serverId:',
             serverId,
           )
@@ -145,7 +150,7 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
                 .insert(schema.roomParticipants)
                 .values({
                   roomId: roomId,
-                  userId: user.id,
+                  userId: auth.id,
                   lastAccessedAt: new Date(),
                 })
                 .onConflictDoUpdate({
@@ -161,7 +166,7 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
               await tx.insert(schema.roomConnections).values({
                 id: roomConnectionId,
                 roomId,
-                userId: user.id,
+                userId: auth.id,
                 serverId,
               })
             })
@@ -183,12 +188,12 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
          * We use this to update the `room_participants` table.
          */
         case 'disconnect': {
-          const user = payload.context.user as User
+          const auth = payload.context as AuthJWTPayload
           const roomConnectionId = payload.context.roomConnectionId as string
 
           console.log(
             '[Sync] onDisconnect - user:',
-            user.id,
+            auth.id,
             'roomConnectionId:',
             roomConnectionId,
           )
@@ -203,7 +208,7 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
                 .where(
                   and(
                     eq(schema.roomParticipants.roomId, roomId),
-                    eq(schema.roomParticipants.userId, user.id),
+                    eq(schema.roomParticipants.userId, auth.id),
                   ),
                 )
 
