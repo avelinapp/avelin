@@ -30,7 +30,7 @@ const server = new Hocuspocus({
   // },
   async onAuthenticate(ctx) {
     try {
-      return await validateJwt(ctx.token)
+      return await validateJwt(ctx.token, `${env.API_URL}/auth/jwks`)
     } catch (err) {
       throw new Error(
         `[ERROR] Authentication failed. Invalid session with ID ${ctx.token}. Reason: ${err}`,
