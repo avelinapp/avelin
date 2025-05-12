@@ -52,7 +52,16 @@ export const RoomListItem = ({
 
   const LanguageIcon = language.logo
 
-  const participants = room.roomParticipants.map((rp) => rp.user)
+  const participants = room.roomParticipants
+    .map((rp) => ({
+      ...rp.user,
+      lastAccessedAt: rp.lastAccessedAt,
+    }))
+    .sort((a, b) => {
+      const x = a.lastAccessedAt ?? 0
+      const y = b.lastAccessedAt ?? 0
+      return y - x
+    })
 
   const activeParticipants = participants.filter((u) =>
     room.connections.some((conn) => conn.userId === u.id && conn.isActive),
@@ -72,7 +81,7 @@ export const RoomListItem = ({
     creator.id !== 'user_system' &&
     !participants.find((u) => u.id === creator.id)
   ) {
-    participants.push(creator)
+    participants.push({ ...creator, lastAccessedAt: room.createdAt })
   }
 
   async function handleDeleteRoom() {
