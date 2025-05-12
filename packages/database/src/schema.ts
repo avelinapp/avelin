@@ -137,12 +137,6 @@ export const roomParticipants = pgTable(
       .references(() => users.id, { onDelete: 'cascade' }),
     /* This is either the last join date (if the user is still in the room) or the last leave date (if the user left the room). */
     lastAccessedAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
-    isConnected: boolean().notNull().default(false),
-    connectedAt: timestamp({ withTimezone: true }),
-    disconnectedAt: timestamp({ withTimezone: true }),
-    /* The number of active sessions that this user has in the room. */
-    connectionCount: integer().notNull().default(0),
-    /* createdAt holds to the initial join date. */
     ...timestamps,
   },
   (table) => [primaryKey({ columns: [table.roomId, table.userId] })],
