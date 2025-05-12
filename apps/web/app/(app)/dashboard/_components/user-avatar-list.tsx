@@ -28,7 +28,7 @@ export const UserAvatar = ({
     <Avatar
       // key={user.id}
       className={cn(
-        'h-6 w-6 text-[11px] font-medium drop-shadow-sm border-[1.5px] border-white dark:border-color-background-2 text-primary-text',
+        'h-6 w-6 text-[11px] font-medium drop-shadow-sm border-[0.75px] border-white dark:border-color-background-2 text-primary-text',
         (user.isAnonymous || !user.picture) && 'bg-gray-11',
         className,
       )}
@@ -119,7 +119,7 @@ export const UsersListDisplay = ({
                 ease: 'easeOut',
               }}
             >
-              <div className="h-6 w-6 leading-none tabular-nums border-[1.5px] border-white dark:border-color-background-2 rounded-full z-10 font-medium -ml-2.5 bg-gray-11 flex items-center justify-center text-color-background">
+              <div className="h-6 w-6 leading-none tabular-nums border-[0.75px] border-white dark:border-color-background-2 rounded-full z-10 font-medium -ml-2.5 bg-gray-11 flex items-center justify-center text-color-background">
                 <span
                   className={cn(
                     remainingUsersCount < 10 ? 'text-[11px]' : 'text-[9px]',

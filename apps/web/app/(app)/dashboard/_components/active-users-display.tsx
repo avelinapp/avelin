@@ -27,9 +27,9 @@ export function ActiveUsersDisplay({ users }: ActiveUsersDisplayProps) {
   )
 
   return (
-    <HoverCard openDelay={500} closeDelay={500}>
+    <HoverCard openDelay={500} closeDelay={200}>
       <HoverCardTrigger asChild>
-        <div className="h-8 py-1 px-2 flex items-center rounded-lg border-1 border-green-8 hover:brightness-[1.20] data-[state=open]:brightness-[1.20] transition-[filter]">
+        <div className="dark:hover:brightness-[1.20] dark:data-[state=open]:brightness-[1.20] hover:brightness-[0.8] data-[state=open]:brightness-[0.8] transition-[filter]">
           <UsersListDisplay users={users} hideAnonymous="none" maxUsers={4} />
         </div>
       </HoverCardTrigger>
