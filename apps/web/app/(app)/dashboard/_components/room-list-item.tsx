@@ -7,19 +7,11 @@ import { relativeTime } from '@/lib/utils'
 import { useZero } from '@/lib/zero'
 import { ActivityIcon, CopyIcon, LinkIcon, Trash2Icon } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
+import { cn } from '@avelin/ui/cn'
 import {
   ContextMenu,
-  ContextMenuCheckboxItem,
   ContextMenuContent,
   ContextMenuItem,
-  ContextMenuLabel,
-  ContextMenuRadioGroup,
-  ContextMenuRadioItem,
-  ContextMenuSeparator,
-  ContextMenuShortcut,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from '@avelin/ui/context-menu'
 import { useCopyToClipboard } from '@avelin/ui/hooks'
@@ -30,13 +22,9 @@ import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
 import { useRouter } from 'next/navigation'
 import { useMemo } from 'react'
 import { ActiveUsersDisplay } from './active-users-display'
-import { UserAvatar, UsersListDisplay } from './user-avatar-list'
+import { UsersListDisplay } from './user-avatar-list'
 
-export const RoomListItem = ({
-  view,
-  room,
-  preload,
-}: {
+type RoomListItemProps = {
   view: 'active' | 'all' | 'hidden'
   room: Zero.Schema.Room &
     Pick<Zero.Schema.RoomParticipant, 'lastAccessedAt'> & {
@@ -46,7 +34,15 @@ export const RoomListItem = ({
       connections: Array<Zero.Schema.RoomConnection>
     }
   preload: (id: string) => Promise<void>
-}) => {
+} & React.ComponentProps<'div'>
+
+export const RoomListItem = ({
+  view,
+  room,
+  preload,
+  className,
+  ...props
+}: RoomListItemProps) => {
   const router = useRouter()
   const z = useZero()
 
@@ -114,9 +110,14 @@ export const RoomListItem = ({
     <ContextMenu>
       <ContextMenuTrigger asChild>
         <div
-          className="group/item rounded-md hover:bg-gray-3 px-4 h-12 flex items-center gap-x-4 w-full justify-between data-[state=open]:bg-gray-3"
+          className={cn(
+            'group/item px-4 h-12 flex items-center rounded-md gap-x-4 w-full justify-between border border-transparent data-[state=open]:bg-gray-2 data-[selected=true]:bg-gray-2 data-[keyboard-selected=true]:border-color-border-subtle outline-none',
+            className,
+          )}
           onClick={() => router.push(`/rooms/${room.slug}`)}
           onMouseEnter={() => preload(room.id)}
+          onFocus={() => preload(room.id)}
+          {...props}
         >
           <div className="flex items-center gap-4">
             <div>

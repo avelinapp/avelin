@@ -116,6 +116,14 @@ function __EditorTextArea({ className }: EditorProps) {
           keybinding: KeyMod.CtrlCmd | KeyMod.Shift | KeyCode.KeyD,
           command: null,
         },
+        {
+          keybinding: KeyMod.CtrlCmd | KeyCode.BracketLeft,
+          command: null,
+        },
+        {
+          keybinding: KeyMod.CtrlCmd | KeyCode.BracketRight,
+          command: null,
+        },
       ])
 
       setEditorMounted(true)
