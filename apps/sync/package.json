@@ -17,6 +17,7 @@
     "@hocuspocus/server": "3.1.0",
     "@t3-oss/env-core": "^0.11.1",
     "bufferutil": "^4.0.8",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",
     "express": "^5.0.1",
     "express-ws": "^5.0.2",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@avelin/typescript-config": "workspace:*",
+    "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",
     "@types/express-ws": "^3.0.5",
     "@types/node": "^20",
