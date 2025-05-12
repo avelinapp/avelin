@@ -15,6 +15,10 @@
     "./client": {
       "types": "./src/client.ts",
       "default": "./dist/client.js"
+    },
+    "./jwt": {
+      "types": "./src/jwt.ts",
+      "default": "./dist/jwt.js"
     }
   },
   "dependencies": {
@@ -22,6 +26,7 @@
     "@avelin/id": "workspace:*",
     "@avelin/storage": "workspace:*",
     "better-auth": "catalog:",
+    "jose": "^5.9.6",
     "react": "^19"
   },
   "devDependencies": {
