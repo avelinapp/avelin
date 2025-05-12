@@ -1,4 +1,3 @@
-import { auth } from '@avelin/auth'
 import {
   BashLogo,
   GraphQLLogo,

@@ -1,5 +1,5 @@
-import RoomsList from './rooms-list'
+import RoomList from './room-list'
 
 export default function Dashboard() {
-  return <RoomsList />
+  return <RoomList />
 }

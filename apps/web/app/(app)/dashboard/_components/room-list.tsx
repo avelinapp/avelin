@@ -1,39 +1,27 @@
 'use client'
 
 import { useRerender } from '@/hooks/use-rerender'
-import { type Language, languages } from '@/lib/constants'
-import { env } from '@/lib/env'
 import { Room } from '@/lib/mutations.zero'
-import { relativeTime } from '@/lib/utils'
 import { useZero } from '@/lib/zero'
 import { useView } from '@/providers/view-provider'
 import {
-  ActivityIcon,
   CircleDotIcon,
-  CopyIcon,
   LayersIcon,
   LayoutGridIcon,
   LayoutListIcon,
-  LinkIcon,
   PlusIcon,
-  TrashIcon,
 } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
-import { useCopyToClipboard } from '@avelin/ui/hooks'
-import { toast } from '@avelin/ui/sonner'
 import { ToggleGroup, ToggleGroupItem } from '@avelin/ui/toggle-group'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@avelin/ui/tooltip'
 import type { Zero } from '@avelin/zero'
 import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
-import { AnimatePresence, motion } from 'motion/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { useMemo } from 'react'
 import EmptyRooms from './empty-rooms'
-import { UsersListDisplay } from './user-avatar-list'
+import { RoomListItem } from './room-list-item'
 
-export default function RoomsList() {
+export default function RoomList() {
   const router = useRouter()
   useRerender({ frequency: 1000 * 60 })
   const { ready, setReady } = useView()
@@ -203,176 +191,15 @@ const CodeRoomListView = ({
 
   return (
     <div className="overflow-y-scroll overflow-x-hidden">
-      <div className="grid grid-cols-[max-content_max-content_max-content_max-content_minmax(0,_1fr)] gap-y-1">
+      <div className="flex flex-col gap-y-1">
         {rooms.map((room) => (
-          // @ts-ignore
-          <CodeRoomListItem
+          <RoomListItem
             key={room.id}
             room={room}
             view={view}
             preload={preloadRoom}
           />
         ))}
-      </div>
-    </div>
-  )
-}
-
-const CodeRoomListItem = ({
-  view,
-  room,
-  preload,
-}: {
-  view: 'active' | 'all' | 'hidden'
-  room: Zero.Schema.Room &
-    Pick<Zero.Schema.RoomParticipant, 'lastAccessedAt'> & {
-      roomParticipants: Array<
-        Zero.Schema.RoomParticipant & { user: Zero.Schema.User }
-      >
-      connections: Array<Zero.Schema.RoomConnection>
-    }
-  preload: (id: string) => Promise<void>
-}) => {
-  const router = useRouter()
-  const z = useZero()
-
-  const language = languages.find(
-    (l) => l.value === (room.editorLanguage as Language['value']),
-  )!
-
-  const LanguageIcon = language.logo
-
-  // let data = room.roomParticipants.filter((rp) => !rp.user.isAnonymous)
-  let data = room.roomParticipants
-
-  const isRoomCreator = room.creatorId === z.userID
-
-  if (view === 'active') {
-    data = data.filter((rp) => rp.isConnected)
-  }
-
-  const users = data.map((rp) => rp.user)
-
-  // Find the room creator
-  const [creator] = useZeroQuery(
-    z.query.users.where('id', room.creatorId ?? '').one(),
-  )
-
-  // If the creator is not in the list of room participants, add them
-  if (creator && !users.find((u) => u.id === creator.id)) {
-    users.push(creator)
-  }
-
-  const isRoomActive = room.connections.some(
-    (conn) => conn.userId !== z.userID && conn.isActive,
-  )
-
-  async function handleDeleteRoom() {
-    await Room.delete({ id: room.id })
-  }
-
-  const [, copy] = useCopyToClipboard()
-
-  const roomUrl = useMemo(
-    () => `${env.NEXT_PUBLIC_APP_URL}/${room.slug}`,
-    [room.slug],
-  )
-
-  function handleCopy(notify?: boolean) {
-    copy(roomUrl)
-
-    if (notify) {
-      toast('Room link copied to your clipboard - share it!', {
-        description: roomUrl,
-        action: (
-          <Button
-            size="xs"
-            variant="ghost"
-            className="p-1.5 h-fit rounded-md ml-auto"
-            onClick={() => handleCopy(false)}
-          >
-            <CopyIcon className="size-4 shrink-0" />
-          </Button>
-        ),
-      })
-    }
-  }
-
-  return (
-    <div
-      className="group/item rounded-md hover:bg-gray-3 px-4 h-12 grid grid-cols-subgrid col-span-5 items-center gap-x-4 w-full"
-      onClick={() => router.push(`/rooms/${room.slug}`)}
-      onMouseEnter={() => preload(room.id)}
-    >
-      <div>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            {LanguageIcon && <LanguageIcon className="size-5 shrink-0" />}
-          </TooltipTrigger>
-          <TooltipContent
-            className="text-xs border-color-border-subtle"
-            side="top"
-          >
-            {language.name}
-          </TooltipContent>
-        </Tooltip>
-      </div>
-      <span className="font-[450] tracking-[-0.01575em]">
-        {room.title && room.title.length >= 1 ? room.title : 'Untitled room'}
-      </span>
-      <span className="text-color-text-quaternary ml-4">
-        {relativeTime(room.lastAccessedAt ?? room.createdAt!)}
-      </span>
-      <div className="flex items-center gap-2">
-        <UsersListDisplay
-          layoutId={`${room.id}-view-${view}`}
-          users={users}
-          hideAnonymous={view === 'all' ? 'display' : 'none'}
-          maxUsers={4}
-        />
-        <AnimatePresence initial={false}>
-          {view === 'all' && isRoomActive && (
-            <motion.div
-              className="flex items-center gap-1.5 text-xs font-medium rounded-md bg-green-5 px-2 py-0.5"
-              initial={{ opacity: 0, filter: 'blur(2px)' }}
-              animate={{ opacity: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, filter: 'blur(2px)' }}
-              transition={{ ease: 'easeOut' }}
-            >
-              <ActivityIcon className="size-3" />
-              Active
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-      <div className="justify-self-end hidden group-hover/item:flex items-center gap-1 z-10">
-        <Button
-          size="xs"
-          variant="outline"
-          tooltip={{
-            content: 'Copy URL',
-          }}
-          onClick={(e) => {
-            e.stopPropagation()
-            handleCopy(true)
-          }}
-        >
-          <LinkIcon className="size-fit" />
-        </Button>
-        <Button
-          size="xs"
-          variant="destructive"
-          tooltip={{
-            content: 'Delete code room',
-          }}
-          disabled={!isRoomCreator}
-          onClick={(e) => {
-            e.stopPropagation()
-            handleDeleteRoom()
-          }}
-        >
-          <TrashIcon className="size-4 shrink-0 dark:text-gray-12 text-primary-text" />
-        </Button>
       </div>
     </div>
   )
