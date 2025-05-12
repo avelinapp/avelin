@@ -72,8 +72,8 @@ export function MyAccountDropdown({ user }: { user: User }) {
           <Avatar
             className={cn(
               'size-7 shrink-0  transition-all',
-              'hover:brightness-90 group-data-[state=open]:brightness-90',
-              'dark:hover:brightness-110 dark:group-data-[state=open]:brightness-110',
+              'hover:brightness-[0.8] group-data-[state=open]:brightness-[0.8]',
+              'dark:hover:brightness-[1.2] dark:group-data-[state=open]:brightness-[1.2]',
             )}
           >
             <AvatarImage src={user?.image ?? undefined} />
