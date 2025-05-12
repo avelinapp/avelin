@@ -37,6 +37,8 @@
     "./hooks": "./src/hooks/index.ts",
     "./suspense": "./src/components/suspense/lazy-suspense.tsx",
     "./fade-in-container": "./src/components/ui/fade-in-container.tsx",
+    "./hooks/use-input-modality": "./src/hooks/use-input-modality.tsx",
+    "./hooks/use-input-modality-ref": "./src/hooks/use-input-modality-ref.tsx",
     "./colors": "./src/colors/index.ts"
   },
   "devDependencies": {
