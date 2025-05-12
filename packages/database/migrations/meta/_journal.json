@@ -176,6 +176,13 @@
       "when": 1746715320301,
       "tag": "0024_room_connections-rename-column-serverSessionId-to-serverId",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1747064782481,
+      "tag": "0025_room_participants-drop-connection-related-columns",
+      "breakpoints": true
     }
   ]
 }
