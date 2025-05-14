@@ -3,6 +3,7 @@
 import { authClient } from '@/lib/auth'
 import { LOGOUT_ACTION_TOAST_ID } from '@/lib/constants'
 import { env } from '@/lib/env'
+import posthog from '@/lib/posthog'
 import { preferencesComingSoonToast } from '@/lib/toasts'
 import type { User } from '@avelin/auth'
 import {
@@ -24,10 +25,14 @@ import {
 import { toast } from '@avelin/ui/sonner'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation'
+import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { useState } from 'react'
 
 export function MyAccountDropdown({ user }: { user: User }) {
   const router = useRouter()
+  const FF_fixedJwtClearBehaviourOnSignout = useFeatureFlagEnabled(
+    'fixed-jwt-clear-behaviour-on-signout',
+  )
 
   function handleDashboardClick() {
     router.push('/dashboard')
@@ -38,11 +43,15 @@ export function MyAccountDropdown({ user }: { user: User }) {
   async function handleLogout() {
     await authClient.signOut({
       fetchOptions: {
-        onResponse: () => {
-          Cookies.remove('avelin.session_jwt', {
-            path: '/',
-            domain: `.${env.NEXT_PUBLIC_BASE_DOMAIN}`,
-          })
+        onResponse: async () => {
+          if (FF_fixedJwtClearBehaviourOnSignout) {
+            Cookies.remove('avelin.session_jwt', {
+              path: '/',
+              domain: `.${env.NEXT_PUBLIC_BASE_DOMAIN}`,
+            })
+          } else {
+            Cookies.remove('avelin.session_jwt')
+          }
         },
         onSuccess: () => {
           toast('Logged out.', {
