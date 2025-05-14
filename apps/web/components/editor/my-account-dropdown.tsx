@@ -3,7 +3,6 @@
 import { authClient } from '@/lib/auth'
 import { LOGOUT_ACTION_TOAST_ID } from '@/lib/constants'
 import { env } from '@/lib/env'
-import posthog from '@/lib/posthog'
 import { preferencesComingSoonToast } from '@/lib/toasts'
 import type { User } from '@avelin/auth'
 import {
@@ -43,7 +42,7 @@ export function MyAccountDropdown({ user }: { user: User }) {
   async function handleLogout() {
     await authClient.signOut({
       fetchOptions: {
-        onResponse: async () => {
+        onResponse: () => {
           if (FF_fixedJwtClearBehaviourOnSignout) {
             Cookies.remove('avelin.session_jwt', {
               path: '/',
