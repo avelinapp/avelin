@@ -2,9 +2,9 @@
 
 import { authClient } from '@/lib/auth'
 import { LOGOUT_ACTION_TOAST_ID } from '@/lib/constants'
+import { env } from '@/lib/env'
 import { preferencesComingSoonToast } from '@/lib/toasts'
 import type { User } from '@avelin/auth'
-import type { Auth } from '@avelin/database'
 import {
   HouseIcon,
   KeyRoundIcon,
@@ -39,7 +39,10 @@ export function MyAccountDropdown({ user }: { user: User }) {
     await authClient.signOut({
       fetchOptions: {
         onResponse: () => {
-          Cookies.remove('avelin.session_jwt')
+          Cookies.remove('avelin.session_jwt', {
+            path: '/',
+            domain: `.${env.NEXT_PUBLIC_BASE_DOMAIN}`,
+          })
         },
         onSuccess: () => {
           toast('Logged out.', {
