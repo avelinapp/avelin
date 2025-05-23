@@ -63,30 +63,6 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
 
       switch (event) {
         /*
-         * Handle changes to the document.
-         * We use this for syncing the room title to the database.
-         */
-        case 'change': {
-          console.log('change event webhook')
-          const title = payload.document.meta.title ?? ''
-          const language = payload.document.editorLanguage ?? 'plaintext'
-
-          console.log(payload)
-
-          await db
-            .update(schema.rooms)
-            .set({
-              title,
-              editorLanguage: language,
-            })
-            .where(eq(schema.rooms.id, roomId))
-
-          return {
-            serverId,
-          }
-        }
-
-        /*
          * Handle connection events.
          * We use this to update the `room_participants` table.
          */
