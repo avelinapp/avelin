@@ -59,7 +59,7 @@ const server = new Hocuspocus({
           }
         },
       },
-      events: [Events.onConnect, Events.onDisconnect, Events.onChange],
+      events: [Events.onConnect, Events.onDisconnect],
     }),
     new Logger(),
     new Database({
