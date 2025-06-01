@@ -51,7 +51,7 @@ export function Header() {
         </span>
       </h1>
       <div className="flex flex-col items-center gap-4 text-base sm:text-xl text-color-text-quaternary">
-        <p>Collaborative code editor for the web.</p>
+        <p>The collaborative brainstorming tool for code.</p>
         <div className="flex items-center gap-1 text-color-text-quaternary ">
           {socials.map(({ name, icon, url }) => {
             const Icon = icon
