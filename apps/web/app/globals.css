@@ -25,7 +25,7 @@
   body {
     @apply text-color-text-primary;
   }
-  
+
   /* Custom scrollbar styling. Thanks @pranathiperii. */
   ::-webkit-scrollbar {
     width: 5px;
@@ -42,6 +42,26 @@
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
   }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  * {
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
 
 @layer utilities {
@@ -51,7 +71,6 @@
 }
 
 @layer utilities {
-
   /* This utility extends the hover/click area on all sides */
   .hover-expand {
     position: relative;
