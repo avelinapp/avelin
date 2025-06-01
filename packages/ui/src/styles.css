@@ -1,19 +1,16 @@
-@import 'hsl-radix-colors/gray.css' layer(base);
+@import "hsl-radix-colors/gray.css" layer(base);
 
-@import 'hsl-radix-colors/red.css' layer(base);
-@import 'hsl-radix-colors/orange.css' layer(base);
-@import 'hsl-radix-colors/green.css' layer(base);
-@import 'hsl-radix-colors/blue.css' layer(base);
-@import 'hsl-radix-colors/indigo.css' layer(base);
-@import 'hsl-radix-colors/purple.css' layer(base);
-@import 'hsl-radix-colors/pink.css' layer(base);
+@import "hsl-radix-colors/red.css" layer(base);
+@import "hsl-radix-colors/orange.css" layer(base);
+@import "hsl-radix-colors/green.css" layer(base);
+@import "hsl-radix-colors/blue.css" layer(base);
+@import "hsl-radix-colors/indigo.css" layer(base);
+@import "hsl-radix-colors/purple.css" layer(base);
+@import "hsl-radix-colors/pink.css" layer(base);
 
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin 'tailwindcss-animate';
-@plugin './tw/plugins/hover-expand';
-
-@custom-variant dark (&:is(.dark *));
 
 @custom-variant dark (&:is(.dark *));
 
@@ -153,9 +150,8 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
-  --font-sans:
-    var(--font-sans), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -279,7 +275,6 @@
     /*--color-background: 210deg 11% 4%;*/
     --color-popover-bg: var(--gray-2);
     --color-text-primary: hsl(0deg, 0%, 100%);
-
   }
 }
 

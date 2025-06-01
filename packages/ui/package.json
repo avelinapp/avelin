@@ -5,10 +5,11 @@
   "scripts": {
     "ui:init": "pnpm dlx shadcn@latest init",
     "ui:add": "pnpm dlx shadcn@latest add",
-    "dev": "tsc --watch",
-    "build": "tsc"
+    "dev:styles": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch",
+    "dev:components": "tsc --watch",
+    "build:styles": "tailwindcss -i ./src/styles.css -o ./dist/index.css",
+    "build:components": "tsc"
   },
-  "files": ["tailwind.config.ts", "postcss.config.mjs", "globals.css"],
   "exports": {
     "./animated-size-container": "./src/components/ui/animated-size-container.tsx",
     "./avatar": "./src/components/ui/avatar.tsx",
@@ -30,23 +31,20 @@
     "./toggle": "./src/components/ui/toggle.tsx",
     "./toggle-group": "./src/components/ui/toggle-group.tsx",
     "./tooltip": "./src/components/ui/tooltip.tsx",
-    "./globals.css": "./src/globals.css",
-    "./tailwind": "./tailwind.config.ts",
-    "./postcss": "./postcss.config.mjs",
     "./cn": "./src/utils/cn.ts",
     "./hooks": "./src/hooks/index.ts",
     "./suspense": "./src/components/suspense/lazy-suspense.tsx",
     "./fade-in-container": "./src/components/ui/fade-in-container.tsx",
     "./hooks/use-input-modality": "./src/hooks/use-input-modality.tsx",
     "./hooks/use-input-modality-ref": "./src/hooks/use-input-modality-ref.tsx",
-    "./colors": "./src/colors/index.ts"
+    "./colors": "./src/colors/index.ts",
+    "./styles.css": "./dist/index.css"
   },
   "devDependencies": {
     "@avelin/typescript-config": "workspace:*",
-    "@tailwindcss/postcss": "^4.1.8",
+    "@avelin/tailwind-config": "workspace:*",
+    "@tailwindcss/cli": "^4.1.8",
     "@types/react": "catalog:",
-    "postcss": "^8",
-    "postcss-load-config": "^6",
     "tailwindcss": "^4.1.8",
     "typescript": "catalog:"
   },

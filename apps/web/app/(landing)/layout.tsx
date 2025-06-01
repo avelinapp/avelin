@@ -1,4 +1,3 @@
-import '@avelin/ui/globals.css'
 import '../globals.css'
 import OneDollarStatsScript from '@/components/misc/one-dollar-stats'
 import { env } from '@/lib/env'

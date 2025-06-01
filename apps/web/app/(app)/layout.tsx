@@ -1,7 +1,6 @@
 import { berkeleyMono, inter } from '@/lib/fonts'
 import type { Metadata } from 'next'
 import '../globals.css'
-import '@avelin/ui/globals.css'
 import CommandMenu from '@/components/command-menu/command-menu'
 import AvelinDevToolsToolbar from '@/components/devtools/toolbar'
 import OneDollarStatsScript from '@/components/misc/one-dollar-stats'
