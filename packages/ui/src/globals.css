@@ -1,18 +1,211 @@
-@import "hsl-radix-colors/gray.css";
+@import 'hsl-radix-colors/gray.css' layer(base);
 
-@import "hsl-radix-colors/red.css";
-@import "hsl-radix-colors/orange.css";
-@import "hsl-radix-colors/green.css";
-@import "hsl-radix-colors/blue.css";
-@import "hsl-radix-colors/indigo.css";
-@import "hsl-radix-colors/purple.css";
-@import "hsl-radix-colors/pink.css";
+@import 'hsl-radix-colors/red.css' layer(base);
+@import 'hsl-radix-colors/orange.css' layer(base);
+@import 'hsl-radix-colors/green.css' layer(base);
+@import 'hsl-radix-colors/blue.css' layer(base);
+@import 'hsl-radix-colors/indigo.css' layer(base);
+@import 'hsl-radix-colors/purple.css' layer(base);
+@import 'hsl-radix-colors/pink.css' layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-animate';
+@plugin './tw/plugins/hover-expand';
 
 @custom-variant dark (&:is(.dark *));
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-gray-1: hsl(var(--gray-1));
+  --color-gray-2: hsl(var(--gray-2));
+  --color-gray-3: hsl(var(--gray-3));
+  --color-gray-4: hsl(var(--gray-4));
+  --color-gray-5: hsl(var(--gray-5));
+  --color-gray-6: hsl(var(--gray-6));
+  --color-gray-7: hsl(var(--gray-7));
+  --color-gray-8: hsl(var(--gray-8));
+  --color-gray-9: hsl(var(--gray-9));
+  --color-gray-10: hsl(var(--gray-10));
+  --color-gray-11: hsl(var(--gray-11));
+  --color-gray-12: hsl(var(--gray-12));
+
+  --color-red-1: hsl(var(--red-1));
+  --color-red-2: hsl(var(--red-2));
+  --color-red-3: hsl(var(--red-3));
+  --color-red-4: hsl(var(--red-4));
+  --color-red-5: hsl(var(--red-5));
+  --color-red-6: hsl(var(--red-6));
+  --color-red-7: hsl(var(--red-7));
+  --color-red-8: hsl(var(--red-8));
+  --color-red-9: hsl(var(--red-9));
+  --color-red-10: hsl(var(--red-10));
+  --color-red-11: hsl(var(--red-11));
+  --color-red-12: hsl(var(--red-12));
+
+  --color-orange-1: hsl(var(--orange-1));
+  --color-orange-2: hsl(var(--orange-2));
+  --color-orange-3: hsl(var(--orange-3));
+  --color-orange-4: hsl(var(--orange-4));
+  --color-orange-5: hsl(var(--orange-5));
+  --color-orange-6: hsl(var(--orange-6));
+  --color-orange-7: hsl(var(--orange-7));
+  --color-orange-8: hsl(var(--orange-8));
+  --color-orange-9: hsl(var(--orange-9));
+  --color-orange-10: hsl(var(--orange-10));
+  --color-orange-11: hsl(var(--orange-11));
+  --color-orange-12: hsl(var(--orange-12));
+
+  --color-green-1: hsl(var(--green-1));
+  --color-green-2: hsl(var(--green-2));
+  --color-green-3: hsl(var(--green-3));
+  --color-green-4: hsl(var(--green-4));
+  --color-green-5: hsl(var(--green-5));
+  --color-green-6: hsl(var(--green-6));
+  --color-green-7: hsl(var(--green-7));
+  --color-green-8: hsl(var(--green-8));
+  --color-green-9: hsl(var(--green-9));
+  --color-green-10: hsl(var(--green-10));
+  --color-green-11: hsl(var(--green-11));
+  --color-green-12: hsl(var(--green-12));
+
+  --color-blue-1: hsl(var(--blue-1));
+  --color-blue-2: hsl(var(--blue-2));
+  --color-blue-3: hsl(var(--blue-3));
+  --color-blue-4: hsl(var(--blue-4));
+  --color-blue-5: hsl(var(--blue-5));
+  --color-blue-6: hsl(var(--blue-6));
+  --color-blue-7: hsl(var(--blue-7));
+  --color-blue-8: hsl(var(--blue-8));
+  --color-blue-9: hsl(var(--blue-9));
+  --color-blue-10: hsl(var(--blue-10));
+  --color-blue-11: hsl(var(--blue-11));
+  --color-blue-12: hsl(var(--blue-12));
+
+  --color-indigo-1: hsl(var(--indigo-1));
+  --color-indigo-2: hsl(var(--indigo-2));
+  --color-indigo-3: hsl(var(--indigo-3));
+  --color-indigo-4: hsl(var(--indigo-4));
+  --color-indigo-5: hsl(var(--indigo-5));
+  --color-indigo-6: hsl(var(--indigo-6));
+  --color-indigo-7: hsl(var(--indigo-7));
+  --color-indigo-8: hsl(var(--indigo-8));
+  --color-indigo-9: hsl(var(--indigo-9));
+  --color-indigo-10: hsl(var(--indigo-10));
+  --color-indigo-11: hsl(var(--indigo-11));
+  --color-indigo-12: hsl(var(--indigo-12));
+
+  --color-purple-1: hsl(var(--purple-1));
+  --color-purple-2: hsl(var(--purple-2));
+  --color-purple-3: hsl(var(--purple-3));
+  --color-purple-4: hsl(var(--purple-4));
+  --color-purple-5: hsl(var(--purple-5));
+  --color-purple-6: hsl(var(--purple-6));
+  --color-purple-7: hsl(var(--purple-7));
+  --color-purple-8: hsl(var(--purple-8));
+  --color-purple-9: hsl(var(--purple-9));
+  --color-purple-10: hsl(var(--purple-10));
+  --color-purple-11: hsl(var(--purple-11));
+  --color-purple-12: hsl(var(--purple-12));
+
+  --color-pink-1: hsl(var(--pink-1));
+  --color-pink-2: hsl(var(--pink-2));
+  --color-pink-3: hsl(var(--pink-3));
+  --color-pink-4: hsl(var(--pink-4));
+  --color-pink-5: hsl(var(--pink-5));
+  --color-pink-6: hsl(var(--pink-6));
+  --color-pink-7: hsl(var(--pink-7));
+  --color-pink-8: hsl(var(--pink-8));
+  --color-pink-9: hsl(var(--pink-9));
+  --color-pink-10: hsl(var(--pink-10));
+  --color-pink-11: hsl(var(--pink-11));
+  --color-pink-12: hsl(var(--pink-12));
+
+  --color-color-background: hsl(var(--color-background));
+  --color-color-background-2: hsl(var(--color-background-2));
+  --color-color-text-primary: hsl(var(--color-text-primary));
+  --color-color-text-secondary: hsl(var(--color-text-secondary));
+  --color-color-text-tertiary: hsl(var(--color-text-tertiary));
+  --color-color-text-quaternary: hsl(var(--color-text-quaternary));
+  --color-color-border-subtle: hsl(var(--color-border-subtle));
+  --color-color-border: hsl(var(--color-border-normal));
+  --color-color-border-strong: hsl(var(--color-border-strong));
+
+  --color-popover-bg: hsl(var(--color-popover-bg));
+
+  --color-primary-bg: hsl(var(--color-primary-bg));
+  --color-primary-hover: hsl(var(--color-primary-hover));
+  --color-primary-active: hsl(var(--color-primary-active));
+  --color-primary-text: hsl(var(--color-primary-text));
+
+  --color-secondary-bg-subtle: hsl(var(--color-secondary-bg-subtle));
+  --color-secondary-bg: hsl(var(--color-secondary-bg));
+  --color-secondary-hover: hsl(var(--color-secondary-hover));
+  --color-secondary-active: hsl(var(--color-secondary-active));
+  --color-secondary-text: hsl(var(--color-secondary-text));
+
+  --color-destructive-bg: hsl(var(--color-destructive-bg));
+  --color-destructive-hover: hsl(var(--color-destructive-hover));
+  --color-destructive-text: hsl(var(--color-destructive-text));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --font-sans:
+    var(--font-sans), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 @layer base {
   :root {

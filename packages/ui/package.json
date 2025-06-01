@@ -43,11 +43,11 @@
   },
   "devDependencies": {
     "@avelin/typescript-config": "workspace:*",
+    "@tailwindcss/postcss": "^4.1.8",
     "@types/react": "catalog:",
-    "autoprefixer": "^10",
     "postcss": "^8",
     "postcss-load-config": "^6",
-    "tailwindcss": "catalog:",
+    "tailwindcss": "^4.1.8",
     "typescript": "catalog:"
   },
   "dependencies": {
