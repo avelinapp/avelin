@@ -365,6 +365,43 @@ const CodeRoomListView = ({
     [rooms],
   )
 
+  useHotkeys(
+    'd',
+    (e) => {
+      e.preventDefault()
+
+      const roomId = lastElRef.current?.dataset.roomId
+      if (!roomId) return
+
+      const room = rooms.find((r) => r.id === roomId)
+      if (!room) return
+
+      const ids = rooms.map((r) => r.id)
+      const currentIdx = ids.indexOf(roomId)
+      const nextIdx = Math.min(ids.length - 1, currentIdx + 1)
+
+      Room.delete({ id: room.id })
+
+      itemRefs.current[ids[nextIdx]!]?.focus()
+    },
+    { enableOnFormTags: false },
+    [rooms],
+  )
+
+  useHotkeys(
+    'c',
+    async (e) => {
+      e.preventDefault()
+
+      const room = await Room.create()
+      if (!room) return
+      itemRefs.current[room.id]?.focus()
+      router.push(`/rooms/${room.slug}`)
+    },
+    { enableOnFormTags: false },
+    [rooms],
+  )
+
   // If the list changes, clear any stale refs
   useEffect(() => {
     const validIds = new Set(rooms.map((r) => r.id))
