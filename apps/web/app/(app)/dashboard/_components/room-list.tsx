@@ -388,6 +388,20 @@ const CodeRoomListView = ({
     [rooms],
   )
 
+  useHotkeys(
+    'c',
+    async (e) => {
+      e.preventDefault()
+
+      const room = await Room.create()
+      if (!room) return
+      itemRefs.current[room.id]?.focus()
+      router.push(`/rooms/${room.slug}`)
+    },
+    { enableOnFormTags: false },
+    [rooms],
+  )
+
   // If the list changes, clear any stale refs
   useEffect(() => {
     const validIds = new Set(rooms.map((r) => r.id))
