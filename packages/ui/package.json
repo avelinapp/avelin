@@ -67,7 +67,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
-    "hsl-radix-colors": "^1.0.2",
     "lucide-react": "^0.453.0",
     "motion": "catalog:",
     "next": "catalog:",
