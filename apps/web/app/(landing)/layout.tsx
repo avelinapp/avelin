@@ -5,7 +5,7 @@ import { berkeleyMono, inter } from '@/lib/fonts'
 import { authCookies } from '@avelin/auth'
 import { Toaster } from '@avelin/ui/sonner'
 import type { Metadata, Viewport } from 'next'
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
@@ -24,13 +24,12 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const cookiesStore = await cookies()
+  const headersStore = await headers()
 
   const sessionId = cookiesStore.get(authCookies.sessionToken.name)?.value
-  const sessionToken = cookiesStore.get('avelin.session_token')?.value
-  console.log('sessionId', sessionId)
-  console.log('sessionToken', sessionToken)
+  const pathname = headersStore.get('X-Avelin-Path')
 
-  if (sessionId) {
+  if (sessionId && pathname !== '/home') {
     return redirect('/dashboard')
   }
 
