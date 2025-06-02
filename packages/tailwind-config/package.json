@@ -4,12 +4,13 @@
   "private": true,
   "exports": {
     ".": "./shared-styles.css",
+    "./colors": "./colors.css",
     "./postcss": "./postcss.config.js"
   },
   "dependencies": {
     "@radix-ui/colors": "^3.0.0",
-    "hsl-radix-colors": "^1.0.2",
-    "tailwindcss-radix-colors": "^2.1.0"
+    "tailwindcss-radix-colors": "^2.1.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.8",

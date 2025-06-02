@@ -553,9 +553,9 @@ importers:
       '@radix-ui/colors':
         specifier: ^3.0.0
         version: 3.0.0
-      hsl-radix-colors:
-        specifier: ^1.0.2
-        version: 1.0.2(typescript@5.8.3)
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@4.1.8)
       tailwindcss-radix-colors:
         specifier: ^2.1.0
         version: 2.1.0(tailwindcss@4.1.8)
@@ -12198,10 +12198,6 @@ snapshots:
   hsl-radix-colors@1.0.2(typescript@5.7.3):
     dependencies:
       typescript: 5.7.3
-
-  hsl-radix-colors@1.0.2(typescript@5.8.3):
-    dependencies:
-      typescript: 5.8.3
 
   html-void-elements@3.0.0: {}
 
