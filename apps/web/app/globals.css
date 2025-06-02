@@ -1,93 +1,130 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "@avelin/tailwind-config";
+@import "@avelin/ui/styles.css";
 
-:root {
-  * {
-    cursor: default;
-  }
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-berkeley-mono);
+}
 
-  /* Opt the editor out of "forced" default cursor */
-  .monaco-editor,
-  .monaco-editor * {
-    cursor: text;
-  }
+@theme {
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+  --text-base--letter-spacing: -0.01em;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-lg--letter-spacing: -0.01575em;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.75rem;
+  --text-xl--letter-spacing: -0.01575em;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
+  --text-2xl--letter-spacing: -0.01575em;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 2.25rem;
+  --text-3xl--letter-spacing: -0.01575em;
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: 2.5rem;
+  --text-4xl--letter-spacing: -0.02em;
+  --text-5xl: 3rem;
+  --text-5xl--line-height: 1;
+  --text-5xl--letter-spacing: -0.02em;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: 1;
+  --text-6xl--letter-spacing: -0.02em;
+  --text-7xl: 4.5rem;
+  --text-7xl--line-height: 1;
+  --text-7xl--letter-spacing: -0.02em;
+  --text-8xl: 6rem;
+  --text-8xl--line-height: 1;
+  --text-8xl--letter-spacing: -0.02em;
+  --text-9xl: 8rem;
+  --text-9xl--line-height: 1;
+  --text-9xl--letter-spacing: -0.02em;
+}
 
-  /* Opt text-based inputs out of "forced" default cursor */
-  input[type="text"],
-  input[type="password"],
-  input[type="email"],
-  textarea,
-  select {
-    cursor: text;
-  }
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
 
-  body {
-    @apply text-color-text-primary;
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
   }
+}
 
-  /* Custom scrollbar styling. Thanks @pranathiperii. */
-  ::-webkit-scrollbar {
-    width: 5px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--border);
-    border-radius: 5px;
-  }
+@utility flex-full {
+  @apply flex-1 flex flex-col h-full w-full;
+}
 
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
-  }
+@layer utilities {
+  :root {
+    * {
+      cursor: default;
+    }
 
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
+    /* Opt the editor out of "forced" default cursor */
+    .monaco-editor,
+    .monaco-editor * {
+      cursor: text;
+    }
 
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
+    /* Opt text-based inputs out of "forced" default cursor */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    textarea,
+    select {
+      cursor: text;
+    }
 
-  * {
+    body {
+      @apply text-color-text-primary;
+    }
+
+    /* Custom scrollbar styling. Thanks @pranathiperii. */
     ::-webkit-scrollbar {
+      width: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 5px;
+    }
+
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
 
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-}
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
 
-@layer utilities {
-  .flex-full {
-    @apply flex-1 flex flex-col h-full w-full;
-  }
-}
+    * {
+      ::-webkit-scrollbar {
+        display: none;
+      }
 
-@layer utilities {
-  /* This utility extends the hover/click area on all sides */
-  .hover-expand {
-    position: relative;
-    --hover-radius: -10px;
-  }
-
-  .hover-expand::before {
-    content: "";
-    position: absolute;
-    top: var(--hover-radius);
-    left: var(--hover-radius);
-    right: var(--hover-radius);
-    bottom: var(--hover-radius);
-
-    /* By not setting background or borders, this pseudo–element is invisible,
-       but because it’s part of the element’s subtree, hovering over it
-       triggers the parent’s :hover state. */
-    pointer-events: auto;
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
   }
 }

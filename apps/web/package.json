@@ -54,8 +54,10 @@
   },
   "devDependencies": {
     "@avelin/database": "workspace:*",
+    "@avelin/tailwind-config": "workspace:*",
     "@avelin/typescript-config": "workspace:*",
     "@shikijs/monaco": "^3.2.1",
+    "@tailwindcss/postcss": "^4.1.8",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "catalog:",
@@ -63,7 +65,7 @@
     "@types/use-sync-external-store": "^0.0.6",
     "postcss": "^8",
     "shiki": "^3.2.1",
-    "tailwindcss": "catalog:",
+    "tailwindcss": "^4.1.8",
     "typescript": "catalog:",
     "undici-types": "^7.2.3"
   }

@@ -1,0 +1,150 @@
+@import "tailwindcss";
+@import "./colors.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  :root {
+    --color-background: var(--gray-1);
+    --color-background-2: var(--gray-2);
+    --color-popover-bg: oklch(100% 0 89.9);
+
+    --color-text-primary: var(--gray-12);
+    --color-text-secondary: --alpha(var(--gray-12) / 95%);
+    --color-text-tertiary: --alpha(var(--gray-12) / 90%);
+    --color-text-quaternary: --alpha(var(--gray-12) / 80%);
+
+    --color-border-subtle: var(--gray-6);
+    --color-border: var(--gray-7);
+    --color-border-normal: var(--color-border);
+    --color-border-strong: var(--gray-8);
+
+    --color-primary-bg: var(--gray-12);
+    --color-primary-hover: --alpha(var(--gray-12) / 90%);
+    --color-primary-text: var(--gray-1);
+
+    --color-secondary-bg-subtle: var(--gray-2);
+    --color-secondary-bg: var(--gray-3);
+    --color-secondary-hover: var(--gray-4);
+    --color-secondary-active: var(--gray-5);
+    --color-secondary-text: var(--gray-11);
+
+    --color-destructive-bg: var(--red-10);
+    --color-destructive-hover: var(--red-12);
+    --color-destructive-text: var(--red-10);
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --color-text-primary: oklch(100% 0 89.9);
+    --color-popover-bg: var(--gray-2);
+  }
+}
+
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-berkeley-mono);
+
+  --color-color-background: var(--color-background);
+  --color-color-background-2: var(--color-background-2);
+  --color-color-text-primary: var(--color-text-primary);
+  --color-color-text-secondary: var(--color-text-secondary);
+  --color-color-text-tertiary: var(--color-text-tertiary);
+  --color-color-text-quaternary: var(--color-text-quaternary);
+  --color-color-border-subtle: var(--color-border-subtle);
+  --color-color-border: var(--color-border-normal);
+  --color-color-border-strong: var(--color-border-strong);
+
+  --color-popover-bg: var(--color-popover-bg);
+
+  --color-primary-bg: var(--color-primary-bg);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-active: var(--color-primary-active);
+  --color-primary-text: var(--color-primary-text);
+
+  --color-secondary-bg-subtle: var(--color-secondary-bg-subtle);
+  --color-secondary-bg: var(--color-secondary-bg);
+  --color-secondary-hover: var(--color-secondary-hover);
+  --color-secondary-active: var(--color-secondary-active);
+  --color-secondary-text: var(--color-secondary-text);
+
+  --color-destructive-bg: var(--color-destructive-bg);
+  --color-destructive-hover: var(--color-destructive-hover);
+  --color-destructive-text: var(--color-destructive-text);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+
+  :root {
+        /* Custom easing curves */
+    --ease-in-quad: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+    --ease-in-cubic: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    --ease-in-quart: cubic-bezier(0.895, 0.03, 0.685, 0.22);
+    --ease-in-quint: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    --ease-in-expo: cubic-bezier(0.95, 0.05, 0.795, 0.035);
+    --ease-in-circ: cubic-bezier(0.6, 0.04, 0.98, 0.335);
+
+    --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+    --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+    --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+    --ease-out-circ: cubic-bezier(0.075, 0.82, 0.165, 1);
+
+    --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+    --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-in-out-quint: cubic-bezier(0.86, 0, 0.07, 1);
+    --ease-in-out-expo: cubic-bezier(1, 0, 0, 1);
+    --ease-in-out-circ: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  }
+}
+
+@utility hover-expand-* {
+  position: relative;
+  --hover-radius: calc(--value([*]) * -1);
+  --hover-radius: calc(var(--spacing) * --value(number) * -1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: var(--hover-radius);
+    left: var(--hover-radius);
+    right: var(--hover-radius);
+    bottom: var(--hover-radius);
+    pointer-events: auto;
+  }
+}

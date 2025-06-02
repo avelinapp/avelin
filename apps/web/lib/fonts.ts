@@ -6,7 +6,7 @@ export const inter = Inter({
   axes: ['opsz'],
   subsets: ['latin'],
   variable: '--font-inter',
-  display: 'swap',
+  display: 'block',
 })
 
 export const berkeleyMono = localFont({

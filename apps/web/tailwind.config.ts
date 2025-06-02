@@ -1,8 +1,6 @@
-import { default as baseConfig } from '@avelin/ui/tailwind'
 import type { Config } from 'tailwindcss'
 
 export default {
-  presets: [baseConfig],
   content: [
     './app/**/*.{js,jsx,ts,tsx}',
     './components/**/*.{js,jsx,ts,tsx}',
