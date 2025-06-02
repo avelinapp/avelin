@@ -11,18 +11,29 @@ import { memo } from 'react'
 
 export const CodeRoom = memo(__CodeRoom)
 
-function __CodeRoom() {
+interface CodeRoomProps {
+  skipAnimation?: boolean
+}
+
+function __CodeRoom({ skipAnimation }: CodeRoomProps) {
   // console.log('**** [CodeRoom] RE-RENDER')
+  console.log('skipAnimation', skipAnimation)
   return (
     <div className="flex flex-col h-full w-full">
       <motion.div
-        initial={{ opacity: 0, filter: 'blur(2px)', scale: 0.98 }}
-        animate={{
-          opacity: 1,
-          filter: 'blur(0px)',
-          scale: 1,
-          transition: { duration: 0.2, ease: 'easeOut' },
-        }}
+        initial={
+          skipAnimation ? {} : { opacity: 0, filter: 'blur(2px)', scale: 0.98 }
+        }
+        animate={
+          skipAnimation
+            ? {}
+            : {
+                opacity: 1,
+                filter: 'blur(0px)',
+                scale: 1,
+                transition: { duration: 0.2, ease: 'easeOut' },
+              }
+        }
       >
         <EditorToolbar />
       </motion.div>

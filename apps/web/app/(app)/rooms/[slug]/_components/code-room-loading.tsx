@@ -10,6 +10,7 @@ interface LoadingRoomProps {
 }
 
 export function LoadingRoom({ status, canCreateRoom }: LoadingRoomProps) {
+  console.log('rendered loading room')
   return (
     <motion.div
       layout

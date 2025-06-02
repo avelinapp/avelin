@@ -6,6 +6,7 @@ import type { Auth } from '@avelin/database'
 import { LogInIcon, LogoAvelin } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { Separator } from '@avelin/ui/separator'
+import { motion } from 'motion/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { memo } from 'react'
@@ -27,7 +28,10 @@ function __EditorToolbar() {
   // console.log('**** [EditorToolbar] RE-RENDER')
 
   return (
-    <div className="flex items-center m-2 drop-shadow-sm py-2 px-4 max-w-full bg-popover-bg rounded-lg border border-color-border-subtle">
+    <motion.div
+      layoutId="toolbar"
+      className="flex items-center m-2 drop-shadow-sm py-2 px-4 max-w-full bg-popover-bg rounded-lg border border-color-border-subtle"
+    >
       <div className="w-full grid grid-cols-3">
         <div className="flex items-center place-self-start">
           <div className="flex items-center h-6">
@@ -77,6 +81,6 @@ function __EditorToolbar() {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }

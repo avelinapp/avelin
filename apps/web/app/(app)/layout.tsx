@@ -7,6 +7,7 @@ import OneDollarStatsScript from '@/components/misc/one-dollar-stats'
 import { env } from '@/lib/env'
 import Providers from '@/providers'
 import { Toaster } from '@avelin/ui/sonner'
+import { LayoutGroup } from 'motion/react'
 
 export const metadata: Metadata = {
   title: 'Avelin',
@@ -25,7 +26,11 @@ export default async function RootLayout({
         className={`${berkeleyMono.variable} ${inter.variable} font-sans font-settings antialiased bg-color-background h-screen w-screen overflow-y-hidden`}
       >
         <Providers>
-          <div className="flex-1 h-full w-full overflow-hidden">{children}</div>
+          <LayoutGroup>
+            <div className="flex-1 h-full w-full overflow-hidden">
+              {children}
+            </div>
+          </LayoutGroup>
           <AvelinDevToolsToolbar />
           <Toaster richColors />
           <CommandMenu />
