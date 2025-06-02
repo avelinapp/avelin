@@ -2,6 +2,7 @@
   "name": "@avelin/tailwind-config",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "exports": {
     ".": "./shared-styles.css",
     "./postcss": "./postcss.config.js"
