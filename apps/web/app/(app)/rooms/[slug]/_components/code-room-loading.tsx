@@ -1,5 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon, LogoAvelin } from '@avelin/icons'
-import { Button } from '@avelin/ui/button'
+import { Button, buttonVariants } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
 import { motion } from 'motion/react'
 import Link from 'next/link'
@@ -68,7 +68,7 @@ export function LoadingRoom({ status, canCreateRoom }: LoadingRoomProps) {
         <Button
           variant="secondary"
           asChild
-          className="group hover:text-color-text-primary transition-colors flex items-center gap-1.5"
+          className="group hover:text-color-text-primary transition-colors flex items-center gap-1.5 hover-expand-12"
         >
           <Link href="/dashboard">
             <ChevronLeftIcon className="-ml-1 group-hover:-translate-x-0.5 transition-transform" />
@@ -79,7 +79,7 @@ export function LoadingRoom({ status, canCreateRoom }: LoadingRoomProps) {
       {status === 'invalid' && (
         <motion.div
           layout="position"
-          className="absolute bottom-[-175px]"
+          className="absolute bottom-[-10%] mask-b-to-85%"
           initial={{ opacity: 0, filter: 'blur(2px)', y: 100 }}
           animate={{
             opacity: 1,
@@ -114,7 +114,7 @@ const InvalidHeader = () => (
 )
 
 const Error404 = () => (
-  <div className="text-[24rem] font-black tracking-tighter bg-gradient-to-b from-gray-4 to-gray-1 dark:from-gray-11 dark:to-black text-transparent bg-clip-text">
+  <div className="text-[24rem] leading-none font-black tracking-tighter text-gray-4 select-none">
     404
   </div>
 )
