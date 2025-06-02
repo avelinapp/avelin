@@ -4,9 +4,10 @@ import { useZero } from '@/lib/zero'
 import { useAuth } from '@/providers/auth-provider'
 import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { useView } from '@/providers/view-provider'
+import { useIsFirstRender } from '@avelin/ui/hooks'
 import { useQuery } from '@rocicorp/zero/react'
 import { AnimatePresence } from 'motion/react'
-import { use, useEffect, useMemo } from 'react'
+import { use, useEffect, useMemo, useState } from 'react'
 import CodeRoom from './_components/code-room'
 import { LoadingRoom } from './_components/code-room-loading'
 
@@ -25,12 +26,21 @@ export default function Page({ params }: { params: Params }) {
   const [room, { type: status }] = useQuery(q, { ttl: '1d' })
   const { isPending: isAuthPending, user, session } = useAuth()
   const { ready, setReady } = useView()
+  const isFirstRender = useIsFirstRender()
+  const [showedLoading, setShowedLoading] = useState(false)
 
   useEffect(() => {
     if (!ready && (!!room || status === 'complete')) {
       setReady(true)
     }
   }, [status, room, ready, setReady])
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (roomStatus !== 'complete' && !didClientDeleteRoom) {
+      setShowedLoading(true)
+    }
+  }, [])
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -62,6 +72,7 @@ export default function Page({ params }: { params: Params }) {
           ? 'deleted'
           : 'complete'
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const content = useMemo(
     () =>
       roomStatus !== 'complete' && !didClientDeleteRoom ? (
@@ -71,9 +82,9 @@ export default function Page({ params }: { params: Params }) {
           canCreateRoom={!user?.isAnonymous}
         />
       ) : (
-        <CodeRoom key="room-loaded" />
+        <CodeRoom key="room-loaded" skipAnimation={!showedLoading} />
       ),
-    [didClientDeleteRoom, roomStatus, user?.isAnonymous],
+    [didClientDeleteRoom, roomStatus, user?.isAnonymous, isFirstRender],
   )
 
   return <AnimatePresence mode="wait">{content}</AnimatePresence>
