@@ -108,7 +108,7 @@ export const rooms = pgTable('rooms', {
     .primaryKey()
     .$defaultFn(() => newId('room')),
   slug: text().unique(),
-  staticSlug: text().unique(),
+  staticSlug: text().notNull().unique(),
   ydoc: bytea(),
   title: text(),
   editorLanguage: text().default('plaintext'),
