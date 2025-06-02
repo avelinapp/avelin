@@ -18,7 +18,7 @@ export async function middleware(request: NextRequest) {
 
   console.log('\n------', pathname, '------')
 
-  if (inArray(pathname, ['/', '/login'])) {
+  if (inArray(pathname, ['/', '/home', '/login'])) {
     console.timeEnd('middleware')
     return response
   }
