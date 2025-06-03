@@ -183,6 +183,13 @@
       "when": 1747064782481,
       "tag": "0025_room_participants-drop-connection-related-columns",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1748900793995,
+      "tag": "0026_rooms-add-static_slug-column",
+      "breakpoints": true
     }
   ]
 }

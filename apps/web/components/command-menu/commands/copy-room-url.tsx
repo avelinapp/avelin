@@ -19,19 +19,24 @@ export function CopyRoomUrlCommand({ closeMenu }: Props) {
     () => `${env.NEXT_PUBLIC_APP_URL}/${room?.slug}`,
     [room?.slug],
   )
+  const roomStaticUrl = useMemo(
+    () => `${env.NEXT_PUBLIC_APP_URL}/s/${room?.staticSlug}`,
+    [room?.staticSlug],
+  )
 
-  const handleCopy = (notify?: boolean) => {
-    copy(roomUrl)
+  const handleCopy = (urlType: 'live' | 'static', notify?: boolean) => {
+    const url = urlType === 'live' ? roomUrl : roomStaticUrl
+    copy(url)
 
     if (notify) {
       toast('Room link copied to your clipboard - share it!', {
-        description: roomUrl,
+        description: url,
         action: (
           <Button
             size="xs"
             variant="ghost"
             className="p-1.5 h-fit rounded-md ml-auto"
-            onClick={() => handleCopy(false)}
+            onClick={() => handleCopy(urlType, false)}
           >
             <CopyIcon className="size-4 shrink-0" />
           </Button>
@@ -41,16 +46,31 @@ export function CopyRoomUrlCommand({ closeMenu }: Props) {
   }
 
   return (
-    <CommandItem
-      keywords={['room', 'link', 'url', 'share', 'copy']}
-      onSelect={() => {
-        handleCopy(true)
-        closeMenu()
-      }}
-    >
-      <LinkIcon />
-      <span className="text-color-text-quaternary">Copy room link...</span>
-      <span>{`${getPrettyHostname()}/${room?.slug}`}</span>
-    </CommandItem>
+    <>
+      <CommandItem
+        keywords={['room', 'link', 'url', 'share', 'copy', 'live']}
+        onSelect={() => {
+          handleCopy('live', true)
+          closeMenu()
+        }}
+      >
+        <LinkIcon />
+        <span className="text-color-text-quaternary">Copy room link...</span>
+        <span>{`${getPrettyHostname()}/${room?.slug}`}</span>
+      </CommandItem>
+      <CommandItem
+        keywords={['room', 'link', 'url', 'share', 'copy', 'static']}
+        onSelect={() => {
+          handleCopy('static', true)
+          closeMenu()
+        }}
+      >
+        <LinkIcon />
+        <span className="text-color-text-quaternary">
+          Copy static room link...
+        </span>
+        <span>{`${getPrettyHostname()}/s/${room?.staticSlug}`}</span>
+      </CommandItem>
+    </>
   )
 }

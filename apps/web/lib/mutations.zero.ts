@@ -8,11 +8,11 @@ export class Room {
     const z = zeroClient!
 
     const id = newId('room')
-    const slug = newRoomSlug()
 
     await z.mutate.rooms.insert({
       id,
-      slug,
+      slug: newRoomSlug(),
+      staticSlug: newRoomSlug(),
       creatorId: z.userID,
       editorLanguage: 'plaintext',
       createdAt: now(),

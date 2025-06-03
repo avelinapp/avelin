@@ -1,6 +1,6 @@
 import { validateJwt } from '@avelin/auth/jwt'
 import { type NeonDatabase, createDb, eq, schema } from '@avelin/database'
-import { generate } from '@avelin/id'
+import { generate, newRoomSlug } from '@avelin/id'
 import { Database } from '@hocuspocus/extension-database'
 import { Logger } from '@hocuspocus/extension-logger'
 import { Events, Webhook } from '@hocuspocus/extension-webhook'
@@ -86,6 +86,7 @@ const server = new Hocuspocus({
           db.insert(schema.rooms)
             .values({
               id: documentName,
+              staticSlug: newRoomSlug(),
             })
             .onConflictDoUpdate({
               target: schema.rooms.id,

@@ -5,6 +5,8 @@ import { type User, and, db, eq, schema, sql } from '@avelin/database'
 import { newId } from '@avelin/id'
 import { readableStreamToArrayBuffer } from 'bun'
 import Elysia from 'elysia'
+import { omit } from 'remeda'
+import * as Y from 'yjs'
 import { env } from '../env'
 
 export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
@@ -17,6 +19,44 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
         )
         const rawBody = Buffer.from(arrayBuffer)
         return rawBody
+      }
+    })
+    .get('/static/:slug', async (c) => {
+      const slug = c.params.slug
+
+      if (!slug) {
+        return c.error(400, {
+          error: 'No room slug provided.',
+        })
+      }
+
+      const [room] = await db
+        .select()
+        .from(schema.rooms)
+        .where(eq(schema.rooms.staticSlug, slug))
+
+      if (!room) {
+        return c.error(404, {
+          error: 'Room not found.',
+        })
+      }
+
+      if (room.deletedAt || !room.ydoc) {
+        return c.error(404, {
+          error: 'Room was deleted.',
+        })
+      }
+
+      const buffer = new Uint8Array(room.ydoc.buffer)
+      const doc = new Y.Doc()
+
+      Y.applyUpdate(doc, buffer)
+
+      const content = doc.getText('monaco').toJSON()
+
+      return {
+        ...omit(room, ['ydoc']),
+        content,
       }
     })
     .post('/sync/webhook', async (c) => {
