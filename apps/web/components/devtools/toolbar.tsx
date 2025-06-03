@@ -6,7 +6,7 @@ import { LoaderIcon, LogoAvelin } from '@avelin/icons'
 import { BunLogo, NodeJSLogo } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { useEffect, useState } from 'react'
 // @ts-ignore
@@ -16,6 +16,9 @@ import ZeroCache from './zero-cache'
 
 export default function AvelinDevToolsToolbar() {
   const FF_devtools = useFeatureFlagEnabled('avelin-devtools')
+
+  const pathname = usePathname()
+  const loadZeroClient = !pathname.startsWith('/s/')
 
   const [show, setShow] = useState(FF_devtools)
 
@@ -92,7 +95,7 @@ export default function AvelinDevToolsToolbar() {
             <LoaderIcon className="size-4 text-white" strokeWidth={2.25} />
             <span>Loading fallback</span>
           </Button>
-          <ZeroCache />
+          {loadZeroClient && <ZeroCache />}
         </div>
       </div>
     </div>

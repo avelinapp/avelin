@@ -95,18 +95,23 @@ export const RoomListItem = ({
     [room.slug],
   )
 
-  function handleCopy(notify?: boolean) {
-    copy(roomUrl)
+  const roomStaticUrl = useMemo(
+    () => `${env.NEXT_PUBLIC_APP_URL}/s/${room.staticSlug}`,
+    [room.staticSlug],
+  )
+
+  function handleCopy(value: string, notify?: boolean) {
+    copy(value)
 
     if (notify) {
       toast('Room link copied to your clipboard - share it!', {
-        description: roomUrl,
+        description: value,
         action: (
           <Button
             size="xs"
             variant="ghost"
             className="p-1.5 h-fit rounded-md ml-auto"
-            onClick={() => handleCopy(false)}
+            onClick={() => handleCopy(value, false)}
           >
             <CopyIcon className="size-4 shrink-0" />
           </Button>
@@ -181,9 +186,13 @@ export const RoomListItem = ({
         </div>
       </ContextMenuTrigger>
       <ContextMenuContent>
-        <ContextMenuItem onSelect={() => handleCopy(true)}>
+        <ContextMenuItem onSelect={() => handleCopy(roomUrl, true)}>
           <LinkIcon />
           Copy link
+        </ContextMenuItem>
+        <ContextMenuItem onSelect={() => handleCopy(roomStaticUrl, true)}>
+          <LinkIcon />
+          Copy static link
         </ContextMenuItem>
         <ContextMenuItem onSelect={handleDeleteRoom}>
           <Trash2Icon /> Delete

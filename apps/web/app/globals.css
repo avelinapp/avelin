@@ -61,6 +61,36 @@
   }
 }
 
+@layer base {
+  pre.shiki > code {
+    counter-reset: line;
+
+    & > div.line {
+      @apply grid grid-cols-[min-content_auto] w-full;
+      counter-increment: line;
+
+      & > .line {
+        grid-column: 2;
+        @apply pr-8;
+      }
+
+      & > span.ln {
+        position: sticky;
+        left: 0;
+        /* left: calc(var(--spacing) * 4); */
+        user-select: none;
+        @apply text-color-text-quaternary/50 bg-gray-1 pl-8 pr-4;
+        width: calc((var(--ln-max-digits) * 1ch) + (var(--spacing) * 12));
+
+        &::before {
+          content: counter(line);
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
 @utility flex-full {
   @apply flex-1 flex flex-col h-full w-full;
 }
