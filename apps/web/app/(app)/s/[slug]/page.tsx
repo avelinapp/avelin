@@ -24,7 +24,7 @@ export default async function Page({
           <h1 className="text-4xl font-[550]">{data.title}</h1>
         </div>
         <CodeBlock
-          className="border border-color-border-subtle shadow-lg dark:shadow-gray-2 rounded-xl overflow-scroll max-h-full **:text-sm **:leading-relaxed"
+          className="border border-color-border-subtle shadow-lg dark:shadow-gray-2 rounded-xl max-h-full **:text-sm **:leading-relaxed"
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           lang={data.editorLanguage as any}
         >

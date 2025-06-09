@@ -7,6 +7,7 @@ import { CopyIcon } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
 import { useScrollEdges } from '@avelin/ui/hooks'
+import { useMeasureFull } from '@avelin/ui/hooks'
 import { toJsxRuntime } from 'hast-util-to-jsx-runtime'
 import { useTheme } from 'next-themes'
 import type React from 'react'
@@ -40,8 +41,7 @@ export function CodeBlock({
   const contentContainerRef = useRef<HTMLDivElement>(null)
   const contentEdges = useScrollEdges(contentContainerRef)
 
-  const locContainerRef = useRef<HTMLDivElement>(null)
-  const [locWidth, setLocWidth] = useState(0)
+  const [locContainerRef, { width: locWidth }] = useMeasureFull()
 
   useEffect(() => {
     console.log({
@@ -51,15 +51,6 @@ export function CodeBlock({
       right: contentEdges.right,
     })
   }, [contentEdges])
-
-  useEffect(() => {
-    const container = locContainerRef.current
-
-    if (!container) return
-
-    const rect = container.getBoundingClientRect()
-    setLocWidth(rect.width)
-  })
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useLayoutEffect(() => {
@@ -89,8 +80,6 @@ export function CodeBlock({
       className={cn(
         '**:font-mono',
         'overflow-hidden whitespace-nowrap relative',
-        // 'size-[1000px]',
-        // 'border-red-500 border-2',
         className,
       )}
       style={
@@ -103,7 +92,6 @@ export function CodeBlock({
       <div
         className={cn(
           'absolute z-10 pointer-events-none top-0 left-0 right-0 bottom-0 h-full w-full',
-          // 'bg-blue-500/10',
         )}
       >
         <div className="h-full w-full relative">
@@ -113,7 +101,7 @@ export function CodeBlock({
           </div>
           <div
             className={cn(
-              'w-24 bg-gray-1 mask-r-from-0% h-full absolute top-0 left-[calc(var(--loc-width))] transition-opacity duration-300 ease-out',
+              'w-24 bg-gray-1 mask-r-from-0% h-full absolute top-0 left-(--loc-width) transition-opacity duration-300 ease-out translate-x-[-0.5px]',
               contentEdges.left && 'opacity-0',
             )}
           />
@@ -146,9 +134,6 @@ export function CodeBlock({
           className="flex flex-col text-color-text-quaternary/50 select-none bg-gray-1 sticky left-0 top-0 text-right pr-8 pl-4"
           tabIndex={-1}
           ref={locContainerRef}
-          // style={{
-          //   height: `${codeContentScrollHeight}px`,
-          // }}
         >
           {Array.from({ length: linesofCode }, (_, i) => i + 1).map((x) => {
             return <span key={x}>{x}</span>
