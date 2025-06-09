@@ -18,13 +18,13 @@ export default async function Page({
     const language = languages.find((v) => v.value === data.editorLanguage)!
     const Icon = language.logo
     return (
-      <div className="h-screen p-16 flex flex-col gap-8 mx-auto w-full max-w-screen-xl">
+      <div className="flex-1 h-full p-16 flex flex-col gap-8 mx-auto w-full max-w-screen-xl">
         <div className="flex items-center gap-4">
           {Icon && <Icon className="size-10" />}
           <h1 className="text-4xl font-[550]">{data.title}</h1>
         </div>
         <CodeBlock
-          className="border border-color-border-subtle shadow-lg rounded-xl overflow-scroll max-h-full **:text-sm **:leading-relaxed"
+          className="border border-color-border-subtle shadow-lg dark:shadow-gray-2 rounded-xl overflow-scroll max-h-full **:text-sm **:leading-relaxed"
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           lang={data.editorLanguage as any}
         >

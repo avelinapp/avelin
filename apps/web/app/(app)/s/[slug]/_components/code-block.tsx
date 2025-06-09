@@ -1,5 +1,4 @@
 // @ts-nocheck
-//
 'use client'
 
 import { avelinDark, avelinLight } from '@/components/editor/themes'
@@ -7,12 +6,15 @@ import { languages } from '@/lib/constants'
 import { CopyIcon } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
+import { useScrollEdges } from '@avelin/ui/hooks'
 import { toJsxRuntime } from 'hast-util-to-jsx-runtime'
 import { useTheme } from 'next-themes'
-import { Fragment, useLayoutEffect, useState } from 'react'
+import type React from 'react'
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { jsx, jsxs } from 'react/jsx-runtime'
 import { type BundledLanguage, codeToHtml, createHighlighter } from 'shiki'
 import { visit } from 'unist-util-visit'
+import { set } from 'zod'
 import { CopyCodeButton } from './copy-code-button'
 
 type CodeBlockProps = {
@@ -32,7 +34,32 @@ export function CodeBlock({
   ...props
 }: CodeBlockProps) {
   const [nodes, setNodes] = useState(undefined)
+  const [linesofCode, setLinesofCode] = useState(0)
   const { theme } = useTheme()
+
+  const contentContainerRef = useRef<HTMLDivElement>(null)
+  const contentEdges = useScrollEdges(contentContainerRef)
+
+  const locContainerRef = useRef<HTMLDivElement>(null)
+  const [locWidth, setLocWidth] = useState(0)
+
+  useEffect(() => {
+    console.log({
+      top: contentEdges.top,
+      bottom: contentEdges.bottom,
+      left: contentEdges.left,
+      right: contentEdges.right,
+    })
+  }, [contentEdges])
+
+  useEffect(() => {
+    const container = locContainerRef.current
+
+    if (!container) return
+
+    const rect = container.getBoundingClientRect()
+    setLocWidth(rect.width)
+  })
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useLayoutEffect(() => {
@@ -41,112 +68,104 @@ export function CodeBlock({
       theme: theme === 'light' ? 'avelin-light' : 'avelin-dark',
     })
 
-    visit(hastTree, { tagName: 'code' }, (codeNode, _index, parent) => {
-      // codeNode.children is an array of nodes. Some are text nodes (including "\n"),
-      // some are <span style="…">foo</span>, etc. We want to group everything up to each "\n" in one “line” array.
+    let lineCount = 0
 
-      const newChildren = []
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-      let buffer: any[] = [] // collects nodes for the current line
-
-      // biome-ignore lint/complexity/noForEach: <explanation>
-      codeNode.children.forEach((child) => {
-        // If this “child” is a text node containing “\n” (possibly multiple),
-        // we need to split on "\n" boundaries. In practice Shiki usually emits a text node
-        // whose value ends with "\n". But to be safe, split ANY text child on "\n".
-        if (child.type === 'text' && child.value.includes('\n')) {
-          const parts = child.value.split('\n')
-          // e.g. value = "const x = 123;\n"
-          // → parts = ["const x = 123;", ""] (the trailing empty string for the final \n)
-          parts.forEach((segment, idx) => {
-            if (segment !== '') {
-              // Push a text‐only node for the segment (no newline)
-              buffer.push({
-                type: 'text',
-                value: segment,
-              })
-            }
-            // Whenever we see a “real” newline (i.e. idx < parts.length–1),
-            // we consider that the end-of-line boundary:
-            if (idx < parts.length - 1) {
-              //  2a) wrap buffer into a <div class="line"> …
-              newChildren.push({
-                type: 'element',
-                tagName: 'div',
-                properties: { className: ['line'] },
-                children: [
-                  // empty <span class="ln"></span> as first child
-                  {
-                    type: 'element',
-                    tagName: 'span',
-                    properties: { className: ['ln'] },
-                    children: [],
-                  },
-                  // then everything we buffered so far
-                  ...buffer,
-                ],
-              })
-              // start a fresh buffer for the next line
-              buffer = []
-            }
-          })
-        } else {
-          // If it’s not a text node with “\n”, just keep buffering
-          buffer.push(child)
-        }
-      })
-
-      // After iterating, if there’s any leftover in buffer, that’s the last line (no trailing newline).
-      if (buffer.length > 0) {
-        newChildren.push({
-          type: 'element',
-          tagName: 'div',
-          properties: { className: ['line'] },
-          children: [
-            {
-              type: 'element',
-              tagName: 'span',
-              properties: { className: ['ln'] },
-              children: [],
-            },
-            ...buffer,
-          ],
-        })
-      }
-
-      // Replace codeNode.children with our new wrapped lines
-      codeNode.children = newChildren
-
-      // 4) Count how many lines we now have:
-      const totalLines = newChildren.length
-      const maxDigits = String(totalLines).length // e.g. 3 if totalLines = 100
-
-      // 5) Inject that into the parent <pre> as data-line-numbers-max-digits:
-      if (parent && parent.type === 'element' && parent.tagName === 'pre') {
-        parent.properties = parent.properties || {}
-        parent.properties['data-line-numbers-max-digits'] = String(maxDigits)
-        parent.properties.style = `--ln-max-digits: ${maxDigits}`
-      }
+    visit(hastTree, { tagName: 'code' }, (codeNode: Element) => {
+      // filter for direct children that are elements
+      // with className including "line"
+      lineCount = codeNode.children.filter(
+        (child) =>
+          child.type === 'element' &&
+          child.tagName === 'span' && // or 'span' if you wrapped as spans
+          child.properties.class === 'line',
+      ).length
     })
 
+    setLinesofCode(lineCount)
     setNodes(hastTree)
-  }, [])
-
+  }, [theme])
   return (
-    <div className={cn('**:font-mono py-6 relative', className)} {...props}>
-      <div className="sticky top-0 max-w-screen-xl">
-        <CopyCodeButton content={children} />
-      </div>
-      <div className="overflow-scroll">
-        {nodes ? (
-          toJsxRuntime(nodes, {
-            Fragment,
-            jsx,
-            jsxs,
-          })
-        ) : (
-          <p>Loading...</p>
+    <div
+      className={cn(
+        '**:font-mono',
+        'overflow-hidden whitespace-nowrap relative',
+        // 'size-[1000px]',
+        // 'border-red-500 border-2',
+        className,
+      )}
+      style={
+        {
+          '--loc-width': `${locWidth}px`,
+        } as React.CSSProperties
+      }
+      {...props}
+    >
+      <div
+        className={cn(
+          'absolute z-10 pointer-events-none top-0 left-0 right-0 bottom-0 h-full w-full',
+          // 'bg-blue-500/10',
         )}
+      >
+        <div className="h-full w-full relative">
+          <div className="absolute top-8 right-8 max-w-screen-xl z-10">
+            {/* biome-ignore lint/a11y/noPositiveTabindex: <explanation> */}
+            <CopyCodeButton content={children} tabIndex={1} />
+          </div>
+          <div
+            className={cn(
+              'w-24 bg-gray-1 mask-r-from-0% h-full absolute top-0 left-[calc(var(--loc-width))] transition-opacity duration-300 ease-out',
+              contentEdges.left && 'opacity-0',
+            )}
+          />
+          <div
+            className={cn(
+              'w-24 bg-gray-1 mask-l-from-0% h-full absolute top-0 right-0 transition-opacity duration-300 ease-out',
+              contentEdges.right && 'opacity-0',
+            )}
+          />
+          <div
+            className={cn(
+              'w-full bg-gray-1 mask-b-from-0% h-24 absolute top-0 left-[calc(var(--loc-width))] transition-opacity duration-300 ease-out',
+              contentEdges.top && 'opacity-0',
+            )}
+          />
+          <div
+            className={cn(
+              'w-full bg-gray-1 mask-t-from-0% h-24 absolute bottom-0 left-[calc(var(--loc-width))] transition-opacity duration-300 ease-out',
+              contentEdges.bottom && 'opacity-0',
+            )}
+          />
+        </div>
+      </div>
+      <div
+        className="grid grid-cols-[max-content_max-content] h-full w-full relative overflow-auto py-6"
+        ref={contentContainerRef}
+        tabIndex={-1}
+      >
+        <div
+          className="flex flex-col text-color-text-quaternary/50 select-none bg-gray-1 sticky left-0 top-0 text-right pr-8 pl-4"
+          tabIndex={-1}
+          ref={locContainerRef}
+          // style={{
+          //   height: `${codeContentScrollHeight}px`,
+          // }}
+        >
+          {Array.from({ length: linesofCode }, (_, i) => i + 1).map((x) => {
+            return <span key={x}>{x}</span>
+          })}
+        </div>
+
+        <div className="pr-4" tabIndex={-1}>
+          {nodes ? (
+            toJsxRuntime(nodes, {
+              Fragment,
+              jsx,
+              jsxs,
+            })
+          ) : (
+            <p>Loading...</p>
+          )}
+        </div>
       </div>
     </div>
   )
