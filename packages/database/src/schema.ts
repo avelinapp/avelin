@@ -9,7 +9,7 @@ import {
   timestamp,
 } from 'drizzle-orm/pg-core'
 import { boolean } from 'drizzle-orm/pg-core'
-import { bytea } from './db.js'
+import { bytea } from './custom-types.js'
 import { timestamps } from './helpers/columns.js'
 
 export const users = pgTable('users', {
