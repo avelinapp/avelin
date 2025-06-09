@@ -8,6 +8,7 @@ import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
 import { useScrollEdges } from '@avelin/ui/hooks'
 import { useMeasureFull } from '@avelin/ui/hooks'
+import { useIsMobile } from '@avelin/ui/hooks'
 import { toJsxRuntime } from 'hast-util-to-jsx-runtime'
 import { useTheme } from 'next-themes'
 import type React from 'react'
@@ -33,6 +34,7 @@ export function CodeBlock({
   className,
   ...props
 }: CodeBlockProps) {
+  const isMobile = useIsMobile()
   const [nodes, setNodes] = useState(undefined)
   const [linesofCode, setLinesofCode] = useState(0)
   const { theme } = useTheme()
@@ -94,34 +96,38 @@ export function CodeBlock({
         )}
       >
         <div className="h-full w-full relative">
-          <div className="absolute top-8 right-8 max-w-screen-xl z-10">
+          <div className="absolute top-4 right-4 sm:top-8 sm:right-8 max-w-screen-xl z-10">
             {/* biome-ignore lint/a11y/noPositiveTabindex: <explanation> */}
             <CopyCodeButton content={children} tabIndex={1} />
           </div>
-          <div
-            className={cn(
-              'w-24 bg-gray-1 mask-r-from-0% h-full absolute top-0 left-(--loc-width) transition-opacity duration-300 ease-out translate-x-[-0.5px]',
-              contentEdges.left && 'opacity-0',
-            )}
-          />
-          <div
-            className={cn(
-              'w-24 bg-gray-1 mask-l-from-0% h-full absolute top-0 right-0 transition-opacity duration-300 ease-out',
-              contentEdges.right && 'opacity-0',
-            )}
-          />
-          <div
-            className={cn(
-              'w-full bg-gray-1 mask-b-from-0% h-24 absolute top-0 left-[calc(var(--loc-width))] transition-opacity duration-300 ease-out',
-              contentEdges.top && 'opacity-0',
-            )}
-          />
-          <div
-            className={cn(
-              'w-full bg-gray-1 mask-t-from-0% h-24 absolute bottom-0 left-[calc(var(--loc-width))] transition-opacity duration-300 ease-out',
-              contentEdges.bottom && 'opacity-0',
-            )}
-          />
+          {!isMobile && (
+            <>
+              <div
+                className={cn(
+                  'w-24 bg-gray-1 mask-r-from-0% h-full absolute top-0 left-(--loc-width) transition-opacity duration-300 ease-out translate-x-[-0.5px]',
+                  contentEdges.left && 'opacity-0',
+                )}
+              />
+              <div
+                className={cn(
+                  'w-24 bg-gray-1 mask-l-from-0% h-full absolute top-0 right-0 transition-opacity duration-300 ease-out',
+                  contentEdges.right && 'opacity-0',
+                )}
+              />
+              <div
+                className={cn(
+                  'w-full bg-gray-1 mask-b-from-0% h-24 absolute top-0 left-[calc(var(--loc-width))] transition-opacity duration-300 ease-out',
+                  contentEdges.top && 'opacity-0',
+                )}
+              />
+              <div
+                className={cn(
+                  'w-full bg-gray-1 mask-t-from-0% h-24 absolute bottom-0 left-[calc(var(--loc-width))] transition-opacity duration-300 ease-out',
+                  contentEdges.bottom && 'opacity-0',
+                )}
+              />
+            </>
+          )}
         </div>
       </div>
       <div
@@ -130,7 +136,7 @@ export function CodeBlock({
         tabIndex={-1}
       >
         <div
-          className="flex flex-col text-color-text-quaternary/50 select-none bg-gray-1 sticky left-0 top-0 text-right pr-8 pl-4"
+          className="flex flex-col text-color-text-quaternary/50 select-none bg-gray-1 sticky left-0 top-0 text-right pr-4 sm:pr-8 pl-4"
           tabIndex={-1}
           ref={locContainerRef}
         >

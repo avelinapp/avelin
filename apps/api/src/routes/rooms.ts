@@ -1,7 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
-import { auth, authCookies } from '@avelin/auth'
 import { type AuthJWTPayload, validateJwt } from '@avelin/auth/jwt'
-import { type User, and, db, eq, schema, sql } from '@avelin/database'
+import { and, db, eq, schema } from '@avelin/database'
 import { newId } from '@avelin/id'
 import { readableStreamToArrayBuffer } from 'bun'
 import Elysia from 'elysia'
@@ -30,10 +29,19 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
         })
       }
 
-      const [room] = await db
+      const [result] = await db
         .select()
         .from(schema.rooms)
         .where(eq(schema.rooms.staticSlug, slug))
+        .innerJoin(schema.users, eq(schema.rooms.creatorId, schema.users.id))
+
+      if (!result) {
+        return c.error(404, {
+          error: 'Room not found.',
+        })
+      }
+
+      const { users: creator, rooms: room } = result
 
       if (!room) {
         return c.error(404, {
@@ -56,6 +64,7 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
 
       return {
         ...omit(room, ['ydoc']),
+        creator,
         content,
       }
     })

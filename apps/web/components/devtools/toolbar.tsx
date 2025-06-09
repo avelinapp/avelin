@@ -51,7 +51,7 @@ export default function AvelinDevToolsToolbar() {
   return (
     <div
       className={cn(
-        'h-9 dark:bg-black bg-white flex items-center px-4 border-t border-color-border-subtle text-sm py-0',
+        'h-9 dark:bg-black bg-white hidden sm:flex items-center px-4 border-t border-color-border-subtle text-sm py-0',
         !show && 'hidden',
       )}
     >
