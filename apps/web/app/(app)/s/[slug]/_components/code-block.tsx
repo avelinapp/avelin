@@ -15,7 +15,6 @@ import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { jsx, jsxs } from 'react/jsx-runtime'
 import { type BundledLanguage, codeToHtml, createHighlighter } from 'shiki'
 import { visit } from 'unist-util-visit'
-import { set } from 'zod'
 import { CopyCodeButton } from './copy-code-button'
 
 type CodeBlockProps = {
