@@ -40,7 +40,7 @@ export function Header() {
       variants={sectionVariants}
       layout="position"
     >
-      <LogoAvelin className="text-primary-bg size-16 sm:size-24 drop-shadow-xl" />
+      <LogoAvelin className="text-primary-bg size-16 sm:size-24 drop-shadow-xl mb-4" />
       <h1 className="font-semibold text-2xl sm:text-4xl font-mono tracking-tighter text-white relative">
         <span>Avelin</span>
         <span

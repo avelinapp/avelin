@@ -114,7 +114,7 @@ export function WaitlistForm({
           We'll let you know when it's ready for you to join.
         </span>
       </div>
-      <div className="w-[300px] sm:w-[400px] h-14 flex-1">
+      <div className="w-[300px] sm:w-[400px] h-14 flex-1 mt-2">
         <AnimatePresence mode="popLayout" initial={false}>
           {content}
         </AnimatePresence>

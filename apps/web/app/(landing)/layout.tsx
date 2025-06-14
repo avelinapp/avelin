@@ -9,9 +9,58 @@ import { cookies, headers } from 'next/headers'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
+const title = 'Avelin'
+const description = 'The collaborative brainstorming tool for code.'
+
 export const metadata: Metadata = {
-  title: 'Avelin',
-  description: 'Code together, right now.',
+  title: {
+    default: `${title}`,
+    template: '%s — Avelin',
+  },
+  metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
+  description,
+  keywords: [
+    'Collaborate',
+    'Brainstorm',
+    'GitHub Gist',
+    'Google Docs',
+    'React',
+    'shadcn/ui',
+    'Next.js',
+    'Tailwind CSS',
+    'TypeScript',
+    'Radix UI',
+  ],
+  authors: [
+    {
+      name: 'Kian Bazza',
+      url: 'https://bazza.dev',
+    },
+  ],
+  creator: 'Kian Bazza',
+  openGraph: {
+    title: 'Avelin',
+    images: [
+      {
+        url: '/og.jpg',
+      },
+    ],
+  },
+  twitter: {
+    title: 'Avelin',
+    card: 'summary_large_image',
+    images: [
+      {
+        url: '/og.jpg',
+      },
+    ],
+  },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon-16x16.png',
+    apple: '/apple-touch-icon.png',
+  },
+  manifest: `${env.NEXT_PUBLIC_APP_URL}/site.webmanifest`,
 }
 
 export const viewport: Viewport = {
