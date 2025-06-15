@@ -42,6 +42,7 @@
     "react-hotkeys-hook": "^5.0.1",
     "react-scan": "^0.1.3",
     "tinykeys": "^3.0.0",
+    "tw-animate-css": "^1.3.4",
     "unique-names-generator": "^4.7.1",
     "unist-util-visit": "^5.0.0",
     "use-sync-external-store": "^1.4.0",

@@ -10,8 +10,8 @@ export default function EmptyRooms({ handleCreateRoom, disabled }: Props) {
   return (
     <div className="flex items-center gap-8 m-auto">
       <EmptyDashboardIcon className="size-32 stroke-gray-8 stroke-1" />
-      <div className="space-y-6">
-        <div className="space-y-4">
+      <div className="flex flex-col gap-6 items-start">
+        <div className="flex flex-col gap-4">
           <span>Create or join a code room</span>
           <div className="text-gray-11">
             <p>Your code rooms will be available to you from this dashboard.</p>
