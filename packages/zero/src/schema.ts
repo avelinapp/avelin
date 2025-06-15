@@ -19,6 +19,7 @@ export const schema = createZeroSchema(drizzleSchema, {
       picture: true,
       isAnonymous: true,
       retiredAt: true,
+      isAdminUser: true,
       createdAt: true,
       updatedAt: true,
       deletedAt: true,
