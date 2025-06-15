@@ -28,6 +28,7 @@
     "./scroll-area": "./src/components/ui/scroll-area.tsx",
     "./separator": "./src/components/ui/separator.tsx",
     "./sonner": "./src/components/ui/sonner.tsx",
+    "./table": "./src/components/ui/table.tsx",
     "./toggle": "./src/components/ui/toggle.tsx",
     "./toggle-group": "./src/components/ui/toggle-group.tsx",
     "./tooltip": "./src/components/ui/tooltip.tsx",

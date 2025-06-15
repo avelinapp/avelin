@@ -125,6 +125,7 @@ export namespace Zero {
     export type RoomParticipant = Row<typeof schema.tables.roomParticipants>
     export type RoomConnection = Row<typeof schema.tables.roomConnections>
     export type User = Row<typeof schema.tables.users>
+    export type WaitlistEntry = Row<typeof schema.tables.waitlistEntries>
   }
 }
 

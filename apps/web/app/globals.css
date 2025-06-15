@@ -60,6 +60,10 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
   }
+
+  * {
+    @apply border-color-border-subtle;
+  }
 }
 
 @layer base {
