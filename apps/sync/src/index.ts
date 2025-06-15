@@ -112,6 +112,11 @@ const server = new Hocuspocus({
 const { app } = expressWebsockets(express())
 app.use(cookieParser())
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.send('Avelin Sync is running!')
+})
+
 app.ws('/', (websocket, request) => {
   const token = request.cookies['avelin.session_jwt'] as string | undefined
   // Add serverId query param to the request URL
