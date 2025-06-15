@@ -151,97 +151,98 @@ jobs:
       #     cache-from: type=gha
       #     cache-to: type=gha,mode=max
 
-  build-push-arm64:
-    name: Build & push ${{ matrix.app }} - ARM64
-    runs-on: ubuntu-24.04-arm
-    needs: prepare
-    permissions:
-      contents: read
-      packages: write
+  # build-push-arm64:
+  #   name: Build & push ${{ matrix.app }} - ARM64
+  #   runs-on: ubuntu-24.04-arm
+  #   needs: prepare
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #
+  #   strategy:
+  #     matrix:
+  #       include:
+  #         - app: web
+  #           dockerfile: ./apps/web/Dockerfile
+  #         # - app: web-bun
+  #         #   dockerfile: ./apps/web/Dockerfile.bun
+  #         - app: api
+  #           dockerfile: ./apps/api/Dockerfile
+  #         - app: sync
+  #           dockerfile: ./apps/sync/Dockerfile
+  #
+  #   steps:
+  #     - name: Checkout monorepo
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+  #
+  #     - name: Checkout submodule for static assets
+  #       uses: actions/checkout@v4
+  #       with:
+  #         repository: avelinapp/assets
+  #         path: apps/web/static
+  #         token: ${{ secrets.GH_AVELINAPP_RO_ACCESS }}
+  #
+  #     - name: Login to GitHub Container Registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ghcr.io
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
+  #
+  #     - name: Setup Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
+  #
+  #     - name: Build and Push ${{ matrix.app }}
+  #       if: ${{ matrix.app != 'web-bun' }}
+  #       uses: docker/build-push-action@v6
+  #       with:
+  #         context: .
+  #         file: ${{ matrix.dockerfile }}
+  #         push: true
+  #         platforms: linux/arm64
+  #         tags: |
+  #           ghcr.io/avelinapp/${{ matrix.app }}:latest-arm64
+  #           ghcr.io/avelinapp/${{ matrix.app }}:${{ github.sha }}-arm64
+  #           ghcr.io/avelinapp/${{ matrix.app }}:${{ needs.prepare.outputs.new_version }}-arm64
+  #           ghcr.io/avelinapp/${{ matrix.app }}:v${{ needs.prepare.outputs.new_version }}-arm64
+  #         build-args: |
+  #           NEXT_PUBLIC_APP_URL=https://avelin.app
+  #           NEXT_PUBLIC_API_URL=https://api.avelin.app
+  #           NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+  #           NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
+  #           NEXT_PUBLIC_BASE_DOMAIN=avelin.app
+  #           NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
+  #         cache-from: type=gha
+  #         cache-to: type=gha,mode=max
 
-    strategy:
-      matrix:
-        include:
-          - app: web
-            dockerfile: ./apps/web/Dockerfile
-          # - app: web-bun
-          #   dockerfile: ./apps/web/Dockerfile.bun
-          - app: api
-            dockerfile: ./apps/api/Dockerfile
-          - app: sync
-            dockerfile: ./apps/sync/Dockerfile
-
-    steps:
-      - name: Checkout monorepo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Checkout submodule for static assets
-        uses: actions/checkout@v4
-        with:
-          repository: avelinapp/assets
-          path: apps/web/static
-          token: ${{ secrets.GH_AVELINAPP_RO_ACCESS }}
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and Push ${{ matrix.app }}
-        if: ${{ matrix.app != 'web-bun' }}
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ${{ matrix.dockerfile }}
-          push: true
-          platforms: linux/arm64
-          tags: |
-            ghcr.io/avelinapp/${{ matrix.app }}:latest-arm64
-            ghcr.io/avelinapp/${{ matrix.app }}:${{ github.sha }}-arm64
-            ghcr.io/avelinapp/${{ matrix.app }}:${{ needs.prepare.outputs.new_version }}-arm64
-            ghcr.io/avelinapp/${{ matrix.app }}:v${{ needs.prepare.outputs.new_version }}-arm64
-          build-args: |
-            NEXT_PUBLIC_APP_URL=https://avelin.app
-            NEXT_PUBLIC_API_URL=https://api.avelin.app
-            NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
-            NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
-            NEXT_PUBLIC_BASE_DOMAIN=avelin.app
-            NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      # - name: Build and Push ${{ matrix.app }}
-      #   if: ${{ matrix.app == 'web-bun' }}
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     context: .
-      #     file: ${{ matrix.dockerfile }}
-      #     push: true
-      #     platforms: linux/arm64
-      #     tags: |
-      #       ghcr.io/avelinapp/web:latest-bun-arm64
-      #       ghcr.io/avelinapp/web:${{ github.sha }}-bun-arm64
-      #       ghcr.io/avelinapp/web:${{ needs.prepare.outputs.new_version }}-bun-arm64
-      #       ghcr.io/avelinapp/web:v${{ needs.prepare.outputs.new_version }}-bun-arm64
-      #     build-args: |
-      #       NEXT_PUBLIC_APP_URL=https://avelin.app
-      #       NEXT_PUBLIC_API_URL=https://api.avelin.app
-      #       NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
-      #       NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
-      #       NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
+  # - name: Build and Push ${{ matrix.app }}
+  #   if: ${{ matrix.app == 'web-bun' }}
+  #   uses: docker/build-push-action@v6
+  #   with:
+  #     context: .
+  #     file: ${{ matrix.dockerfile }}
+  #     push: true
+  #     platforms: linux/arm64
+  #     tags: |
+  #       ghcr.io/avelinapp/web:latest-bun-arm64
+  #       ghcr.io/avelinapp/web:${{ github.sha }}-bun-arm64
+  #       ghcr.io/avelinapp/web:${{ needs.prepare.outputs.new_version }}-bun-arm64
+  #       ghcr.io/avelinapp/web:v${{ needs.prepare.outputs.new_version }}-bun-arm64
+  #     build-args: |
+  #       NEXT_PUBLIC_APP_URL=https://avelin.app
+  #       NEXT_PUBLIC_API_URL=https://api.avelin.app
+  #       NEXT_PUBLIC_SYNC_URL=wss://sync.avelin.app
+  #       NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
+  #       NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
+  #     cache-from: type=gha
+  #     cache-to: type=gha,mode=max
 
   create-manifests:
     name: Create image manifests
-    needs: [prepare, build-push-amd64, build-push-arm64]
+    # needs: [prepare, build-push-amd64, build-push-arm64]
+    needs: [prepare, build-push-amd64]
     runs-on: ubuntu-24.04
 
     steps:
@@ -263,26 +264,29 @@ jobs:
 
           for app in "${APPS[@]}"; do
             DIGEST_AMD64=$(docker manifest inspect ghcr.io/avelinapp/$app:${{ github.sha }}-amd64 | jq -r '.manifests[] | select(.platform.architecture == "amd64" and .platform.os == "linux") | .digest')
-            DIGEST_ARM64=$(docker manifest inspect ghcr.io/avelinapp/$app:${{ github.sha }}-arm64 | jq -r '.manifests[] | select(.platform.architecture == "arm64" and .platform.os == "linux") | .digest')
+            # DIGEST_ARM64=$(docker manifest inspect ghcr.io/avelinapp/$app:${{ github.sha }}-arm64 | jq -r '.manifests[] | select(.platform.architecture == "arm64" and .platform.os == "linux") | .digest')
 
             docker manifest create \
               ghcr.io/avelinapp/$app:${{ github.sha }} \
-              --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
-              --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
+              --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64
+              # --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
+              # --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
 
             docker manifest push ghcr.io/avelinapp/$app:${{ github.sha }}
 
             docker manifest create \
               ghcr.io/avelinapp/$app:$VERSION \
-              --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
-              --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
+              --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64
+              # --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
+              # --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
 
             docker manifest push ghcr.io/avelinapp/$app:$VERSION
 
             docker manifest create \
               ghcr.io/avelinapp/$app:v$VERSION \
-              --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
-              --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
+              --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64
+              # --amend ghcr.io/avelinapp/$app@$DIGEST_AMD64 \
+              # --amend ghcr.io/avelinapp/$app@$DIGEST_ARM64
 
             docker manifest push ghcr.io/avelinapp/$app:v$VERSION
           done
@@ -320,23 +324,23 @@ jobs:
       #     done
 
   update-manifests:
-    name: Update manifests in avelinapp/iac
+    name: Update manifests in avelinapp/gitops
     runs-on: ubuntu-24.04
     needs: [prepare, create-manifests]
     permissions:
       contents: write
 
     steps:
-      - name: Checkout IaC repo
+      - name: Checkout GitOps repo
         uses: actions/checkout@v4
         with:
-          repository: avelinapp/iac
+          repository: avelinapp/gitops
           token: ${{ secrets.GH_IAC_SECRET }}
           fetch-depth: 0
-          path: avelinapp-iac
+          path: avelinapp-gitops
 
       - name: Update K8s manifests
-        working-directory: avelinapp-iac
+        working-directory: avelinapp-gitops
         run: |
           VERSION=v${{ needs.prepare.outputs.new_version }}
           apps=("web" "api" "sync")
@@ -367,7 +371,7 @@ jobs:
       #     fi
 
       - name: Update Zero server manifest
-        working-directory: avelinapp-iac
+        working-directory: avelinapp-gitops
         run: |
           ZERO_VERSION=${{ needs.prepare.outputs.zero_version }}
           manifests_dir="gitops/cluster-apps/avelin"
@@ -380,8 +384,8 @@ jobs:
             exit 1
           fi
 
-      - name: Commit and Push IaC changes
-        working-directory: avelinapp-iac
+      - name: Commit and Push GitOps manifest changes
+        working-directory: avelinapp-gitops
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
@@ -468,9 +472,9 @@ jobs:
           rm packages/database/.env
 
       ### Not used since Zero v0.17
-        # `schemaVersion` is no longer used, in favour of
-        # TypeScript-style structural typing to detect schema changes
-        # https://zero.rocicorp.dev/docs/release-notes/0.17
+      # `schemaVersion` is no longer used, in favour of
+      # TypeScript-style structural typing to detect schema changes
+      # https://zero.rocicorp.dev/docs/release-notes/0.17
       ################################################################
       # - name: Bump Zero schema version
       #   env:
@@ -480,14 +484,14 @@ jobs:
       #     echo "CI=$CI" >> packages/zero/.env
 
       #     pnpm run zero:migrate
-      
+
       - name: Deploy latest Zero permissions
         env:
           ZERO_UPSTREAM_DB: ${{ secrets.DATABASE_URL }}
         run: |
           # build database before deploying; otherwise drizzle schema won't load
           pnpm turbo @avelin/database#build
-          
+
           echo "ZERO_UPSTREAM_DB=$ZERO_UPSTREAM_DB" >> packages/zero/.env
           echo "CI=$CI" >> packages/zero/.env
 
