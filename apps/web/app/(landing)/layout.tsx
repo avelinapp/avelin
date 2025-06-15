@@ -11,6 +11,7 @@ import { redirect } from 'next/navigation'
 
 const title = 'Avelin'
 const description = 'The collaborative brainstorming tool for code.'
+const ogImageUrl = 'https://static.avelin.app/og-v2.jpg'
 
 export const metadata: Metadata = {
   title: {
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
     title: 'Avelin',
     images: [
       {
-        url: '/og.jpg',
+        url: ogImageUrl,
       },
     ],
   },
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     images: [
       {
-        url: '/og.jpg',
+        url: ogImageUrl,
       },
     ],
   },
