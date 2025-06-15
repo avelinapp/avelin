@@ -93,6 +93,7 @@ export default async function RootLayout({
         }}
       >
         {children}
+        <div className="bg-secondary-hover hidden" />
         <footer className="absolute bottom-0 w-full pb-4 flex flex-col items-center text-sm sm:text-base">
           <span className="!tracking-normal text-gray-8 font-medium">
             Crafted by{' '}
