@@ -320,23 +320,23 @@ jobs:
       #     done
 
   update-manifests:
-    name: Update manifests in avelinapp/iac
+    name: Update manifests in avelinapp/gitops
     runs-on: ubuntu-24.04
     needs: [prepare, create-manifests]
     permissions:
       contents: write
 
     steps:
-      - name: Checkout IaC repo
+      - name: Checkout GitOps repo
         uses: actions/checkout@v4
         with:
-          repository: avelinapp/iac
+          repository: avelinapp/gitops
           token: ${{ secrets.GH_IAC_SECRET }}
           fetch-depth: 0
-          path: avelinapp-iac
+          path: avelinapp-gitops
 
       - name: Update K8s manifests
-        working-directory: avelinapp-iac
+        working-directory: avelinapp-gitops
         run: |
           VERSION=v${{ needs.prepare.outputs.new_version }}
           apps=("web" "api" "sync")
@@ -367,7 +367,7 @@ jobs:
       #     fi
 
       - name: Update Zero server manifest
-        working-directory: avelinapp-iac
+        working-directory: avelinapp-gitops
         run: |
           ZERO_VERSION=${{ needs.prepare.outputs.zero_version }}
           manifests_dir="gitops/cluster-apps/avelin"
@@ -380,8 +380,8 @@ jobs:
             exit 1
           fi
 
-      - name: Commit and Push IaC changes
-        working-directory: avelinapp-iac
+      - name: Commit and Push GitOps manifest changes
+        working-directory: avelinapp-gitops
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
@@ -468,9 +468,9 @@ jobs:
           rm packages/database/.env
 
       ### Not used since Zero v0.17
-        # `schemaVersion` is no longer used, in favour of
-        # TypeScript-style structural typing to detect schema changes
-        # https://zero.rocicorp.dev/docs/release-notes/0.17
+      # `schemaVersion` is no longer used, in favour of
+      # TypeScript-style structural typing to detect schema changes
+      # https://zero.rocicorp.dev/docs/release-notes/0.17
       ################################################################
       # - name: Bump Zero schema version
       #   env:
@@ -480,14 +480,14 @@ jobs:
       #     echo "CI=$CI" >> packages/zero/.env
 
       #     pnpm run zero:migrate
-      
+
       - name: Deploy latest Zero permissions
         env:
           ZERO_UPSTREAM_DB: ${{ secrets.DATABASE_URL }}
         run: |
           # build database before deploying; otherwise drizzle schema won't load
           pnpm turbo @avelin/database#build
-          
+
           echo "ZERO_UPSTREAM_DB=$ZERO_UPSTREAM_DB" >> packages/zero/.env
           echo "CI=$CI" >> packages/zero/.env
 
