@@ -23,6 +23,7 @@ export const users = pgTable('users', {
   isAnonymous: boolean().default(false),
   /* When an anonymous user was transitioned to a real user. */
   retiredAt: timestamp({ withTimezone: true, mode: 'date' }),
+  isAdminUser: boolean().notNull().default(false),
   ...timestamps,
 })
 
@@ -145,7 +146,7 @@ export const roomParticipants = pgTable(
 
 export const roomParticipantsRelations = relations(
   roomParticipants,
-  ({ one, many }) => ({
+  ({ one }) => ({
     user: one(users, {
       fields: [roomParticipants.userId],
       references: [users.id],
