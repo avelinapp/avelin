@@ -85,7 +85,19 @@ export const schema = createZeroSchema(drizzleSchema, {
       updatedAt: true,
       deletedAt: true,
     },
-    waitlistEntries: false,
+    waitlistEntries: {
+      id: true,
+      userId: true,
+      email: true,
+      position: true,
+      status: true,
+      joinedAt: true,
+      invitedAt: true,
+      acceptedAt: true,
+      createdAt: true,
+      updatedAt: true,
+      deletedAt: true,
+    },
   },
   manyToMany: {
     rooms: {
@@ -101,6 +113,7 @@ export type AuthData = {
   picture: string | null
   email: string
   isAnonymous: boolean | null
+  isAdminUser: boolean
 }
 
 export type Schema = typeof schema
@@ -123,6 +136,15 @@ export const permissions: ReturnType<typeof definePermissions> =
       authData: AuthData,
       { cmpLit }: ExpressionBuilder<Schema, TableName>,
     ) => cmpLit(authData.sub, 'IS NOT', null)
+
+    const loggedInUserIsAdmin = (
+      authData: AuthData,
+      eb: ExpressionBuilder<Schema, TableName>,
+    ) =>
+      eb.and(
+        userIsLoggedIn(authData, eb),
+        eb.cmpLit(authData.isAdminUser, 'IS', true),
+      )
 
     const loggedInUserIsCreator = (
       authData: AuthData,
@@ -250,6 +272,16 @@ export const permissions: ReturnType<typeof definePermissions> =
           },
           delete: NOBODY_CAN,
           select: NOBODY_CAN,
+        },
+      },
+      waitlistEntries: {
+        row: {
+          insert: [loggedInUserIsAdmin],
+          update: {
+            preMutation: [loggedInUserIsAdmin],
+          },
+          delete: [loggedInUserIsAdmin],
+          select: [loggedInUserIsAdmin],
         },
       },
     } satisfies PermissionsConfig<AuthData, Schema>
