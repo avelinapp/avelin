@@ -6,7 +6,6 @@ import {
   anonymous,
   bearer,
   createAuthMiddleware,
-  customSession,
   getJwtToken,
   jwt,
   openAPI,
