@@ -10,6 +10,7 @@ import {
   KeyRoundIcon,
   LogOutIcon,
   SettingsIcon,
+  ShieldUserIcon,
 } from '@avelin/icons'
 import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
 import { Button } from '@avelin/ui/button'
@@ -23,6 +24,7 @@ import {
 } from '@avelin/ui/dropdown-menu'
 import { toast } from '@avelin/ui/sonner'
 import Cookies from 'js-cookie'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { useState } from 'react'
@@ -133,6 +135,21 @@ export function MyAccountDropdown({ user }: { user: User }) {
           />
           Preferences
         </DropdownMenuItem>
+        {user.isAdminUser && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="group" asChild>
+              <Link href="/admin">
+                <ShieldUserIcon
+                  strokeWidth={2.25}
+                  className="size-4 shrink-0 group-hover:text-color-text-primary"
+                />
+                Admin Area
+              </Link>
+            </DropdownMenuItem>
+          </>
+        )}
+        <DropdownMenuSeparator />
         <DropdownMenuItem className="group" onClick={handleLogout}>
           <LogOutIcon strokeWidth={2.25} className="size-4 shrink-0" />
           Log out

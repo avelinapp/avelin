@@ -6,6 +6,7 @@ import {
   anonymous,
   bearer,
   createAuthMiddleware,
+  customSession,
   getJwtToken,
   jwt,
   openAPI,
@@ -63,6 +64,11 @@ export const auth = betterAuth({
   user: {
     fields: {
       image: schema.users.picture.name,
+    },
+    additionalFields: {
+      isAdminUser: {
+        type: 'boolean',
+      },
     },
   },
   advanced: {

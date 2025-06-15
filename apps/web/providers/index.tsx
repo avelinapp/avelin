@@ -31,6 +31,8 @@ export default async function Providers({
 
     auth = error ? undefined : data
 
+    console.log('[Providers] auth:', auth)
+
     if (auth) {
       const flags = await getFlags(auth.user.id)
       posthogBootstrapData = {
