@@ -48,10 +48,7 @@ export function debounce<T extends (...args: any[]) => any>(
     )
   }
 
-  function startTimer(
-    pendingFunc: () => void,
-    waitTime: number,
-  ): NodeJS.Timeout {
+  function startTimer(pendingFunc: () => void, waitTime: number): any {
     return setTimeout(pendingFunc, waitTime)
   }
 
