@@ -1,6 +1,6 @@
 'use client'
 
-import { Input } from '@avelin/ui/input'
+import { Input, type InputProps } from '@avelin/ui/input'
 import { useCallback, useEffect, useState } from 'react'
 import { debounce } from '../lib/debounce'
 
@@ -13,7 +13,7 @@ export function DebouncedInput({
   value: string | number
   onChange: (value: string | number) => void
   debounceMs?: number
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+} & Omit<InputProps, 'onChange'>) {
   const [value, setValue] = useState(initialValue)
 
   // Sync with initialValue when it changes

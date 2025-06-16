@@ -52,6 +52,7 @@
     "@avelin/typescript-config": "workspace:*",
     "@tailwindcss/cli": "^4.1.8",
     "@types/react": "catalog:",
+    "@types/node": "catalog:",
     "tailwindcss": "^4.1.8",
     "typescript": "catalog:"
   },
@@ -74,6 +75,7 @@
     "@radix-ui/react-toggle": "^1.1.2",
     "@radix-ui/react-toggle-group": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.3",
+    "@tanstack/react-table": "^8.21.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
