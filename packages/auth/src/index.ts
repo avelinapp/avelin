@@ -1,4 +1,5 @@
 import { db, eq, schema } from '@avelin/database'
+import { storage } from '@avelin/storage'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { APIError } from 'better-auth/api'
@@ -45,6 +46,17 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      mapProfileToUser: async (profile) => {
+        // Upload the profile picture to Avelin Storage
+        // Otherwise, we keep getting 429 Too Many Requests from the Google API
+        const pictureUrl = await storage.upload({
+          imageUrl: profile.picture,
+        })
+
+        return {
+          image: pictureUrl,
+        }
+      },
     },
   },
   plugins: [
