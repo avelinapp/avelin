@@ -50,7 +50,7 @@ export default function WaitlistInviteEmail() {
           />
         </Head>
         <Container className="font-sans text-gray-12 max-w-full bg-gray-2 pt-4">
-          <Section className="pt-16 pb-4 max-w-[600px] bg-white px-4 rounded-2xl">
+          <Section className="pt-16 pb-6 max-w-[600px] bg-white px-6 rounded-2xl">
             <Img
               src="https://static.avelin.app/avelin-logo-text-dark.png"
               alt="Avelin"
@@ -72,7 +72,7 @@ export default function WaitlistInviteEmail() {
               </Text>
               <Button
                 href="https://avelin.app/login"
-                className="px-4 py-2.5 bg-gray-12 text-gray-1 select-none gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-gray-1 transition-[box-shadow,background-color,color] duration-150 ease-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-gray-5 focus-visible:ring-offset-2 my-2 mx-auto"
+                className="px-6 py-2.5 bg-gray-12 text-gray-1 select-none gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-gray-1 transition-[box-shadow,background-color,color] duration-150 ease-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-gray-5 focus-visible:ring-offset-2 my-2 mx-auto"
               >
                 Join Avelin now
               </Button>
@@ -120,7 +120,7 @@ export default function WaitlistInviteEmail() {
         </Container>
 
         <Container className="font-sans text-gray-12 bg-gray-2 max-w-full">
-          <Section className="max-w-[600px] pt-8 pb-4 px-4">
+          <Section className="max-w-[600px] pt-8 pb-6 px-6">
             <Img
               src="https://static.avelin.app/bazzalabs-logo-text-dark.png"
               alt="Bazza Labs"
