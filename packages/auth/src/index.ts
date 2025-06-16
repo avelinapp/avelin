@@ -1,6 +1,7 @@
-import { db, schema } from '@avelin/database'
+import { db, eq, schema } from '@avelin/database'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { APIError } from 'better-auth/api'
 import {
   anonymous,
   bearer,
@@ -72,11 +73,38 @@ export const auth = betterAuth({
   },
   advanced: {
     cookiePrefix: 'avelin',
-    generateId: false,
+    database: {
+      generateId: false,
+    },
     crossSubDomainCookies: {
       enabled: true,
       // Leading period to make the cookie accessible across al subdomains.
       domain: `.${BASE_DOMAIN}`,
+    },
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          const [waitlistEntry] = await db
+            .select()
+            .from(schema.waitlistEntries)
+            .where(eq(schema.waitlistEntries.email, user.email))
+
+          if (!waitlistEntry) {
+            throw new APIError('BAD_REQUEST', {
+              message: 'You are not on the waitlist.',
+            })
+          }
+
+          if (waitlistEntry.status !== 'invite_sent') {
+            throw new APIError('BAD_REQUEST', {
+              message:
+                "You're on the waitlist, but need to be invited before creating an account.",
+            })
+          }
+        },
+      },
     },
   },
   hooks: {
