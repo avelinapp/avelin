@@ -1,11 +1,11 @@
+import type { HocuspocusProvider } from '@hocuspocus/provider'
+import { useEffect, useMemo, useState } from 'react'
 import { type BaseColor, colors } from '@/lib/rooms'
 import {
   type AwarenessList,
   USER_IDLE_TIMEOUT,
   type UserAwareness,
 } from '@/lib/sync'
-import type { HocuspocusProvider } from '@hocuspocus/provider'
-import { useEffect, useMemo, useState } from 'react'
 
 type CursorsProps = {
   provider: HocuspocusProvider
@@ -89,7 +89,6 @@ export function Cursors({ provider }: CursorsProps) {
   }, [])
 
   // Insert awareness info into cursors with styles
-  // biome-ignore lint/correctness/useExhaustiveDependencies:
   const styleSheet = useMemo(() => {
     let cursorStyles = ''
 
@@ -138,6 +137,6 @@ export function Cursors({ provider }: CursorsProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [awarenessUsers, tick])
 
-  // biome-ignore lint/security/noDangerouslySetInnerHtml:
+  // biome-ignore lint/security/noDangerouslySetInnerHtml: required
   return <style dangerouslySetInnerHTML={styleSheet} />
 }

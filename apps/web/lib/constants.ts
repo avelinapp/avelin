@@ -2,7 +2,6 @@ import {
   BashLogo,
   GraphQLLogo,
   JavascriptLogo,
-  MySQLLogo,
   PlainTextLogo,
   PostgreSQLLogo,
   PowerShellLogo,

@@ -1,10 +1,9 @@
 'use client'
 
+import { cn } from '@avelin/ui/cn'
 import * as ContextMenuPrimitive from '@radix-ui/react-context-menu'
 import { CheckIcon, ChevronRightIcon, CircleIcon } from 'lucide-react'
 import type * as React from 'react'
-
-import { cn } from '@avelin/ui/cn'
 
 function ContextMenu({
   ...props

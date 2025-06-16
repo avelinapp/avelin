@@ -1,7 +1,7 @@
 import {
-  type Config,
   adjectives,
   animals,
+  type Config,
   uniqueNamesGenerator,
 } from 'unique-names-generator'
 

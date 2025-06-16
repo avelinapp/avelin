@@ -1,9 +1,5 @@
 'use client'
 
-import { authClient } from '@/lib/auth'
-import { LOGOUT_ACTION_TOAST_ID } from '@/lib/constants'
-import { env } from '@/lib/env'
-import { preferencesComingSoonToast } from '@/lib/toasts'
 import type { User } from '@avelin/auth'
 import {
   HouseIcon,
@@ -29,6 +25,10 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { useState } from 'react'
+import { authClient } from '@/lib/auth'
+import { LOGOUT_ACTION_TOAST_ID } from '@/lib/constants'
+import { env } from '@/lib/env'
+import { preferencesComingSoonToast } from '@/lib/toasts'
 
 export function MyAccountDropdown({ user }: { user: User }) {
   const router = useRouter()

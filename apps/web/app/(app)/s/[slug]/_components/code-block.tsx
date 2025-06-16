@@ -1,21 +1,17 @@
 // @ts-nocheck
 'use client'
 
-import { avelinDark, avelinLight } from '@/components/editor/themes'
-import { languages } from '@/lib/constants'
-import { CopyIcon } from '@avelin/icons'
-import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
-import { useScrollEdges } from '@avelin/ui/hooks'
-import { useMeasureFull } from '@avelin/ui/hooks'
-import { useIsMobile } from '@avelin/ui/hooks'
+import { useIsMobile, useMeasureFull, useScrollEdges } from '@avelin/ui/hooks'
 import { toJsxRuntime } from 'hast-util-to-jsx-runtime'
 import { useTheme } from 'next-themes'
 import type React from 'react'
 import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { jsx, jsxs } from 'react/jsx-runtime'
-import { type BundledLanguage, codeToHtml, createHighlighter } from 'shiki'
+import { type BundledLanguage, createHighlighter } from 'shiki'
 import { visit } from 'unist-util-visit'
+import { avelinDark, avelinLight } from '@/components/editor/themes'
+import { languages } from '@/lib/constants'
 import { CopyCodeButton } from './copy-code-button'
 
 type CodeBlockProps = {

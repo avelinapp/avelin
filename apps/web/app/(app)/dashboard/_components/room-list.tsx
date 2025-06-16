@@ -1,12 +1,7 @@
 'use client'
 
-import { useRerender } from '@/hooks/use-rerender'
-import { Room } from '@/lib/mutations.zero'
-import { useZero } from '@/lib/zero'
-import { useView } from '@/providers/view-provider'
 import {
   ActivityIcon,
-  CircleDotIcon,
   LayersIcon,
   LayoutGridIcon,
   LayoutListIcon,
@@ -20,6 +15,10 @@ import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
+import { useRerender } from '@/hooks/use-rerender'
+import { Room } from '@/lib/mutations.zero'
+import { useZero } from '@/lib/zero'
+import { useView } from '@/providers/view-provider'
 import EmptyRooms from './empty-rooms'
 import { RoomListItem } from './room-list-item'
 

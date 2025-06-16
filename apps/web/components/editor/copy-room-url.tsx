@@ -1,11 +1,11 @@
 'use client'
 
-import { env } from '@/lib/env'
 import { CopyIcon, LinkIcon } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { useCopyToClipboard } from '@avelin/ui/hooks'
 import { toast } from '@avelin/ui/sonner'
 import { useMemo } from 'react'
+import { env } from '@/lib/env'
 
 export function CopyRoomURL({ roomSlug }: { roomSlug: string }) {
   const [, copy] = useCopyToClipboard()

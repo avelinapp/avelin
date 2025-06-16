@@ -1,11 +1,5 @@
 'use client'
 
-import { type BaseColor, colors } from '@/lib/rooms'
-import type { UserInfo } from '@/lib/sync'
-import {
-  useCodeRoomStore,
-  useCustomUsersSelector,
-} from '@/providers/code-room-provider'
 import { ChevronDownIcon } from '@avelin/icons'
 import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
 import { Button } from '@avelin/ui/button'
@@ -27,6 +21,12 @@ import {
   useMemo,
   useState,
 } from 'react'
+import { type BaseColor, colors } from '@/lib/rooms'
+import type { UserInfo } from '@/lib/sync'
+import {
+  useCodeRoomStore,
+  useCustomUsersSelector,
+} from '@/providers/code-room-provider'
 
 type UsersListDisplayProps = {
   users: Array<Omit<UserInfo, 'lastActive'>>

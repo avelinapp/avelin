@@ -1,4 +1,4 @@
-import { type AuthData, type ZeroSchema, schema } from '@avelin/zero'
+import { type AuthData, schema, type ZeroSchema } from '@avelin/zero'
 import { Zero } from '@rocicorp/zero'
 import { createUseZero } from '@rocicorp/zero/react'
 import type { Metadata } from 'next'

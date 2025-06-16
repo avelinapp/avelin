@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useLayoutEffect, useMemo, useState } from 'react'
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function useScrollEdges(ref: React.RefObject<any>) {

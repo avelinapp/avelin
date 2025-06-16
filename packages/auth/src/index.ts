@@ -2,11 +2,11 @@ import { db, schema } from '@avelin/database'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import {
-  type JwtOptions,
   anonymous,
   bearer,
   createAuthMiddleware,
   getJwtToken,
+  type JwtOptions,
   jwt,
   openAPI,
 } from 'better-auth/plugins'

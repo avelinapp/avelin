@@ -1,6 +1,7 @@
 import { newId } from '@avelin/id'
 import { relations } from 'drizzle-orm'
 import {
+  boolean,
   integer,
   pgEnum,
   pgTable,
@@ -8,7 +9,6 @@ import {
   text,
   timestamp,
 } from 'drizzle-orm/pg-core'
-import { boolean } from 'drizzle-orm/pg-core'
 import { bytea } from './custom-types.js'
 import { timestamps } from './helpers/columns.js'
 

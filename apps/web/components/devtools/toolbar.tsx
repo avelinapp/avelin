@@ -1,16 +1,14 @@
 'use client'
-
-import { env } from '@/lib/env'
-import { useView } from '@/providers/view-provider'
-import { LoaderIcon, LogoAvelin } from '@avelin/icons'
-import { BunLogo, NodeJSLogo } from '@avelin/icons'
+import { BunLogo, LoaderIcon, LogoAvelin, NodeJSLogo } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { useEffect, useState } from 'react'
 // @ts-ignore
 import { tinykeys } from 'tinykeys'
+import { env } from '@/lib/env'
+import { useView } from '@/providers/view-provider'
 import { FPSMeter } from './fps'
 import ZeroCache from './zero-cache'
 

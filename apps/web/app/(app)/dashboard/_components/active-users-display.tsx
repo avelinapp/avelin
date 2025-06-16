@@ -1,6 +1,5 @@
 'use client'
 
-import { Avatar, AvatarFallback } from '@avelin/ui/avatar'
 import { cn } from '@avelin/ui/cn'
 import {
   HoverCard,

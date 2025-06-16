@@ -1,10 +1,10 @@
-import { env } from '@/lib/env'
 import type { auth } from '@avelin/auth'
 import {
   anonymousClient,
   createAuthClient,
   inferAdditionalFields,
 } from '@avelin/auth/client'
+import { env } from '@/lib/env'
 
 const API_URL = env.NEXT_PUBLIC_API_URL
 

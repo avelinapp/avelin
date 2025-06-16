@@ -1,12 +1,12 @@
-import { env } from '@/lib/env'
-import { getPrettyHostname } from '@/lib/utils'
-import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { CopyIcon, LinkIcon } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { CommandItem } from '@avelin/ui/command'
 import { useCopyToClipboard } from '@avelin/ui/hooks'
 import { toast } from '@avelin/ui/sonner'
 import { useMemo } from 'react'
+import { env } from '@/lib/env'
+import { getPrettyHostname } from '@/lib/utils'
+import { useCodeRoomStore } from '@/providers/code-room-provider'
 
 interface Props {
   closeMenu: () => void

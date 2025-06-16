@@ -11,6 +11,7 @@ import {
   Tailwind,
   Text,
 } from '@react-email/components'
+// biome-ignore lint/correctness/noUnusedImports: required for react-email components
 import * as React from 'react'
 
 export default function WaitlistInviteEmail() {

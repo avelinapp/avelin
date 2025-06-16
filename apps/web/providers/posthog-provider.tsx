@@ -1,11 +1,13 @@
 'use client'
 
-import { env } from '@/lib/env'
 import { usePathname, useSearchParams } from 'next/navigation'
 import posthog from 'posthog-js'
-import { usePostHog } from 'posthog-js/react'
-import { PostHogProvider as PostHogProviderPrimitive } from 'posthog-js/react'
+import {
+  PostHogProvider as PostHogProviderPrimitive,
+  usePostHog,
+} from 'posthog-js/react'
 import { useEffect } from 'react'
+import { env } from '@/lib/env'
 import { useAuth } from './auth-provider'
 
 type PosthogBootstrapData = {

@@ -9,8 +9,7 @@ import {
 } from '@avelin/ui/table'
 import { flexRender, type Table as TanStackTable } from '@tanstack/react-table'
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export function DataTable({ table }: { table: TanStackTable<any> }) {
+export function DataTable<TData>({ table }: { table: TanStackTable<TData> }) {
   console.log('rows count:', table.getRowModel().rows.length)
   return (
     <>

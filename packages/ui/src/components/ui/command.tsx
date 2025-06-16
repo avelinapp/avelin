@@ -1,12 +1,11 @@
 'use client'
 
+import { cn } from '@avelin/ui/cn'
+import { Dialog, DialogContent } from '@avelin/ui/dialog'
 import type { DialogProps } from '@radix-ui/react-dialog'
 import { Command as CommandPrimitive } from 'cmdk'
 import { SearchIcon } from 'lucide-react'
 import * as React from 'react'
-
-import { cn } from '@avelin/ui/cn'
-import { Dialog, DialogContent } from '@avelin/ui/dialog'
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,

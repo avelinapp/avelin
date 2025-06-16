@@ -1,7 +1,5 @@
 'use client'
 
-import { Check, ChevronsUpDown } from 'lucide-react'
-
 import { Button, type ButtonTooltipProps } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
 import {
@@ -13,6 +11,7 @@ import {
   CommandList,
 } from '@avelin/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@avelin/ui/popover'
+import { Check, ChevronsUpDown } from 'lucide-react'
 import { forwardRef, useState } from 'react'
 
 type ComboboxProps = {

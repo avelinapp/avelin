@@ -1,5 +1,5 @@
-import { ChevronLeftIcon, ChevronRightIcon, LogoAvelin } from '@avelin/icons'
-import { Button, buttonVariants } from '@avelin/ui/button'
+import { ChevronLeftIcon, LogoAvelin } from '@avelin/icons'
+import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
 import { motion } from 'motion/react'
 import Link from 'next/link'

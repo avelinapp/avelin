@@ -13,7 +13,7 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
     .onParse(async ({ request, headers }) => {
       if (headers['content-type'] === 'application/json; charset=utf-8') {
         const arrayBuffer = await readableStreamToArrayBuffer(
-          // biome-ignore lint/suspicious/noExplicitAny:
+          // biome-ignore lint/suspicious/noExplicitAny: required
           request.body as any,
         )
         const rawBody = Buffer.from(arrayBuffer)
@@ -70,7 +70,7 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
     })
     .post('/sync/webhook', async (c) => {
       /* Verify the request signature */
-      // biome-ignore lint/suspicious/noExplicitAny:
+      // biome-ignore lint/suspicious/noExplicitAny: required
       const body = new Uint8Array(c.body as any)
 
       const signature = Buffer.from(
@@ -102,7 +102,7 @@ export const rooms = new Elysia({ prefix: '/rooms' }).guard({}, (app) =>
         })
       }
 
-      // biome-ignore lint/suspicious/noExplicitAny:
+      // biome-ignore lint/suspicious/noExplicitAny: required
       const data = c.body as any
 
       const { event, payload } = data

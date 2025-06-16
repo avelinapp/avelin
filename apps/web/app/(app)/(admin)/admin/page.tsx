@@ -1,10 +1,10 @@
 'use client'
 
+import { useQuery } from '@rocicorp/zero/react'
+import { useEffect } from 'react'
 import { WaitlistEntriesTable } from '@/app/(app)/(admin)/admin/_/waitlist-entries-table'
 import { useZero } from '@/lib/zero'
 import { useView } from '@/providers/view-provider'
-import { useQuery } from '@rocicorp/zero/react'
-import { useEffect } from 'react'
 
 export default function Page() {
   const { setReady } = useView()

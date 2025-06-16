@@ -1,12 +1,14 @@
-import Toolbar from '@/app/(app)/dashboard/_components/toolbar'
-import { authClient } from '@/lib/auth'
 import { authCookies } from '@avelin/auth'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
+import Toolbar from '@/app/(app)/dashboard/_components/toolbar'
+import { authClient } from '@/lib/auth'
 
 export default async function AdminLayout({
   children,
-}: { children: React.ReactNode }) {
+}: {
+  children: React.ReactNode
+}) {
   const cookieStore = await cookies()
 
   const sessionId = cookieStore.get(authCookies.sessionToken.name)?.value

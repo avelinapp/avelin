@@ -1,11 +1,11 @@
 import { schema as drizzleSchema } from '@avelin/database'
 import {
   ANYONE_CAN,
+  definePermissions,
   type ExpressionBuilder,
   NOBODY_CAN,
   type PermissionsConfig,
   type Row,
-  definePermissions,
 } from '@rocicorp/zero'
 import { createZeroSchema } from 'drizzle-zero'
 

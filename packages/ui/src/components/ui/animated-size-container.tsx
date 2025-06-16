@@ -11,8 +11,8 @@ import { useResizeObserver } from '@avelin/ui/hooks'
 import { motion } from 'motion/react'
 import {
   type ComponentPropsWithoutRef,
-  type PropsWithChildren,
   forwardRef,
+  type PropsWithChildren,
   useRef,
 } from 'react'
 

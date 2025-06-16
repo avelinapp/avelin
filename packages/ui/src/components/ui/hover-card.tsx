@@ -1,9 +1,8 @@
 'use client'
 
+import { cn } from '@avelin/ui/cn'
 import * as HoverCardPrimitive from '@radix-ui/react-hover-card'
 import type * as React from 'react'
-
-import { cn } from '@avelin/ui/cn'
 
 function HoverCard({
   ...props

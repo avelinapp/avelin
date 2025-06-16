@@ -1,13 +1,13 @@
-import { berkeleyMono, inter } from '@/lib/fonts'
 import type { Metadata } from 'next'
+import { berkeleyMono, inter } from '@/lib/fonts'
 import '../globals.css'
+import { Toaster } from '@avelin/ui/sonner'
+import { LayoutGroup } from 'motion/react'
 import CommandMenu from '@/components/command-menu/command-menu'
 import AvelinDevToolsToolbar from '@/components/devtools/toolbar'
 import OneDollarStatsScript from '@/components/misc/one-dollar-stats'
 import { env } from '@/lib/env'
 import Providers from '@/providers'
-import { Toaster } from '@avelin/ui/sonner'
-import { LayoutGroup } from 'motion/react'
 
 export const metadata: Metadata = {
   title: 'Avelin',

@@ -1,16 +1,5 @@
 'use client'
 
-import { type Language, languages } from '@/lib/constants'
-import { env } from '@/lib/env'
-import { assignOption, baseColors, generateUniqueName } from '@/lib/rooms'
-import {
-  type AwarenessChange,
-  type AwarenessList,
-  USER_IDLE_TIMEOUT,
-  type UserAwareness,
-  type UserInfo,
-} from '@/lib/sync'
-import { client } from '@/lib/zero'
 import type { Session, User } from '@avelin/auth'
 import { toast } from '@avelin/ui/sonner'
 import type { Zero } from '@avelin/zero'
@@ -22,8 +11,19 @@ import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-s
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { Awareness } from 'y-protocols/awareness'
 import * as Y from 'yjs'
-import { type StoreApi, createStore, useStore } from 'zustand'
+import { createStore, type StoreApi, useStore } from 'zustand'
 import { useShallow } from 'zustand/react/shallow'
+import { type Language, languages } from '@/lib/constants'
+import { env } from '@/lib/env'
+import { assignOption, baseColors, generateUniqueName } from '@/lib/rooms'
+import {
+  type AwarenessChange,
+  type AwarenessList,
+  USER_IDLE_TIMEOUT,
+  type UserAwareness,
+  type UserInfo,
+} from '@/lib/sync'
+import { client } from '@/lib/zero'
 
 const CodeRoomContext = createContext<StoreApi<CodeRoomStore> | null>(null)
 
@@ -196,7 +196,6 @@ export const createCodeRoomStore = () =>
           const newAwareness = [...awareness.getStates()] as AwarenessList
 
           if (!skipRoomAwarenessChangeEvent) {
-            // biome-ignore lint/complexity/noForEach: <explanation>
             added.forEach((id) => {
               const userAwareness = newAwareness.find(
                 ([clientId]) => clientId === id,
@@ -207,7 +206,6 @@ export const createCodeRoomStore = () =>
               toast.info(`${client.user?.name} joined the room.`)
             })
 
-            // biome-ignore lint/complexity/noForEach:
             removed.forEach((id) => {
               const removedUser = get().users.get(id)
 

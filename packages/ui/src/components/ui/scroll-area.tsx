@@ -1,9 +1,8 @@
 'use client'
 
+import { cn } from '@avelin/ui/cn'
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'
 import * as React from 'react'
-
-import { cn } from '@avelin/ui/cn'
 
 const ScrollArea = React.forwardRef<
   React.ElementRef<typeof ScrollAreaPrimitive.Root>,
