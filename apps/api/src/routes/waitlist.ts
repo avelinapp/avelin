@@ -45,7 +45,7 @@ export const waitlist = new Elysia({ prefix: '/waitlist' })
     },
   )
   .use(auth)
-  .get(
+  .post(
     '/invite',
     async ({ user, body: { email, waitlistEntryId }, error }) => {
       if (!user.isAdminUser) {
@@ -70,7 +70,7 @@ export const waitlist = new Elysia({ prefix: '/waitlist' })
         })
 
         if (res.error) {
-          return error(500, { error: res.error })
+          return error(500, { error: res.error.message })
         }
 
         return res.data
