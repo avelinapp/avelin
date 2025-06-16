@@ -47,14 +47,14 @@ export const waitlist = new Elysia({ prefix: '/waitlist' })
   .use(auth)
   .post(
     '/invite',
-    async ({ user, body: { email, waitlistEntryId }, error }) => {
+    async ({ user, body: { waitlistEntryId }, error }) => {
       if (!user.isAdminUser) {
         return error(403, {
           error: 'Only admins can invite users.',
         })
       }
 
-      if (!email && !waitlistEntryId) {
+      if (!waitlistEntryId) {
         return error(400, {
           error: 'Must provide either an email or a waitlistEntryId.',
         })
@@ -76,34 +76,28 @@ export const waitlist = new Elysia({ prefix: '/waitlist' })
         return res.data
       }
 
-      if (email) {
-        return await sendEmail(email)
+      const [entry] = await db
+        .select()
+        .from(schema.waitlistEntries)
+        .where(eq(schema.waitlistEntries.id, waitlistEntryId))
+
+      if (!entry) {
+        return error(404, {
+          error: 'Waitlist entry not found.',
+        })
       }
 
-      if (waitlistEntryId) {
-        const [entry] = await db
-          .select()
-          .from(schema.waitlistEntries)
-          .where(eq(schema.waitlistEntries.id, waitlistEntryId))
+      await sendEmail(entry.email)
 
-        if (!entry) {
-          return error(404, {
-            error: 'Waitlist entry not found.',
-          })
-        }
-
-        return await sendEmail(entry.email)
-      }
+      await db
+        .update(schema.waitlistEntries)
+        .set({ invitedAt: new Date(), status: 'invite_sent' })
+        .where(eq(schema.waitlistEntries.id, waitlistEntryId))
     },
     {
       auth: true,
       body: t.Object({
-        email: t.Optional(
-          t.String({
-            format: 'email',
-          }),
-        ),
-        waitlistEntryId: t.Optional(t.String()),
+        waitlistEntryId: t.String(),
       }),
     },
   )
