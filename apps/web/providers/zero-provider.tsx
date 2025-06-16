@@ -1,11 +1,11 @@
 'use client'
 
-import { getZeroClient } from '@/lib/zero'
 import type { AuthData } from '@avelin/zero'
 import { ZeroProvider as ZeroProviderPrimitive } from '@rocicorp/zero/react'
 import { decodeJwt } from 'jose/jwt/decode'
 import Cookies from 'js-cookie'
 import { usePathname } from 'next/navigation'
+import { getZeroClient } from '@/lib/zero'
 import { useAuth } from './auth-provider'
 import ViewProvider from './view-provider'
 

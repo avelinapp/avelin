@@ -1,5 +1,5 @@
 import { validateJwt } from '@avelin/auth/jwt'
-import { type NeonDatabase, createDb, eq, schema } from '@avelin/database'
+import { createDb, eq, type NeonDatabase, schema } from '@avelin/database'
 import { generate, newRoomSlug } from '@avelin/id'
 import { Database } from '@hocuspocus/extension-database'
 import { Logger } from '@hocuspocus/extension-logger'
@@ -43,12 +43,12 @@ const server = new Hocuspocus({
       secret: env.HOCUSPOCUS_WEBHOOK_SECRET,
       transformer: {
         // TODO: Complete implementation
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        toYdoc(document: any, fieldName: string): Doc {
+        // biome-ignore lint/suspicious/noExplicitAny: leave them
+        toYdoc(_document: any, _fieldName: string): Doc {
           // convert the given document (from your api) to a ydoc using the provided fieldName
           return new Doc()
         },
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        // biome-ignore lint/suspicious/noExplicitAny: leave them
         fromYdoc(document: Doc): any {
           // convert the ydoc to your representation
           const meta = document.getMap('meta').toJSON()
@@ -113,7 +113,7 @@ const { app } = expressWebsockets(express())
 app.use(cookieParser())
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', (_, res) => {
   res.send('Avelin Sync is running!')
 })
 

@@ -1,6 +1,7 @@
 import { newId } from '@avelin/id'
 import { relations } from 'drizzle-orm'
 import {
+  boolean,
   integer,
   pgEnum,
   pgTable,
@@ -8,7 +9,6 @@ import {
   text,
   timestamp,
 } from 'drizzle-orm/pg-core'
-import { boolean } from 'drizzle-orm/pg-core'
 import { bytea } from './custom-types.js'
 import { timestamps } from './helpers/columns.js'
 
@@ -23,6 +23,7 @@ export const users = pgTable('users', {
   isAnonymous: boolean().default(false),
   /* When an anonymous user was transitioned to a real user. */
   retiredAt: timestamp({ withTimezone: true, mode: 'date' }),
+  isAdminUser: boolean().notNull().default(false),
   ...timestamps,
 })
 
@@ -145,7 +146,7 @@ export const roomParticipants = pgTable(
 
 export const roomParticipantsRelations = relations(
   roomParticipants,
-  ({ one, many }) => ({
+  ({ one }) => ({
     user: one(users, {
       fields: [roomParticipants.userId],
       references: [users.id],

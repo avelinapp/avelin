@@ -190,6 +190,13 @@
       "when": 1748900793995,
       "tag": "0026_rooms-add-static_slug-column",
       "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1749998122852,
+      "tag": "0027_users-create-isAdminUser-column",
+      "breakpoints": true
     }
   ]
 }

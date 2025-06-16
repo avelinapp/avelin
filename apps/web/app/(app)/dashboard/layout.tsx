@@ -1,8 +1,8 @@
-import { authClient } from '@/lib/auth'
 import { authCookies } from '@avelin/auth'
 import type { Metadata } from 'next'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { authClient } from '@/lib/auth'
 import Toolbar from './_components/toolbar'
 
 export const metadata: Metadata = {

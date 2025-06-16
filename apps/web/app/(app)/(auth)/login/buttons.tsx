@@ -1,9 +1,9 @@
 'use client'
 
-import { authClient } from '@/lib/auth'
-import { env } from '@/lib/env'
 import { LogoGoogle } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
+import { authClient } from '@/lib/auth'
+import { env } from '@/lib/env'
 
 export const LoginWithGoogle = () => {
   async function signIn() {

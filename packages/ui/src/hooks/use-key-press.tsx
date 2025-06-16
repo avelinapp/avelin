@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 
-// biome-ignore lint/suspicious/noExplicitAny:
+// biome-ignore lint/suspicious/noExplicitAny: required
 export const useKeyPress = (keys: string[], callback: any, node = null) => {
   // implement the callback ref pattern
   const callbackRef = useRef(callback)

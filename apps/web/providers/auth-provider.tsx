@@ -1,10 +1,10 @@
 'use client'
 
-import { authClient } from '@/lib/auth'
-import { env } from '@/lib/env'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation'
 import { createContext, useCallback, useContext, useState } from 'react'
+import { authClient } from '@/lib/auth'
+import { env } from '@/lib/env'
 
 type User = typeof authClient.$Infer.Session.user
 type Session = typeof authClient.$Infer.Session.session

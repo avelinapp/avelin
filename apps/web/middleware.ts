@@ -1,9 +1,9 @@
-import { type Session, type User, authCookies } from '@avelin/auth'
+import { authCookies, type Session, type User } from '@avelin/auth'
 import { betterFetch } from '@better-fetch/fetch'
 import { decodeJwt } from 'jose'
 import { ResponseCookies } from 'next/dist/compiled/@edge-runtime/cookies'
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import { env } from './lib/env'
 import { inArray } from './lib/utils'
 

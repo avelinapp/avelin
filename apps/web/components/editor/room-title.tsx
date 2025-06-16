@@ -1,10 +1,10 @@
 'use client'
 
-import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { cn } from '@avelin/ui/cn'
 import { Input } from '@avelin/ui/input'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@avelin/ui/tooltip'
 import { memo, useEffect, useRef, useState } from 'react'
+import { useCodeRoomStore } from '@/providers/code-room-provider'
 
 export const RoomTitle = memo(function RoomTitle() {
   const [roomTitle, setRoomTitle] = useCodeRoomStore((state) => [

@@ -1,7 +1,7 @@
-import { languages } from '@/lib/constants'
-import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { ChevronRightIcon, CodeXmlIcon } from '@avelin/icons'
 import { CommandItem, type CommandItemProps } from '@avelin/ui/command'
+import { languages } from '@/lib/constants'
+import { useCodeRoomStore } from '@/providers/code-room-provider'
 
 export function ChangeEditorLanguageRootCommand({
   ...props

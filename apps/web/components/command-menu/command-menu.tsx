@@ -1,7 +1,5 @@
 'use client'
 
-import { inArray } from '@/lib/utils'
-import { useCommandMenu } from '@/providers/command-menu-provider'
 import { AnimatedSizeContainer } from '@avelin/ui/animated-size-container'
 import { cn } from '@avelin/ui/cn'
 import {
@@ -25,6 +23,8 @@ import { type AnimationSequence, animate } from 'motion'
 import { motion } from 'motion/react'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { inArray } from '@/lib/utils'
+import { useCommandMenu } from '@/providers/command-menu-provider'
 import { CopyRoomUrlCommand } from './commands/copy-room-url'
 import {
   ChangeEditorLanguageCommands,

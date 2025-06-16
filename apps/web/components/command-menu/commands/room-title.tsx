@@ -1,7 +1,7 @@
-import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { PencilIcon } from '@avelin/icons'
 import { CommandItem, type CommandItemProps } from '@avelin/ui/command'
 import { useEffect } from 'react'
+import { useCodeRoomStore } from '@/providers/code-room-provider'
 
 export function RoomTitleRootCommand({ ...props }: CommandItemProps) {
   return (

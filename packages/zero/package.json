@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "tsc --watch",
     "dev:zero": "zero-cache-dev -p src/schema.ts",
-    "zero:migrate": "tsx src/scripts/migrate.ts",
     "zero:deploy-permissions": "zero-deploy-permissions --schema-path src/schema.ts",
     "build": "tsc",
     "check": "biome check .",

@@ -1,11 +1,11 @@
 'use client'
 
-import { inArray } from '@/lib/utils'
 import { LogoAvelin } from '@avelin/icons'
 import { AnimatePresence, motion } from 'motion/react'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { create, useStore } from 'zustand'
+import { inArray } from '@/lib/utils'
 
 type ViewState = {
   ready: boolean
@@ -35,7 +35,9 @@ type Timing =
 
 export default function ViewProvider({
   children,
-}: { children: React.ReactNode }) {
+}: {
+  children: React.ReactNode
+}) {
   const { ready, setReady, isSimulation } = useView()
   const [showFallback, setShowFallback] = useState(false)
   const [timing, setTiming] = useState<Timing>({

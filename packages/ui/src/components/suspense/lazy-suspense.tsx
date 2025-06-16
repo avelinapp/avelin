@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic'
-import { Suspense, lazy } from 'react'
+import { lazy, Suspense } from 'react'
 import DelayedFallback from './delayed-fallback'
 import FadeIn from './fade-in'
 

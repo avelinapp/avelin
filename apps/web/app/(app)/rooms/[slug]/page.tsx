@@ -1,13 +1,13 @@
 'use client'
 
-import { useZero } from '@/lib/zero'
-import { useAuth } from '@/providers/auth-provider'
-import { useCodeRoomStore } from '@/providers/code-room-provider'
-import { useView } from '@/providers/view-provider'
 import { useIsFirstRender } from '@avelin/ui/hooks'
 import { useQuery } from '@rocicorp/zero/react'
 import { AnimatePresence } from 'motion/react'
 import { use, useEffect, useMemo, useState } from 'react'
+import { useZero } from '@/lib/zero'
+import { useAuth } from '@/providers/auth-provider'
+import { useCodeRoomStore } from '@/providers/code-room-provider'
+import { useView } from '@/providers/view-provider'
 import CodeRoom from './_components/code-room'
 import { LoadingRoom } from './_components/code-room-loading'
 

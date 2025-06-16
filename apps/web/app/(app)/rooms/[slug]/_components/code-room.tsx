@@ -4,10 +4,11 @@ const EditorTextArea = dynamic(
   () => import('@/components/editor/editor-text-area'),
   { ssr: false },
 )
-import { EditorToolbar } from '@/components/editor/editor-toolbar'
+
 import { motion } from 'motion/react'
 import dynamic from 'next/dynamic'
 import { memo } from 'react'
+import { EditorToolbar } from '@/components/editor/editor-toolbar'
 
 export const CodeRoom = memo(__CodeRoom)
 

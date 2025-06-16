@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
 import { cn } from '@avelin/ui/cn'
 import type { Zero } from '@avelin/zero'
 import { AnimatePresence, LayoutGroup, motion } from 'motion/react'
-import { type ComponentPropsWithoutRef, forwardRef } from 'react'
 
 type UsersListDisplayProps = {
   users: Array<Zero.Schema.User>

@@ -1,6 +1,7 @@
 {
   "extends": "@avelin/typescript-config/nextjs.json",
   "compilerOptions": {
+    "types": ["undici-types"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]

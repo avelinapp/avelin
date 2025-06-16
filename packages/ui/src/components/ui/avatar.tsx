@@ -1,9 +1,8 @@
 'use client'
 
+import { cn } from '@avelin/ui/cn'
 import * as AvatarPrimitive from '@radix-ui/react-avatar'
 import * as React from 'react'
-
-import { cn } from '@avelin/ui/cn'
 
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,

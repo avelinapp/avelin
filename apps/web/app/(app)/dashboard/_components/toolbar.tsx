@@ -1,11 +1,11 @@
 'use client'
 
-import { MyAccountDropdown } from '@/components/editor/my-account-dropdown'
-import { useAuth } from '@/providers/auth-provider'
 import type { Auth } from '@avelin/database'
 import { LogoAvelin } from '@avelin/icons'
 import { motion } from 'motion/react'
 import Link from 'next/link'
+import { MyAccountDropdown } from '@/components/editor/my-account-dropdown'
+import { useAuth } from '@/providers/auth-provider'
 
 export default function Toolbar() {
   const { user } = useAuth()

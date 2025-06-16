@@ -1,9 +1,8 @@
 'use client'
 
-import { Slot } from '@radix-ui/react-slot'
-import { type VariantProps, cva } from 'class-variance-authority'
-
 import { cn } from '@avelin/ui/cn'
+import { Slot } from '@radix-ui/react-slot'
+import { cva, type VariantProps } from 'class-variance-authority'
 import { forwardRef } from 'react'
 import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip'
 
@@ -46,7 +45,7 @@ export type ButtonTooltipProps = {
 }
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'size'>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
   tooltip?: ButtonTooltipProps

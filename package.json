@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "turbo run dev dev:tsc --concurrency=20",
     "dev:zero": "turbo run dev:zero",
-    "dev:up": "turbo run dev dev:tsc dev:zero db:studio --concurrency=16",
+    "dev:email": "turbo run dev:email",
+    "dev:up": "turbo run dev dev:tsc dev:zero dev:email db:studio --concurrency=20",
     "check": "biome check .",
     "check:fix": "biome check . --write",
     "build": "turbo run build",
@@ -27,7 +28,7 @@
     "clean": "rm -rf **/node_modules **/.turbo **/.next **/dist"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.0.0-beta.4",
     "@release-it/conventional-changelog": "^9.0.2",
     "auto-changelog": "^2.5.0",
     "husky": "^9.1.6",

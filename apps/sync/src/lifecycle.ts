@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { type NeonDatabase, db, eq, schema } from '@avelin/database'
+import { eq, type NeonDatabase, schema } from '@avelin/database'
 import { env } from './env.js'
 import { fileExists } from './utils.js'
 

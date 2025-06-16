@@ -1,10 +1,5 @@
 'use client'
 
-import { type Language, languages } from '@/lib/constants'
-import { env } from '@/lib/env'
-import { Room } from '@/lib/mutations.zero'
-import { relativeTime } from '@/lib/utils'
-import { useZero } from '@/lib/zero'
 import { ActivityIcon, CopyIcon, LinkIcon, Trash2Icon } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
@@ -21,6 +16,11 @@ import type { Zero } from '@avelin/zero'
 import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
 import { useRouter } from 'next/navigation'
 import { useMemo } from 'react'
+import { type Language, languages } from '@/lib/constants'
+import { env } from '@/lib/env'
+import { Room } from '@/lib/mutations.zero'
+import { relativeTime } from '@/lib/utils'
+import { useZero } from '@/lib/zero'
 import { ActiveUsersDisplay } from './active-users-display'
 import { UsersListDisplay } from './user-avatar-list'
 
@@ -123,6 +123,7 @@ export const RoomListItem = ({
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>
+        {/** biome-ignore lint/a11y/noStaticElementInteractions: required */}
         <div
           className={cn(
             'group/item px-4 h-12 flex items-center rounded-md gap-x-4 w-full justify-between border border-transparent data-[state=open]:bg-gray-2 data-[selected=true]:bg-gray-2 data-[keyboard-selected=true]:border-color-border-subtle outline-none',

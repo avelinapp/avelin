@@ -1,9 +1,8 @@
 'use client'
 
+import { cn } from '@avelin/ui/cn'
 import * as LabelPrimitive from '@radix-ui/react-label'
 import type * as React from 'react'
-
-import { cn } from '@avelin/ui/cn'
 
 function Label({
   className,

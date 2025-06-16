@@ -1,8 +1,10 @@
-import { authClient } from '@/lib/auth'
-import { getFlags } from '@/lib/posthog'
+// biome-ignore-all lint/suspicious/noExplicitAny: required
+
 import { authCookies } from '@avelin/auth'
 import { TooltipProvider } from '@avelin/ui/tooltip'
 import { cookies, headers } from 'next/headers'
+import { authClient } from '@/lib/auth'
+import { getFlags } from '@/lib/posthog'
 import AuthProvider from './auth-provider'
 import { CodeRoomProvider } from './code-room-provider'
 import { CommandMenuProvider } from './command-menu-provider'
@@ -19,8 +21,8 @@ export default async function Providers({
 
   const cookieStore = await cookies()
   const sessionId = cookieStore.get(authCookies.sessionToken.name)?.value
-  let auth = undefined
-  let posthogBootstrapData = undefined
+  let auth: any
+  let posthogBootstrapData: any
 
   if (sessionId) {
     const { data, error } = await authClient.getSession({
@@ -30,6 +32,8 @@ export default async function Providers({
     })
 
     auth = error ? undefined : data
+
+    console.log('[Providers] auth:', auth)
 
     if (auth) {
       const flags = await getFlags(auth.user.id)

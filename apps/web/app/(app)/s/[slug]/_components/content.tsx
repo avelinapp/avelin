@@ -1,12 +1,12 @@
 'use client'
 
+import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
+import { motion } from 'motion/react'
 import {
   containerVariants,
   sectionVariants,
 } from '@/app/(landing)/_components/variants'
 import { languages } from '@/lib/constants'
-import { Avatar, AvatarFallback, AvatarImage } from '@avelin/ui/avatar'
-import { motion } from 'motion/react'
 import { CodeBlock } from './code-block'
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>

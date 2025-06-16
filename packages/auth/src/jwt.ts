@@ -1,4 +1,4 @@
-import { type JWTPayload, createRemoteJWKSet, jwtVerify } from 'jose'
+import { createRemoteJWKSet, type JWTPayload, jwtVerify } from 'jose'
 import type { User } from './index.js'
 
 const API_URL = (process.env.API_URL ||

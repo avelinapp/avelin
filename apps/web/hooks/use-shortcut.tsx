@@ -1,7 +1,7 @@
 'use client'
 
-import { useCommandMenu } from '@/providers/command-menu-provider'
 import { useKeyPress } from '@avelin/ui/hooks'
+import { useCommandMenu } from '@/providers/command-menu-provider'
 
 export const useShortcut = (
   keys: string[],

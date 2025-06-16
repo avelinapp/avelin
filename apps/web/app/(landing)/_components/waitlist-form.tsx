@@ -1,7 +1,5 @@
 'use client'
 
-import { api } from '@/lib/api'
-import { delay } from '@/lib/utils'
 import { CircleCheckBigIcon } from '@avelin/icons'
 import { buttonVariants } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
@@ -19,6 +17,8 @@ import { AnimatePresence, motion } from 'motion/react'
 import { type RefObject, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { api } from '@/lib/api'
+import { delay } from '@/lib/utils'
 import { sectionVariants } from './variants'
 
 const waitlistFormSchema = z.object({
@@ -200,11 +200,7 @@ export function FormView({
   )
 }
 
-export function SubmittingView({
-  ref,
-}: {
-  ref?: RefObject<HTMLDivElement>
-}) {
+export function SubmittingView({ ref }: { ref?: RefObject<HTMLDivElement> }) {
   return (
     <motion.div ref={ref} className="flex gap-4 w-[400px]">
       <motion.button

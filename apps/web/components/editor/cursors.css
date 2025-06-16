@@ -37,7 +37,10 @@
   opacity: var(--name-opacity);
   transform: scale(var(--name-scale));
   transform-origin: bottom left;
-  transition: opacity 0.2s var(--ease-in-out-quad), visibility 0.2s var(--ease-in-out-quad), transform 0.2s var(--ease-in-out-quad);
+  transition:
+    opacity 0.2s var(--ease-in-out-quad),
+    visibility 0.2s var(--ease-in-out-quad),
+    transform 0.2s var(--ease-in-out-quad);
   position: absolute;
   top: -1.4em;
   left: -2px;

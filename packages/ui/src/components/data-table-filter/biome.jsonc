@@ -1,0 +1,10 @@
+{
+  "extends": ["../../../../../biome.jsonc"],
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noExplicitAny": "warn"
+      }
+    }
+  }
+}

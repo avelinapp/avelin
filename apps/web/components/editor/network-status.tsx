@@ -1,6 +1,5 @@
 'use client'
 
-import { useCodeRoomStore } from '@/providers/code-room-provider'
 import { ZapIcon } from '@avelin/icons'
 import { Badge } from '@avelin/ui/badge'
 import { cn } from '@avelin/ui/cn'
@@ -8,6 +7,7 @@ import { useNetworkStatus } from '@avelin/ui/hooks'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@avelin/ui/tooltip'
 import { WebSocketStatus } from '@hocuspocus/provider'
 import { useCallback, useEffect, useState } from 'react'
+import { useCodeRoomStore } from '@/providers/code-room-provider'
 
 interface NetworkStatusBadgeProps
   extends React.HTMLAttributes<HTMLDivElement> {}
