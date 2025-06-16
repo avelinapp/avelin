@@ -98,6 +98,10 @@ export const auth = betterAuth({
     user: {
       create: {
         before: async (user) => {
+          // Return early if creating an anonymous user
+          // @ts-expect-error for some reason, anonymous flag isn't typed
+          if (user.isAnonymous) return
+
           const [waitlistEntry] = await db
             .select()
             .from(schema.waitlistEntries)
