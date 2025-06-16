@@ -40,7 +40,7 @@ export const env = createEnv({
     POSTHOG_KEY: z.string().min(1),
 
     /* Resend */
-    // RESEND_API_KEY: z.string().min(1),
+    RESEND_API_KEY: z.string().min(1),
   },
 
   /**

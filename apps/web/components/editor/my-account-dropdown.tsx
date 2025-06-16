@@ -9,6 +9,7 @@ import {
   HouseIcon,
   KeyRoundIcon,
   LogOutIcon,
+  LogoAvelin,
   SettingsIcon,
   ShieldUserIcon,
 } from '@avelin/icons'
@@ -135,19 +136,23 @@ export function MyAccountDropdown({ user }: { user: User }) {
           />
           Preferences
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="group" asChild>
+          <Link href="/home">
+            <LogoAvelin className="size-4 shrink-0 group-hover:text-color-text-primary" />
+            Homepage
+          </Link>
+        </DropdownMenuItem>
         {user.isAdminUser && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="group" asChild>
-              <Link href="/admin">
-                <ShieldUserIcon
-                  strokeWidth={2.25}
-                  className="size-4 shrink-0 group-hover:text-color-text-primary"
-                />
-                Admin Area
-              </Link>
-            </DropdownMenuItem>
-          </>
+          <DropdownMenuItem className="group" asChild>
+            <Link href="/admin">
+              <ShieldUserIcon
+                strokeWidth={2.25}
+                className="size-4 shrink-0 group-hover:text-color-text-primary"
+              />
+              Admin Area
+            </Link>
+          </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
         <DropdownMenuItem className="group" onClick={handleLogout}>

@@ -32,6 +32,13 @@
     --color-destructive-hover: var(--red-12);
     --color-destructive-text: var(--red-10);
 
+    --color-cursors-red-selection: --alpha(var(--red-9) / 15%);
+    --color-cursors-orange-selection: --alpha(var(--orange-9) / 15%);
+    --color-cursors-green-selection: --alpha(var(--green-9) / 15%);
+    --color-cursors-blue-selection: --alpha(var(--blue-9) / 15%);
+    --color-cursors-purple-selection: --alpha(var(--purple-9) / 15%);
+    --color-cursors-pink-selection: --alpha(var(--pink-9) / 15%);
+
     --radius: 0.75rem;
   }
 

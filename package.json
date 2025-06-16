@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "turbo run dev dev:tsc --concurrency=20",
     "dev:zero": "turbo run dev:zero",
-    "dev:up": "turbo run dev dev:tsc dev:zero db:studio --concurrency=16",
+    "dev:email": "turbo run dev:email",
+    "dev:up": "turbo run dev dev:tsc dev:zero dev:email db:studio --concurrency=20",
     "check": "biome check .",
     "check:fix": "biome check . --write",
     "build": "turbo run build",

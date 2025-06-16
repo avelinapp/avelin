@@ -5,7 +5,8 @@
     "outDir": "dist",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "types": ["undici-types"]
+    "types": ["undici-types"],
+    "jsx": "react"
   },
   "include": ["src"],
   "exclude": ["node_modules"]
