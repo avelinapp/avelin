@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@avelin/ui/table'
-import { type Table as TanStackTable, flexRender } from '@tanstack/react-table'
+import { flexRender, type Table as TanStackTable } from '@tanstack/react-table'
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function DataTable({ table }: { table: TanStackTable<any> }) {
@@ -40,7 +40,7 @@ export function DataTable({ table }: { table: TanStackTable<any> }) {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  className="h-12"
+                  className="h-14"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -65,7 +65,7 @@ export function DataTable({ table }: { table: TanStackTable<any> }) {
             {table.getRowModel().rows.length < 10 && (
               <div
                 style={{
-                  height: `calc(${10 - table.getRowModel().rows.length} * 12 * var(--spacing)`,
+                  height: `calc(${10 - table.getRowModel().rows.length} * 14 * var(--spacing)`,
                 }}
               />
             )}
