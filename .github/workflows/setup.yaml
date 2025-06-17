@@ -1,0 +1,47 @@
+name: Checkout codebase
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: "The exact commit SHA or ref to checkout"
+        required: true
+        type: string
+
+jobs:
+  setup:
+    name: Checkout & install dependencies
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout monorepo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.ref }}
+
+      - name: Cache PNPM store
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Setup Node.js & PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          node-version-file: package.json
+          store: ~/.pnpm-store
+          cache: store
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Archive workspace
+        run: tar czf workspace.tar.gz .
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: workspace
+          path: workspace.tar.gz
