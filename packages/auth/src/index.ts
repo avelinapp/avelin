@@ -120,6 +120,19 @@ export const auth = betterAuth({
             })
           }
         },
+        after: async (user) => {
+          // Return early if creating an anonymous user
+          // @ts-expect-error for some reason, anonymous flag isn't typed
+          if (user.isAnonymous) return
+
+          await db
+            .update(schema.waitlistEntries)
+            .set({
+              status: 'invite_accepted',
+              acceptedAt: new Date(),
+            })
+            .where(eq(schema.waitlistEntries.email, user.email))
+        },
       },
     },
   },
