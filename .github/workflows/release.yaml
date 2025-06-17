@@ -39,7 +39,7 @@ jobs:
         with:
           run_install: false
 
-      - name: Install Node.js 20
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: "package.json"
@@ -47,7 +47,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Determine next version
         id: determine_version
@@ -88,6 +88,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.sha }}
 
       - name: Checkout submodule for static assets
         uses: actions/checkout@v4
@@ -410,6 +411,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.sha }}
 
       - name: Configure Git
         run: |
@@ -421,7 +423,7 @@ jobs:
         with:
           run_install: false
 
-      - name: Install Node.js 20
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: "package.json"
@@ -429,7 +431,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Create GitHub release
         run: pnpm release --ci
@@ -445,13 +447,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.sha }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           run_install: false
 
-      - name: Install Node.js 20
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: "package.json"
@@ -459,7 +462,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Migrate database
         env:
