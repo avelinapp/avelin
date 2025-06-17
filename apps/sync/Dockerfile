@@ -25,7 +25,13 @@ RUN turbo prune --scope=${PACKAGE} --docker
 
 # 3. Build the project
 FROM base AS builder
-ARG PACKAGE
+ARG PACKAGE 
+
+ARG TURBO_TEAM \
+  TURBO_TOKEN
+
+ENV TURBO_TEAM=${TURBO_TEAM} \
+  TURBO_TOKEN=${TURBO_TOKEN}
 
 # Environment to skip .env validation on build
 ENV CI=true

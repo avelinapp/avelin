@@ -127,6 +127,8 @@ jobs:
             NEXT_PUBLIC_ZERO_URL=https://zero.avelin.app
             NEXT_PUBLIC_BASE_DOMAIN=avelin.app
             NEXT_PUBLIC_POSTHOG_KEY=phc_ClqyvBT8tnlp26PQhvbWZHuSMvrn6gq0CZEqfzwI3JC
+            TURBO_TEAM=${{ vars.TURBO_TEAM }}
+            TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
