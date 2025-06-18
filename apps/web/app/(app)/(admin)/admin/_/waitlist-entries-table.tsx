@@ -55,6 +55,7 @@ export function WaitlistEntriesTable({
       pagination,
     },
     onPaginationChange: setPagination,
+    autoResetPageIndex: false,
   })
 
   // Step 6: Render the table!
