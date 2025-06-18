@@ -5,9 +5,10 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  type PaginationState,
   useReactTable,
 } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { tstColumnDefs } from '@/app/(app)/(admin)/admin/_/columns'
 import { DataTable } from '@/app/(app)/(admin)/admin/_/data-table'
 import { columnsConfig } from '@/app/(app)/(admin)/admin/_/filters'
@@ -34,6 +35,11 @@ export function WaitlistEntriesTable({
 
   const tstFilters = useMemo(() => createTSTFilters(filters), [filters])
 
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0, //initial page index
+    pageSize: 10, //default page size
+  })
+
   const table = useReactTable({
     data,
     columns: tstColumns,
@@ -46,7 +52,10 @@ export function WaitlistEntriesTable({
         id: false,
       },
       columnFilters: tstFilters,
+      pagination,
     },
+    onPaginationChange: setPagination,
+    autoResetPageIndex: false,
   })
 
   // Step 6: Render the table!
