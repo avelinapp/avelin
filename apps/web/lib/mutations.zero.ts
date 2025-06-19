@@ -1,4 +1,5 @@
 import { newId, newRoomSlug } from '@avelin/id'
+import posthog from 'posthog-js'
 import { now, client as zeroClient } from './zero'
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
@@ -20,6 +21,9 @@ export class Room {
     })
 
     const [room] = await z.query.rooms.where('id', id).run()
+
+    // Capture event
+    posthog.capture('room_created')
 
     return room
   }
