@@ -19,6 +19,10 @@ export const env = createEnv({
     GOOGLE_CLIENT_ID: z.string().min(1),
     GOOGLE_CLIENT_SECRET: z.string().min(1),
 
+    /* GitHub OAuth */
+    GITHUB_CLIENT_ID: z.string().min(1),
+    GITHUB_CLIENT_SECRET: z.string().min(1),
+
     /* Avelin Zero JWT */
     AUTH_JWT_SECRET: z.string().min(1),
 
