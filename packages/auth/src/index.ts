@@ -58,6 +58,20 @@ export const auth = betterAuth({
         }
       },
     },
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      mapProfileToUser: async (profile) => {
+        // Upload the profile picture to Avelin Storage
+        const pictureUrl = await storage.upload({
+          imageUrl: profile.avatar_url,
+        })
+
+        return {
+          image: pictureUrl,
+        }
+      },
+    },
   },
   plugins: [
     bearer(),

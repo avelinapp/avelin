@@ -1,5 +1,5 @@
 import { LogoAvelin } from '@avelin/icons'
-import { LoginWithGoogle } from './buttons'
+import { LoginWithGithub, LoginWithGoogle } from './buttons'
 
 export default function Page() {
   return (
@@ -13,6 +13,7 @@ export default function Page() {
       </div>
       <div className="w-full flex gap-2">
         <LoginWithGoogle />
+        <LoginWithGithub />
       </div>
     </div>
   )
