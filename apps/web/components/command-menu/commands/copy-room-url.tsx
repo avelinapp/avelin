@@ -1,11 +1,10 @@
-import { CopyIcon, LinkIcon } from '@avelin/icons'
+import { CopyIcon, ExternalLinkIcon, LinkIcon } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { CommandItem } from '@avelin/ui/command'
-import { useCopyToClipboard } from '@avelin/ui/hooks'
+import { useCopyToClipboard, useIsHoldingCmdKey } from '@avelin/ui/hooks'
 import { toast } from '@avelin/ui/sonner'
 import { useMemo } from 'react'
 import { env } from '@/lib/env'
-import { getPrettyHostname } from '@/lib/utils'
 import { useCodeRoomStore } from '@/providers/code-room-provider'
 
 interface Props {
@@ -14,6 +13,7 @@ interface Props {
 
 export function CopyRoomUrlCommand({ closeMenu }: Props) {
   const [room] = useCodeRoomStore((state) => [state.room])
+  const isHoldingCmdKey = useIsHoldingCmdKey()
   const [, copy] = useCopyToClipboard()
   const roomUrl = useMemo(
     () => `${env.NEXT_PUBLIC_APP_URL}/${room?.slug}`,
@@ -23,6 +23,16 @@ export function CopyRoomUrlCommand({ closeMenu }: Props) {
     () => `${env.NEXT_PUBLIC_APP_URL}/s/${room?.staticSlug}`,
     [room?.staticSlug],
   )
+
+  function handleStaticRoomSelect() {
+    if (isHoldingCmdKey) {
+      window.open(roomUrl, '_blank')
+      toast('Static room link opened in a new tab.')
+    } else {
+      handleCopy('static', true)
+      closeMenu()
+    }
+  }
 
   const handleCopy = (urlType: 'live' | 'static', notify?: boolean) => {
     const url = urlType === 'live' ? roomUrl : roomStaticUrl
@@ -48,6 +58,7 @@ export function CopyRoomUrlCommand({ closeMenu }: Props) {
   return (
     <>
       <CommandItem
+        value="Copy room link"
         keywords={['room', 'link', 'url', 'share', 'copy', 'live']}
         onSelect={() => {
           handleCopy('live', true)
@@ -55,21 +66,23 @@ export function CopyRoomUrlCommand({ closeMenu }: Props) {
         }}
       >
         <LinkIcon />
-        <span className="text-color-text-quaternary">Copy room link...</span>
-        <span>{`${getPrettyHostname()}/${room?.slug}`}</span>
+        <span className="text-color-text-quaternary">Copy room link</span>
       </CommandItem>
       <CommandItem
+        className="group"
+        value="Copy static room link"
         keywords={['room', 'link', 'url', 'share', 'copy', 'static']}
-        onSelect={() => {
-          handleCopy('static', true)
-          closeMenu()
-        }}
+        onSelect={handleStaticRoomSelect}
       >
         <LinkIcon />
         <span className="text-color-text-quaternary">
-          Copy static room link...
+          {isHoldingCmdKey
+            ? 'Open static room in a new tab'
+            : 'Copy static room link'}
         </span>
-        <span>{`${getPrettyHostname()}/s/${room?.staticSlug}`}</span>
+        <span className="ml-auto opacity-0 group-data-[selected=true]:opacity-100 transition-opacity duration-75 ease-out text-color-text-quaternary/75">
+          {isHoldingCmdKey ? <ExternalLinkIcon /> : '⌘ + Enter to open'}
+        </span>
       </CommandItem>
     </>
   )

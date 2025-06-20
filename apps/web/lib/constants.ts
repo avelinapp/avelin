@@ -103,4 +103,42 @@ export const languages: Language[] = [
   { value: 'yaml', name: 'YAML', logo: YamlLogo },
 ] as const
 
+/**
+ * Maps Avelin's language values to Ray.so's language keys.
+ * If a language is not present in Ray.so, the value is undefined.
+ */
+export const AVELIN_TO_RAYSO_LANGUAGE_MAP: Record<string, string | undefined> =
+  {
+    bat: undefined, // Not present in Ray.so
+    cpp: 'cpp',
+    css: 'css',
+    dockerfile: 'dockerfile',
+    go: 'go',
+    graphql: 'graphql',
+    html: 'html',
+    java: 'java',
+    javascript: 'javascript',
+    json: 'json',
+    lua: 'lua',
+    markdown: 'markdown',
+    'objective-c': 'objectivec', // Avelin uses 'objective-c', Ray.so uses 'objectivec'
+    pascal: undefined, // Not present in Ray.so
+    perl: undefined, // Not present in Ray.so
+    php: 'php',
+    plaintext: 'plaintext',
+    powershell: 'powershell',
+    python: 'python',
+    r: 'r',
+    ruby: 'ruby',
+    rust: 'rust',
+    scheme: undefined, // Not present in Ray.so
+    scss: 'scss',
+    shell: 'shell',
+    sql: 'sql',
+    typescript: 'typescript',
+    tsx: 'tsx',
+    xml: 'xml',
+    yaml: 'yaml',
+  } as const
+
 export const LOGOUT_ACTION_TOAST_ID = 'logout-action'
