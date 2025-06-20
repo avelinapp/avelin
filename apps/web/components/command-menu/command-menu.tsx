@@ -23,6 +23,7 @@ import { type AnimationSequence, animate } from 'motion'
 import { motion } from 'motion/react'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { RoomExportPngCommand } from '@/components/command-menu/commands/room-export-png'
 import { inArray } from '@/lib/utils'
 import { useCommandMenu } from '@/providers/command-menu-provider'
 import { CopyRoomUrlCommand } from './commands/copy-room-url'
@@ -169,32 +170,23 @@ export default function CommandMenu() {
                   )}
                   {!page && isCodeRoom && (
                     <CommandGroup heading="Code Rooms">
-                      <>
-                        {isCodeRoom && (
-                          <ChangeEditorLanguageRootCommand
-                            onSelect={() => {
-                              goToPage([...pages, 'editor-language'])
-                              setSearch('')
-                            }}
-                          />
-                        )}
-                        {!!search && (
-                          <ChangeEditorLanguageCommands closeMenu={closeMenu} />
-                        )}
-                        {isCodeRoom && (
-                          <CopyRoomUrlCommand closeMenu={closeMenu} />
-                        )}
-                        {isCodeRoom && (
-                          <RoomTitleRootCommand
-                            onSelect={() => {
-                              goToPage([...pages, 'room-title'])
-                            }}
-                          />
-                        )}
-                        {isCodeRoom && (
-                          <RoomDeleteCommand closeMenu={closeMenu} />
-                        )}
-                      </>
+                      <ChangeEditorLanguageRootCommand
+                        onSelect={() => {
+                          goToPage([...pages, 'editor-language'])
+                          setSearch('')
+                        }}
+                      />
+                      {!!search && (
+                        <ChangeEditorLanguageCommands closeMenu={closeMenu} />
+                      )}
+                      <RoomTitleRootCommand
+                        onSelect={() => {
+                          goToPage([...pages, 'room-title'])
+                        }}
+                      />
+                      <RoomDeleteCommand closeMenu={closeMenu} />
+                      <CopyRoomUrlCommand closeMenu={closeMenu} />
+                      <RoomExportPngCommand closeMenu={closeMenu} />
                     </CommandGroup>
                   )}
                   {page === 'editor-language' && isCodeRoom && (
