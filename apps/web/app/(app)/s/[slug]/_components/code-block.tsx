@@ -33,7 +33,7 @@ export function CodeBlock({
   const isMobile = useIsMobile()
   const [nodes, setNodes] = useState(undefined)
   const [linesofCode, setLinesofCode] = useState(0)
-  const { theme } = useTheme()
+  const { resolvedTheme } = useTheme()
 
   const contentContainerRef = useRef<HTMLDivElement>(null)
   const contentEdges = useScrollEdges(contentContainerRef)
@@ -53,7 +53,7 @@ export function CodeBlock({
   useLayoutEffect(() => {
     const hastTree = highlighter.codeToHast(children, {
       lang,
-      theme: theme === 'light' ? 'avelin-light' : 'avelin-dark',
+      theme: resolvedTheme === 'light' ? 'avelin-light' : 'avelin-dark',
     })
 
     let lineCount = 0
@@ -71,7 +71,7 @@ export function CodeBlock({
 
     setLinesofCode(lineCount)
     setNodes(hastTree)
-  }, [theme])
+  }, [resolvedTheme])
   return (
     <div
       className={cn(
