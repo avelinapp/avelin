@@ -104,14 +104,14 @@ export function WaitlistForm({
     >
       <div className="w-[50px] h-[1px] bg-color-border-subtle mb-9 sm:mb-5" />
       <span className="sm:text-xl text-lg text-white font-medium leading-none">
-        Join the waitlist for early access.
+        The private alpha is live now.
       </span>
       <div className="flex flex-col gap-1 items-center text-color-text-quaternary">
         <span className="!tracking-normal">
-          Our private alpha is launching soon.
+          We're inviting early access users to try Avelin.
         </span>
         <span className="!tracking-normal">
-          We'll let you know when it's ready for you to join.
+          Want early access? Join the waitlist.
         </span>
       </div>
       <div className="w-[300px] sm:w-[400px] h-14 flex-1 mt-2">

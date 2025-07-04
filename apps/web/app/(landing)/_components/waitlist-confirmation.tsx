@@ -29,14 +29,10 @@ export default function WaitlistConfirmation() {
       </span>
       <div className="flex flex-col gap-1 *:text-lg *:text-color-text-quaternary *:text-center">
         <p>We're thrilled to have you on board!</p>
-        {/* <p>You should receive a confirmation email shortly.</p> */}
-      </div>
-      <div className="flex flex-col gap-1 *:text-lg *:text-color-text-quaternary *:text-center">
         <p>
-          Our <span className="text-pink-9">private alpha</span> will be
-          available in the next few weeks.
+          Our private alpha is live right now - we're letting users on slowly.
         </p>
-        <p>Invites will be sent in waves, so keep an eye on your inbox.</p>
+        <p>We'll send you an email when we're ready for you.</p>
       </div>
       <div className="flex flex-col gap-1 *:text-lg *:text-color-text-quaternary *:text-center">
         <p className="!text-xl font-medium !text-white">
