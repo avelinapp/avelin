@@ -12,6 +12,7 @@ import { cn } from '@avelin/ui/cn'
 import { ToggleGroup, ToggleGroupItem } from '@avelin/ui/toggle-group'
 import type { Zero } from '@avelin/zero'
 import { useQuery as useZeroQuery } from '@rocicorp/zero/react'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
@@ -200,8 +201,16 @@ const CodeRoomListView = ({
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Keep track of the last “selected” element so we can clear it
+  // Keep track of the last "selected" element so we can clear it
   const lastElRef = useRef<HTMLElement | null>(null)
+
+  // Set up virtualizer
+  const virtualizer = useVirtualizer({
+    count: rooms.length,
+    getScrollElement: () => containerRef.current,
+    estimateSize: () => 48, // h-12 = 48px
+    overscan: 5,
+  })
 
   useEffect(() => {
     const container = containerRef.current!
@@ -263,6 +272,11 @@ const CodeRoomListView = ({
         el.dataset.keyboardSelected = 'true'
         el.focus()
         lastElRef.current = el
+        // Scroll to the restored item
+        const idx = rooms.findIndex((r) => r.id === roomId)
+        if (idx !== -1) {
+          virtualizer.scrollToIndex(idx, { align: 'auto' })
+        }
       }
     }
 
@@ -271,7 +285,7 @@ const CodeRoomListView = ({
     // restore again whenever the user hits back/forward
     window.addEventListener('popstate', restore)
     return () => window.removeEventListener('popstate', restore)
-  }, [])
+  }, [rooms, virtualizer])
 
   // Imperatively set/clear the data-attributes
   function select(el: HTMLElement, modality: 'keyboard' | 'pointer') {
@@ -324,10 +338,11 @@ const CodeRoomListView = ({
       )?.[0]
       const currentIdx = currentId ? ids.indexOf(currentId) : -1
       const nextIdx = Math.min(ids.length - 1, currentIdx + 1)
+      virtualizer.scrollToIndex(nextIdx, { align: 'auto' })
       itemRefs.current[ids[nextIdx]!]?.focus()
     },
     { enableOnFormTags: false },
-    [rooms],
+    [rooms, virtualizer],
   )
 
   useHotkeys(
@@ -341,10 +356,11 @@ const CodeRoomListView = ({
       )?.[0]
       const currentIdx = currentId ? ids.indexOf(currentId) : ids.length
       const prevIdx = Math.max(0, currentIdx - 1)
+      virtualizer.scrollToIndex(prevIdx, { align: 'auto' })
       itemRefs.current[ids[prevIdx]!]?.focus()
     },
     { enableOnFormTags: false },
-    [rooms],
+    [rooms, virtualizer],
   )
 
   useHotkeys(
@@ -414,20 +430,38 @@ const CodeRoomListView = ({
       ref={containerRef}
       className="overflow-y-scroll overflow-x-hidden outline-none"
     >
-      <div className="flex flex-col">
-        {rooms.map((room) => {
+      <div
+        style={{
+          height: `${virtualizer.getTotalSize()}px`,
+          width: '100%',
+          position: 'relative',
+        }}
+      >
+        {virtualizer.getVirtualItems().map((virtualItem) => {
+          const room = rooms[virtualItem.index]!
           return (
-            <RoomListItem
-              room={room}
-              view={view}
-              preload={preloadRoom}
+            <div
               key={room.id}
-              ref={(el) => {
-                itemRefs.current[room.id] = el
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: `${virtualItem.size}px`,
+                transform: `translateY(${virtualItem.start}px)`,
               }}
-              data-room-id={room.id}
-              tabIndex={0}
-            />
+            >
+              <RoomListItem
+                room={room}
+                view={view}
+                preload={preloadRoom}
+                ref={(el) => {
+                  itemRefs.current[room.id] = el
+                }}
+                data-room-id={room.id}
+                tabIndex={0}
+              />
+            </div>
           )
         })}
       </div>
