@@ -2,7 +2,7 @@ import { newId, newRoomSlug } from '@avelin/id'
 import { config } from 'dotenv'
 import { eq, like } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/neon-http'
-import { rooms, users } from './schema.js'
+import { roomParticipants, rooms, users } from './schema.js'
 
 config({ path: '.env' })
 
@@ -254,9 +254,10 @@ async function seed() {
 
       for (let j = 0; j < currentBatchSize; j++) {
         const language = randomElement(LANGUAGES)
-        // ALWAYS use your user as the creator so rooms show up in your dashboard
-        // (Zero permissions prevent syncing roomParticipants, so we rely on creatorId)
-        const creator = yourUser
+        // Randomly choose a creator from all available users (your user + test users)
+        // This makes you sometimes a creator and sometimes just a participant
+        const allUsers = [yourUser, ...createdUsers]
+        const creator = randomElement(allUsers)
         const createdAt = randomDate(sixMonthsAgo, now)
         const updatedAt = randomDate(createdAt, now)
 
@@ -274,13 +275,49 @@ async function seed() {
 
       const insertedRooms = await db.insert(rooms).values(roomBatch).returning()
 
-      // Step 4: DO NOT create roomParticipants entries
-      // Zero has `insert: NOBODY_CAN` permission for roomParticipants (see packages/zero/src/schema.ts:225),
-      // which means Zero won't sync participant rows created outside the Zero client.
-      // The dashboard logic already handles showing rooms where you're the creator
-      // even without a participant entry (see apps/web/app/(app)/dashboard/_components/room-list.tsx:46-47).
-      //
-      // When users open a room, Zero client-side code will create the participant entry if needed.
+      // Step 4: Create roomParticipants entries
+      // Note: Zero has `insert: NOBODY_CAN` for roomParticipants, meaning these won't be synced by Zero.
+      // However, we can still create them directly in the database for seeding purposes.
+      // Always ensure YOUR_USER_ID is a participant in every room.
+      const participantBatch = []
+
+      for (const room of insertedRooms) {
+        const allUsers = [yourUser, ...createdUsers]
+
+        // Always add your user as a participant
+        const participantUserIds = new Set([YOUR_USER_ID])
+
+        // Add 1-3 random participants (including potentially the creator if not already you)
+        const numAdditionalParticipants = Math.floor(Math.random() * 3) + 1
+        const shuffledUsers = [...allUsers].sort(() => Math.random() - 0.5)
+
+        for (
+          let k = 0;
+          k < numAdditionalParticipants && k < shuffledUsers.length;
+          k++
+        ) {
+          participantUserIds.add(shuffledUsers[k]!.id)
+        }
+
+        // Create participant entries for all selected users
+        for (const userId of participantUserIds) {
+          const lastAccessedAt = randomDate(room.createdAt, room.updatedAt)
+          participantBatch.push({
+            roomId: room.id,
+            userId,
+            lastAccessedAt,
+            createdAt: lastAccessedAt,
+            updatedAt: lastAccessedAt,
+          })
+        }
+      }
+
+      if (participantBatch.length > 0) {
+        await db
+          .insert(roomParticipants)
+          .values(participantBatch)
+          .onConflictDoNothing()
+      }
 
       totalCreated += insertedRooms.length
       const progress = Math.round((totalCreated / roomCount) * 100)

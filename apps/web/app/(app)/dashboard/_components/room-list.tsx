@@ -34,26 +34,49 @@ export default function RoomList() {
 
   const z = useZero()
 
-  const q = z.query.rooms
+  // Optimized base query with user access filtering at query level
+  const allRoomsQuery = z.query.rooms
     .where('deletedAt', 'IS', null)
+    .where(({ cmp, or, exists }) =>
+      or(
+        // User is the creator
+        cmp('creatorId', z.userID),
+        // OR user is a non-deleted participant
+        exists('participants', (q) =>
+          q.where('id', z.userID).where('deletedAt', 'IS', null),
+        ),
+      ),
+    )
+    .related('participants')
     .related('roomParticipants', (q) => q.related('user'))
     .related('connections')
 
-  let [rooms, { type: status }] = useZeroQuery(q, { ttl: '1d' })
-
-  rooms = rooms
-    .filter(
-      (room) =>
-        (room.creatorId === z.userID &&
-          !room.roomParticipants.find((rp) => rp.userId === z.userID)) ||
-        !!room.roomParticipants.find(
-          (rp) => rp.userId === z.userID && rp.deletedAt === null,
+  // Optimized query for active rooms - filters at query level
+  const activeRoomsQuery = z.query.rooms
+    .where('deletedAt', 'IS', null)
+    .where(({ cmp, or, exists }) =>
+      or(
+        cmp('creatorId', z.userID),
+        exists('participants', (q) =>
+          q.where('id', z.userID).where('deletedAt', 'IS', null),
         ),
+      ),
     )
+    .whereExists('connections', (q) => q.where('isActive', true))
+    .related('participants')
+    .related('roomParticipants', (q) => q.related('user'))
+    .related('connections', (q) => q.where('isActive', true))
+
+  const q = roomsView === 'all' ? allRoomsQuery : activeRoomsQuery
+
+  let [rooms, { type: status }] = useZeroQuery(q)
+
+  // Client-side: Extract lastAccessedAt and sort
+  rooms = rooms
     .map((room) => ({
       ...room,
       lastAccessedAt:
-        room.roomParticipants.find((rp) => rp.userId === z.userID)
+        room.roomParticipants?.find((rp) => rp.userId === z.userID)
           ?.lastAccessedAt ?? null,
     }))
     .sort((a, b) => {
@@ -63,15 +86,14 @@ export default function RoomList() {
       return y - x
     })
 
+  // Active view: Sort by most recent connection time
   if (roomsView === 'active') {
-    rooms = rooms
-      .filter((room) => room.connections.some((rp) => rp.isActive))
-      .sort((a, b) => {
-        const x = Math.max(...a.connections.map((rp) => rp.connectedAt!))
-        const y = Math.max(...b.connections.map((rp) => rp.connectedAt!))
+    rooms = rooms.sort((a, b) => {
+      const x = Math.max(...a.connections.map((rp) => rp.connectedAt!))
+      const y = Math.max(...b.connections.map((rp) => rp.connectedAt!))
 
-        return x - y
-      })
+      return y - x
+    })
   }
 
   const pageReady = rooms.length > 0 || status === 'complete'
@@ -316,10 +338,10 @@ const CodeRoomListView = ({
   const z = useZero()
 
   async function preloadRoom(id: string) {
-    const { cleanup, complete } = z.query.rooms
+    const { complete } = z.query.rooms
       .where('id', id)
       .related('roomParticipants')
-      .preload({ ttl: '1d' })
+      .preload()
 
     await complete
 

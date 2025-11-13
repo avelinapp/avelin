@@ -20,7 +20,7 @@ export class Room {
       updatedAt: now(),
     })
 
-    const [room] = await z.query.rooms.where('id', id).run()
+    const room = await z.query.rooms.where('id', id).one().run()
 
     // Capture event
     posthog.capture('room_created')
@@ -35,15 +35,15 @@ export class Room {
       .where('roomId', '=', id)
       .run()
 
-    const roomConnections = await z.query.roomConnections.where(
-      'roomId',
-      '=',
-      id,
-    )
+    const roomConnections = await z.query.roomConnections
+      .where('roomId', '=', id)
+      .run()
 
-    z.mutateBatch((tx) => {
+    z.mutateBatch(async (tx) => {
       tx.rooms.update({ id, deletedAt: now() })
+    })
 
+    z.mutateBatch(async (tx) => {
       for (const rp of roomParticipants) {
         tx.roomParticipants.delete({
           roomId: id,

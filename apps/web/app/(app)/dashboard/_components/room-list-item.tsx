@@ -1,5 +1,3 @@
-'use client'
-
 import { ActivityIcon, CopyIcon, LinkIcon, Trash2Icon } from '@avelin/icons'
 import { Button } from '@avelin/ui/button'
 import { cn } from '@avelin/ui/cn'
@@ -66,9 +64,8 @@ export const RoomListItem = ({
   const activeParticipants = participants.filter((u) =>
     room.connections.some((conn) => conn.userId === u.id && conn.isActive),
   )
-  const isRoomActive = activeParticipants.length > 0
 
-  const isRoomCreator = room.creatorId === z.userID
+  const isRoomActive = activeParticipants.length > 0
 
   // Find the room creator
   const [creator] = useZeroQuery(
