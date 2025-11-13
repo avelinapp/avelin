@@ -1,4 +1,3 @@
-import { schema as drizzleSchema } from '@avelin/database'
 import {
   ANYONE_CAN,
   definePermissions,
@@ -6,105 +5,15 @@ import {
   NOBODY_CAN,
   type PermissionsConfig,
   type Row,
+  type Schema,
 } from '@rocicorp/zero'
-import { createZeroSchema } from 'drizzle-zero'
+import { schema as genSchema } from './zero-schema.gen.js'
 
-export const schema = createZeroSchema(drizzleSchema, {
-  tables: {
-    users: {
-      id: true,
-      email: true,
-      emailVerified: true,
-      name: true,
-      picture: true,
-      isAnonymous: true,
-      retiredAt: true,
-      isAdminUser: true,
-      createdAt: true,
-      updatedAt: true,
-      deletedAt: true,
-    },
-    accounts: {
-      id: true,
-      providerId: true,
-      accountId: true,
-      userId: true,
-      accessToken: false,
-      refreshToken: false,
-      idToken: false,
-      accessTokenExpiresAt: false,
-      refreshTokenExpiresAt: false,
-      scope: false,
-      password: false,
-      createdAt: true,
-      updatedAt: true,
-      deletedAt: true,
-    },
-    sessions: {
-      id: true,
-      token: false,
-      userId: true,
-      ipAddress: true,
-      userAgent: true,
-      expiresAt: true,
-      createdAt: true,
-      updatedAt: true,
-      deletedAt: true,
-    },
-    verifications: false,
-    jwks: false,
-    rooms: {
-      id: true,
-      slug: true,
-      staticSlug: true,
-      ydoc: false,
-      title: true,
-      editorLanguage: true,
-      creatorId: true,
-      createdAt: true,
-      updatedAt: true,
-      deletedAt: true,
-    },
-    roomParticipants: {
-      roomId: true,
-      userId: true,
-      lastAccessedAt: true,
-      createdAt: true,
-      updatedAt: true,
-      deletedAt: true,
-    },
-    roomConnections: {
-      id: true,
-      roomId: true,
-      userId: true,
-      serverId: true,
-      connectedAt: true,
-      disconnectedAt: true,
-      isActive: true,
-      createdAt: true,
-      updatedAt: true,
-      deletedAt: true,
-    },
-    waitlistEntries: {
-      id: true,
-      userId: true,
-      email: true,
-      position: true,
-      status: true,
-      joinedAt: true,
-      invitedAt: true,
-      acceptedAt: true,
-      createdAt: true,
-      updatedAt: true,
-      deletedAt: true,
-    },
-  },
-  manyToMany: {
-    rooms: {
-      participants: ['roomParticipants', 'users'],
-    },
-  },
-})
+export const schema = {
+  ...genSchema,
+} as const satisfies Schema
+
+export type ZeroSchema = typeof schema
 
 export type AuthData = {
   sub: string
@@ -116,9 +25,6 @@ export type AuthData = {
   isAdminUser: boolean
 }
 
-export type Schema = typeof schema
-export type ZeroSchema = Schema
-
 export namespace Zero {
   export namespace Schema {
     export type Room = Row<typeof schema.tables.rooms>
@@ -129,18 +35,18 @@ export namespace Zero {
   }
 }
 
-type TableName = keyof Schema['tables']
+type TableName = keyof ZeroSchema['tables']
 
 export const permissions: ReturnType<typeof definePermissions> =
-  definePermissions<AuthData, Schema>(schema, () => {
+  definePermissions<AuthData, ZeroSchema>(schema, () => {
     const userIsLoggedIn = (
       authData: AuthData,
-      { cmpLit }: ExpressionBuilder<Schema, TableName>,
+      { cmpLit }: ExpressionBuilder<ZeroSchema, TableName>,
     ) => cmpLit(authData.sub, 'IS NOT', null)
 
     const loggedInUserIsAdmin = (
       authData: AuthData,
-      eb: ExpressionBuilder<Schema, TableName>,
+      eb: ExpressionBuilder<ZeroSchema, TableName>,
     ) =>
       eb.and(
         userIsLoggedIn(authData, eb),
@@ -149,7 +55,7 @@ export const permissions: ReturnType<typeof definePermissions> =
 
     const loggedInUserIsCreator = (
       authData: AuthData,
-      eb: ExpressionBuilder<Schema, 'rooms'>,
+      eb: ExpressionBuilder<ZeroSchema, 'rooms'>,
     ) =>
       eb.and(
         userIsLoggedIn(authData, eb),
@@ -158,7 +64,7 @@ export const permissions: ReturnType<typeof definePermissions> =
 
     const loggedInUserIsRoomParticipantForRoom = (
       authData: AuthData,
-      eb: ExpressionBuilder<Schema, 'rooms'>,
+      eb: ExpressionBuilder<ZeroSchema, 'rooms'>,
     ) =>
       eb.and(
         userIsLoggedIn(authData, eb),
@@ -169,13 +75,13 @@ export const permissions: ReturnType<typeof definePermissions> =
 
     const loggedInUserIsRoomParticipant = (
       authData: AuthData,
-      eb: ExpressionBuilder<Schema, 'roomParticipants'>,
+      eb: ExpressionBuilder<ZeroSchema, 'roomParticipants'>,
     ) =>
       eb.and(userIsLoggedIn(authData, eb), eb.cmp('userId', '=', authData.sub))
 
     const canDeleteRoomParticipant = (
       authData: AuthData,
-      eb: ExpressionBuilder<Schema, 'roomParticipants'>,
+      eb: ExpressionBuilder<ZeroSchema, 'roomParticipants'>,
     ) =>
       eb.and(
         userIsLoggedIn(authData, eb),
@@ -187,13 +93,13 @@ export const permissions: ReturnType<typeof definePermissions> =
 
     const loggedInUserIsRoomConnector = (
       authData: AuthData,
-      eb: ExpressionBuilder<Schema, 'roomConnections'>,
+      eb: ExpressionBuilder<ZeroSchema, 'roomConnections'>,
     ) =>
       eb.and(userIsLoggedIn(authData, eb), eb.cmp('userId', '=', authData.sub))
 
     const canDeleteRoomConnection = (
       authDate: AuthData,
-      eb: ExpressionBuilder<Schema, 'roomConnections'>,
+      eb: ExpressionBuilder<ZeroSchema, 'roomConnections'>,
     ) =>
       eb.and(
         userIsLoggedIn(authDate, eb),
@@ -285,5 +191,5 @@ export const permissions: ReturnType<typeof definePermissions> =
           select: [loggedInUserIsAdmin],
         },
       },
-    } satisfies PermissionsConfig<AuthData, Schema>
+    } satisfies PermissionsConfig<AuthData, ZeroSchema>
   })

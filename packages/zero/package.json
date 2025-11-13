@@ -7,6 +7,7 @@
     "dev": "tsc --watch",
     "dev:zero": "zero-cache-dev -p src/schema.ts",
     "zero:deploy-permissions": "zero-deploy-permissions --schema-path src/schema.ts",
+    "generate": "drizzle-zero generate --format --schema ../database/src/schema.ts --output ./src/zero-schema.gen.ts",
     "build": "tsc",
     "check": "biome check .",
     "check:fix": "biome check . --write"
@@ -26,6 +27,6 @@
     "@rocicorp/zero": "catalog:",
     "dotenv": "^16.4.7",
     "drizzle-orm": "catalog:",
-    "drizzle-zero": "^0.7.0"
+    "drizzle-zero": "^0.16.1"
   }
 }
