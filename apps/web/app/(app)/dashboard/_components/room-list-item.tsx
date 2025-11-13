@@ -135,7 +135,9 @@ export const RoomListItem = ({
             <div>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  {LanguageIcon && <LanguageIcon className="size-5 shrink-0" />}
+                  {LanguageIcon && (
+                    <LanguageIcon className="size-5 shrink-0 text-color-text-tertiary" />
+                  )}
                 </TooltipTrigger>
                 <TooltipContent
                   className="text-xs border-color-border-subtle"
